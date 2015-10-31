@@ -1,0 +1,34 @@
+﻿@{
+    ViewBag.Title = "导入试题";
+    Layout = "~/Views/Shared/_PageEdit.cshtml";
+}
+<div class="row cl">
+    <label class="form-label col-2">
+        题库文档：</label>
+    <div class="formControls col-10">
+        <div class="uploader-thum-container">
+            <div id="fileList" class="uploader-list">
+            </div>
+            <div id="filePicker">
+                选择文档</div>
+            <button id="btn-star" class="btn btn-default btn-uploadstar radius ml-10">
+                开始上传</button>
+        </div>
+    </div>
+</div>
+<!--div class="row cl">
+    <label class="form-label col-2">
+        文章内容：</label>
+    <div class="formControls col-10">
+        <script id="editor" type="text/plain" style="width: 100%; height: 400px;"></script>
+    </div>
+</div-->
+<div class="row cl mt-20">
+    <div class="col-10 col-offset-2">
+        <button onclick="layer_close();" class="btn btn-default radius f-r" type="button">
+            &nbsp;&nbsp;取消&nbsp;&nbsp;</button>
+        <button id="QuestionImport" class="btn btn-secondary radius f-r mr-10" style="display:none;" type="button">
+            &nbsp;&nbsp;导入&nbsp;&nbsp;</button>
+    </div>
+</div>
+<script type="text/javascript" src="@Url.Content("~/Content/js/DocxUploadAndImport.js")"></script>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <link href="../lib/Hui-iconfont/1.0.1/iconfont.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="../lib/jquery/1.9.1/jquery.min.js"></script>
+    <script type="text/javascript" src="../lib/layer/1.9.3/layer.js"></script>
+    <script type="text/javascript" src="../js/H-ui.js"></script>
+    <style>
+        i{transition-property:all; transition-duration:0.3s; cursor:default;}
+        div{height:24px;}
+    </style>
+</head>
+<body>
+    <p>&lt;i&gt;需要设置为 position:absolute ，才能使用 transform:rotate(180deg) 旋转成功。</p>
+    <p>如果未设置为 position:absolute ，将在旋转后恢复原状态。</p>
+    正确的设置：
+    <div>
+        <i class="Hui-iconfont success">&#xe6d5;</i>
+    </div>
+    <br/>
+    错误的设置：
+    <div>
+        <i class="Hui-iconfont error">&#xe6d5;</i>
+    </div>
+    <script type="text/javascript">
+        $(function() {
+            $('i.success').on('mouseenter', function () {
+                $(this).css({
+                    'position': 'absolute',
+                    'transform': 'rotate(180deg)'
+                });
+            });
+            $('i.error').on('mouseenter', function () {
+                $(this).css({
+                    'transform': 'rotate(180deg)'
+                });
+            });
+            $('i.success, i.error').on('mouseleave', function () {
+                $(this).css('transform', '');
+            });
+        });
+    </script>
+</body>
+</html>
