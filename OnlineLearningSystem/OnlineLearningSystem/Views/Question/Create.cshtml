@@ -1,0 +1,76 @@
+﻿@model OnlineLearningSystem.Models.Question
+@{
+    ViewBag.Title = "添加试题";
+    Layout = "~/Views/Shared/_PageEdit.cshtml";
+}
+<div class="pd-20">
+    @using (Html.BeginForm("Create", "Question", FormMethod.Post, new { @class = "form form-horizontal" }))
+    {
+        @Html.ValidationSummary(true)
+        @Html.HiddenFor(m => m.Q_Id)
+        @Html.HiddenFor(m => m.Q_AutoId)
+        @Html.HiddenFor(m => m.Q_DifficultyCoefficient)
+        @Html.HiddenFor(m => m.Q_AddTime)
+        <div class="row cl">
+            <label class="form-label col-2">
+                状态</label>
+            <div class="formControls col-2">
+                <span class="select-box">
+                    @Html.EditorFor(m => m.Q_Status, "Status", new { name = "Q_Status" })
+                </span>
+                @Html.ValidationMessageFor(m => m.Q_Status)
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-2">
+                题型</label>
+            <div class="formControls col-2">
+                <span class="select-box">
+                    @Html.DropDownListFor(m => m.Q_Type, (List<SelectListItem>)ViewBag.Types, new { @class = "select" })
+                </span>
+                @Html.ValidationMessageFor(m => m.Q_Type)
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-2">
+                分类</label>
+            <div class="formControls col-2">
+                <span class="select-box">
+                    @Html.DropDownListFor(m => m.Q_Classify, (List<SelectListItem>)ViewBag.Classifies, new { @class = "select" })
+                </span>
+                @Html.ValidationMessageFor(m => m.Q_Classify)
+            </div>
+        </div>
+        @Html.EditorFor(m => m.Q_Content, "QuestionContent", new { title = "内容", name = "Q_Content" })
+        <div class="row cl">
+            <div class="col-2"></div>
+            <div class="col-10">@Html.ValidationMessageFor(m => m.Q_Content)</div>
+        </div>
+        @Html.EditorFor(m => m.Q_OptionalAnswer, "OptionalAnswer", new { title = "备选答案", name = "Q_OptionalAnswer" })
+        <div class="row cl">
+            <div class="col-2"></div>
+            <div class="col-10">@Html.ValidationMessageFor(m => m.Q_OptionalAnswer)</div>
+        </div>
+        @Html.EditorFor(m => m.Q_ModelAnswer, "ModelAnswer", new { title = "标准答案", name = "Q_ModelAnswer" })
+        <div class="row cl">
+            <div class="col-2"></div>
+            <div class="col-10">@Html.ValidationMessageFor(m => m.Q_ModelAnswer)</div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-2">
+                备注</label>
+            <div class="formControls col-6">
+                @Html.TextAreaFor(m => m.Q_Remark, new { @class = "textarea" })
+                @Html.ValidationMessageFor(m => m.Q_Remark)
+            </div>
+        </div>
+        <div class="row cl">
+            <div class="col-10 col-offset-2">
+                <button onclick="create_submit();" class="btn btn-primary radius" type="submit">
+                    <i class="Hui-iconfont">&#xe632;</i> 提交</button>
+                <button onclick="layer_close();" class="btn btn-default radius" type="button">
+                    &nbsp;&nbsp;取消&nbsp;&nbsp;</button>
+            </div>
+        </div>
+    }
+</div>

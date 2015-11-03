@@ -7,13 +7,14 @@
 <div class="pd-20">
     <div class="cl pd-5 bg-1 bk-gray">
         <span class="l">
-            <a href="javascript:;" onclick="datadel()" class="btn btn-danger radius">
+            <a href="javascript:;" class="btn btn-danger radius">
                <i class="Hui-iconfont">&#xe6e2;</i> 批量删除 
             </a>
-            <a class="btn btn-primary radius" onclick="article_add('添加试题','article-add.html')" href="javascript:;"><i class="Hui-iconfont">&#xe600;</i> 添加试题 
+            <a id="CreateBtn" class="btn btn-primary radius" href="javascript:;">
+               <i class="Hui-iconfont">&#xe600;</i> 添加试题 
             </a>
-            <a class="btn btn-primary radius" onclick="ShowPageWithSize('导入试题','/Question/UploadAndImport',800,300)" href="javascript:;">
-               <i class="Hui-iconfont">&#xe600;</i> 导入试题 
+            <a id="DocxUploadBtn" class="btn btn-primary radius" href="javascript:;">
+               <i class="Hui-iconfont">&#xe642;</i> 导入试题 
             </a>
         </span>
     </div>
@@ -90,165 +91,4 @@
 <script type="text/javascript" src="@Url.Content("~/Content/lib/My97DatePicker/WdatePicker.js")"></script>
 <script type="text/javascript" src="@Url.Content("~/Content/lib/datatables/1.10.9/jquery.dataTables.min.js")"></script>
 <!--script type="text/javascript" src="http://cdn.bootcss.com/datatables/1.10.9/js/jquery.dataTables.js"></script-->
-<script type="text/javascript">
-
-    $(function () {
-
-        var table;
-
-        table = $('.table-sort').DataTable({
-            "processing": true,
-            "serverSide": true,
-            "ajax": {
-                "url": "/Question/ListDataTablesAjax",
-                "type": "POST"
-            },
-            "stateSave": false,
-            "lengthChange": false,
-            "pageLength": 15,
-            "sorting": [[1, "desc"]],
-            "columnDefs": [{ "orderable": false, "targets": [0, 6]}],
-            "columns": [
-                {
-                    "width": "10px",
-                    "className": "text-c",
-                    "defaultContent": '<input type="checkbox" value="" name="">'
-                },
-                { "name": "Q_Id", "data": "Q_Id" },
-                { "name": "Q_Type", "data": "Q_Type" },
-                { "name": "Q_ClassifyName", "data": "Q_ClassifyName" },
-                { "name": "Q_AddTime", "defaultContent": '<span class="Q_AddTime"></span>' },
-                { "name": "Q_Content", "defaultContent": '<span class="Q_Content"></span>' },
-                { "name": "Q_DifficultyCoefficient", "data": "Q_DifficultyCoefficient" },
-                {
-                    "width": "80px",
-                    "className": "text-c",
-                    "defaultContent":
-                        '<a style="text-decoration: none" class="recycle fz-18" href="javascript:;" title="回收"><i class="Hui-iconfont">&#xe6de;</i></a>' +
-                        '<a style="text-decoration: none" class="edit ml-5 fz-18" href="javascript:;" title="编辑"><i class="Hui-iconfont">&#xe6df;</i></a>' +
-                        '<a style="text-decoration: none" class="delete ml-5 fz-18" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a>'
-                }
-            ],
-            "createdRow": function (row, data, dataIndex) {
-
-                var span, strDate, date, content;
-
-                row = $(row);
-
-                span = row.find('span.Q_AddTime');
-                strDate = data['Q_AddTime'];
-                date = strDate.jsonDateToDate(strDate);
-                strDate = date.format('yyyy-MM-dd hh:mm:ss');
-
-                span.text(strDate);
-
-                span = row.find('span.Q_Content');
-                content = data['Q_Content'];
-                content = content.replace(/\\r\\n/g, '<br />');
-
-                span.html(content);
-            }
-        });
-
-        $('.table-sort tbody').on('click', 'a.recycle', function () {
-
-            var data, id;
-
-            data = table.row($(this).parents('tr')).data();
-            id = data['Q_Id'];
-
-            alert(id);
-        });
-
-        $('.table-sort tbody').on('click', 'a.edit', function () {
-
-            var data, id;
-
-            data = table.row($(this).parents('tr')).data();
-            id = data['Q_Id'];
-
-            alert(id);
-        });
-
-        $('.table-sort tbody').on('click', 'a.delete', function () {
-
-            var data, id;
-
-            data = table.row($(this).parents('tr')).data();
-            id = data['Q_Id'];
-
-            alert(id);
-        });
-    });
-
-    /*试题-添加*/
-    function article_add(title, url, w, h) {
-        var index = layer.open({
-            type: 2,
-            title: title,
-            content: url
-        });
-        layer.full(index);
-    }
-    /*试题-编辑*/
-    function article_edit(title, url, id, w, h) {
-        var index = layer.open({
-            type: 2,
-            title: title,
-            content: url
-        });
-        layer.full(index);
-    }
-    /*试题-删除*/
-    function article_del(obj, id) {
-        layer.confirm('确认要删除吗？', function (index) {
-            $(obj).parents("tr").remove();
-            layer.msg('已删除!', 1);
-        });
-    }
-    /*试题-审核*/
-    function article_shenhe(obj, id) {
-        layer.confirm('审核文章？', {
-            btn: ['通过', '不通过'],
-            shade: false
-        },
-	function () {
-	    $(obj).parents("tr").find(".td-manage").prepend('<a class="c-primary" onClick="article_start(this,id)" href="javascript:;" title="申请上线">申请上线</a>');
-	    $(obj).parents("tr").find(".td-status").html('<span class="label label-success radius">已发布</span>');
-	    $(obj).remove();
-	    layer.msg('已发布', { icon: 6, time: 1000 });
-	},
-	function () {
-	    $(obj).parents("tr").find(".td-manage").prepend('<a class="c-primary" onClick="article_shenqing(this,id)" href="javascript:;" title="申请上线">申请上线</a>');
-	    $(obj).parents("tr").find(".td-status").html('<span class="label label-danger radius">未通过</span>');
-	    $(obj).remove();
-	    layer.msg('未通过', { icon: 5, time: 1000 });
-	});
-    }
-    /*试题-回收*/
-    function article_stop(obj, id) {
-        layer.confirm('确认要回收吗？', function (index) {
-            $(obj).parents("tr").find(".td-manage").prepend('<a style="text-decoration:none" onClick="article_start(this,id)" href="javascript:;" title="发布"><i class="Hui-iconfont">&#xe603;</i></a>');
-            $(obj).parents("tr").find(".td-status").html('<span class="label label-defaunt radius">已回收</span>');
-            $(obj).remove();
-            layer.msg('已回收!', { icon: 5, time: 1000 });
-        });
-    }
-
-    /*试题-发布*/
-    function article_start(obj, id) {
-        layer.confirm('确认要发布吗？', function (index) {
-            $(obj).parents("tr").find(".td-manage").prepend('<a style="text-decoration:none" onClick="article_stop(this,id)" href="javascript:;" title="回收"><i class="Hui-iconfont">&#xe6de;</i></a>');
-            $(obj).parents("tr").find(".td-status").html('<span class="label label-success radius">已发布</span>');
-            $(obj).remove();
-            layer.msg('已发布!', { icon: 6, time: 1000 });
-        });
-    }
-    /*试题-申请上线*/
-    function article_shenqing(obj, id) {
-        $(obj).parents("tr").find(".td-status").html('<span class="label label-default radius">待审核</span>');
-        $(obj).parents("tr").find(".td-manage").html("");
-        layer.msg('已提交申请，耐心等待审核!', { icon: 1, time: 2000 });
-    }
-
-</script>
+<script type="text/javascript" src="@Url.Content("~/Content/js/Question/InitialList.js")"></script>

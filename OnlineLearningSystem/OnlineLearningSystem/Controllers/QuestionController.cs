@@ -10,6 +10,9 @@ namespace OnlineLearningSystem.Controllers
 {
     public class QuestionController : OLSController
     {
+
+        UQuestion uq = new UQuestion();
+
         //
         // GET: /Question/
 
@@ -27,7 +30,7 @@ namespace OnlineLearningSystem.Controllers
         }
 
         //
-        // GET: /Question/ListDataTablesAjax
+        // POST: /Question/ListDataTablesAjax
 
         public JsonResult ListDataTablesAjax()
         {
@@ -40,9 +43,9 @@ namespace OnlineLearningSystem.Controllers
         }
 
         //
-        // GET: /Question/UploadAndImport
+        // GET: /Question/DocxUploadAndImport
 
-        public ActionResult UploadAndImport()
+        public ActionResult DocxUploadAndImport()
         {
             return View();
         }
@@ -56,6 +59,75 @@ namespace OnlineLearningSystem.Controllers
             filePath = Server.MapPath(filePath);
 
             return Json(new UQuestion().ImportDocx(filePath));
+        }
+
+        //
+        // GET: /Question/Create
+
+        [HttpGet]
+        public ActionResult Create()
+        {
+
+            Question q;
+
+            q = uq.GetNew();
+
+            ViewBag.Types = uq.GetTypeList(q.Q_Type);
+            ViewBag.Classifies = uq.GetClassifyList(q.Q_Classify);
+
+            return View(q);
+        }
+
+        //
+        // POST: /Question/Create
+
+        [HttpPost]
+        public ActionResult Create(Question q)
+        {
+
+            if (ModelState.IsValid)
+            {
+
+                if (uq.Create(q))
+                {
+                    return RedirectToAction("List");
+                }
+            }
+
+            ViewBag.Types = uq.GetTypeList(q.Q_Type);
+            ViewBag.Classifies = uq.GetClassifyList(q.Q_Classify);
+
+            return View(q);
+        }
+
+        // GET: /Question/Edit
+
+        public ActionResult Edit(String id)
+        {
+            return View();
+        }
+
+        // POST: /Question/Edit
+
+        public ActionResult Edit(Question q)
+        {
+            return View();
+        }
+
+        //
+        // GET: /Question/Recycle
+
+        public JsonResult Recycle(String id)
+        {
+            return Json(0);
+        }
+
+        //
+        // GET: /Question/Delete
+
+        public JsonResult Delete(String id)
+        {
+            return Json(0);
         }
     }
 }

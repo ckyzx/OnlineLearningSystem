@@ -90,6 +90,7 @@
     <Compile Include="Utilities\DataTablesRequest.cs" />
     <Compile Include="Utilities\DataTablesResponse.cs" />
     <Compile Include="Utilities\DocxParagraph.cs" />
+    <Compile Include="Utilities\StaticHelper.cs" />
     <Compile Include="Utilities\OpenXmlHelper.cs" />
     <Compile Include="Utilities\UQuestion.cs" />
     <Compile Include="Utilities\Utility.cs" />
@@ -101,7 +102,7 @@
     <Content Include="Content\css\H-ui.min.css" />
     <Content Include="Content\css\H-ui.reset.css" />
     <Content Include="Content\css\style.css" />
-    <Content Include="Content\js\DocxUploadAndImport.js" />
+    <Content Include="Content\js\Question\DocxUploadAndImport.js" />
     <Content Include="Content\images\acrossTab-2.png" />
     <Content Include="Content\images\acrossTab-2bak.png" />
     <Content Include="Content\images\acrossTab-bg.png" />
@@ -131,6 +132,7 @@
     <Content Include="Content\js\de_DE.txt" />
     <Content Include="Content\js\H-ui.admin.js" />
     <Content Include="Content\js\H-ui.js" />
+    <Content Include="Content\js\Question\InitialList.js" />
     <Content Include="Content\lib\datatables\1.10.0\jquery.dataTables.min.js" />
     <Content Include="Content\lib\datatables\1.10.9\jquery.dataTables.js" />
     <Content Include="Content\lib\datatables\1.10.9\jquery.dataTables.min.js" />
@@ -184,6 +186,9 @@
     <Content Include="Content\lib\My97DatePicker\WdatePicker.js" />
     <Content Include="Content\lib\PIE_IE678.js" />
     <Content Include="Content\lib\respond.min.js" />
+    <Content Include="Content\lib\Validation\1.8.0\jquery.validate-vsdoc.js" />
+    <Content Include="Content\lib\Validation\1.8.0\jquery.validate.js" />
+    <Content Include="Content\lib\Validation\1.8.0\jquery.validate.min.js" />
     <Content Include="Content\lib\ueditor\1.4.3\asp\action_config.asp" />
     <Content Include="Content\lib\ueditor\1.4.3\asp\action_crawler.asp" />
     <Content Include="Content\lib\ueditor\1.4.3\asp\action_list.asp" />
@@ -486,6 +491,7 @@
     <Content Include="Content\lib\ueditor\1.4.3\ueditor.config.js" />
     <Content Include="Content\lib\ueditor\1.4.3\ueditor.parse.js" />
     <Content Include="Content\lib\ueditor\1.4.3\ueditor.parse.min.js" />
+    <Content Include="Content\lib\Validation\1.8.0\validate.css" />
     <Content Include="Content\lib\Validform\5.3.2\passwordStrength-min.js" />
     <Content Include="Content\lib\Validform\5.3.2\Validform.js" />
     <Content Include="Content\lib\Validform\5.3.2\Validform.min.js" />
@@ -671,8 +677,14 @@
     <Content Include="Views\Admin\Index.cshtml" />
     <Content Include="Views\Shared\_MenuStudent.cshtml" />
     <Content Include="Views\Shared\_MenuAdmin.cshtml" />
-    <Content Include="Views\Question\UploadAndImport.cshtml" />
+    <Content Include="Views\Question\DocxUploadAndImport.cshtml" />
     <Content Include="Views\Shared\_PageEdit.cshtml" />
+    <Content Include="Views\Question\Create.cshtml" />
+    <Content Include="Views\Shared\UEditor.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Status.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\OptionalAnswer.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\QuestionContent.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\ModelAnswer.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

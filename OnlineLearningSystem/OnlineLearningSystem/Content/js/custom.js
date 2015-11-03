@@ -5,10 +5,11 @@ function ShowPage(title,url){
         type: 2,
         title: title,
         content: url,
+        // 初始化为小区域，可避免展现错位的控件
         //area: ['180px', '36px']
         area: ['800px', '600px']
     });
-    //layer.full(index);
+    layer.full(index);
 }
 
 function ShowPageWithSize(title,url,w,h){

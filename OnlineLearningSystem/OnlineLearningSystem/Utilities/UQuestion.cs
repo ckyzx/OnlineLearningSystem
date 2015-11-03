@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Text.RegularExpressions;
 using OnlineLearningSystem.Models;
+using System.Web.Mvc;
 //using Newtonsoft.Json;
 
 namespace OnlineLearningSystem.Utilities
@@ -77,7 +78,7 @@ namespace OnlineLearningSystem.Utilities
                         case "案例分析题":
                         case "问答题":
 
-                            if ((contentRegex1.IsMatch(text) || typeRegex.IsMatch(text)) 
+                            if ((contentRegex1.IsMatch(text) || typeRegex.IsMatch(text))
                                 && qModelAnswer != "")
                             {
 
@@ -105,7 +106,7 @@ namespace OnlineLearningSystem.Utilities
 
                         case "公文改错题":
 
-                            if ((contentRegex2.IsMatch(text) || typeRegex.IsMatch(text)) 
+                            if ((contentRegex2.IsMatch(text) || typeRegex.IsMatch(text))
                                 && qModelAnswer != "")
                             {
 
@@ -398,7 +399,8 @@ namespace OnlineLearningSystem.Utilities
                 olsEni
                 .Questions
                 .Where(m => m.Q_Type.Contains(dtRequest.SearchValue))
-                .Select(m=>new{
+                .Select(m => new
+                {
                     Q_Id = m.Q_Id,
                     Q_Type = m.Q_Type,
                     Q_Classify = m.Q_Classify,
@@ -407,7 +409,7 @@ namespace OnlineLearningSystem.Utilities
                     Q_OptionalAnswer = m.Q_OptionalAnswer,
                     Q_AddTime = m.Q_AddTime,
                     Q_Status = m.Q_Status,
-                    Q_Remark =m.Q_Remark
+                    Q_Remark = m.Q_Remark
                 })
                 .OrderBy(m => m.Q_Id)
                 .ToList();
@@ -451,6 +453,102 @@ namespace OnlineLearningSystem.Utilities
             dtResponse.data = qs;
 
             return dtResponse;
+        }
+
+        public Question GetNew()
+        {
+
+            Question q;
+
+            q = new Question()
+            {
+                Q_Id = 0,
+                Q_Type = "",
+                Q_Classify = 0,
+                Q_Content = "",
+                Q_OptionalAnswer = "",
+                Q_ModelAnswer = "",
+                Q_DifficultyCoefficient = 0,
+                Q_Remark = "",
+                Q_AddTime = DateTime.Now,
+                Q_Status = 1
+            };
+
+            return q;
+        }
+
+        public List<SelectListItem> GetTypeList(String currentValue)
+        {
+
+            List<SelectListItem> items;
+
+            items = new List<SelectListItem>()
+            {
+                new SelectListItem(){ Text = "[未设置]", Value = ""},
+                new SelectListItem(){ Text = "单选题", Value = "单选题"},
+                new SelectListItem(){ Text = "多选题", Value = "多选题"},
+                new SelectListItem(){ Text = "判断题", Value = "判断题"},
+                new SelectListItem(){ Text = "公文改错题", Value = "公文改错题"},
+                new SelectListItem(){ Text = "计算题", Value = "计算题"},
+                new SelectListItem(){ Text = "案例分析题", Value = "案例分析题"},
+                new SelectListItem(){ Text = "问答题", Value = "问答题"}
+            };
+
+            foreach (var i in items)
+            {
+                if (i.Value == currentValue)
+                {
+                    i.Selected = true;
+                }
+            }
+
+            return items;
+        }
+
+        public List<SelectListItem> GetClassifyList(Int32 currentValue)
+        {
+
+            List<SelectListItem> list;
+
+            var items = olsEni.QuestionClassifies.Select(m => new { m.QC_Name, m.QC_Id });
+
+            list = new List<SelectListItem>();
+            list.Add(new SelectListItem() { Text = "[未设置]", Value = "" });
+
+            foreach (var i in items)
+            {
+                list.Add(new SelectListItem { 
+                    Text = i.QC_Name, 
+                    Value = i.QC_Id.ToString(), 
+                    Selected = i.QC_Id == currentValue ? true : false 
+                });
+            }
+
+            return list;
+        }
+
+        public Boolean Create(Question q)
+        {
+            try
+            {
+
+                Int32 rowCount;
+                Int32 qId;
+
+                rowCount = olsEni.Questions.Count();
+                qId = 0 == rowCount ? 0 : olsEni.Questions.Max(m => m.Q_AutoId);
+
+                q.Q_Id = qId + 1;
+                olsEni.Questions.Add(q);
+                olsEni.SaveChanges();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                
+                throw;
+            }
         }
     }
 }

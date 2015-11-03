@@ -1,0 +1,8 @@
+﻿@model String
+<script id="@ViewData["name"]" name="@ViewData["name"]" type="text/plain" style="width: 100%; height: 350px;">@Model</script>
+<script type="text/javascript">
+    $(function () {
+        var @ViewData["name"];
+        @ViewData["name"] = UE.getEditor('@ViewData["name"]');
+    });
+</script>
