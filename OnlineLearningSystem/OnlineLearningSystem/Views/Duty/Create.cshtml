@@ -1,0 +1,50 @@
+﻿@model OnlineLearningSystem.Models.Duty
+@{
+    ViewBag.Title = "添加职务";
+    Layout = "~/Views/Shared/_PageEdit.cshtml";
+}
+<div class="pd-20">
+    @using (Html.BeginForm("Create", "Duty", FormMethod.Post, new { name = "create", @class = "form form-horizontal" }))
+    {
+        @Html.ValidationSummary(true)
+        @Html.HiddenFor(m => m.Du_Id)
+        @Html.HiddenFor(m => m.Du_AutoId)
+        @Html.HiddenFor(m => m.Du_AddTime)
+        <div class="row cl">
+            <label class="form-label col-2">
+                @Html.LabelFor(m=>m.Du_Status)    
+            </label>
+            <div class="formControls col-2">
+                <span class="select-box">
+                    @Html.EditorFor(m => m.Du_Status, "Status")
+                </span>
+                @Html.ValidationMessageFor(m => m.Du_Status)
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-2">
+                @Html.LabelFor(m=>m.Du_Name)
+            </label>
+            <div class="formControls col-2">
+                @Html.TextBoxFor(m=>m.Du_Name, new{ @class = "input-text" })
+                @Html.ValidationMessageFor(m=>m.Du_Name)
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-2">
+                @Html.LabelFor(m=>m.Du_Remark)
+            </label>
+            <div class="formControls col-4">
+                @Html.TextAreaFor(m => m.Du_Remark, new { @class = "textarea" })
+                @Html.ValidationMessageFor(m => m.Du_Remark)
+            </div>
+        </div>
+        <div class="row cl">
+            <div class="col-10 col-offset-2">
+                <input class="btn btn-primary radius" type="submit" />
+                <button onclick="layer_close();" class="btn btn-default radius" type="button">
+                    &nbsp;&nbsp;取消&nbsp;&nbsp;</button>
+            </div>
+        </div>
+    }
+</div>

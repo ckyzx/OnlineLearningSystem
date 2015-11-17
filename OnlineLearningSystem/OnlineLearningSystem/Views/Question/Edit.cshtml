@@ -1,0 +1,110 @@
+﻿@model OnlineLearningSystem.Models.Question
+@{
+    ViewBag.Title = "编辑试题";
+    Layout = "~/Views/Shared/_PageEdit.cshtml";
+}
+<div class="pd-20">
+    @using (Html.BeginForm("Edit", "Question", FormMethod.Post, new { name = "create", @class = "form form-horizontal" }))
+    {
+        @Html.ValidationSummary(true)
+        @Html.HiddenFor(m => m.Q_Id)
+        @Html.HiddenFor(m => m.Q_AutoId)
+        @Html.HiddenFor(m => m.Q_DifficultyCoefficient)
+        @Html.HiddenFor(m => m.Q_AddTime)
+        <div class="row cl">
+            <label class="form-label col-2">
+                @Html.LabelFor(m => m.Q_Status)
+            </label>
+            <div class="formControls col-2">
+                <span class="select-box">
+                    @Html.EditorFor(m => m.Q_Status, "Status")
+                </span>
+                @Html.ValidationMessageFor(m => m.Q_Status)
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-2">
+                @Html.LabelFor(m => m.Q_Type)
+            </label>
+            <div class="formControls col-2">
+                <span class="select-box">
+                    @Html.DropDownListFor(m => m.Q_Type, (List<SelectListItem>)ViewBag.Types, new { @class = "select" })
+                </span>
+                @Html.ValidationMessageFor(m => m.Q_Type)
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-2">
+                @Html.LabelFor(m => m.QC_Id)
+            </label>
+            <div class="formControls col-2">
+                <span class="select-box">
+                    @Html.DropDownListFor(m => m.QC_Id, (List<SelectListItem>)ViewBag.Classifies, new { @class = "select" })
+                </span>
+                @Html.ValidationMessageFor(m => m.QC_Id)
+            </div>
+        </div>
+        @Html.EditorFor(m => m.Q_Content, "QuestionContent", new { title = "内容" })
+        <div class="row cl">
+            <div class="col-2">
+            </div>
+            <div class="col-10">@Html.ValidationMessageFor(m => m.Q_Content)</div>
+        </div>
+        Dictionary<String, String> optionalAnswer;
+
+        optionalAnswer = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<String, String>>(Model.Q_OptionalAnswer);
+        
+        @Html.Raw("<div class=\"row cl\">");
+        @Html.Raw("<label class=\"form-label col-2\">");
+        @Html.LabelFor(m => m.Q_OptionalAnswer);
+        @Html.Raw("</label>");
+        @Html.Raw("<div class=\"formControls col-10\">");
+                                                       
+        switch (Model.Q_Type)
+        {
+            case "单选题":
+            
+                foreach (KeyValuePair<String, String> kv in optionalAnswer)
+                {
+                    
+                    @Html.Raw("<span class=\"mr-10\"><input type=\"radio\" value=\"" + kv.Key + "\" class=\"mr-5\" />" + kv.Value + "</span>");
+                }
+                break;
+            case "多选题":
+                foreach (KeyValuePair<String, String> kv in optionalAnswer)
+                {
+                        
+                    @Html.Raw("<span class=\"mr-10\"><input type=\"checkbox\" value=\"" + kv.Key + "\" class=\"mr-5\" />" + kv.Value + "</span>");
+                }
+                break;
+            case "判断题":
+                @Html.Raw("<span class=\"mr-10\"><input type=\"checkbox\" value=\"√\" class=\"mr-5\" />√</span>");
+                @Html.Raw("<span class=\"mr-10\"><input type=\"checkbox\" value=\"×\" class=\"mr-5\" />×</span>");
+                break;
+            default:
+                @Html.TextArea("", null == Model.Q_ModelAnswer ? "" : Model.Q_ModelAnswer, new { @class = "textarea" })
+           break;
+        }
+        @Html.ValidationMessageFor(m => m.Q_OptionalAnswer);
+        @Html.ValidationMessageFor(m => m.Q_ModelAnswer);
+        @Html.Raw("</div>");
+        @Html.Raw("</div>");
+    
+        <div class="row cl">
+            <label class="form-label col-2">
+                @Html.LabelFor(m => m.Q_Remark)
+            </label>
+            <div class="formControls col-4">
+                @Html.TextAreaFor(m => m.Q_Remark, new { @class = "textarea" })
+                @Html.ValidationMessageFor(m => m.Q_Remark)
+            </div>
+        </div>
+        <div class="row cl">
+            <div class="col-10 col-offset-2">
+                <input class="btn btn-primary radius" type="submit" />
+                <button onclick="layer_close();" class="btn btn-default radius" type="button">
+                    &nbsp;&nbsp;取消&nbsp;&nbsp;</button>
+            </div>
+        </div>
+    }
+</div>

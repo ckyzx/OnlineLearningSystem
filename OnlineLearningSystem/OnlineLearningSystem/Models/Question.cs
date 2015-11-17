@@ -21,10 +21,10 @@ namespace OnlineLearningSystem.Models
 
         [DisplayName("分类")]
         [Required(ErrorMessage = "请选择{0}")]
-        public Int32 Q_Classify { get; set; }
+        public Int32 QC_Id { get; set; }
 
         [NotMapped]
-        public String Q_ClassifyName { get; set; }
+        public String QC_Name { get; set; }
 
         [DisplayName("内容")]
         [Required(ErrorMessage = "请输入{0}")]
@@ -45,6 +45,7 @@ namespace OnlineLearningSystem.Models
         public String Q_Remark { get; set; }
 
         [DisplayName("添加时间")]
+        [DataType(DataType.DateTime)]
         public DateTime Q_AddTime { get; set; }
 
         [DisplayName("状态")]

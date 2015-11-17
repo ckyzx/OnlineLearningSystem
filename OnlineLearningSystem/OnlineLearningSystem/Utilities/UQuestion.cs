@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Data;
 using System.Web;
-using System.Text.RegularExpressions;
-using OnlineLearningSystem.Models;
 using System.Web.Mvc;
-//using Newtonsoft.Json;
+using OnlineLearningSystem.Models;
+
+using System.Text.RegularExpressions;
+using Newtonsoft.Json;
 
 namespace OnlineLearningSystem.Utilities
 {
@@ -30,7 +32,7 @@ namespace OnlineLearningSystem.Utilities
                 DateTime now;
                 Regex typeRegex, contentRegex1, contentRegex2, optionalAnswerRegex, modelAnswerRegex;
                 String text, qType, qClassify, qContent, qOptionalAnswer, qModelAnswer;
-                Int32 i1, i2, len, rowCount, qId, qcId;
+                Int32 i1, i2, len, rowCount, id, id1;
                 Boolean isContent;
                 List<Question> qs;
                 List<QuestionClassify> qcs;
@@ -58,9 +60,9 @@ namespace OnlineLearningSystem.Utilities
 
                 // 获取数据编号
                 rowCount = olsEni.Questions.Count();
-                qId = 0 == rowCount ? 1 : olsEni.Questions.Max(m => m.Q_AutoId);
+                id = 0 == rowCount ? 0 : olsEni.Questions.Max(model => model.Q_AutoId);
                 rowCount = olsEni.QuestionClassifies.Count();
-                qcId = 0 == rowCount ? 1 : olsEni.QuestionClassifies.Max(m => m.QC_AutoId);
+                id1 = 0 == rowCount ? 0 : olsEni.QuestionClassifies.Max(model => model.QC_AutoId);
 
                 foreach (var para in docxPara)
                 {
@@ -82,13 +84,20 @@ namespace OnlineLearningSystem.Utilities
                                 && qModelAnswer != "")
                             {
 
-                                qId += 1;
+                                // 格式化单选题/多选题的答案
+                                if (qType == "单选题" || qType == "多选题")
+                                {
+                                    qOptionalAnswer = FormatOptionalAnswer(qOptionalAnswer);
+                                    qModelAnswer = FormatModelAnswer(qModelAnswer);
+                                }
+
+                                id += 1;
 
                                 qs.Add(new Question()
                                 {
-                                    Q_Id = qId,
+                                    Q_Id = id,
                                     Q_Type = qType,
-                                    Q_Classify = qcId,
+                                    QC_Id = id1,
                                     Q_Content = qContent,
                                     Q_OptionalAnswer = qOptionalAnswer,
                                     Q_ModelAnswer = qModelAnswer,
@@ -110,13 +119,13 @@ namespace OnlineLearningSystem.Utilities
                                 && qModelAnswer != "")
                             {
 
-                                qId += 1;
+                                id += 1;
 
                                 qs.Add(new Question()
                                 {
-                                    Q_Id = qId,
+                                    Q_Id = id,
                                     Q_Type = qType,
-                                    Q_Classify = qcId,
+                                    QC_Id = id1,
                                     Q_Content = qContent,
                                     Q_OptionalAnswer = qOptionalAnswer,
                                     Q_ModelAnswer = qModelAnswer,
@@ -146,25 +155,26 @@ namespace OnlineLearningSystem.Utilities
                         qClassify = text.Substring(3);
 
                         // 判断分类是否存在
-                        classify = olsEni.QuestionClassifies.SingleOrDefault(m => m.QC_Name == qClassify);
+                        classify = olsEni.QuestionClassifies.SingleOrDefault(model => model.QC_Name == qClassify);
 
                         // 如果不存在，则新增
                         if (null == classify)
                         {
 
-                            qcId += 1;
+                            id1 += 1;
 
                             qcs.Add(new QuestionClassify()
                             {
-                                QC_Id = qcId,
+                                QC_Id = id1,
                                 QC_Name = qClassify,
+                                QC_Level = "000" + id1.ToString(),
                                 QC_AddTime = now,
                                 QC_Status = 1
                             });
                         }
                         else
                         {
-                            qcId = classify.QC_Id;
+                            id1 = classify.QC_Id;
                         }
 
                         continue;
@@ -200,9 +210,7 @@ namespace OnlineLearningSystem.Utilities
                     switch (qType)
                     {
                         case "单选题":
-                        case "单项选择题":
                         case "多选题":
-                        case "多项选择题":
                         case "判断题":
 
                             if (contentRegex1.IsMatch(text))
@@ -214,8 +222,8 @@ namespace OnlineLearningSystem.Utilities
                                 qContent = qContent.Replace("（", "(");
                                 qContent = qContent.Replace("）", ")");
 
-                                i1 = qContent.IndexOf("(");
-                                i2 = qContent.IndexOf(")");
+                                i1 = qContent.LastIndexOf("(");
+                                i2 = qContent.LastIndexOf(")");
 
                                 if (i1 == -1 || i2 == -1)
                                 {
@@ -315,13 +323,20 @@ namespace OnlineLearningSystem.Utilities
                 if (qModelAnswer != "")
                 {
 
-                    qId += 1;
+                    // 格式化单选题/多选题的答案
+                    if (qType == "单选题" || qType == "多选题")
+                    {
+                        qOptionalAnswer = FormatOptionalAnswer(qOptionalAnswer);
+                        qModelAnswer = FormatModelAnswer(qModelAnswer);
+                    }
+
+                    id += 1;
 
                     qs.Add(new Question()
                     {
-                        Q_Id = qId,
+                        Q_Id = id,
                         Q_Type = qType,
-                        Q_Classify = qcId,
+                        QC_Id = id1,
                         Q_Content = qContent,
                         Q_OptionalAnswer = qOptionalAnswer,
                         Q_ModelAnswer = qModelAnswer,
@@ -342,9 +357,9 @@ namespace OnlineLearningSystem.Utilities
 
                 olsEni.SaveChanges();
 
-                foreach (var q in qs)
+                foreach (var model in qs)
                 {
-                    olsEni.Questions.Add(q);
+                    olsEni.Questions.Add(model);
                 }
 
                 olsEni.SaveChanges();
@@ -357,10 +372,47 @@ namespace OnlineLearningSystem.Utilities
             catch (Exception ex)
             {
 
-                dic["Message"] = ex.Message;
+                dic["Message"] = StaticHelper.GetExceptionMessage(ex);
 
                 return dic;
             }
+        }
+
+        private String FormatOptionalAnswer(String qOptionalAnswer)
+        {
+
+            Regex spaceRegex, dotRegex, suffixRegex;
+
+            spaceRegex = new Regex(@"\s+");
+            dotRegex = new Regex(@"(\.|．)\s*");
+            suffixRegex = new Regex(", \"$");
+
+            qOptionalAnswer = qOptionalAnswer.Trim();
+            qOptionalAnswer = dotRegex.Replace(qOptionalAnswer, "\":\"");
+            qOptionalAnswer = spaceRegex.Replace(qOptionalAnswer, "\", \"");
+            //if (suffixRegex.IsMatch(qOptionalAnswer))
+            //{
+            //    qOptionalAnswer = qOptionalAnswer.Substring(0, qOptionalAnswer.Length - 3);
+            //}
+            qOptionalAnswer = "{\"" + qOptionalAnswer;
+            qOptionalAnswer = qOptionalAnswer + "\"}";
+
+            return qOptionalAnswer;
+        }
+
+        private String FormatModelAnswer(String qModelAnswer)
+        {
+
+            Regex spaceRegex;
+            Char[] ary1;
+
+            spaceRegex = new Regex(@"\s+");
+            qModelAnswer = spaceRegex.Replace(qModelAnswer, "");
+
+            ary1 = qModelAnswer.ToCharArray();
+
+            return JsonConvert.SerializeObject(ary1);
+
         }
 
         public DataTablesResponse ListDataTablesAjax(DataTablesRequest dtRequest)
@@ -369,7 +421,7 @@ namespace OnlineLearningSystem.Utilities
             DataTablesResponse dtResponse;
             Int32 recordsTotal, recordsFiltered;
             String whereSql, orderColumn, classfyName;
-            List<Question> qs;
+            List<Question> ms;
 
 
             dtResponse = new DataTablesResponse();
@@ -395,86 +447,69 @@ namespace OnlineLearningSystem.Utilities
             //TODO:指定排序列
             orderColumn = dtRequest.Columns[dtRequest.OrderColumn].Name;
 
-            var tmpQs =
+            var tmpMs =
                 olsEni
                 .Questions
-                .Where(m => m.Q_Type.Contains(dtRequest.SearchValue))
-                .Select(m => new
+                .OrderBy(model => model.Q_Id)
+                .Where(model =>
+                    (model.Q_Type.Contains(dtRequest.SearchValue)
+                    || model.Q_Content.Contains(dtRequest.SearchValue)
+                    || model.Q_OptionalAnswer.Contains(dtRequest.SearchValue)
+                    || model.Q_ModelAnswer.Contains(dtRequest.SearchValue))
+                    && model.Q_Status != (Byte)Status.Delete)
+                .Select(model => new
                 {
-                    Q_Id = m.Q_Id,
-                    Q_Type = m.Q_Type,
-                    Q_Classify = m.Q_Classify,
-                    Q_DifficultyCoefficient = m.Q_DifficultyCoefficient,
-                    Q_Content = m.Q_Content,
-                    Q_OptionalAnswer = m.Q_OptionalAnswer,
-                    Q_AddTime = m.Q_AddTime,
-                    Q_Status = m.Q_Status,
-                    Q_Remark = m.Q_Remark
+                    Q_Id = model.Q_Id,
+                    Q_Type = model.Q_Type,
+                    Q_Classify = model.QC_Id,
+                    Q_DifficultyCoefficient = model.Q_DifficultyCoefficient,
+                    Q_Content = model.Q_Content,
+                    Q_OptionalAnswer = model.Q_OptionalAnswer,
+                    Q_AddTime = model.Q_AddTime,
+                    Q_Status = model.Q_Status,
+                    Q_Remark = model.Q_Remark
                 })
-                .OrderBy(m => m.Q_Id)
                 .ToList();
 
             // 获取分类名称
-            qs = new List<Question>();
+            ms = new List<Question>();
 
-            foreach (var q in tmpQs)
+            foreach (var model in tmpMs)
             {
 
-                classfyName = olsEni.QuestionClassifies.SingleOrDefault(m => m.QC_Id == q.Q_Classify).QC_Name;
+                classfyName = olsEni.QuestionClassifies.SingleOrDefault(m1 => m1.QC_Id == model.Q_Classify).QC_Name;
 
-                qs.Add(new Question()
+                ms.Add(new Question()
                 {
-                    Q_Id = q.Q_Id,
-                    Q_Type = q.Q_Type,
-                    Q_Classify = q.Q_Classify,
-                    Q_ClassifyName = classfyName,
-                    Q_DifficultyCoefficient = q.Q_DifficultyCoefficient,
-                    Q_Content = q.Q_Content,
-                    Q_OptionalAnswer = q.Q_OptionalAnswer,
-                    Q_AddTime = q.Q_AddTime,
-                    Q_Status = q.Q_Status,
-                    Q_Remark = q.Q_Remark
+                    Q_Id = model.Q_Id,
+                    Q_Type = model.Q_Type,
+                    QC_Id = model.Q_Classify,
+                    QC_Name = classfyName,
+                    Q_DifficultyCoefficient = model.Q_DifficultyCoefficient,
+                    Q_Content = model.Q_Content,
+                    Q_OptionalAnswer = model.Q_OptionalAnswer,
+                    Q_Remark = model.Q_Remark,
+                    Q_AddTime = model.Q_AddTime,
+                    Q_Status = model.Q_Status
                 });
             }
 
-            tmpQs = null;
+            tmpMs = null;
 
-            recordsFiltered = qs.Count();
+            recordsFiltered = ms.Count();
             dtResponse.recordsFiltered = recordsFiltered;
 
             if (-1 != dtRequest.Length)
             {
-                qs =
-                    qs
+                ms =
+                    ms
                     .Skip(dtRequest.Start).Take(dtRequest.Length)
                     .ToList();
             }
 
-            dtResponse.data = qs;
+            dtResponse.data = ms;
 
             return dtResponse;
-        }
-
-        public Question GetNew()
-        {
-
-            Question q;
-
-            q = new Question()
-            {
-                Q_Id = 0,
-                Q_Type = "",
-                Q_Classify = 0,
-                Q_Content = "",
-                Q_OptionalAnswer = "",
-                Q_ModelAnswer = "",
-                Q_DifficultyCoefficient = 0,
-                Q_Remark = "",
-                Q_AddTime = DateTime.Now,
-                Q_Status = 1
-            };
-
-            return q;
         }
 
         public List<SelectListItem> GetTypeList(String currentValue)
@@ -510,44 +545,183 @@ namespace OnlineLearningSystem.Utilities
 
             List<SelectListItem> list;
 
-            var items = olsEni.QuestionClassifies.Select(m => new { m.QC_Name, m.QC_Id });
+            var items = olsEni.QuestionClassifies.Where(m => m.QC_Status == (Byte)Status.Available).Select(model => new { model.QC_Name, model.QC_Id });
 
             list = new List<SelectListItem>();
             list.Add(new SelectListItem() { Text = "[未设置]", Value = "" });
 
             foreach (var i in items)
             {
-                list.Add(new SelectListItem { 
-                    Text = i.QC_Name, 
-                    Value = i.QC_Id.ToString(), 
-                    Selected = i.QC_Id == currentValue ? true : false 
+                list.Add(new SelectListItem
+                {
+                    Text = i.QC_Name,
+                    Value = i.QC_Id.ToString(),
+                    Selected = i.QC_Id == currentValue ? true : false
                 });
             }
 
             return list;
         }
 
-        public Boolean Create(Question q)
+        public Question GetNew()
+        {
+
+            Question model;
+
+            model = new Question()
+            {
+                Q_Id = 0,
+                Q_Type = "",
+                QC_Id = 0,
+                Q_Content = "",
+                Q_OptionalAnswer = "",
+                Q_ModelAnswer = "",
+                Q_DifficultyCoefficient = 0,
+                Q_Remark = "",
+                Q_AddTime = DateTime.Now,
+                Q_Status = (Byte)Status.Available
+            };
+
+            return model;
+        }
+
+        public Question Get(Int32 id)
+        {
+            Question model;
+
+            model = olsEni.Questions.SingleOrDefault(m => m.Q_Id == id);
+
+            if (null == model)
+            {
+                throw new NotImplementedException();
+            }
+
+            return model;
+        }
+
+        public Boolean Create(Question model)
         {
             try
             {
 
                 Int32 rowCount;
-                Int32 qId;
+                Int32 id;
 
                 rowCount = olsEni.Questions.Count();
-                qId = 0 == rowCount ? 0 : olsEni.Questions.Max(m => m.Q_AutoId);
+                id = 0 == rowCount ? 0 : olsEni.Questions.Max(m => m.Q_AutoId);
 
-                q.Q_Id = qId + 1;
-                olsEni.Questions.Add(q);
+                model.Q_Id = id + 1;
+                olsEni.Questions.Add(model);
                 olsEni.SaveChanges();
 
                 return true;
             }
             catch (Exception ex)
             {
-                
+
                 throw;
+            }
+        }
+
+        public Boolean Edit(Question model)
+        {
+            try
+            {
+                olsEni.Entry(model).State = EntityState.Modified;
+                olsEni.SaveChanges();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
+
+        public ResponseJson Recycle(Int32 id)
+        {
+
+            return SetStatus(id, Status.Recycle);
+        }
+
+        public ResponseJson Resume(Int32 id)
+        {
+
+            return SetStatus(id, Status.Available);
+        }
+
+        public ResponseJson Delete(Int32 id)
+        {
+
+            return SetStatus(id, Status.Delete);
+        }
+
+        public ResponseJson SetStatus(Int32 id, Status status)
+        {
+
+            ResponseJson resJson;
+
+            resJson = new ResponseJson();
+
+            try
+            {
+                Question model;
+
+                model = olsEni.Questions.SingleOrDefault(m => m.Q_Id == id);
+
+                if (null == model)
+                {
+                    resJson.message = "数据不存在！";
+                    return resJson;
+                }
+
+                model.Q_Status = (Byte)status;
+                olsEni.Entry(model).State = EntityState.Modified;
+                olsEni.SaveChanges();
+
+                resJson.status = ResponseStatus.Success;
+                return resJson;
+            }
+            catch (Exception ex)
+            {
+                resJson.status = ResponseStatus.Error;
+                resJson.message = StaticHelper.GetExceptionMessage(ex);
+                return resJson;
+            }
+        }
+
+        public ResponseJson SetDifficultyCoefficient(int id, byte coefficient)
+        {
+
+            ResponseJson resJson;
+
+            resJson = new ResponseJson();
+
+            try
+            {
+                Question model;
+
+                model = olsEni.Questions.SingleOrDefault(m => m.Q_Id == id);
+
+                if (null == model)
+                {
+                    resJson.message = "数据不存在！";
+                    return resJson;
+                }
+
+                model.Q_DifficultyCoefficient = (Byte)coefficient;
+                olsEni.Entry(model).State = EntityState.Modified;
+                olsEni.SaveChanges();
+
+                resJson.status = ResponseStatus.Success;
+                return resJson;
+            }
+            catch (Exception ex)
+            {
+                resJson.status = ResponseStatus.Error;
+                resJson.message = StaticHelper.GetExceptionMessage(ex);
+                return resJson;
             }
         }
     }

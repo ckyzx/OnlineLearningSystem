@@ -10,6 +10,7 @@
 /*global document: false, jQuery: false */
 
 (function ($) {
+
     var $jQval = $.validator,
         adapters,
         data_validation = "unobtrusiveValidation";

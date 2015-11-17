@@ -1,4 +1,4 @@
-﻿$(function () {
+﻿$(function() {
     $('.skin-minimal input').iCheck({
         checkboxClass: 'icheckbox-blue',
         radioClass: 'iradio-blue',
@@ -6,9 +6,9 @@
     });
 
     $list = $("#fileList"),
-	        $btn = $("#btn-star"),
-	        state = "pending",
-	        uploader;
+        $btn = $("#btn-star"),
+        state = "pending",
+        uploader;
 
     var uploader = WebUploader.create({
         auto: true,
@@ -31,21 +31,21 @@
         },
         fileVal: "upfile"
     });
-    uploader.on('fileQueued', function (file) {
+    uploader.on('fileQueued', function(file) {
         var $li = $(
-			'<div id="' + file.id + '" class="item">' +
-				'<!--div class="pic-box"><img></div-->' +
-				'<div class="info">' + file.name + '</div>' +
-				'<p class="state">等待上传...</p>' +
-			'</div>'
-		),
-		$img = $li.find('img');
+                '<div id="' + file.id + '" class="item">' +
+                '<!--div class="pic-box"><img></div-->' +
+                '<div class="info">' + file.name + '</div>' +
+                '<p class="state">等待上传...</p>' +
+                '</div>'
+            ),
+            $img = $li.find('img');
         $list.html($li);
 
         // 创建缩略图
         // 如果为非图片文件，可以不用调用此方法。
         // thumbnailWidth x thumbnailHeight 为 100 x 100
-        uploader.makeThumb(file, function (error, src) {
+        uploader.makeThumb(file, function(error, src) {
             if (error) {
                 $img.replaceWith('<span>不能预览</span>');
                 return;
@@ -54,13 +54,13 @@
             $img.attr('src', src);
         }, 100, 100);
     });
-    uploader.on('error', function (type) {
+    uploader.on('error', function(type) {
         alert(type);
     });
     // 文件上传过程中创建进度条实时显示。
-    uploader.on('uploadProgress', function (file, percentage) {
+    uploader.on('uploadProgress', function(file, percentage) {
         var $li = $('#' + file.id),
-			$percent = $li.find('.progress-box .sr-only');
+            $percent = $li.find('.progress-box .sr-only');
 
         // 避免重复创建
         if (!$percent.length) {
@@ -71,23 +71,23 @@
     });
 
     // 文件上传成功，给item添加成功class, 用样式标记上传成功。
-    uploader.on('uploadSuccess', function (file, response) {
+    uploader.on('uploadSuccess', function(file, response) {
 
         $('#' + file.id).addClass('upload-state-success').find(".state").text("已上传");
         $('#QuestionImport').attr('file-path', response.url).fadeIn();
     });
 
     // 文件上传失败，显示上传出错。
-    uploader.on('uploadError', function (file) {
+    uploader.on('uploadError', function(file) {
         $('#' + file.id).addClass('upload-state-error').find(".state").text("上传出错");
     });
 
     // 完成上传完了，成功或者失败，先删除进度条。
-    uploader.on('uploadComplete', function (file) {
+    uploader.on('uploadComplete', function(file) {
 
         $('#' + file.id).find('.progress-box').fadeOut();
     });
-    uploader.on('all', function (type) {
+    uploader.on('all', function(type) {
         if (type === 'startUpload') {
             state = 'uploading';
         } else if (type === 'stopUpload') {
@@ -103,7 +103,7 @@
         }
     });
 
-    $btn.on('click', function () {
+    $btn.on('click', function() {
         if (state === 'uploading') {
             uploader.stop();
         } else {
@@ -111,7 +111,7 @@
         }
     });
 
-    $('#QuestionImport').on('click', function () {
+    $('#QuestionImport').on('click', function() {
 
         var btn;
         var filePath, jqXHR;
@@ -119,18 +119,25 @@
         btn = $(this);
         filePath = btn.attr('file-path');
 
-        jqXHR = $.post('/Question/Import', { filePath: filePath }, function (data, textStatus, jqXHR) {
+        jqXHR = $.post('/Question/Import', {
+            filePath: filePath
+        }, function(data, textStatus, jqXHR) {
 
             if (1 == data.Status) {
 
                 alert('题库导入成功。');
                 layer_close();
+            }else if(0 == data.Status){
+
+                alert(data.Message);
             }
         }, 'json');
 
         jqXHR
-            //.success(function() { alert("second success"); })
-            .error(function() { alert("题库导入失败。"); })
+        //.success(function() { alert("second success"); })
+            .error(function() {
+                alert("题库导入失败。");
+            })
             //.complete(function() { alert("complete"); });
     });
 

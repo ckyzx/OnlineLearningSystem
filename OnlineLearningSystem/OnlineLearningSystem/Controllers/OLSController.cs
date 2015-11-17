@@ -8,6 +8,7 @@ using OnlineLearningSystem.Utilities;
 
 namespace OnlineLearningSystem.Controllers
 {
+    [AuthorizeFilter]
     public class OLSController : Controller
     {
 

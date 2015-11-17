@@ -11,6 +11,6 @@ namespace OnlineLearningSystem.Utilities
         public Int32 draw { get; set; }
         public Int32 recordsTotal { get; set; }
         public Int32 recordsFiltered { get; set; }
-        public List<Question> data { get; set; }
+        public Object data { get; set; }
     }
 }

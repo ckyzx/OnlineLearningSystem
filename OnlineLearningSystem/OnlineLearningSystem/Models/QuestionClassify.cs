@@ -13,6 +13,7 @@ namespace OnlineLearningSystem.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Int32 QC_AutoId { get; set; }
         public String QC_Name { get; set; }
+        public String QC_Level { get; set; }
         public String QC_Remark { get; set; }
         public DateTime QC_AddTime { get; set; }
         public Byte QC_Status { get; set; }

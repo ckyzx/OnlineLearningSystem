@@ -1,4 +1,34 @@
-﻿<!DOCTYPE HTML>
+﻿@using OnlineLearningSystem.Models;
+@{
+    User u;
+    List<Department> ds;
+    List<Role> rs;
+    List<Permission> ps;
+    String departmentNames, permissions;
+
+    //[禁用权限验证]
+    /*u = new User();
+    departmentNames = "";
+    permissions = "";*/
+    
+    u = (User)Session["User"];
+
+    ds = u.U_DepartmentList;
+    rs = u.U_RoleList;
+    ps = u.U_PermissionList;
+
+    departmentNames = "";
+    foreach(var d in ds){
+        departmentNames += d.D_Name + "，";
+    }
+    departmentNames = departmentNames.Substring(0, departmentNames.Length - 1);
+
+    permissions = "";
+    foreach(var p in ps){
+        permissions += p.P_Name + "/" + p.P_Controller + "/" + p.P_Action + ";";
+    }
+}
+<!DOCTYPE HTML>
 <html>
 <head>
 <meta charset="utf-8" />
@@ -23,31 +53,34 @@
 <script type="text/javascript" src="http://lib.h-ui.net/DD_belatedPNG_0.0.8a-min.js" ></script>
 <script>DD_belatedPNG.fix('*');</script>
 <![endif]-->
-<title>@ViewBag.Title - 在线学习系统</title>
+<title>在线学习系统</title>
 <meta name="keywords" content="" />
 <meta name="description" content="" />
 </head>
 <body>
 <header class="Hui-header cl">
     <a class="Hui-logo l" title="H-ui.admin v2.3" href="/">在线学习系统</a>
-    <span class="Hui-subtitle l">@ViewBag.Title</span>
+    <span class="Hui-subtitle l">@ViewBag.Subtitle</span>
 	<nav class="mainnav cl" id="Hui-nav">
 		<ul>
-            <li class="dropDown dropDown_hover"><a href="javascript:;" class="dropDown_A">我的桌面</a></li>
+            <li class="dropDown dropDown_hover"><a _href="/Panel/Index" href="javascript:;" class="dropDown_A desktop">我的桌面</a></li>
 		</ul>
 	</nav>
 	<ul class="Hui-userbar">
-		<li>张山</li>
-		<li class="dropDown dropDown_hover"><a href="#" class="dropDown_A">ZhangShan <i class="Hui-iconfont">&#xe6d5;</i></a>
+		<li id="User" 
+            user-name="@u.U_Name" 
+            department-Names="@departmentNames" 
+            permissions="@permissions">@u.U_Name&nbsp;&nbsp;@departmentNames</li>
+		<li class="dropDown dropDown_hover"><a href="#" class="dropDown_A">@u.U_LoginName<i class="Hui-iconfont">&#xe6d5;</i></a>
 			<ul class="dropDown-menu radius box-shadow">
+				<li><a href="#" class="show-page" title="修改密码" url="/User/ModifyPassword" width="500" height="400">修改密码</a></li>
 				<li><a href="#">个人信息</a></li>
-				<li><a href="#">切换账户</a></li>
-				<li><a href="#">退出</a></li>
+				<li><a href="/User/Logout">退出</a></li>
 			</ul>
 		</li>
-		<li id="Hui-msg">
+		<!--li id="Hui-msg">
             <a href="#" title="消息"><span class="badge badge-danger">1</span><i class="Hui-iconfont" style="font-size:18px">&#xe68a;</i></a>
-        </li>
+        </li-->
 		<li id="Hui-skin" class="dropDown right dropDown_hover"><a href="javascript:;" title="换肤"><i class="Hui-iconfont" style="font-size:18px">&#xe62a;</i></a>
 			<ul class="dropDown-menu radius box-shadow">
 				<li><a href="javascript:;" data-val="default" title="默认（黑色）">默认（黑色）</a></li>
@@ -72,7 +105,7 @@
 	<div id="Hui-tabNav" class="Hui-tabNav">
 		<div class="Hui-tabNav-wp">
 			<ul id="min_title_list" class="acrossTab cl">
-				<li class="active"><span title="我的桌面" data-href="welcome.html">我的桌面</span><em></em></li>
+				<li class="active"><span title="我的桌面" data-href="/Panel/Index">我的桌面</span><em></em></li>
 			</ul>
 		</div>
 		<div class="Hui-tabNav-more btn-group"><a id="js-tabNav-prev" class="btn radius btn-default size-S" href="javascript:;"><i class="Hui-iconfont">&#xe6d4;</i></a><a id="js-tabNav-next" class="btn radius btn-default size-S" href="javascript:;"><i class="Hui-iconfont">&#xe6d7;</i></a></div>
@@ -84,5 +117,7 @@
 <script type="text/javascript" src="@Url.Content("~/Content/js/H-ui.js")"></script> 
 <script type="text/javascript" src="@Url.Content("~/Content/js/H-ui.admin.js")"></script>
 <script type="text/javascript" src="@Url.Content("~/Content/js/custom.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Content/js/background-init.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Content/js/menu-init.js")"></script>
 </body>
 </html>
