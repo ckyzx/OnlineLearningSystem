@@ -189,9 +189,11 @@
     <Content Include="Content\js\de_DE.txt" />
     <Content Include="Content\js\H-ui.admin.js" />
     <Content Include="Content\js\H-ui.js" />
+    <Content Include="Content\js\Question\Edit.js" />
     <Content Include="Content\js\Question\List.js" />
     <Content Include="Content\js\Question\ListNoControl.js" />
     <Content Include="Content\js\Question\ListSelect.js" />
+    <Content Include="Content\js\Role\Edit.js" />
     <Content Include="Content\js\Role\List.js" />
     <Content Include="Content\js\Role\ListLocal.js" />
     <Content Include="Content\js\User\Edit.js" />
@@ -822,7 +824,6 @@
     <Content Include="Views\ExaminationPaperTemplate\ListStudent.cshtml" />
     <Content Include="Views\User\Login.cshtml" />
     <Content Include="Views\User\ModifyPassword.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\Answer.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

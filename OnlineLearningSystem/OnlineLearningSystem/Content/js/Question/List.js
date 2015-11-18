@@ -1,13 +1,30 @@
 ﻿$(function() {
 
     var table;
+    var status;
+
+    QueryString.Initial();
+    status = QueryString.GetValue('status');
+    status = undefined == status ? 1 :status;
+
+    // 显示“试题缓存导入面板”
+    if(4 == status){
+
+        $('#QuestionImportPanel').show();
+    }else{
+
+        $('#FunctionPanel').show();
+    }
 
     table = $('.question-table').DataTable({
         "processing": true,
         "serverSide": true,
         "ajax": {
             "url": "/Question/ListDataTablesAjax",
-            "type": "POST"
+            "type": "POST",
+            "data": {
+                status: status
+            }
         },
         "stateSave": false,
         "lengthChange": false,
@@ -83,6 +100,9 @@
                     row.find('a.delete').show();
                     break;
                 case 3:
+                    break;
+                case 4:
+                    row.find('a.edit').show();
                     break;
                 default:
                     break;
@@ -230,6 +250,44 @@
         ShowPageWithSize('导入试题', '/Question/DocxUploadAndImport', 800, 300);
     });
 
+    $('#CacheClearBtn').on('click',function(){
+        
+        $.post('/Question/CacheClear', {}, function(data) {
+
+                if (1 == data.status) {
+
+                    alert('缓存清除成功。');
+                    location.href = '/Question/List';
+                } else if (0 == data.status) {
+
+                    alert(data.message);
+                }
+            }, 'json')
+            .error(function() {
+
+                alert('请求返回错误！');
+            });
+    });
+
+    $('#CacheImportBtn').on('click',function(){
+
+        $.post('/Question/CacheImport', {}, function(data) {
+
+                if (1 == data.status) {
+
+                    alert('缓存导入成功。');
+                    location.href = '/Question/List';
+                } else if (0 == data.status) {
+
+                    alert(data.message);
+                }
+            }, 'json')
+            .error(function() {
+
+                alert('请求返回错误！');
+            });
+    });
+
     // 初始化难度系数设置框
     var options;
 
@@ -265,6 +323,7 @@
                 alert('请求返回错误！');
             });
     });
+
 });
 
 var difficultyCoefficient;

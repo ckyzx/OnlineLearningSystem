@@ -96,7 +96,7 @@ $(function() {
                 if(refresh){
                 	iframe_box.find(".show_iframe").hide().eq(bStopIndex).show().find("iframe").attr("src", _href);
                 }else{
-                	iframe_box.find(".show_iframe").hide().eq(bStopIndex).show().find("iframe")
+                	iframe_box.find(".show_iframe").hide().eq(bStopIndex).show().find("iframe");
                 }
             }
         }
@@ -109,6 +109,7 @@ $(function() {
     };
 
     function creatIframe(href, titleName) {
+
         var topWindow = $(window.parent.document);
         var show_nav = topWindow.find('#min_title_list');
         show_nav.find('li').removeClass("active");
@@ -118,8 +119,13 @@ $(function() {
         var iframeBox = iframe_box.find('.show_iframe');
         iframeBox.hide();
         iframe_box.append('<div class="show_iframe"><div class="loading"></div><iframe frameborder="0" src=' + href + '></iframe></div>');
+        
         var showBox = iframe_box.find('.show_iframe:visible');
-        showBox.find('iframe').attr("src", href).load(function() {
+        var iframe;
+
+        iframe = showBox.find('iframe');
+        iframe.get(0).contentWindow.name = href;
+        iframe.attr("src", href).load(function() {
             showBox.find('.loading').hide();
         });
     }

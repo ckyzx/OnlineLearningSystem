@@ -10,6 +10,7 @@ namespace OnlineLearningSystem.Utilities
         Unset = 0,
         Available = 1,
         Recycle = 2,
-        Delete = 3
+        Delete = 3,
+        Cache = 4
     }
 }

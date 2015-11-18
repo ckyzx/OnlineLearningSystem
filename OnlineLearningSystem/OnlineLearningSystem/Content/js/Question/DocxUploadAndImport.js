@@ -74,7 +74,7 @@
     uploader.on('uploadSuccess', function(file, response) {
 
         $('#' + file.id).addClass('upload-state-success').find(".state").text("已上传");
-        $('#QuestionImport').attr('file-path', response.url).fadeIn();
+        $('#DocxImport').attr('file-path', response.url).fadeIn();
     });
 
     // 文件上传失败，显示上传出错。
@@ -111,7 +111,7 @@
         }
     });
 
-    $('#QuestionImport').on('click', function() {
+    $('#DocxImport').on('click', function() {
 
         var btn;
         var filePath, jqXHR;
@@ -126,18 +126,24 @@
             if (1 == data.Status) {
 
                 alert('题库导入成功。');
-                layer_close();
-            }else if(0 == data.Status){
+
+                if (parent.name.toLowerCase().indexOf('list') != -1) {
+
+                    parent.location.href = '/Question/List?status=4';
+                } else {
+                    location.href = '/Question/List?status=4';
+                }
+            } else if (0 == data.Status) {
 
                 alert(data.Message);
             }
         }, 'json');
 
         jqXHR
-        //.success(function() { alert("second success"); })
             .error(function() {
                 alert("题库导入失败。");
             })
+            //.success(function() { alert("second success"); })
             //.complete(function() { alert("complete"); });
     });
 

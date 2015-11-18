@@ -30,9 +30,10 @@ namespace OnlineLearningSystem.Utilities
                 List<DocxParagraph> docxPara;
                 const String qTypes = "单选题；多选题；判断题；公文改错题；计算题；案例分析题；问答题；";
                 DateTime now;
-                Regex typeRegex, contentRegex1, contentRegex2, optionalAnswerRegex, modelAnswerRegex;
+                Regex typeRegex, contentRegex1, contentRegex2, optionalAnswerRegex, modelAnswerRegex, difficultyCoefficientRegex;
                 String text, qType, qClassify, qContent, qOptionalAnswer, qModelAnswer;
                 Int32 i1, i2, len, rowCount, id, id1;
+                Byte difficultyCoefficient;
                 Boolean isContent;
                 List<Question> qs;
                 List<QuestionClassify> qcs;
@@ -47,6 +48,7 @@ namespace OnlineLearningSystem.Utilities
                 contentRegex2 = new Regex(@"^\s*\(.+\)|^\s*（.+）");
                 optionalAnswerRegex = new Regex(@"^\s*[a-zA-Z]{1}[\.．]{1}");
                 modelAnswerRegex = new Regex(@"^\s*答案：|^\s*答案:|^\s*【答】");
+                difficultyCoefficientRegex = new Regex(@"^难度系数：|难度系数:");
 
                 qType = "";
                 qClassify = "";
@@ -63,6 +65,8 @@ namespace OnlineLearningSystem.Utilities
                 id = 0 == rowCount ? 0 : olsEni.Questions.Max(model => model.Q_AutoId);
                 rowCount = olsEni.QuestionClassifies.Count();
                 id1 = 0 == rowCount ? 0 : olsEni.QuestionClassifies.Max(model => model.QC_AutoId);
+
+                difficultyCoefficient = 0;
 
                 foreach (var para in docxPara)
                 {
@@ -98,11 +102,12 @@ namespace OnlineLearningSystem.Utilities
                                     Q_Id = id,
                                     Q_Type = qType,
                                     QC_Id = id1,
+                                    Q_DifficultyCoefficient = difficultyCoefficient,
                                     Q_Content = qContent,
                                     Q_OptionalAnswer = qOptionalAnswer,
                                     Q_ModelAnswer = qModelAnswer,
                                     Q_AddTime = now,
-                                    Q_Status = 1
+                                    Q_Status = 4
                                 });
 
                                 qContent = "";
@@ -126,11 +131,12 @@ namespace OnlineLearningSystem.Utilities
                                     Q_Id = id,
                                     Q_Type = qType,
                                     QC_Id = id1,
+                                    Q_DifficultyCoefficient = difficultyCoefficient,
                                     Q_Content = qContent,
                                     Q_OptionalAnswer = qOptionalAnswer,
                                     Q_ModelAnswer = qModelAnswer,
                                     Q_AddTime = now,
-                                    Q_Status = 1
+                                    Q_Status = 4
                                 });
 
                                 qContent = "";
@@ -199,6 +205,16 @@ namespace OnlineLearningSystem.Utilities
                             return dic;
                         }
 
+                        continue;
+                    }
+
+                    #endregion
+
+                    #region 判断是否为难度系数行
+
+                    if (difficultyCoefficientRegex.IsMatch(text))
+                    {
+                        difficultyCoefficient = Convert.ToByte(difficultyCoefficientRegex.Replace(text, ""));
                         continue;
                     }
 
@@ -337,11 +353,12 @@ namespace OnlineLearningSystem.Utilities
                         Q_Id = id,
                         Q_Type = qType,
                         QC_Id = id1,
+                        Q_DifficultyCoefficient = difficultyCoefficient,
                         Q_Content = qContent,
                         Q_OptionalAnswer = qOptionalAnswer,
                         Q_ModelAnswer = qModelAnswer,
                         Q_AddTime = now,
-                        Q_Status = 1
+                        Q_Status = 4
                     });
 
                     qContent = "";
@@ -415,7 +432,7 @@ namespace OnlineLearningSystem.Utilities
 
         }
 
-        public DataTablesResponse ListDataTablesAjax(DataTablesRequest dtRequest)
+        public DataTablesResponse ListDataTablesAjax(Byte status, DataTablesRequest dtRequest)
         {
 
             DataTablesResponse dtResponse;
@@ -456,7 +473,7 @@ namespace OnlineLearningSystem.Utilities
                     || model.Q_Content.Contains(dtRequest.SearchValue)
                     || model.Q_OptionalAnswer.Contains(dtRequest.SearchValue)
                     || model.Q_ModelAnswer.Contains(dtRequest.SearchValue))
-                    && model.Q_Status != (Byte)Status.Delete)
+                    && model.Q_Status == status)
                 .Select(model => new
                 {
                     Q_Id = model.Q_Id,
@@ -716,6 +733,81 @@ namespace OnlineLearningSystem.Utilities
 
                 resJson.status = ResponseStatus.Success;
                 return resJson;
+            }
+            catch (Exception ex)
+            {
+                resJson.status = ResponseStatus.Error;
+                resJson.message = StaticHelper.GetExceptionMessage(ex);
+                return resJson;
+            }
+        }
+
+        public ResponseJson CacheImport()
+        {
+
+            ResponseJson resJson;
+
+            resJson = new ResponseJson();
+
+            try
+            {
+
+                List<Question> qs;
+
+                qs = olsEni.Questions.Where(m => m.Q_Status == (Byte)Status.Cache).ToList();
+                foreach (var q in qs)
+                {
+                    q.Q_Status = (Byte)Status.Available;
+                    olsEni.Entry(q).State = EntityState.Modified;
+                }
+
+                if (olsEni.SaveChanges() == 0)
+                {
+                    resJson.status = ResponseStatus.Error;
+                    resJson.message = "缓存导入失败。";
+                    return resJson;
+                }
+
+                resJson.status = ResponseStatus.Success;
+                return resJson;
+
+            }
+            catch (Exception ex)
+            {
+                resJson.status = ResponseStatus.Error;
+                resJson.message = StaticHelper.GetExceptionMessage(ex);
+                return resJson;
+            }
+        }
+
+        internal ResponseJson CacheClear()
+        {
+
+            ResponseJson resJson;
+
+            resJson = new ResponseJson();
+
+            try
+            {
+
+                List<Question> qs;
+
+                qs = olsEni.Questions.Where(m => m.Q_Status == (Byte)Status.Cache).ToList();
+                foreach (var q in qs)
+                {
+                    olsEni.Entry(q).State = EntityState.Deleted;
+                }
+
+                if (olsEni.SaveChanges() == 0)
+                {
+                    resJson.status = ResponseStatus.Error;
+                    resJson.message = "缓存清除失败。";
+                    return resJson;
+                }
+
+                resJson.status = ResponseStatus.Success;
+                return resJson;
+
             }
             catch (Exception ex)
             {

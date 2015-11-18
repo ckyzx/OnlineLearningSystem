@@ -35,14 +35,14 @@ namespace OnlineLearningSystem.Controllers
         // POST: /Question/ListDataTablesAjax
 
         [Description("查询试题")]
-        public JsonResult ListDataTablesAjax()
+        public JsonResult ListDataTablesAjax(Byte status = 1)
         {
 
             DataTablesRequest dtRequest;
             DataTablesResponse dtResponse;
 
             dtRequest = GetDataTablesRequest();
-            dtResponse = um.ListDataTablesAjax(dtRequest);
+            dtResponse = um.ListDataTablesAjax(status, dtRequest);
 
             return Json(dtResponse, JsonRequestBehavior.DenyGet);
         }
@@ -91,6 +91,7 @@ namespace OnlineLearningSystem.Controllers
 
         [Description("添加试题")]
         [HttpPost]
+        [ValidateInput(false)]
         public ActionResult Create(Question m)
         {
 
@@ -132,6 +133,7 @@ namespace OnlineLearningSystem.Controllers
 
         [Description("编辑试题")]
         [HttpPost]
+        [ValidateInput(false)]
         public ActionResult Edit(Question m)
         {
 
@@ -202,6 +204,34 @@ namespace OnlineLearningSystem.Controllers
             ResponseJson resJson;
 
             resJson = um.SetDifficultyCoefficient(id, coefficient);
+
+            return Json(resJson, JsonRequestBehavior.AllowGet);
+        }
+
+        //
+        // GET: /Question/CacheImport
+
+        [Description("缓存导入")]
+        public JsonResult CacheImport()
+        {
+
+            ResponseJson resJson;
+
+            resJson = um.CacheImport();
+
+            return Json(resJson, JsonRequestBehavior.AllowGet);
+        }
+
+        //
+        // GET: /Question/CacheClear
+
+        [Description("缓存清除")]
+        public JsonResult CacheClear()
+        {
+
+            ResponseJson resJson;
+
+            resJson = um.CacheClear();
 
             return Json(resJson, JsonRequestBehavior.AllowGet);
         }
