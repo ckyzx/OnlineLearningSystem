@@ -1,5 +1,5 @@
-$(function(){
-	
+$(function() {
+
     var valueSelector;
 
     valueSelector = $('.question-table').attr('value-selector');
@@ -60,8 +60,16 @@ $(function(){
         hidden.val(questions);
     });
 
+    initQuestionSelectTable();
+
+});
+
+function initQuestionSelectTable() {
 
     var table;
+    var valueSelector;
+
+    valueSelector = $('.question-table').attr('value-selector');
 
     table = $('.question-table').DataTable({
         "processing": true,
@@ -136,5 +144,4 @@ $(function(){
             SetDataTablesChecked('.question-table', valueSelector);
         }
     });
-
-});
+}

@@ -391,19 +391,24 @@ namespace OnlineLearningSystem.Utilities
             try
             {
 
+                DateTime now;
                 Int32 rowCount, epId;
                 ExaminationPaperTemplate ept;
                 ExaminationPaper ep;
+                List<ExaminationPaperTemplateQuestion> eptqs;
+                ExaminationPaperQuestion epq;
+
+                now = DateTime.Now;
 
                 ept = Get(id);
 
                 switch (ept.EPT_PaperTemplateStatus)
                 {
-                    case 0:
+                    case 0: // 考试未开始
 
                         resJson.message = "考试未开始。";
                         break;
-                    case 1:
+                    case 1: // 考试进行中
 
                         ep =
                             olsEni
@@ -429,7 +434,7 @@ namespace OnlineLearningSystem.Utilities
                                 EP_UserName = "",
                                 EP_Score = 0,
                                 EP_Remark = "",
-                                EP_AddTime = DateTime.Now,
+                                EP_AddTime = now,
                                 EP_Status = 0
                             };
 
@@ -454,7 +459,7 @@ namespace OnlineLearningSystem.Utilities
                         resJson.message = "考试已结束。";
 
                         break;
-                    //case 2:
+                    //case 2:// 考试已结束
                     default:
 
                         resJson.message = "考试已结束。";

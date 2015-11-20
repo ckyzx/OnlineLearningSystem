@@ -64,7 +64,6 @@ namespace OnlineLearningSystem.Models
         [DisplayName("试卷模板")]
         public String ET_PaperTemplates { get; set; }
 
-        [NotMapped]
         [DisplayName("试题")]
         public String ET_Questions { get; set; }
 

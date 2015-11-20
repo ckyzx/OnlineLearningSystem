@@ -76,6 +76,7 @@
     <Compile Include="Content\lib\ueditor\1.4.3\net\App_Code\PathFormater.cs" />
     <Compile Include="Content\lib\ueditor\1.4.3\net\App_Code\UploadHandler.cs" />
     <Compile Include="Controllers\ActionPermissionController.cs" />
+    <Compile Include="Controllers\ExaminationPaperController.cs" />
     <Compile Include="Controllers\PanelController.cs" />
     <Compile Include="Controllers\DutyController.cs" />
     <Compile Include="Controllers\ExaminationTaskTemplateController.cs" />
@@ -86,7 +87,7 @@
     <Compile Include="Controllers\DepartmentController.cs" />
     <Compile Include="Controllers\PermissionCategoryController.cs" />
     <Compile Include="Controllers\ExaminationTaskController.cs" />
-    <Compile Include="Controllers\ExaminationPaperTemplate.cs" />
+    <Compile Include="Controllers\ExaminationPaperTemplateController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -147,6 +148,7 @@
     <Content Include="Content\html\layer_close.htm" />
     <Content Include="Content\html\parent_reload.htm" />
     <Content Include="Content\html\goto_login.htm" />
+    <Content Include="Content\html\prompt_redirect.htm" />
     <Content Include="Content\js\background-init.js" />
     <Content Include="Content\js\custom-enum.js" />
     <Content Include="Content\js\custom-page-edit.js" />
@@ -155,6 +157,7 @@
     <Content Include="Content\js\Duty\List.js" />
     <Content Include="Content\js\ExaminationPaperTemplate\Edit.js" />
     <Content Include="Content\js\ExaminationPaperTemplate\ListStudent.js" />
+    <Content Include="Content\js\ExaminationPaper\Paper.js" />
     <Content Include="Content\js\ExaminationTaskTemplate\Edit.js" />
     <Content Include="Content\js\ExaminationTask\Edit.js" />
     <Content Include="Content\js\menu-init.js" />
@@ -209,6 +212,14 @@
     <Content Include="Content\lib\datatables\1.10.9\jquery.dataTables.js" />
     <Content Include="Content\lib\datatables\1.10.9\jquery.dataTables.min.js" />
     <Content Include="Content\lib\DD_belatedPNG_0.0.8a-min.js" />
+    <Content Include="Content\lib\swiper_3.1.0\css\swiper.css" />
+    <Content Include="Content\lib\swiper_3.1.0\css\swiper.min.css" />
+    <Content Include="Content\lib\swiper_3.1.0\js\swiper.jquery.js" />
+    <Content Include="Content\lib\swiper_3.1.0\js\swiper.jquery.min.js" />
+    <Content Include="Content\lib\swiper_3.1.0\js\swiper.jquery.umd.js" />
+    <Content Include="Content\lib\swiper_3.1.0\js\swiper.jquery.umd.min.js" />
+    <Content Include="Content\lib\swiper_3.1.0\js\swiper.js" />
+    <Content Include="Content\lib\swiper_3.1.0\js\swiper.min.js" />
     <Content Include="Content\lib\html5.js" />
     <Content Include="Content\lib\Hui-iconfont\1.0.1\demo.html" />
     <Content Include="Content\lib\Hui-iconfont\1.0.1\iconfont.css" />
@@ -224,9 +235,14 @@
     <Content Include="Content\lib\icheck\purple.png" />
     <Content Include="Content\lib\icheck\red.png" />
     <Content Include="Content\lib\icheck\yellow.png" />
+    <Content Include="Content\lib\jquery-tmpl\jquery.tmpl.js" />
+    <Content Include="Content\lib\jquery-tmpl\jquery.tmpl.min.js" />
+    <Content Include="Content\lib\jquery-tmpl\jquery.tmplPlus.js" />
+    <Content Include="Content\lib\jquery-tmpl\jquery.tmplPlus.min.js" />
     <Content Include="Content\lib\jquery\1.9.1\jquery.js" />
     <Content Include="Content\lib\jquery\1.9.1\jquery.min.js" />
     <Content Include="Content\lib\js.datetime.js" />
+    <Content Include="Content\lib\js.request.js" />
     <Content Include="Content\lib\layer\1.9.3\demo.html" />
     <Content Include="Content\lib\layer\1.9.3\extend\layer.ext.js" />
     <Content Include="Content\lib\layer\1.9.3\layer.js" />
@@ -736,6 +752,9 @@
   <ItemGroup>
     <None Include="Content\images\gq\Thumbs.db" />
     <None Include="Content\images\Thumbs.db" />
+    <None Include="Content\lib\swiper_3.1.0\js\maps\swiper.jquery.min.js.map" />
+    <None Include="Content\lib\swiper_3.1.0\js\maps\swiper.jquery.umd.min.js.map" />
+    <None Include="Content\lib\swiper_3.1.0\js\maps\swiper.min.js.map" />
     <None Include="Content\lib\Hui-iconfont\1.0.1\iconfont.eot" />
     <None Include="Content\lib\Hui-iconfont\1.0.1\iconfont.svg" />
     <None Include="Content\lib\Hui-iconfont\1.0.1\iconfont.ttf" />
@@ -824,6 +843,7 @@
     <Content Include="Views\ExaminationPaperTemplate\ListStudent.cshtml" />
     <Content Include="Views\User\Login.cshtml" />
     <Content Include="Views\User\ModifyPassword.cshtml" />
+    <Content Include="Views\ExaminationPaper\Paper.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

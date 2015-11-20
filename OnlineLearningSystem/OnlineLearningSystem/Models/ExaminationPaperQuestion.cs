@@ -15,6 +15,8 @@ namespace OnlineLearningSystem.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Int32 EPQ_AutoId { get; set; }
 
+        public Int32 EPTQ_Id { get; set; }
+
         public Int32 EP_Id { get; set; }
 
         public String EPQ_Answer { get; set; }

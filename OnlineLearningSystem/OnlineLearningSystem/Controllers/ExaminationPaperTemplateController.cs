@@ -76,6 +76,7 @@ namespace OnlineLearningSystem.Controllers
         //
         // GET: /ExaminationPaperTemplate/Paper
 
+        [Description("进入考试")]
         public ActionResult Paper(Int32 id)
         {
 
@@ -87,10 +88,10 @@ namespace OnlineLearningSystem.Controllers
 
             if (ResponseStatus.Success == resJson.status)
             {
-                return RedirectToAction("Paper", "ExaminationPaper", new { id = resJson.addition });
+                return RedirectToAction("Paper", "ExaminationPaper", new { epId = resJson.addition });
             }
 
-            return RedirectToAction("ListStudent");
+            return Redirect("/Content/html/prompt_redirect.htm?prompt=" + resJson.message + "&close=1");
         }
 
         //

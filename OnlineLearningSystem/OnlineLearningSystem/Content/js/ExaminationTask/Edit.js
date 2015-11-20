@@ -133,4 +133,35 @@ $(function() {
         setNodeChecked(ztree, nodes, departmentIds, userIds);
     });
 
+    $('#ET_AutoType').on('change', function() {
+
+        var container;
+        var table;
+
+        container = $('#QuestionListSelectContainer');
+
+        table = $('.question-table').DataTable();
+        table.destroy();
+
+        if ($(this).val() != 0) {
+
+            container.show();
+
+            initQuestionSelectTable();
+
+        }else{
+            container.hide();
+        }
+    });
+
+    $('#ET_AutoType').change();
 });
+
+var AutoType;
+
+AutoType = {
+    0: '手动',
+    1: '每日',
+    2: '每周',
+    3: '每月'
+};

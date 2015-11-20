@@ -5,6 +5,7 @@ using System.Data;
 using System.Web;
 using System.Web.Mvc;
 using OnlineLearningSystem.Models;
+using Newtonsoft.Json;
 
 namespace OnlineLearningSystem.Utilities
 {
@@ -194,5 +195,49 @@ namespace OnlineLearningSystem.Utilities
             }
         }
 
+        public ResponseJson GetQuestions(Int32 epId, Int32 uId)
+        {
+
+            ResponseJson resJson;
+
+            resJson = new ResponseJson();
+
+            try
+            {
+
+                ExaminationPaper ep;
+                Int32 eptId;
+                List<ExaminationPaperQuestion> epqs;
+                List<ExaminationPaperTemplateQuestion> eptqs;
+
+                ep = olsEni.ExaminationPapers.SingleOrDefault(m => m.EP_Id == epId && m.EP_UserId == uId);
+
+                if (null == ep)
+                {
+                    resJson.status = ResponseStatus.Error;
+                    resJson.message = "试卷不存在。";
+                    return resJson;
+                }
+
+                eptId = ep.EPT_Id;
+
+                eptqs =
+                    olsEni
+                    .ExaminationPaperTemplateQuestions
+                    .Where(m => m.EPT_Id == eptId)
+                    .ToList();
+                epqs = olsEni.ExaminationPaperQuestions.Where(m => m.EP_Id == epId).ToList();
+
+                resJson.status = ResponseStatus.Success;
+                resJson.data = JsonConvert.SerializeObject(new Object[] { eptqs, epqs });
+                return resJson;
+            }
+            catch (Exception ex)
+            {
+                resJson.status = ResponseStatus.Error;
+                resJson.message = StaticHelper.GetExceptionMessage(ex);
+                return resJson;
+            }
+        }
     }
 }

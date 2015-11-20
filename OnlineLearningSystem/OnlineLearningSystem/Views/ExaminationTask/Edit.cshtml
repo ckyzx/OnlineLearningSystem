@@ -78,7 +78,7 @@
             <label class="form-label col-2">
                 @Html.LabelFor(m => m.ET_Attendee)
             </label>
-            <div class="formControls col-2">
+            <div class="formControls col-10">
                 <ul id="DepartmentsAndUsers" class="ztree" value='@ViewBag.DepartmentsAndUsers'>
                 </ul>
                 @Html.HiddenFor(m => m.ET_ParticipatingDepartment)
@@ -125,6 +125,44 @@
                 @Html.ValidationMessageFor(m => m.ET_TimeSpan)
             </div>
         </div>
+        <div id="QuestionListSelectContainer" class="row cl" style="display:none;">
+            <label class="form-label col-2">
+                @Html.LabelFor(m => m.ET_Questions)
+            </label>
+            <div class="formControls col-10">
+                <table class="table table-border table-bordered table-bg table-hover table-sort question-table" 
+                       value-selector="#ET_Questions">
+                    <thead>
+                        <tr>
+                            <th class="text-c">
+                                <input type="checkbox" name="" value="all" />
+                            </th>
+                            <th>
+                                ID
+                            </th>
+                            <th>
+                                题型
+                            </th>
+                            <th>
+                                分类
+                            </th>
+                            <th>
+                                添加时间
+                            </th>
+                            <th>
+                                试题
+                            </th>
+                            <th>
+                                难度系数
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+                @Html.HiddenFor(m => m.ET_Questions)
+            </div>
+        </div>
         <div class="row cl">
             <label class="form-label col-2">
                 @Html.LabelFor(m => m.ET_Remark)
@@ -146,4 +184,7 @@
 <link type="text/css" rel="Stylesheet" href="@Url.Content("/Content/lib/zTree_v3/css/metroStyle/metroStyle.css")" />
 <script type="text/javascript" src="@Url.Content("/Content/lib/zTree_v3/js/jquery.ztree.core-3.5.min.js")"></script>
 <script type="text/javascript" src="@Url.Content("/Content/lib/zTree_v3/js/jquery.ztree.excheck-3.5.min.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Content/lib/js.datetime.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Content/lib/datatables/1.10.9/jquery.dataTables.min.js")"></script>
 <script type="text/javascript" src="@Url.Content("/Content/js/ExaminationTask/Edit.js")"></script>
+<script type="text/javascript" src="@Url.Content("/Content/js/Question/ListSelect.js")"></script>

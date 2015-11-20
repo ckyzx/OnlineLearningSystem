@@ -1,0 +1,39 @@
+﻿<html>
+
+<head>
+    <title></title>
+    <script type="text/javascript" src="/Content/lib/jquery/1.9.1/jquery.min.js"></script> 
+    <script type="text/javascript" src="/Content/lib/layer/1.9.3/layer.js"></script> 
+    <script type="text/javascript" src="/Content/js/H-ui.js"></script> 
+    <script type="text/javascript" src="/Content/js/H-ui.admin.js"></script>
+    <script type="text/javascript" src="/Content/lib/js.request.js"></script>
+    <script type="text/javascript">
+    var prompt, redirect, close;
+
+    QueryString.Initial();
+
+    prompt = QueryString.GetValue('prompt');
+    prompt = undefined == prompt ? false : decodeURI(prompt);
+
+    redirect = QueryString.GetValue('redirect');
+    redirect = undefined == redirect ? false : redirect;
+
+    close = QueryString.GetValue('close');
+    close = undefined == close ? false : close;
+
+    if (prompt) {
+        alert(prompt);
+    }
+
+    if (redirect) {
+        location.href = redirect;
+    } else if (close) {
+        layer_close();
+    }
+    </script>
+</head>
+
+<body>
+</body>
+
+</html>
