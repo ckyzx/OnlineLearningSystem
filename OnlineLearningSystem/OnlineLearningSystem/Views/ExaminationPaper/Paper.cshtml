@@ -2,54 +2,53 @@
     ViewBag.Title = "试卷";
     Layout = "~/Views/Shared/_PageEdit.cshtml";
 }
-<div id="QuestionContainer" class="swiper-container">
-    <div class="swiper-wrapper">
+<div id="ExaminationPaperContainer">
+    <div id="TypeList">
+        <ul class="Huifold">
+        </ul>
     </div>
-    <div class="swiper-scrollbar">
+    <div id="QuestionList">
     </div>
 </div>
 <link type="text/css" rel="Stylesheet" href="@Url.Content("/Content/lib/swiper_3.1.0/css/swiper.css")" />
-<style>
-    body
-    {
-        background: #eee;
-        font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
-        font-size: 14px;
-        color: #000;
-        margin: 0;
-        padding: 0;
-    }
-    .swiper-container
-    {
-        width: 250px;
-        height: 100%;
-        margin: 0;
-    }
-    .swiper-slide
-    {
-        text-align: center;
-        font-size: 18px;
-        background: #fff;
-        width: 250px; /* Center slide text vertically */
-        height: 32px;
-        display: -webkit-box;
-        display: -ms-flexbox;
-        display: -webkit-flex;
-        display: flex;
-        -webkit-box-pack: center;
-        -ms-flex-pack: center;
-        -webkit-justify-content: center;
-        justify-content: center;
-        -webkit-box-align: center;
-        -ms-flex-align: center;
-        -webkit-align-items: center;
-        align-items: center;
-    }
-</style>
 <script type="text/javascript" src="@Url.Content("/Content/lib/jquery-tmpl/jquery.tmpl.min.js")"></script>
 <script type="text/javascript" src="@Url.Content("/Content/lib/swiper_3.1.0/js/swiper.min.js")"></script>
 <script type="text/javascript" src="@Url.Content("/Content/lib/js.request.js")"></script>
 <script type="text/javascript" src="@Url.Content("/Content/js/ExaminationPaper/Paper.js")"></script>
-<script id="QuestionTmpl" type="text/x-jquery-tmpl">
-    <div class="swiper-slide">${type}</div>
+<script id="TypeItemTmpl" type="text/x-jquery-tmpl">
+    <li class="item" index="${i}">
+        <h4>${type}<b>+</b></h4>
+        <div class="info">
+            {{each questions}}
+            <div class="info-item"><a href="javascript:void(0);" index="${$value.i}">${$value.i}</a></div>
+            {{/each}}
+        </div>
+    </li>
+</script>
+<script id="QuestionListTmpl" type="text/x-jquery-tmpl">
+    <div id="Questions_${i}" class="swiper-container hide" index="${i}">
+        <div class="swiper-wrapper">
+        {{tmpl(questions) '#QuestionsTmpl'}}
+        </div>
+        <div class="swiper-pagination"></div>
+        <div class="swiper-button-container">
+            <button class="btn btn-primary radius size-S swiper-button-question swiper-button-prev-question ml-80 mr-10" type="button">上一题</button>
+            <button class="btn btn-primary radius size-S swiper-button-question swiper-button-next-question" type="button">下一题</button>
+        </div>
+    </div>
+</script>
+<script id="QuestionsTmpl" type="text/x-jquery-tmpl">
+    <div class="swiper-slide">
+        <div class="question">
+            <div class="col-12 cl question-content">
+                <div class="col-8"><span class="tip">题</span>{{html EPTQ_Content}}</div>
+            </div>
+            <div class="col-12 cl question-answer">
+                <div class="col-8">
+                    <span class="tip">答</span><br />
+                    <textarea class="textarea" cols="20" rows="2"></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
 </script>

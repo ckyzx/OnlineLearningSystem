@@ -1,9 +1,12 @@
 $(function() {
 
     var epId;
+    var swipers;
 
     QueryString.Initial();
     epId = QueryString.GetValue('epId');
+
+    swipers = {};
 
     if (undefined == epId) {
 
@@ -36,13 +39,20 @@ $(function() {
 
     function renderQuestions(questions, answers) {
 
-        var ary, obj;
+        var ary;
+        var obj;
+        var i1, i2;
+        var questionContainers;
 
         ary = [];
+        i1 = 0;
+        i2 = 1;
 
         for (var i = 0; i < questions.length; i++) {
 
             q = questions[i];
+            q.EPTQ_Content = q.EPTQ_Content.replace(/\\r\\n/g, '<br />');
+
             a = getAnswer(answers, q.EPTQ_Id);
 
             if (undefined != a) {
@@ -54,29 +64,92 @@ $(function() {
             obj = duplicateType(ary, q.EPTQ_Type);
             if (undefined == obj) {
 
-                ary.push({
+                obj = {
+                    i: i1,
                     type: q.EPTQ_Type,
                     questions: []
-                });
-            } else {
+                };
+                ary.push(obj);
 
-                obj.questions.push(q);
+                i1 += 1;
+                i2 = 1;
             }
+
+            q.i = i2;
+            obj.questions.push(q);
+
+            i2 += 1;
         }
 
-        $('#QuestionTmpl').tmpl(ary).appendTo('#QuestionContainer .swiper-wrapper');
+        $('#TypeItemTmpl').tmpl(ary).appendTo('#TypeList ul');
+        $('#QuestionListTmpl').tmpl(ary).appendTo('#QuestionList');
 
+        /* 5个参数顺序不可打乱，分别是：响应区,隐藏显示的内容,速度,类型,事件 */
+        $.Huifold("#TypeList ul .item h4", "#TypeList ul .item .info", "fast", 1, "click");
 
-        var swiper = new Swiper('.swiper-container', {
-            scrollbar: '.swiper-scrollbar',
-            scrollbarHide: true,
-            slidesPerView: 'auto',
-            centeredSlides: true,
-            spaceBetween: 10,
-            grabCursor: true,
-            direction: 'vertical'
+        questionContainers = $('div[id^="Questions_"]');
+        questionContainers.eq(0).addClass('question-container-active').show();
+        swipers[0] = initSwiper(questionContainers.eq(0).get(0));
+
+        $('#TypeList')
+            .on('click', '.info-item a', function() {
+
+                var a, li;
+                var i1, i2;
+
+                a = $(this);
+                li = a.parentsUntil('ul').last();
+
+                i1 = li.attr('index');
+                i2 = a.attr('index');
+
+                $('#Questions_' + i1).find('.bullet-' + i2).click();
+            })
+            .on('click', 'li.item', function() {
+
+                var li;
+                var i, i1;
+                var oldContainer;
+
+                li = $(this);
+                i = li.attr('index');
+
+                // 销毁并隐藏
+                oldContainer = $('.question-container-active');
+                i1 = oldContainer.attr('index');
+
+                if(i == i1){
+                    return;
+                }
+
+                if(swipers[i1] != null){
+
+                    swipers[i1].destroy();
+                    swipers[i1] = null;
+                }
+                oldContainer.removeClass('question-container-active').hide();
+
+                questionContainers.eq(i).addClass('question-container-active').show();
+                swipers[i] = initSwiper(questionContainers.eq(i).get(0));
+            });
+    }
+
+    function initSwiper(ele) {
+
+        var swiper;
+
+        swiper = new Swiper(ele, {
+            direction: 'vertical',
+            pagination: '.swiper-pagination',
+            paginationClickable: true,
+            paginationBulletRender: function(index, className) {
+                return '<span class="' + className + ' bullet-' + (index + 1) + '">' + (index + 1) + '</span>';
+            },
+            prevButton: '.swiper-button-prev-question',
+            nextButton: '.swiper-button-next-question'
         });
 
+        return swiper;
     }
 
     function getAnswer(answers, eptqId) {
@@ -103,4 +176,5 @@ $(function() {
 
         return undefined;
     }
+
 });
