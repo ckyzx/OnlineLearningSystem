@@ -120,6 +120,7 @@
     <Compile Include="Utilities\PaperStatus.cs" />
     <Compile Include="Utilities\PaperTemplateStatus.cs" />
     <Compile Include="Utilities\ResponseJson.cs" />
+    <Compile Include="Utilities\ResponseMessage.cs" />
     <Compile Include="Utilities\ResponseStatus.cs" />
     <Compile Include="Utilities\StaticHelper.cs" />
     <Compile Include="Utilities\OpenXmlHelper.cs" />
@@ -212,6 +213,7 @@
     <Content Include="Content\lib\datatables\1.10.9\jquery.dataTables.js" />
     <Content Include="Content\lib\datatables\1.10.9\jquery.dataTables.min.js" />
     <Content Include="Content\lib\DD_belatedPNG_0.0.8a-min.js" />
+    <Content Include="Content\lib\jquery.timers-1.2.js" />
     <Content Include="Content\lib\swiper_3.1.0\css\swiper.css" />
     <Content Include="Content\lib\swiper_3.1.0\css\swiper.min.css" />
     <Content Include="Content\lib\swiper_3.1.0\js\swiper.jquery.js" />

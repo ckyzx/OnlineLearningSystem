@@ -48,5 +48,18 @@ namespace OnlineLearningSystem.Controllers
             return Json(resJson, JsonRequestBehavior.DenyGet);
         }
 
+        //
+        // POST: /ExaminationPaper/SubmitAnswers
+
+        [Description("提交答案")]
+        public JsonResult SubmitAnswers(String answersJson)
+        {
+
+            ResponseJson resJson;
+
+            resJson = um.SubmitAnswers(answersJson);
+
+            return Json(resJson, JsonRequestBehavior.AllowGet);
+        }
     }
 }

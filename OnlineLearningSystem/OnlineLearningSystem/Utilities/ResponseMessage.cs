@@ -5,9 +5,8 @@ using System.Web;
 
 namespace OnlineLearningSystem.Utilities
 {
-    public class Utility
+    public static class ResponseMessage
     {
-        public OLSEntities olsEni = new OLSEntities();
-        public DateTime now = DateTime.Now;
+        public static String SaveChangeError = "数据保存错误。";
     }
 }

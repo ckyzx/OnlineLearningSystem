@@ -13,6 +13,7 @@
 <link type="text/css" rel="Stylesheet" href="@Url.Content("/Content/lib/swiper_3.1.0/css/swiper.css")" />
 <script type="text/javascript" src="@Url.Content("/Content/lib/jquery-tmpl/jquery.tmpl.min.js")"></script>
 <script type="text/javascript" src="@Url.Content("/Content/lib/swiper_3.1.0/js/swiper.min.js")"></script>
+<script type="text/javascript" src="@Url.Content("/Content/lib/jquery.timers-1.2.js")"></script>
 <script type="text/javascript" src="@Url.Content("/Content/lib/js.request.js")"></script>
 <script type="text/javascript" src="@Url.Content("/Content/js/ExaminationPaper/Paper.js")"></script>
 <script id="TypeItemTmpl" type="text/x-jquery-tmpl">
@@ -59,7 +60,7 @@
                     <span class="mr-10"><input type="radio" name="question_radios_${EPTQ_Id}" value="×" class="mr-5" />×</span>
                     {{else EPTQ_Type == '公文改错题' || EPTQ_Type == '计算题' || EPTQ_Type == '案例分析题' || EPTQ_Type == '问答题'}}
                     <br />
-                    <textarea class="textarea" cols="20" rows="2"></textarea>
+                    <textarea name="question_textarea_${EPTQ_Id}" class="textarea" cols="20" rows="2"></textarea>
                     {{/if}}
                 </div>
             </div>

@@ -239,5 +239,70 @@ namespace OnlineLearningSystem.Utilities
                 return resJson;
             }
         }
+
+        public ResponseJson SubmitAnswers(String answersJson)
+        {
+
+            ResponseJson resJson;
+
+            resJson = new ResponseJson();
+
+            try
+            {
+
+                List<ExaminationPaperQuestion> epqs;
+                ExaminationPaperQuestion epq1;
+                Int32 epqId, rowCount;
+
+                epqs = JsonConvert.DeserializeObject<List<ExaminationPaperQuestion>>(answersJson);
+
+                rowCount = olsEni.ExaminationPaperQuestions.Count();
+                epqId = 0 == rowCount ? 1 : olsEni.ExaminationPaperQuestions.Max(m => m.EPQ_AutoId) + 1;
+
+                foreach (var epq in epqs)
+                {
+
+                    epq1 =
+                        olsEni
+                        .ExaminationPaperQuestions
+                        .SingleOrDefault(m =>
+                            m.EP_Id == epq.EP_Id
+                            && m.EPTQ_Id == epq.EPTQ_Id);
+
+                    if (null != epq1)
+                    {
+
+                        epq1.EPQ_Answer = epq.EPQ_Answer;
+                        olsEni.Entry(epq1).State = EntityState.Modified;
+                    }
+                    else
+                    {
+
+                        epq.EPQ_Id = epqId;
+                        epq.EPQ_AddTime = now;
+                        olsEni.Entry(epq).State = EntityState.Added;
+
+                        epqId += 1;
+                    }
+                }
+
+                if (0 == olsEni.SaveChanges())
+                {
+
+                    resJson.status = ResponseStatus.Error;
+                    resJson.message = ResponseMessage.SaveChangeError;
+                    return resJson;
+                }
+
+                resJson.status = ResponseStatus.Success;
+                return resJson;
+            }
+            catch (Exception ex)
+            {
+                resJson.status = ResponseStatus.Error;
+                resJson.message = StaticHelper.GetExceptionMessage(ex);
+                return resJson;
+            }
+        }
     }
 }
