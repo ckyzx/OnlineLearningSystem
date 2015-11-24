@@ -130,6 +130,17 @@ $(function() {
                 if (btn.hasClass('swiper-button-disabled')) {
                     switchNextQuestionType(btn);
                 }
+            })
+            .on('click', 'button.paper-hand-in', function() {
+
+                if (confirm('确定要结束考试吗？')) {
+
+                    saveLocalAnswers1();
+                    submitAnswers(function() {
+                        layer_close();
+                    });
+
+                }
             });
     }
 
@@ -256,7 +267,7 @@ $(function() {
         adInput.val(JSON.stringify(answer));
     }
 
-    function submitAnswers() {
+    function submitAnswers(successCallback) {
 
         var answers;
 
@@ -296,6 +307,10 @@ $(function() {
                         a.submitStatus = true;
 
                         $('#AnswerData_' + a.EPTQ_Id).val(JSON.stringify(a));
+
+                        if ('function' == typeof(successCallback)) {
+                            successCallback();
+                        }
                     };
                 } else if (0 == data.status) {
 
@@ -308,7 +323,7 @@ $(function() {
             });
     }
 
-    function saveAnswers(){
+    function saveAnswers() {
 
         saveLocalAnswers1();
         submitAnswers();
@@ -558,7 +573,7 @@ $(function() {
         setCurrentQuestionId(questionContainer);
     }
 
-    function setCurrentQuestionId(questionContainer){
+    function setCurrentQuestionId(questionContainer) {
 
         $('#CurrentQuestionId').val(questionContainer.find('.swiper-slide-active').attr('q-id'));
     }

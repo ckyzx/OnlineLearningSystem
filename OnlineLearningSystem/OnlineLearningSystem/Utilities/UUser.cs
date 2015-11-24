@@ -8,6 +8,7 @@ using OnlineLearningSystem.Models;
 using Newtonsoft.Json;
 using System.Text;
 using System.Security.Cryptography;
+using OnlineLearningSystem.ViewModels;
 
 namespace OnlineLearningSystem.Utilities
 {
@@ -134,12 +135,12 @@ namespace OnlineLearningSystem.Utilities
             return list;
         }
 
-        public User GetNew()
+        public VMUser GetNew()
         {
 
-            User model;
+            VMUser model;
 
-            model = new User()
+            model = new VMUser()
             {
                 U_Id = 0,
                 Du_Id = 0,
@@ -147,7 +148,9 @@ namespace OnlineLearningSystem.Utilities
                 U_Name = "",
                 U_LoginName = "",
                 U_Password = "",
-                U_Departments = "{}",
+                U_RePassword = "",
+                U_Departments = "[]",
+                U_Roles = "[]",
                 U_Remark = "",
                 U_AddTime = DateTime.Now,
                 U_Status = (Byte)Status.Available
@@ -156,39 +159,79 @@ namespace OnlineLearningSystem.Utilities
             return model;
         }
 
-        public User Get(Int32 id)
+        public VMUser Get(Int32 id)
         {
 
             User model;
+            VMUser vmModel;
+            Duty duty;
+            String duName;
 
             model = olsEni.Users.SingleOrDefault(m => m.U_Id == id);
+
+            if (null != model.Du_Id)
+            {
+                duty = olsEni.Duties.SingleOrDefault(m => m.Du_Id == model.Du_Id);
+                duName = duty.Du_Name;
+            }
+            else
+            {
+                duName = "";
+            }
+
+            vmModel = new VMUser
+            {
+                U_Id = model.U_Id,
+                Du_Id = model.Du_Id,
+                Du_Name = duName,
+                U_Name = model.U_Name,
+                U_LoginName = model.U_LoginName,
+                U_Departments = model.U_Departments,
+                U_Roles = model.U_Roles,
+                U_Remark = model.U_Remark,
+                U_AddTime = model.U_AddTime,
+                U_Status = model.U_Status
+            };
 
             if (null == model)
             {
                 throw new NotImplementedException();
             }
 
-            return model;
+            return vmModel;
         }
 
-        public Boolean Create(User model)
+        public Boolean Create(VMUser vmModel)
         {
             try
             {
 
                 Int32 rowCount;
                 Int32 uId;
+                User model;
 
                 rowCount = olsEni.Users.Count();
-                uId = 0 == rowCount ? 0 : olsEni.Users.Max(m => m.U_AutoId);
+                uId = 0 == rowCount ? 1 : olsEni.Users.Max(m => m.U_AutoId) + 1;
 
-                model.U_Id = uId + 1;
-                model.U_Password = EncryptPassword(model.U_Password);
+                model = new User
+                {
+                    U_Id = uId,
+                    Du_Id = vmModel.Du_Id,
+                    U_Name = vmModel.U_Name,
+                    U_LoginName = vmModel.U_LoginName,
+                    U_Password = EncryptPassword(vmModel.U_Password),
+                    U_Departments = vmModel.U_Departments,
+                    U_Roles = vmModel.U_Roles,
+                    U_Remark = vmModel.U_Remark,
+                    U_AddTime = vmModel.U_AddTime,
+                    U_Status = vmModel.U_Status
+                };
 
                 olsEni.Users.Add(model);
                 olsEni.SaveChanges();
 
                 UpdateUserDepartment(model);
+                UpdateUserRole(model);
 
                 return true;
             }
@@ -241,17 +284,61 @@ namespace OnlineLearningSystem.Utilities
 
         }
 
-        public Boolean Edit(User model)
+        public void UpdateUserRole(User model)
+        {
+
+            List<User_Role> urs;
+            Int32[] rs;
+
+            urs = olsEni.User_Role.Where(m => m.U_Id == model.U_Id).ToList();
+            foreach (var ud in urs)
+            {
+                olsEni.Entry(ud).State = EntityState.Deleted;
+            }
+            olsEni.SaveChanges();
+
+            rs = JsonConvert.DeserializeObject<Int32[]>(model.U_Roles);
+            foreach (var r in rs)
+            {
+
+                olsEni.User_Role.Add(new User_Role
+                {
+                    U_Id = model.U_Id,
+                    R_Id = Convert.ToInt32(r)
+                });
+            }
+            olsEni.SaveChanges();
+
+        }
+
+        public Boolean Edit(VMUser vmModel)
         {
             try
             {
 
-                model.U_Password = EncryptPassword(model.U_Password);
+                User model;
 
-                olsEni.Entry(model).State = EntityState.Modified;
+                model = olsEni.Users.SingleOrDefault(m => m.U_Id == vmModel.U_Id);
+
+                model.U_Id = vmModel.U_Id;
+                model.Du_Id = vmModel.Du_Id;
+                model.U_Name = vmModel.U_Name;
+                model.U_LoginName = vmModel.U_LoginName;
+                model.U_Departments = vmModel.U_Departments;
+                model.U_Roles = vmModel.U_Roles;
+                model.U_Remark = vmModel.U_Remark;
+                model.U_Status = vmModel.U_Status;
+
+                if ("" != vmModel.U_Password)
+                {
+                    model.U_Password = EncryptPassword(vmModel.U_Password);
+                }
+
+                olsEni.Entry(vmModel).State = EntityState.Modified;
                 olsEni.SaveChanges();
 
                 UpdateUserDepartment(model);
+                UpdateUserRole(model);
 
                 return true;
             }
@@ -350,7 +437,8 @@ namespace OnlineLearningSystem.Utilities
                 var rs = GetUserRoleList(u.U_Id);
                 var ds = GetDepartmentList(u.U_Id);
 
-                if(rs.Count() == 0){
+                if (rs.Count() == 0)
+                {
                     rs = GetDepartmentRoleList(ds);
                 }
                 u.U_RoleList = rs;
@@ -523,11 +611,11 @@ namespace OnlineLearningSystem.Utilities
             }
         }
 
-        public Boolean CheckPassword(Int32 uId, String password)
+        public Boolean CheckOldPassword(Int32 uId, String oldPassword)
         {
             try
             {
-                
+
                 User model;
 
                 model = olsEni.Users.SingleOrDefault(m => m.U_Id == uId);
@@ -537,9 +625,53 @@ namespace OnlineLearningSystem.Utilities
                     return false;
                 }
 
-                password = EncryptPassword(password);
+                oldPassword = EncryptPassword(oldPassword);
 
-                if (password == model.U_Password)
+                if (oldPassword == model.U_Password)
+                {
+                    return true;
+                }
+
+                return false;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+        public Boolean DuplicateName(String name)
+        {
+            try
+            {
+
+                Int32 count;
+
+                count = olsEni.Users.Where(m => m.U_Name == name).Count();
+
+                if (count > 0)
+                {
+                    return true;
+                }
+
+                return false;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+        public Boolean DuplicateLoginName(Int32 uId, String loginName)
+        {
+            try
+            {
+
+                Int32 count;
+
+                count = olsEni.Users.Where(m => m.U_Id != uId && m.U_LoginName == loginName).Count();
+
+                if (count > 0)
                 {
                     return true;
                 }

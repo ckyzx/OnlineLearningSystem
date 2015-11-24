@@ -1,4 +1,4 @@
-﻿@model OnlineLearningSystem.Models.User
+﻿@model OnlineLearningSystem.ViewModels.VMUser
 @{
     ViewBag.Title = "添加用户";
     Layout = "~/Views/Shared/_PageEdit.cshtml";
@@ -8,7 +8,6 @@
     {
         @Html.ValidationSummary(true)
         @Html.HiddenFor(m => m.U_Id)
-        @Html.HiddenFor(m => m.U_AutoId)
         @Html.HiddenFor(m => m.U_AddTime)
         <div class="row cl">
             <label class="form-label col-2">
@@ -50,6 +49,15 @@
         </div>
         <div class="row cl">
             <label class="form-label col-2">
+                @Html.LabelFor(m => m.U_RePassword)
+            </label>
+            <div class="formControls col-2">
+                @Html.PasswordFor(m => m.U_RePassword, new { @class = "input-text" })
+                @Html.ValidationMessageFor(m => m.U_RePassword)
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-2">
                 @Html.LabelFor(m => m.Du_Id)
             </label>
             <div class="formControls col-2">
@@ -61,7 +69,7 @@
         </div>
         <div class="row cl">
             <label class="form-label col-2">
-                @Html.LabelFor(m=>m.U_Departments)
+                @Html.LabelFor(m => m.U_Departments)
             </label>
             <div class="formControls col-10">
                 <table class="table table-border table-bordered table-bg table-hover table-sort department-table">
@@ -109,7 +117,7 @@
         </div>
         <div class="row cl">
             <label class="form-label col-2">
-                @Html.LabelFor(m=>m.U_Roles)
+                @Html.LabelFor(m => m.U_Roles)
             </label>
             <div class="formControls col-10">
                 <table class="table table-border table-bordered table-bg table-hover table-sort role-table">

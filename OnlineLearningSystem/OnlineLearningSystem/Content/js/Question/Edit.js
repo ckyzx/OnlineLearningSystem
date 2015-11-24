@@ -24,7 +24,7 @@ $(function() {
                     area: ['500px', '360px'],
                     content: 
                         '请一行输入一条备选答案，√ 开头表示选中。'+
-                        '<a id="SampleTip" href="javascript:void(0);" style="color:orange;" onclick="layer.tips(\'A.备选答案a<br />B.备选答案b<br />C.备选答案c<br />...\', \'#SampleTip\');">示例</a><br />' +
+                        '<a id="SampleTip" href="javascript:void(0);" style="color:orange;" onclick="layer.tips(\'√A.备选答案a<br />B.备选答案b<br />C.备选答案c<br />……\', \'#SampleTip\');">示例</a><br />' +
                         '<textarea id="ModifyAnswer" class="textarea" cols="20" rows="2" style="height:200px;">' + taValue + '</textarea>'
                 },
                 function(index) {

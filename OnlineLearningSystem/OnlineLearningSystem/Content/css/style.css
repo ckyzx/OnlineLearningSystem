@@ -1,168 +1,45 @@
 @charset "utf-8";
 
 /* 无下拉列表的菜单按钮 */
+.Hui-aside .menu_dropdown dt.menu-btn { padding-left: 0; }
+.Hui-aside .menu_dropdown dt.menu-btn a { display: block; padding-left: 15px; text-decoration: none; }
+.Hui-aside .menu_dropdown dt.menu-btn a:hover { color: #148cf1; }
 
-.Hui-aside .menu_dropdown dt.menu-btn {
-    padding-left: 0;
-}
-
-.Hui-aside .menu_dropdown dt.menu-btn a {
-    display: block;
-    padding-left: 15px;
-    text-decoration: none;
-}
-
-.Hui-aside .menu_dropdown dt.menu-btn a:hover {
-    color: #148cf1;
-}
-
-.fz-14 {
-    font-size: 14px;
-}
-
-.fz-18 {
-    font-size: 18px;
-}
+.fz-10 { font-size: 10px!important; transform:scale(0.9)!important; }
+.fz-12 { font-size: 12px; }
+.fz-14 { font-size: 14px; }
+.fz-16 { font-size: 16px; }
+.fz-18 { font-size: 18px; }
 
 /* 试卷页面 */
-#ExaminationPaperContainer {
-    height: 100%;
-}
+#ExaminationPaperContainer { height: 100%; }
 
-#ExaminationPaperContainer .Huifold{
-    border-bottom:1px solid #FFF;
-}
+#ExaminationPaperContainer .Huifold{ border-bottom:1px solid #FFF; }
+#ExaminationPaperContainer .Huifold .item h4 { padding-left: 30px; }
+#ExaminationPaperContainer .Huifold .item h4 b{ color:#999; font-weight:normal; }
+#ExaminationPaperContainer .Huifold .item h4.active{ background: #FFF; }
+#ExaminationPaperContainer .Huifold .item .info { padding: 0; }
+#ExaminationPaperContainer .Huifold .item .info .info-item { }
+#ExaminationPaperContainer .Huifold .item .info .info-item a { display: block; padding: 5px 5px 5px 45px; background:#EEE; }
+#ExaminationPaperContainer .Huifold .item .info .info-item a:hover{ text-decoration: none; color: #666; background: #DDD; }
+#ExaminationPaperContainer .Huifold .item .info .info-item a.active{ color:#FFF; background: #5a98de; }
 
-#ExaminationPaperContainer .Huifold .item h4 {
-    padding-left: 30px;
-}
+#ExaminationPaperContainer .swiper-container { margin: 0; width: 100%; height: 100%; }
+#ExaminationPaperContainer .swiper-wrapper { width: 100%; height: 100%; }
+#ExaminationPaperContainer .swiper-slide { width: 100%; height: 100%; font-size: 14px; background: #fff; overflow-y: scroll; }
+#ExaminationPaperContainer .swiper-container-vertical > .swiper-pagination{ right:20px; }
+#ExaminationPaperContainer .swiper-pagination-bullet { width: 20px; height: 20px; text-align: center; line-height: 20px; font-size: 12px; color: #000; opacity: 1; background: rgba(0, 0, 0, 0.2); }
+#ExaminationPaperContainer .swiper-pagination-bullet-active { color: #fff; background: #007aff; }
+#ExaminationPaperContainer .swiper-button-container{ position: absolute; bottom: 0; padding: 20px 0; width: 100%; height: 31px; background: #FFF; }
+#ExaminationPaperContainer .swiper-button-question{ }
+#ExaminationPaperContainer .swiper-button-prev-question{ }
+#ExaminationPaperContainer .swiper-button-next-question{ }
+/*#ExaminationPaperContainer .swiper-button-disabled{ background-color: #e6e6e6; border-color: #e6e6e6; }*/
 
-#ExaminationPaperContainer .Huifold h4 b{
-    color:#999;
-    font-weight:normal;
-}
-
-#ExaminationPaperContainer .Huifold .item h4.active{
-    background: #FFF;
-}
-
-#ExaminationPaperContainer .Huifold .item .info {
-    padding: 0;
-}
-
-#ExaminationPaperContainer .Huifold .item .info .info-item {}
-
-#ExaminationPaperContainer .Huifold .item .info .info-item a {
-    display: block;
-    padding: 5px 5px 5px 45px;
-    background:#EEE;
-}
-
-#ExaminationPaperContainer .Huifold .item .info .info-item a:hover{
-    text-decoration: none;
-    color: #666;
-    background: #DDD;
-}
-
-#ExaminationPaperContainer .Huifold .item .info .info-item a.active{
-    color:#FFF;
-    background: #5a98de;
-}
-
-#ExaminationPaperContainer .swiper-container {
-    margin: 0;
-    width: 100%;
-    height: 100%;
-}
-
-#ExaminationPaperContainer .swiper-wrapper {
-    width: 100%;
-    height: 100%;
-}
-
-#ExaminationPaperContainer .swiper-slide {
-    width: 100%;
-    height: 100%;
-    font-size: 14px;
-    background: #fff;
-    overflow-y: scroll;
-}
-
-#ExaminationPaperContainer .swiper-container-vertical > .swiper-pagination{
-    right:20px;
-}
-
-#ExaminationPaperContainer .swiper-pagination-bullet {
-    width: 20px;
-    height: 20px;
-    text-align: center;
-    line-height: 20px;
-    font-size: 12px;
-    color: #000;
-    opacity: 1;
-    background: rgba(0, 0, 0, 0.2);
-}
-
-#ExaminationPaperContainer .swiper-pagination-bullet-active {
-    color: #fff;
-    background: #007aff;
-}
-
-#ExaminationPaperContainer .swiper-button-container{
-    position: absolute;
-    bottom: 0;
-    padding: 20px 0;
-    width: 100%;
-    height: 31px;
-    background: #FFF;
-}
-
-#ExaminationPaperContainer .swiper-button-question{}
-
-#ExaminationPaperContainer .swiper-button-prev-question{}
-
-#ExaminationPaperContainer .swiper-button-next-question{}
-
-/*#ExaminationPaperContainer .swiper-button-disabled{
-    background-color: #e6e6e6;
-    border-color: #e6e6e6;
-}*/
-
-#ExaminationPaperContainer #TypeList {
-    position: absolute;
-    width: 200px;
-    height: 100%;
-    background-color: #EEE;
-}
-
-#ExaminationPaperContainer #QuestionList {
-    padding-left: 200px;
-    height: 100%;
-}
-
-#ExaminationPaperContainer #QuestionList .question {
-    height: 100%;
-}
-
-#ExaminationPaperContainer #QuestionList .question-content {
-    margin-bottom: 30px;
-    padding: 50px 80px 0 80px;
-    font-size: 18px;
-    text-align: justify;
-}
-
-#ExaminationPaperContainer #QuestionList .question-answer {
-    padding: 0 80px 81px 80px;
-}
-
-#ExaminationPaperContainer #QuestionList .question-answer textarea {
-    height:200px;
-}
-
-#ExaminationPaperContainer #QuestionList span.tip {
-    padding: 2px 6px;
-    margin-right: 10px;
-    font-size: 18px;
-    color: #FFF;
-    background: #666;
-}
+#ExaminationPaperContainer #TypeList { position: absolute; width: 200px; height: 100%; background-color: #EEE; }
+#ExaminationPaperContainer #QuestionList { padding-left: 200px; height: 100%; }
+#ExaminationPaperContainer #QuestionList .question { height: 100%; }
+#ExaminationPaperContainer #QuestionList .question-content { margin-bottom: 30px; padding: 50px 80px 0 80px; font-size: 18px; text-align: justify; }
+#ExaminationPaperContainer #QuestionList .question-answer { padding: 0 80px 81px 80px; }
+#ExaminationPaperContainer #QuestionList .question-answer textarea { height:200px; }
+#ExaminationPaperContainer #QuestionList span.tip { padding: 2px 6px; margin-right: 10px; font-size: 18px; color: #FFF; background: #666; }

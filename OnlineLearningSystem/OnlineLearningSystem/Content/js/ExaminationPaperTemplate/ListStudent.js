@@ -49,7 +49,7 @@ $(function() {
             "width": "180px",
             "className": "text-c",
             "defaultContent": 
-                '<a style="text-decoration: none" class="enter-exam fz-14" href="javascript:;" title="进入考试">进入考试</a>' +
+                '<a style="text-decoration: none" class="btn btn-primary radius size-MINI enter-exam fz-10" href="javascript:;" title="进入考试">进入考试</a>' +
                 '<a style="text-decoration: none" class="recycle ml-5 fz-18 hide" href="javascript:;" title="回收"><i class="Hui-iconfont">&#xe631;</i></a>' +
                 '<a style="text-decoration: none" class="resume ml-5 fz-18 hide" href="javascript:;" title="恢复"><i class="Hui-iconfont">&#xe615;</i></a>' +
                 '<a style="text-decoration: none" class="edit ml-5 fz-18 hide" href="javascript:;" title="编辑"><i class="Hui-iconfont">&#xe60c;</i></a>' +

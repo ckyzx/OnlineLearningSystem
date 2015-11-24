@@ -44,9 +44,11 @@ $(function() {
             "name": "EPT_Remark",
             "data": 'EPT_Remark'
         }, {
-            "width": "80px",
+            "width": "120px",
             "className": "text-c",
-            "defaultContent": '<a style="text-decoration: none" class="recycle fz-18 hide" href="javascript:;" title="回收"><i class="Hui-iconfont">&#xe631;</i></a>' +
+            "defaultContent": 
+                '<a style="text-decoration: none" class="btn btn-primary radius size-MINI paper-score fz-10" href="javascript:;" title="试卷">试卷</a>' +
+                '<a style="text-decoration: none" class="recycle fz-18 hide" href="javascript:;" title="回收"><i class="Hui-iconfont">&#xe631;</i></a>' +
                 '<a style="text-decoration: none" class="resume ml-5 fz-18 hide" href="javascript:;" title="恢复"><i class="Hui-iconfont">&#xe615;</i></a>' +
                 '<a style="text-decoration: none" class="edit ml-5 fz-18 hide" href="javascript:;" title="编辑"><i class="Hui-iconfont">&#xe60c;</i></a>' +
                 '<a style="text-decoration: none" class="delete ml-5 fz-18 hide" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a>'
@@ -212,6 +214,16 @@ $(function() {
 
                 alert('请求返回错误！');
             });
+    });
+
+    $('.table-sort tbody').on('click', 'a.paper-score', function() {
+
+        var data, id;
+
+        data = table.row($(this).parents('tr')).data();
+        id = data['EPT_Id'];
+
+        ShowPage('试卷', '/ExaminationPaperTemplate/Papers?id=' + id);
     });
 
     $('#CreateBtn').on('click', function() {

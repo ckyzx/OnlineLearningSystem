@@ -56,7 +56,7 @@ namespace OnlineLearningSystem.Controllers
         public ActionResult Create()
         {
 
-            User u;
+            VMUser u;
 
             u = um.GetNew();
 
@@ -72,7 +72,7 @@ namespace OnlineLearningSystem.Controllers
 
         [Description("添加用户")]
         [HttpPost]
-        public ActionResult Create(User u)
+        public ActionResult Create(VMUser u)
         {
 
             if (ModelState.IsValid)
@@ -99,7 +99,7 @@ namespace OnlineLearningSystem.Controllers
         public ActionResult Edit(Int32 id)
         {
 
-            User u;
+            VMUser u;
 
             u = um.Get(id);
 
@@ -115,7 +115,7 @@ namespace OnlineLearningSystem.Controllers
 
         [Description("编辑用户")]
         [HttpPost]
-        public ActionResult Edit(User u)
+        public ActionResult Edit(VMUser u)
         {
 
             if (ModelState.IsValid)
@@ -254,9 +254,39 @@ namespace OnlineLearningSystem.Controllers
 
             m = (User)Session["User"];
 
-            matching = um.CheckPassword(m.U_Id, U_OldPassword);
+            matching = um.CheckOldPassword(m.U_Id, U_OldPassword);
 
             return Json(matching, JsonRequestBehavior.AllowGet);
+        }
+
+        //
+        // GET: /User/DuplicateName
+
+        [Description("检查用户名")]
+        public JsonResult DuplicateName(String U_Name)
+        {
+
+            Boolean matching;
+
+            matching = um.DuplicateName(U_Name);
+
+            return Json(!matching, JsonRequestBehavior.AllowGet);
+        }
+
+        //
+        // GET: /User/DuplicateLoginName
+
+        [Description("检查登录名")]
+        public JsonResult DuplicateLoginName(String U_LoginName)
+        {
+
+            Int32 uId;
+            Boolean matching;
+
+            uId = 0;
+            matching = um.DuplicateLoginName(uId, U_LoginName);
+
+            return Json(!matching, JsonRequestBehavior.AllowGet);
         }
     }
 }

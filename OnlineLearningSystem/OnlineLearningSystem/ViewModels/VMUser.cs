@@ -36,15 +36,17 @@ namespace OnlineLearningSystem.ViewModels
         public List<Permission> U_PermissionList { get; set; }
 
         [DisplayName("用户名")]
+        [Remote("DuplicateName", "User", ErrorMessage = "用户名已存在。")]
         [Required(ErrorMessage = "请输入{0}")]
         public String U_Name { get; set; }
 
         [DisplayName("登录名")]
+        [Remote("DuplicateLoginName", "User", ErrorMessage = "登录名已存在。")]
         [Required(ErrorMessage = "请输入{0}")]
         public String U_LoginName { get; set; }
 
         [DisplayName("旧密码")]
-        [Remote("CheckOldPassword","User", ErrorMessage="旧密码不正确")]
+        [Remote("CheckOldPassword", "User", ErrorMessage = "旧密码不正确")]
         [Required(ErrorMessage = "请输入{0}")]
         public String U_OldPassword { get; set; }
 
@@ -53,7 +55,7 @@ namespace OnlineLearningSystem.ViewModels
         public String U_Password { get; set; }
 
         [DisplayName("重复密码")]
-        [Compare("U_Password",ErrorMessage="重复密码不一致")]
+        [Compare("U_Password", ErrorMessage = "重复密码不一致")]
         [Required(ErrorMessage = "请输入{0}")]
         public String U_RePassword { get; set; }
 
