@@ -82,7 +82,13 @@ $(function() {
         }
     };
 
-    $('form').submit(function() {
+    $('form').submit(function(e) {
+
+        if(!confirm('确定提交吗？')){
+            
+            e.preventDefault();
+            return;
+        }
 
         permissionIds = [];
         permissionNames = [];

@@ -1,25 +1,40 @@
 ﻿<html>
-
 <head>
     <title></title>
     <script type="text/javascript">
 
-    var winName;
+        var winName;
+        var selfLi, selfSpan, selfHref, selfI;
 
-    winName = parent.name;
+        winName = parent.name;
 
-    if(winName == ''){
+        // 父窗口为列表页，则刷新
+        if (winName.indexOf('List') != -1) {
 
-    	location.href = '/Panel/Index';
-    }
-    else if (winName.toLowerCase().indexOf('list') != -1) {
+            parent.location.reload();
+        } else if (undefined != parent.$) {
 
-        parent.location.reload();
-    }
+            selfLi = parent.$('#min_title_list li.active');
+            selfSpan = selfLi.find('span');
+            selfI = selfLi.find('i');
+            selfHref = selfSpan.attr('data-href');
+
+            if (selfHref.indexOf('Create') != -1) { // 当前标签为“添加页”，则打开列表页
+
+                selfHref = selfHref.replace('Create', 'List');
+                a = parent.$('.Hui-aside').find('a[_href="' + selfHref + '"]');
+                if (a.length == 1) {
+                    a.click();
+                }
+
+                selfI.click();
+            } else { // 关闭标签
+
+                selfI.click();
+            }
+        }
     </script>
 </head>
-
 <body>
 </body>
-
 </html>

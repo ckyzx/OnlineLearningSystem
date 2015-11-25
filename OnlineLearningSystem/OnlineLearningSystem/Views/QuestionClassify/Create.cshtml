@@ -1,0 +1,51 @@
+﻿@model OnlineLearningSystem.Models.QuestionClassify
+@{
+    ViewBag.Title = "添加试题分类";
+    Layout = "~/Views/Shared/_PageEdit.cshtml";
+}
+<div class="pd-20">
+    @using (Html.BeginForm("Create", "QuestionClassify", FormMethod.Post, new { name = "create", @class = "form form-horizontal" }))
+    {
+        @Html.ValidationSummary(true)
+        @Html.HiddenFor(m => m.QC_Id)
+        @Html.HiddenFor(m => m.QC_AutoId)
+        @Html.HiddenFor(m => m.QC_Level)
+        @Html.HiddenFor(m => m.QC_AddTime)
+        <div class="row cl">
+            <label class="form-label col-2">
+                @Html.LabelFor(m => m.QC_Status)    
+            </label>
+            <div class="formControls col-2">
+                <span class="select-box">
+                    @Html.EditorFor(m => m.QC_Status, "Status")
+                </span>
+                @Html.ValidationMessageFor(m => m.QC_Status)
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-2">
+                @Html.LabelFor(m => m.QC_Name)
+            </label>
+            <div class="formControls col-2">
+                @Html.TextBoxFor(m => m.QC_Name, new { @class = "input-text" })
+                @Html.ValidationMessageFor(m => m.QC_Name)
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-2">
+                @Html.LabelFor(m => m.QC_Remark)
+            </label>
+            <div class="formControls col-4">
+                @Html.TextAreaFor(m => m.QC_Remark, new { @class = "textarea" })
+                @Html.ValidationMessageFor(m => m.QC_Remark)
+            </div>
+        </div>
+        <div class="row cl">
+            <div class="col-10 col-offset-2">
+                <input class="btn btn-primary radius" type="submit" />
+                <button onclick="layer_close();" class="btn btn-default radius" type="button">
+                    &nbsp;&nbsp;取消&nbsp;&nbsp;</button>
+            </div>
+        </div>
+    }
+</div>

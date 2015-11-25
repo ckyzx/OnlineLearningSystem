@@ -151,14 +151,13 @@ namespace OnlineLearningSystem.Utilities
                 DateTime now;
                 Int32 rowCount;
                 Int32 id;
-                List<ActionPermission> aps;
 
                 now = DateTime.Now;
 
                 rowCount = olsEni.PermissionCategories.Count();
-                id = 0 == rowCount ? 0 : olsEni.PermissionCategories.Max(m => m.PC_AutoId);
+                id = 0 == rowCount ? 1 : olsEni.PermissionCategories.Max(m => m.PC_AutoId) + 1;
 
-                model.PC_Id = id + 1;
+                model.PC_Id = id;
 
                 if (null == model.PC_Level)
                 {
@@ -168,27 +167,7 @@ namespace OnlineLearningSystem.Utilities
                 olsEni.PermissionCategories.Add(model);
                 olsEni.SaveChanges();
 
-                aps = (List<ActionPermission>)JsonConvert.DeserializeObject<List<ActionPermission>>(model.PC_Permissions);
-
-                rowCount = olsEni.Permissions.Count();
-                id = 0 == rowCount ? 0 : olsEni.Permissions.Max(m => m.P_AutoId);
-
-                foreach (var ap in aps)
-                {
-
-                    id += 1;
-
-                    olsEni.Permissions.Add(new Permission
-                    {
-                        P_Id = id,
-                        PC_Id = model.PC_Id,
-                        P_Name = ap.Description,
-                        P_Controller = ap.ControllerName,
-                        P_Action = ap.ActionName,
-                        P_AddTime = now
-                    });
-                }
-                olsEni.SaveChanges();
+                UpdatePermission(model);
 
                 return true;
             }
@@ -205,10 +184,6 @@ namespace OnlineLearningSystem.Utilities
             {
 
                 DateTime now;
-                Int32 rowCount;
-                Int32 id;
-                List<ActionPermission> aps;
-                Permission p;
 
                 now = DateTime.Now;
 
@@ -220,45 +195,7 @@ namespace OnlineLearningSystem.Utilities
                 olsEni.Entry(model).State = EntityState.Modified;
                 olsEni.SaveChanges();
 
-
-                aps = (List<ActionPermission>)JsonConvert.DeserializeObject<List<ActionPermission>>(model.PC_Permissions);
-
-                rowCount = olsEni.Permissions.Count();
-                id = 0 == rowCount ? 0 : olsEni.Permissions.Max(m => m.P_AutoId);
-
-                foreach (var ap in aps)
-                {
-
-                    p = olsEni
-                        .Permissions
-                        .SingleOrDefault(m => 
-                            m.P_Controller == ap.ControllerName 
-                            && m.P_Action == ap.ActionName
-                            && m.P_Name == ap.Description);
-
-                    if (null == p)
-                    {
-
-                        id += 1;
-
-                        olsEni.Permissions.Add(new Permission
-                        {
-                            P_Id = id,
-                            PC_Id = model.PC_Id,
-                            P_Name = ap.Description,
-                            P_Controller = ap.ControllerName,
-                            P_Action = ap.ActionName,
-                            P_AddTime = now
-                        });
-                    }
-                    else
-                    {
-
-                        p.PC_Id = model.PC_Id;
-                        olsEni.Entry(p).State = EntityState.Modified;
-                    }
-                }
-                olsEni.SaveChanges();
+                UpdatePermission(model);
 
                 return true;
             }
@@ -267,6 +204,55 @@ namespace OnlineLearningSystem.Utilities
 
                 throw;
             }
+        }
+
+        private void UpdatePermission(PermissionCategory model)
+        {
+
+            Int32 rowCount;
+            Int32 id;
+            List<ActionPermission> aps;
+            Permission p;
+
+            aps = (List<ActionPermission>)JsonConvert.DeserializeObject<List<ActionPermission>>(model.PC_Permissions);
+
+            rowCount = olsEni.Permissions.Count();
+            id = 0 == rowCount ? 1 : olsEni.Permissions.Max(m => m.P_AutoId) + 1;
+
+            foreach (var ap in aps)
+            {
+
+                p = olsEni
+                    .Permissions
+                    .SingleOrDefault(m =>
+                        m.P_Controller == ap.ControllerName
+                        && m.P_Action == ap.ActionName
+                        && m.P_Name == ap.Description);
+
+                // 不重复插入权限记录，如果已存在权限记录将重设其权限目录
+                if (null == p)
+                {
+
+                    olsEni.Permissions.Add(new Permission
+                    {
+                        P_Id = id,
+                        PC_Id = model.PC_Id,
+                        P_Name = ap.Description,
+                        P_Controller = ap.ControllerName,
+                        P_Action = ap.ActionName,
+                        P_AddTime = now
+                    });
+
+                    id += 1;
+                }
+                else
+                {
+
+                    p.PC_Id = model.PC_Id;
+                    olsEni.Entry(p).State = EntityState.Modified;
+                }
+            }
+            olsEni.SaveChanges();
         }
 
         public ResponseJson Recycle(Int32 id)

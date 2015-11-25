@@ -113,6 +113,7 @@ namespace OnlineLearningSystem.Utilities
                 D_Id = 0,
                 D_Name = "",
                 D_Level = "",
+                D_Roles = "[]",
                 D_Remark = "",
                 D_AddTime = DateTime.Now,
                 D_Status = (Byte)Status.Available
@@ -150,6 +151,7 @@ namespace OnlineLearningSystem.Utilities
 
                 if (null == model.D_Level)
                 {
+                    
                     model.D_Level = String.Format("{0:D4}", model.D_Id);
                 }
 
@@ -320,6 +322,29 @@ namespace OnlineLearningSystem.Utilities
             zTreeJson.Append("]");
 
             return zTreeJson.ToString();
+        }
+
+        public Boolean DuplicateName(Int32 id, String name)
+        {
+
+            try
+            {
+
+                Int32 count;
+
+                count = olsEni.Departments.Where(m => m.D_Id != id && m.D_Name == name).Count();
+
+                if (count > 0)
+                {
+                    return true;
+                }
+
+                return false;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
         }
     }
 }

@@ -9,13 +9,13 @@ using OnlineLearningSystem.Utilities;
 
 namespace OnlineLearningSystem.Controllers
 {
-    public class DepartmentController : OLSController
+    public class QuestionClassifyController : OLSController
     {
 
-        UDepartment um = new UDepartment();
+        UQuestionClassify um = new UQuestionClassify();
 
         //
-        // GET: /Department/
+        // GET: /QuestionClassify/
 
         public ActionResult Index()
         {
@@ -23,18 +23,18 @@ namespace OnlineLearningSystem.Controllers
         }
 
         //
-        // GET: /Department/List
+        // GET: /QuestionClassify/List
 
-        [Description("部门列表")]
+        [Description("试题分类列表")]
         public ActionResult List()
         {
             return View();
         }
 
         //
-        // POST: /Department/ListDataTablesAjax
+        // POST: /QuestionClassify/ListDataTablesAjax
 
-        [Description("查询部门")]
+        [Description("查询试题分类")]
         public JsonResult ListDataTablesAjax()
         {
 
@@ -48,27 +48,26 @@ namespace OnlineLearningSystem.Controllers
         }
 
         //
-        // GET: /Department/Create
+        // GET: /QuestionClassify/Create
 
-        [Description("新建部门")]
+        [Description("新建试题分类")]
         [HttpGet]
         public ActionResult Create()
         {
 
-            Department m;
+            QuestionClassify m;
 
             m = um.GetNew();
-            ViewBag.Roles = new URole().List();
 
             return View(m);
         }
 
         //
-        // POST: /Department/Create
+        // POST: /QuestionClassify/Create
 
-        [Description("添加部门")]
+        [Description("添加试题分类")]
         [HttpPost]
-        public ActionResult Create(Department m)
+        public ActionResult Create(QuestionClassify m)
         {
 
             if (ModelState.IsValid)
@@ -80,33 +79,30 @@ namespace OnlineLearningSystem.Controllers
                 }
             }
 
-            ViewBag.Roles = new URole().List();
-
             return View(m);
         }
 
         //
-        // GET: /Department/Edit
+        // GET: /QuestionClassify/Edit
 
-        [Description("查看部门")]
+        [Description("查看试题分类")]
         [HttpGet]
         public ActionResult Edit(Int32 id)
         {
 
-            Department m;
+            QuestionClassify m;
 
             m = um.Get(id);
-            ViewBag.Roles = new URole().List();
 
             return View(m);
         }
 
         //
-        // POST: /Department/Edit
+        // POST: /QuestionClassify/Edit
 
-        [Description("修改部门")]
+        [Description("修改试题分类")]
         [HttpPost]
-        public ActionResult Edit(Department m)
+        public ActionResult Edit(QuestionClassify m)
         {
 
             if (ModelState.IsValid)
@@ -118,15 +114,13 @@ namespace OnlineLearningSystem.Controllers
                 }
             }
 
-            ViewBag.Roles = new URole().List();
-
             return View(m);
         }
 
         //
-        // GET: /Department/Recycle
+        // GET: /QuestionClassify/Recycle
 
-        [Description("回收部门")]
+        [Description("回收试题分类")]
         public JsonResult Recycle(Int32 id)
         {
 
@@ -138,9 +132,9 @@ namespace OnlineLearningSystem.Controllers
         }
 
         //
-        // GET: /Department/Resume
+        // GET: /QuestionClassify/Resume
 
-        [Description("恢复部门")]
+        [Description("恢复试题分类")]
         public JsonResult Resume(Int32 id)
         {
 
@@ -152,9 +146,9 @@ namespace OnlineLearningSystem.Controllers
         }
 
         //
-        // GET: /Department/Delete
+        // GET: /QuestionClassify/Delete
 
-        [Description("删除部门")]
+        [Description("删除试题分类")]
         public JsonResult Delete(Int32 id)
         {
 
@@ -166,15 +160,15 @@ namespace OnlineLearningSystem.Controllers
         }
 
         //
-        // GET: /Department/DuplicateName
+        // GET: /QuestionClassify/DuplicateName
 
-        [Description("检查部门名称")]
-        public JsonResult DuplicateName(Int32 D_Id, String D_Name)
+        [Description("检查试题分类名称")]
+        public JsonResult DuplicateName(Int32 QC_Id, String QC_Name)
         {
 
             Boolean matching;
 
-            matching = um.DuplicateName(D_Id, D_Name);
+            matching = um.DuplicateName(QC_Id, QC_Name);
 
             return Json(!matching, JsonRequestBehavior.AllowGet);
         }

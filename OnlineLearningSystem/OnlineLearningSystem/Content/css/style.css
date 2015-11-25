@@ -36,7 +36,7 @@
 #ExaminationPaperContainer .swiper-button-next-question{ }
 /*#ExaminationPaperContainer .swiper-button-disabled{ background-color: #e6e6e6; border-color: #e6e6e6; }*/
 
-#ExaminationPaperContainer #TypeList { position: absolute; width: 200px; height: 100%; background-color: #EEE; }
+#ExaminationPaperContainer #TypeList { position: absolute; width: 200px; height: 100%; background-color: #EEE; overflow-y: scroll; }
 #ExaminationPaperContainer #QuestionList { padding-left: 200px; height: 100%; }
 #ExaminationPaperContainer #QuestionList .question { height: 100%; }
 #ExaminationPaperContainer #QuestionList .question-content { margin-bottom: 30px; padding: 50px 80px 0 80px; font-size: 18px; text-align: justify; }

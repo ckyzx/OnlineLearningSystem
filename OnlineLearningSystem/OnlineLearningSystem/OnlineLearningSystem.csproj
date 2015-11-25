@@ -88,6 +88,7 @@
     <Compile Include="Controllers\PermissionCategoryController.cs" />
     <Compile Include="Controllers\ExaminationTaskController.cs" />
     <Compile Include="Controllers\ExaminationPaperTemplateController.cs" />
+    <Compile Include="Controllers\QuestionClassifyController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -137,6 +138,7 @@
     <Compile Include="Utilities\UExaminationTask.cs" />
     <Compile Include="Utilities\UExaminationPaperTemplate.cs" />
     <Compile Include="Utilities\UExminationPaper.cs" />
+    <Compile Include="Utilities\UQuestionClassify.cs" />
     <Compile Include="ViewModels\VMUser.cs" />
     <Compile Include="ViewModels\VMUserModifyPassword.cs" />
   </ItemGroup>
@@ -165,6 +167,7 @@
     <Content Include="Content\js\init-menu.js" />
     <Content Include="Content\js\init-page-edit.js" />
     <Content Include="Content\js\PermissionCategory\Edit.js" />
+    <Content Include="Content\js\QuestionClassify\List.js" />
     <Content Include="Content\js\Question\DocxUploadAndImport.js" />
     <Content Include="Content\images\acrossTab-2.png" />
     <Content Include="Content\images\acrossTab-2bak.png" />
@@ -849,6 +852,9 @@
     <Content Include="Views\User\Login.cshtml" />
     <Content Include="Views\User\ModifyPassword.cshtml" />
     <Content Include="Views\ExaminationPaper\Paper.cshtml" />
+    <Content Include="Views\QuestionClassify\Create.cshtml" />
+    <Content Include="Views\QuestionClassify\Edit.cshtml" />
+    <Content Include="Views\QuestionClassify\List.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

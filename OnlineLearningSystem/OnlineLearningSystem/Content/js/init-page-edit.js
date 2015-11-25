@@ -16,13 +16,14 @@ $(function() {
 
     events = $._data($('form')[0], 'events');
 
-    if (events && !events['submit']) {
+    if (!events || (events && !events['submit'])) {
 
         $('form').submit(function(e) {
 
-            if (!confirm('确认提交吗？')) {
+            if (!confirm('确定提交吗？')) {
 
                 e.preventDefault();
+                return;
             }
         });
     }

@@ -33,3 +33,5 @@ EXEC p_killspid 'OLS'
 GO
 
 DROP DATABASE OLS;
+
+GO

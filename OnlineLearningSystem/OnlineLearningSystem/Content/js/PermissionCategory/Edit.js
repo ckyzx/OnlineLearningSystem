@@ -26,9 +26,15 @@ $(function() {
     }
 
     // 提交前，获取被选择的操作权限值
-    $('form').submit(function() {
+    $('form').submit(function(e) {
 
         var table, dtData, actionPermissions;
+
+        if(!confirm('确定提交吗？')){
+            
+            e.preventDefault();
+            return;
+        }
 
         table = $('.table-sort');
         dtData = table.DataTable.settings[0].aoData;

@@ -8,7 +8,7 @@ $(function() {
         var psInput;
         var ps;
 
-        if(!confirm('确认提交吗？')){
+        if(!confirm('确定提交吗？')){
             
             e.preventDefault();
             return;

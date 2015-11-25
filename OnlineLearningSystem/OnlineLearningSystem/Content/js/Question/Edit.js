@@ -63,7 +63,7 @@ $(function() {
 
                     qType = $('#Q_Type').val();
                     generateSelectItems(qType, qOptionalAnswer, qModelAnswer);
-                    changeAnswer();
+                    changeContentAndAnswer();
 
                     layer.close(index);
                 },
@@ -74,11 +74,11 @@ $(function() {
         })
         .on('click', ':checkbox', function() {
 
-            changeAnswer();
+            changeContentAndAnswer();
         })
         .on('click', ':radio', function() {
 
-            changeAnswer();
+            changeContentAndAnswer();
         });
 
     $('select#Q_Type').on('change', function() {
@@ -89,7 +89,13 @@ $(function() {
     // 提交前修改数据
     $('form').submit(function(e) {
 
-        changeAnswer();
+        if(confirm('确定提交吗？')){
+            
+            changeContentAndAnswer();
+        }else{
+
+            e.preventDefault();
+        }
     });
 
     function whetherAnswerCheck(qModelAnswer, currentAnswer) {
@@ -125,7 +131,7 @@ $(function() {
         $('#SelectItemContainer').html(controlHtml);
     }
 
-    function changeAnswer() {
+    function changeContentAndAnswer() {
 
         var qType, modelAnswers, answer;
 
@@ -139,6 +145,7 @@ $(function() {
                 modelAnswers.push(answer);
                 modelAnswers = modelAnswers.length > 0 ? JSON.stringify(modelAnswers) : '';
 
+                $('#Q_Content').val($('[name="Content"]').val());
                 $('#Q_OptionalAnswer').val(getOptionalAnswer());
                 $('#Q_ModelAnswer').val(modelAnswers);
 
@@ -152,6 +159,7 @@ $(function() {
                 });
                 modelAnswers = modelAnswers.length > 0 ? JSON.stringify(modelAnswers) : '';
 
+                $('#Q_Content').val($('[name="Content"]').val());
                 $('#Q_OptionalAnswer').val(getOptionalAnswer());
                 $('#Q_ModelAnswer').val(modelAnswers);
 
@@ -161,6 +169,7 @@ $(function() {
                 answer = $('input[name="Answer"]:checked').val();
                 answer = undefined == answer ? '' : answer;
 
+                $('#Q_Content').val($('[name="Content"]').val());
                 $('#Q_OptionalAnswer').val(getOptionalAnswer());
                 $('#Q_ModelAnswer').val(answer);
 
@@ -240,7 +249,7 @@ $(function() {
             case '单选题':
 
                 tmpHtml1 = templateHtml;
-                controlHtml = '<textarea id="Content" class="textarea" cols="20" rows="2">' + qContent + '</textarea>';
+                controlHtml = '<textarea id="Content" name="Content" class="textarea" cols="20" rows="2">' + qContent + '</textarea>';
                 validationMessageHtml = '<span class="field-validation-valid" data-valmsg-for="Q_Content" data-valmsg-replace="true"></span>';
 
                 tmpHtml1 = tmpHtml1.replace('{Name}', '内容');
@@ -274,7 +283,7 @@ $(function() {
             case '多选题':
 
                 tmpHtml1 = templateHtml;
-                controlHtml = '<textarea id="Content" class="textarea" cols="20" rows="2">' + qContent + '</textarea>';
+                controlHtml = '<textarea id="Content" name="Content" class="textarea" cols="20" rows="2">' + qContent + '</textarea>';
                 validationMessageHtml = '<span class="field-validation-valid" data-valmsg-for="Q_Content" data-valmsg-replace="true"></span>';
 
                 tmpHtml1 = tmpHtml1.replace('{Name}', '内容');
@@ -308,7 +317,7 @@ $(function() {
             case '判断题':
 
                 tmpHtml1 = templateHtml;
-                controlHtml = '<textarea id="Content" class="textarea" cols="20" rows="2">' + qContent + '</textarea>';
+                controlHtml = '<textarea id="Content" name="Content" class="textarea" cols="20" rows="2">' + qContent + '</textarea>';
                 validationMessageHtml = '<span class="field-validation-valid" data-valmsg-for="Q_Content" data-valmsg-replace="true"></span>';
 
                 tmpHtml1 = tmpHtml1.replace('{Name}', '内容');

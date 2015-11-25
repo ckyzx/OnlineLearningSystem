@@ -1,10 +1,11 @@
 USE OLS;
 
+GO
 INSERT INTO Departments (D_Id, D_Name, D_Roles, D_Level, D_Remark, D_AddTime, D_Status) VALUES (1, '技术部', '[1]', '0001', NULL, GETDATE(), 1);
 INSERT INTO Roles (R_Id, R_Name, R_Permissions, R_PermissionCategories, R_Remark, R_AddTime, R_Status) VALUES (1, '技术部', '[]', '[]', NULL, GETDATE(), 1);
 INSERT INTO Department_Role (D_Id, R_Id) VALUES (1, 1);
 INSERT INTO Duties (Du_Id, Du_Name, Du_Remark, Du_AddTime, Du_Status) VALUES (1, '系统管理员', NULL, GETDATE(), 1);
-INSERT INTO Users (U_Id, U_Name, U_LoginName, U_Password, Du_Id, U_Departments, U_Roles, U_Remark, U_AddTime, U_Status) VALUES (1, '系统管理员', 'Admin', '86A59028668AA3DB6794A16C91D30476'/*kyzx201510*/, 1, '[1]', '[1]', NULL, GETDATE(), 1);
+INSERT INTO Users (U_Id, U_Name, U_LoginName, U_Password, Du_Id, U_Departments, U_Roles, U_Remark, U_AddTime, U_Status) VALUES (1, '系统管理员', 'XiTongGuanLiYuan', 'BC111B2A0E2ABDB0A74F698C45551DE7'/*xnsw201510*/, 1, '[1]', '[1]', NULL, GETDATE(), 1);
 INSERT INTO User_Department (U_Id, D_Id) VALUES (1, 1);
 INSERT INTO Departments (D_Id, D_Name, D_Roles, D_Level, D_Remark, D_AddTime, D_Status) VALUES (2, '局长室', '[2]', '0002', NULL, GETDATE(), 1);
 INSERT INTO Roles (R_Id, R_Name, R_Permissions, R_PermissionCategories, R_Remark, R_AddTime, R_Status) VALUES (2, '局长室', '[]', '[]', NULL, GETDATE(), 1);
@@ -131,14 +132,14 @@ INSERT INTO Users (U_Id, U_Name, U_LoginName, U_Password, Du_Id, U_Departments, 
 INSERT INTO User_Department (U_Id, D_Id) VALUES (44, 9);
 INSERT INTO Users (U_Id, U_Name, U_LoginName, U_Password, Du_Id, U_Departments, U_Roles, U_Remark, U_AddTime, U_Status) VALUES (45, '陈佳伟', 'ChenJiaWei', 'BC111B2A0E2ABDB0A74F698C45551DE7'/*xnsw201510*/, NULL, '[9]', '[9]', NULL, GETDATE(), 1);
 INSERT INTO User_Department (U_Id, D_Id) VALUES (45, 9);
-INSERT INTO Departments (D_Id, D_Name, D_Roles, D_Level, D_Remark, D_AddTime, D_Status) VALUES (10, '监察室', '[10]', '00010', NULL, GETDATE(), 1);
+INSERT INTO Departments (D_Id, D_Name, D_Roles, D_Level, D_Remark, D_AddTime, D_Status) VALUES (10, '监察室', '[10]', '0010', NULL, GETDATE(), 1);
 INSERT INTO Roles (R_Id, R_Name, R_Permissions, R_PermissionCategories, R_Remark, R_AddTime, R_Status) VALUES (10, '监察室', '[]', '[]', NULL, GETDATE(), 1);
 INSERT INTO Department_Role (D_Id, R_Id) VALUES (10, 10);
 INSERT INTO Users (U_Id, U_Name, U_LoginName, U_Password, Du_Id, U_Departments, U_Roles, U_Remark, U_AddTime, U_Status) VALUES (46, '钟玩章', 'ZhongWanZhang', 'BC111B2A0E2ABDB0A74F698C45551DE7'/*xnsw201510*/, 6, '[10]', '[10]', NULL, GETDATE(), 1);
 INSERT INTO User_Department (U_Id, D_Id) VALUES (46, 10);
 INSERT INTO Users (U_Id, U_Name, U_LoginName, U_Password, Du_Id, U_Departments, U_Roles, U_Remark, U_AddTime, U_Status) VALUES (47, '李荣怀', 'LiRongHuai', 'BC111B2A0E2ABDB0A74F698C45551DE7'/*xnsw201510*/, 8, '[10]', '[10]', NULL, GETDATE(), 1);
 INSERT INTO User_Department (U_Id, D_Id) VALUES (47, 10);
-INSERT INTO Departments (D_Id, D_Name, D_Roles, D_Level, D_Remark, D_AddTime, D_Status) VALUES (11, '纳税服务股', '[11]', '00011', NULL, GETDATE(), 1);
+INSERT INTO Departments (D_Id, D_Name, D_Roles, D_Level, D_Remark, D_AddTime, D_Status) VALUES (11, '纳税服务股', '[11]', '0011', NULL, GETDATE(), 1);
 INSERT INTO Roles (R_Id, R_Name, R_Permissions, R_PermissionCategories, R_Remark, R_AddTime, R_Status) VALUES (11, '纳税服务股', '[]', '[]', NULL, GETDATE(), 1);
 INSERT INTO Department_Role (D_Id, R_Id) VALUES (11, 11);
 INSERT INTO Users (U_Id, U_Name, U_LoginName, U_Password, Du_Id, U_Departments, U_Roles, U_Remark, U_AddTime, U_Status) VALUES (48, '蔡伟政', 'CaiWeiZheng', 'BC111B2A0E2ABDB0A74F698C45551DE7'/*xnsw201510*/, 10, '[11]', '[11]', NULL, GETDATE(), 1);
@@ -148,7 +149,7 @@ INSERT INTO User_Department (U_Id, D_Id) VALUES (49, 11);
 INSERT INTO Duties (Du_Id, Du_Name, Du_Remark, Du_AddTime, Du_Status) VALUES (15, '协税员', NULL, GETDATE(), 1);
 INSERT INTO Users (U_Id, U_Name, U_LoginName, U_Password, Du_Id, U_Departments, U_Roles, U_Remark, U_AddTime, U_Status) VALUES (50, '林丹', 'LinDan', 'BC111B2A0E2ABDB0A74F698C45551DE7'/*xnsw201510*/, 15, '[11]', '[11]', NULL, GETDATE(), 1);
 INSERT INTO User_Department (U_Id, D_Id) VALUES (50, 11);
-INSERT INTO Departments (D_Id, D_Name, D_Roles, D_Level, D_Remark, D_AddTime, D_Status) VALUES (12, '稽查局', '[12]', '00012', NULL, GETDATE(), 1);
+INSERT INTO Departments (D_Id, D_Name, D_Roles, D_Level, D_Remark, D_AddTime, D_Status) VALUES (12, '稽查局', '[12]', '0012', NULL, GETDATE(), 1);
 INSERT INTO Roles (R_Id, R_Name, R_Permissions, R_PermissionCategories, R_Remark, R_AddTime, R_Status) VALUES (12, '稽查局', '[]', '[]', NULL, GETDATE(), 1);
 INSERT INTO Department_Role (D_Id, R_Id) VALUES (12, 12);
 INSERT INTO Users (U_Id, U_Name, U_LoginName, U_Password, Du_Id, U_Departments, U_Roles, U_Remark, U_AddTime, U_Status) VALUES (51, '刘波', 'LiuBo', 'BC111B2A0E2ABDB0A74F698C45551DE7'/*xnsw201510*/, 2, '[12]', '[12]', NULL, GETDATE(), 1);
@@ -178,7 +179,7 @@ INSERT INTO Users (U_Id, U_Name, U_LoginName, U_Password, Du_Id, U_Departments, 
 INSERT INTO User_Department (U_Id, D_Id) VALUES (60, 12);
 INSERT INTO Users (U_Id, U_Name, U_LoginName, U_Password, Du_Id, U_Departments, U_Roles, U_Remark, U_AddTime, U_Status) VALUES (61, '钟明', 'ZhongMing', 'BC111B2A0E2ABDB0A74F698C45551DE7'/*xnsw201510*/, NULL, '[12]', '[12]', NULL, GETDATE(), 1);
 INSERT INTO User_Department (U_Id, D_Id) VALUES (61, 12);
-INSERT INTO Departments (D_Id, D_Name, D_Roles, D_Level, D_Remark, D_AddTime, D_Status) VALUES (13, '新陂分局（大税源管理分局） ', '[13]', '00013', NULL, GETDATE(), 1);
+INSERT INTO Departments (D_Id, D_Name, D_Roles, D_Level, D_Remark, D_AddTime, D_Status) VALUES (13, '新陂分局（大税源管理分局） ', '[13]', '0013', NULL, GETDATE(), 1);
 INSERT INTO Roles (R_Id, R_Name, R_Permissions, R_PermissionCategories, R_Remark, R_AddTime, R_Status) VALUES (13, '新陂分局（大税源管理分局） ', '[]', '[]', NULL, GETDATE(), 1);
 INSERT INTO Department_Role (D_Id, R_Id) VALUES (13, 13);
 INSERT INTO Duties (Du_Id, Du_Name, Du_Remark, Du_AddTime, Du_Status) VALUES (21, '分局长', NULL, GETDATE(), 1);
@@ -217,7 +218,7 @@ INSERT INTO Users (U_Id, U_Name, U_LoginName, U_Password, Du_Id, U_Departments, 
 INSERT INTO User_Department (U_Id, D_Id) VALUES (77, 13);
 INSERT INTO Users (U_Id, U_Name, U_LoginName, U_Password, Du_Id, U_Departments, U_Roles, U_Remark, U_AddTime, U_Status) VALUES (78, '钟荣榜', 'ZhongRongBang', 'BC111B2A0E2ABDB0A74F698C45551DE7'/*xnsw201510*/, NULL, '[13]', '[13]', NULL, GETDATE(), 1);
 INSERT INTO User_Department (U_Id, D_Id) VALUES (78, 13);
-INSERT INTO Departments (D_Id, D_Name, D_Roles, D_Level, D_Remark, D_AddTime, D_Status) VALUES (14, '宁中分局（一般税源管理分局）', '[14]', '00014', NULL, GETDATE(), 1);
+INSERT INTO Departments (D_Id, D_Name, D_Roles, D_Level, D_Remark, D_AddTime, D_Status) VALUES (14, '宁中分局（一般税源管理分局）', '[14]', '0014', NULL, GETDATE(), 1);
 INSERT INTO Roles (R_Id, R_Name, R_Permissions, R_PermissionCategories, R_Remark, R_AddTime, R_Status) VALUES (14, '宁中分局（一般税源管理分局）', '[]', '[]', NULL, GETDATE(), 1);
 INSERT INTO Department_Role (D_Id, R_Id) VALUES (14, 14);
 INSERT INTO Users (U_Id, U_Name, U_LoginName, U_Password, Du_Id, U_Departments, U_Roles, U_Remark, U_AddTime, U_Status) VALUES (79, '王新', 'WangXin', 'BC111B2A0E2ABDB0A74F698C45551DE7'/*xnsw201510*/, 21, '[14]', '[14]', NULL, GETDATE(), 1);
@@ -310,7 +311,7 @@ INSERT INTO Users (U_Id, U_Name, U_LoginName, U_Password, Du_Id, U_Departments, 
 INSERT INTO User_Department (U_Id, D_Id) VALUES (122, 14);
 INSERT INTO Users (U_Id, U_Name, U_LoginName, U_Password, Du_Id, U_Departments, U_Roles, U_Remark, U_AddTime, U_Status) VALUES (123, '罗庆桓', 'LuoQingHuan', 'BC111B2A0E2ABDB0A74F698C45551DE7'/*xnsw201510*/, NULL, '[14]', '[14]', NULL, GETDATE(), 1);
 INSERT INTO User_Department (U_Id, D_Id) VALUES (123, 14);
-INSERT INTO Departments (D_Id, D_Name, D_Roles, D_Level, D_Remark, D_AddTime, D_Status) VALUES (15, '城区分局', '[15]', '00015', NULL, GETDATE(), 1);
+INSERT INTO Departments (D_Id, D_Name, D_Roles, D_Level, D_Remark, D_AddTime, D_Status) VALUES (15, '城区分局', '[15]', '0015', NULL, GETDATE(), 1);
 INSERT INTO Roles (R_Id, R_Name, R_Permissions, R_PermissionCategories, R_Remark, R_AddTime, R_Status) VALUES (15, '城区分局', '[]', '[]', NULL, GETDATE(), 1);
 INSERT INTO Department_Role (D_Id, R_Id) VALUES (15, 15);
 INSERT INTO Users (U_Id, U_Name, U_LoginName, U_Password, Du_Id, U_Departments, U_Roles, U_Remark, U_AddTime, U_Status) VALUES (124, '刁苑辉', 'DiaoYuanHui', 'BC111B2A0E2ABDB0A74F698C45551DE7'/*xnsw201510*/, 21, '[15]', '[15]', NULL, GETDATE(), 1);
@@ -375,7 +376,7 @@ INSERT INTO Users (U_Id, U_Name, U_LoginName, U_Password, Du_Id, U_Departments, 
 INSERT INTO User_Department (U_Id, D_Id) VALUES (153, 15);
 INSERT INTO Users (U_Id, U_Name, U_LoginName, U_Password, Du_Id, U_Departments, U_Roles, U_Remark, U_AddTime, U_Status) VALUES (154, '陈萍', 'ChenPing', 'BC111B2A0E2ABDB0A74F698C45551DE7'/*xnsw201510*/, 15, '[15]', '[15]', NULL, GETDATE(), 1);
 INSERT INTO User_Department (U_Id, D_Id) VALUES (154, 15);
-INSERT INTO Departments (D_Id, D_Name, D_Roles, D_Level, D_Remark, D_AddTime, D_Status) VALUES (16, '罗岗分局', '[16]', '00016', NULL, GETDATE(), 1);
+INSERT INTO Departments (D_Id, D_Name, D_Roles, D_Level, D_Remark, D_AddTime, D_Status) VALUES (16, '罗岗分局', '[16]', '0016', NULL, GETDATE(), 1);
 INSERT INTO Roles (R_Id, R_Name, R_Permissions, R_PermissionCategories, R_Remark, R_AddTime, R_Status) VALUES (16, '罗岗分局', '[]', '[]', NULL, GETDATE(), 1);
 INSERT INTO Department_Role (D_Id, R_Id) VALUES (16, 16);
 INSERT INTO Users (U_Id, U_Name, U_LoginName, U_Password, Du_Id, U_Departments, U_Roles, U_Remark, U_AddTime, U_Status) VALUES (155, '张思明', 'ZhangSiMing', 'BC111B2A0E2ABDB0A74F698C45551DE7'/*xnsw201510*/, 21, '[16]', '[16]', NULL, GETDATE(), 1);
@@ -392,7 +393,7 @@ INSERT INTO Users (U_Id, U_Name, U_LoginName, U_Password, Du_Id, U_Departments, 
 INSERT INTO User_Department (U_Id, D_Id) VALUES (160, 16);
 INSERT INTO Users (U_Id, U_Name, U_LoginName, U_Password, Du_Id, U_Departments, U_Roles, U_Remark, U_AddTime, U_Status) VALUES (161, '陈峰', 'ChenFeng', 'BC111B2A0E2ABDB0A74F698C45551DE7'/*xnsw201510*/, NULL, '[16]', '[16]', NULL, GETDATE(), 1);
 INSERT INTO User_Department (U_Id, D_Id) VALUES (161, 16);
-INSERT INTO Departments (D_Id, D_Name, D_Roles, D_Level, D_Remark, D_AddTime, D_Status) VALUES (17, '黄陂分局 ', '[17]', '00017', NULL, GETDATE(), 1);
+INSERT INTO Departments (D_Id, D_Name, D_Roles, D_Level, D_Remark, D_AddTime, D_Status) VALUES (17, '黄陂分局 ', '[17]', '0017', NULL, GETDATE(), 1);
 INSERT INTO Roles (R_Id, R_Name, R_Permissions, R_PermissionCategories, R_Remark, R_AddTime, R_Status) VALUES (17, '黄陂分局 ', '[]', '[]', NULL, GETDATE(), 1);
 INSERT INTO Department_Role (D_Id, R_Id) VALUES (17, 17);
 INSERT INTO Users (U_Id, U_Name, U_LoginName, U_Password, Du_Id, U_Departments, U_Roles, U_Remark, U_AddTime, U_Status) VALUES (162, '蓝俊波', 'LanJunBo', 'BC111B2A0E2ABDB0A74F698C45551DE7'/*xnsw201510*/, 21, '[17]', '[17]', NULL, GETDATE(), 1);
@@ -409,7 +410,7 @@ INSERT INTO Users (U_Id, U_Name, U_LoginName, U_Password, Du_Id, U_Departments, 
 INSERT INTO User_Department (U_Id, D_Id) VALUES (167, 17);
 INSERT INTO Users (U_Id, U_Name, U_LoginName, U_Password, Du_Id, U_Departments, U_Roles, U_Remark, U_AddTime, U_Status) VALUES (168, '罗维静', 'LuoWeiJing', 'BC111B2A0E2ABDB0A74F698C45551DE7'/*xnsw201510*/, 15, '[17]', '[17]', NULL, GETDATE(), 1);
 INSERT INTO User_Department (U_Id, D_Id) VALUES (168, 17);
-INSERT INTO Departments (D_Id, D_Name, D_Roles, D_Level, D_Remark, D_AddTime, D_Status) VALUES (18, '龙田分局', '[18]', '00018', NULL, GETDATE(), 1);
+INSERT INTO Departments (D_Id, D_Name, D_Roles, D_Level, D_Remark, D_AddTime, D_Status) VALUES (18, '龙田分局', '[18]', '0018', NULL, GETDATE(), 1);
 INSERT INTO Roles (R_Id, R_Name, R_Permissions, R_PermissionCategories, R_Remark, R_AddTime, R_Status) VALUES (18, '龙田分局', '[]', '[]', NULL, GETDATE(), 1);
 INSERT INTO Department_Role (D_Id, R_Id) VALUES (18, 18);
 INSERT INTO Users (U_Id, U_Name, U_LoginName, U_Password, Du_Id, U_Departments, U_Roles, U_Remark, U_AddTime, U_Status) VALUES (169, '刘绍斌', 'LiuShaoBin', 'BC111B2A0E2ABDB0A74F698C45551DE7'/*xnsw201510*/, 21, '[18]', '[18]', NULL, GETDATE(), 1);
@@ -438,7 +439,7 @@ INSERT INTO Users (U_Id, U_Name, U_LoginName, U_Password, Du_Id, U_Departments, 
 INSERT INTO User_Department (U_Id, D_Id) VALUES (180, 18);
 INSERT INTO Users (U_Id, U_Name, U_LoginName, U_Password, Du_Id, U_Departments, U_Roles, U_Remark, U_AddTime, U_Status) VALUES (181, '刁芳妮', 'DiaoFangNi', 'BC111B2A0E2ABDB0A74F698C45551DE7'/*xnsw201510*/, 15, '[18]', '[18]', NULL, GETDATE(), 1);
 INSERT INTO User_Department (U_Id, D_Id) VALUES (181, 18);
-INSERT INTO Departments (D_Id, D_Name, D_Roles, D_Level, D_Remark, D_AddTime, D_Status) VALUES (19, '坭陂分局', '[19]', '00019', NULL, GETDATE(), 1);
+INSERT INTO Departments (D_Id, D_Name, D_Roles, D_Level, D_Remark, D_AddTime, D_Status) VALUES (19, '坭陂分局', '[19]', '0019', NULL, GETDATE(), 1);
 INSERT INTO Roles (R_Id, R_Name, R_Permissions, R_PermissionCategories, R_Remark, R_AddTime, R_Status) VALUES (19, '坭陂分局', '[]', '[]', NULL, GETDATE(), 1);
 INSERT INTO Department_Role (D_Id, R_Id) VALUES (19, 19);
 INSERT INTO Users (U_Id, U_Name, U_LoginName, U_Password, Du_Id, U_Departments, U_Roles, U_Remark, U_AddTime, U_Status) VALUES (182, '罗新峰', 'LuoXinFeng', 'BC111B2A0E2ABDB0A74F698C45551DE7'/*xnsw201510*/, 21, '[19]', '[19]', NULL, GETDATE(), 1);
@@ -471,3 +472,5 @@ INSERT INTO Users (U_Id, U_Name, U_LoginName, U_Password, Du_Id, U_Departments, 
 INSERT INTO User_Department (U_Id, D_Id) VALUES (195, 19);
 INSERT INTO Users (U_Id, U_Name, U_LoginName, U_Password, Du_Id, U_Departments, U_Roles, U_Remark, U_AddTime, U_Status) VALUES (196, '翁丽兰', 'WengLiLan', 'BC111B2A0E2ABDB0A74F698C45551DE7'/*xnsw201510*/, NULL, '[19]', '[19]', NULL, GETDATE(), 1);
 INSERT INTO User_Department (U_Id, D_Id) VALUES (196, 19);
+
+GO
