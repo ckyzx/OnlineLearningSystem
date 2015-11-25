@@ -167,5 +167,19 @@ namespace OnlineLearningSystem.Controllers
             return Json(resJson, JsonRequestBehavior.AllowGet);
         }
 
+        //
+        // GET: /PermissionCatetory/DuplicateName
+
+        [Description("检查权限目录名称")]
+        public JsonResult DuplicateName(Int32 PC_Id, String PC_Name)
+        {
+
+            Boolean matching;
+
+            matching = um.DuplicateName(PC_Id, PC_Name);
+
+            return Json(!matching, JsonRequestBehavior.AllowGet);
+        }
+
     }
 }

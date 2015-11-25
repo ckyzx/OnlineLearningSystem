@@ -186,17 +186,14 @@ namespace OnlineLearningSystem.Utilities
                 Du_Name = duName,
                 U_Name = model.U_Name,
                 U_LoginName = model.U_LoginName,
+                U_Password = "**********",
+                U_RePassword = "**********",
                 U_Departments = model.U_Departments,
                 U_Roles = model.U_Roles,
                 U_Remark = model.U_Remark,
                 U_AddTime = model.U_AddTime,
                 U_Status = model.U_Status
             };
-
-            if (null == model)
-            {
-                throw new NotImplementedException();
-            }
 
             return vmModel;
         }
@@ -329,12 +326,12 @@ namespace OnlineLearningSystem.Utilities
                 model.U_Remark = vmModel.U_Remark;
                 model.U_Status = vmModel.U_Status;
 
-                if ("" != vmModel.U_Password)
+                if ("**********" != vmModel.U_Password)
                 {
                     model.U_Password = EncryptPassword(vmModel.U_Password);
                 }
 
-                olsEni.Entry(vmModel).State = EntityState.Modified;
+                olsEni.Entry(model).State = EntityState.Modified;
                 olsEni.SaveChanges();
 
                 UpdateUserDepartment(model);
@@ -640,14 +637,14 @@ namespace OnlineLearningSystem.Utilities
             }
         }
 
-        public Boolean DuplicateName(String name)
+        public Boolean DuplicateName(Int32 uId, String name)
         {
             try
             {
 
                 Int32 count;
 
-                count = olsEni.Users.Where(m => m.U_Name == name).Count();
+                count = olsEni.Users.Where(m => m.U_Id != uId && m.U_Name == name).Count();
 
                 if (count > 0)
                 {

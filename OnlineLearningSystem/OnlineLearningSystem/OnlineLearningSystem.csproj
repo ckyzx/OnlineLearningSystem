@@ -138,6 +138,7 @@
     <Compile Include="Utilities\UExaminationPaperTemplate.cs" />
     <Compile Include="Utilities\UExminationPaper.cs" />
     <Compile Include="ViewModels\VMUser.cs" />
+    <Compile Include="ViewModels\VMUserModifyPassword.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\css\H-ui.admin.css" />
@@ -150,7 +151,6 @@
     <Content Include="Content\html\parent_reload.htm" />
     <Content Include="Content\html\goto_login.htm" />
     <Content Include="Content\html\prompt_redirect.htm" />
-    <Content Include="Content\js\background-init.js" />
     <Content Include="Content\js\custom-enum.js" />
     <Content Include="Content\js\custom-page-edit.js" />
     <Content Include="Content\js\Department\Edit.js" />
@@ -161,7 +161,9 @@
     <Content Include="Content\js\ExaminationPaper\Paper.js" />
     <Content Include="Content\js\ExaminationTaskTemplate\Edit.js" />
     <Content Include="Content\js\ExaminationTask\Edit.js" />
-    <Content Include="Content\js\menu-init.js" />
+    <Content Include="Content\js\init-background.js" />
+    <Content Include="Content\js\init-menu.js" />
+    <Content Include="Content\js\init-page-edit.js" />
     <Content Include="Content\js\PermissionCategory\Edit.js" />
     <Content Include="Content\js\Question\DocxUploadAndImport.js" />
     <Content Include="Content\images\acrossTab-2.png" />
@@ -213,6 +215,7 @@
     <Content Include="Content\lib\datatables\1.10.9\jquery.dataTables.js" />
     <Content Include="Content\lib\datatables\1.10.9\jquery.dataTables.min.js" />
     <Content Include="Content\lib\DD_belatedPNG_0.0.8a-min.js" />
+    <Content Include="Content\lib\jquery.cookie.js" />
     <Content Include="Content\lib\jquery.timers-1.2.js" />
     <Content Include="Content\lib\swiper_3.1.0\css\swiper.css" />
     <Content Include="Content\lib\swiper_3.1.0\css\swiper.min.css" />

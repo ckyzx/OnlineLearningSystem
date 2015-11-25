@@ -14,4 +14,11 @@
 
         ShowPageWithSize(title, url, width, height);
     });
+
+    $('#Logout').on('click',function(){
+
+        $.cookie('save_login_state', null, {path: '/'});
+
+        location.href = '/User/Logout';
+    });
 });

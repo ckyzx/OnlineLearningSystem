@@ -165,5 +165,19 @@ namespace OnlineLearningSystem.Controllers
             return Json(resJson, JsonRequestBehavior.AllowGet);
         }
 
+        //
+        // GET: /Role/DuplicateName
+
+        [Description("检查角色名称")]
+        public JsonResult DuplicateName(Int32 R_Id, String R_Name)
+        {
+
+            Boolean matching;
+
+            matching = um.DuplicateName(R_Id, R_Name);
+
+            return Json(!matching, JsonRequestBehavior.AllowGet);
+        }
+
     }
 }

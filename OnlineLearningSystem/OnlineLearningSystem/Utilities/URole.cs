@@ -256,5 +256,28 @@ namespace OnlineLearningSystem.Utilities
                 return resJson;
             }
         }
+
+        public Boolean DuplicateName(Int32 id, String name)
+        {
+
+            try
+            {
+
+                Int32 count;
+
+                count = olsEni.Roles.Where(m => m.R_Id != id && m.R_Name == name).Count();
+
+                if (count > 0)
+                {
+                    return true;
+                }
+
+                return false;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
     }
 }

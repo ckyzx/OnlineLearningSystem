@@ -216,5 +216,27 @@ namespace OnlineLearningSystem.Utilities
             }
         }
 
+        public Boolean DuplicateName(Int32 id, String name)
+        {
+
+            try
+            {
+
+                Int32 count;
+
+                count = olsEni.Duties.Where(m => m.Du_Id != id && m.Du_Name == name).Count();
+
+                if (count > 0)
+                {
+                    return true;
+                }
+
+                return false;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
     }
 }

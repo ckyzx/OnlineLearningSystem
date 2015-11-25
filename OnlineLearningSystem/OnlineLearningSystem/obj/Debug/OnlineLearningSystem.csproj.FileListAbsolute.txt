@@ -2,7 +2,6 @@ D:\Cheng\Workspace\OnlineLearningSystem\OnlineLearningSystem\OnlineLearningSyste
 D:\Cheng\Workspace\OnlineLearningSystem\OnlineLearningSystem\OnlineLearningSystem\bin\OnlineLearningSystem.pdb
 D:\Cheng\Workspace\OnlineLearningSystem\OnlineLearningSystem\OnlineLearningSystem\bin\EntityFramework.dll
 D:\Cheng\Workspace\OnlineLearningSystem\OnlineLearningSystem\OnlineLearningSystem\bin\EntityFramework.xml
-D:\Cheng\Workspace\OnlineLearningSystem\OnlineLearningSystem\OnlineLearningSystem\obj\Debug\ResolveAssemblyReference.cache
 D:\Cheng\Workspace\OnlineLearningSystem\OnlineLearningSystem\OnlineLearningSystem\obj\Debug\OnlineLearningSystem.dll
 D:\Cheng\Workspace\OnlineLearningSystem\OnlineLearningSystem\OnlineLearningSystem\obj\Debug\OnlineLearningSystem.pdb
 D:\Cheng\Workspace\OnlineLearningSystem\OnlineLearningSystem\OnlineLearningSystem\bin\Newtonsoft.Json.dll
@@ -18,3 +17,4 @@ D:\Cheng\Workspace\Backup\OnlineLearningSystem_20151029\OnlineLearningSystem\Onl
 D:\Cheng\Workspace\Backup\OnlineLearningSystem_20151029\OnlineLearningSystem\OnlineLearningSystem\obj\Debug\ResolveAssemblyReference.cache
 D:\Cheng\Workspace\Backup\OnlineLearningSystem_20151029\OnlineLearningSystem\OnlineLearningSystem\obj\Debug\OnlineLearningSystem.dll
 D:\Cheng\Workspace\Backup\OnlineLearningSystem_20151029\OnlineLearningSystem\OnlineLearningSystem\obj\Debug\OnlineLearningSystem.pdb
+D:\Cheng\Workspace\OnlineLearningSystem\OnlineLearningSystem\OnlineLearningSystem\obj\Debug\OnlineLearningSystem.csprojResolveAssemblyReference.cache

@@ -367,5 +367,28 @@ namespace OnlineLearningSystem.Utilities
 
             return zTreeJson.ToString();
         }
+
+        public Boolean DuplicateName(Int32 id, String name)
+        {
+
+            try
+            {
+
+                Int32 count;
+
+                count = olsEni.PermissionCategories.Where(m => m.PC_Id != id && m.PC_Name == name).Count();
+
+                if (count > 0)
+                {
+                    return true;
+                }
+
+                return false;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
     }
 }

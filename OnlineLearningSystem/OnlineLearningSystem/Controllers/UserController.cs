@@ -182,6 +182,11 @@ namespace OnlineLearningSystem.Controllers
         [HttpGet]
         public ActionResult Login(){
 
+            if (null != Session["User"])
+            {
+                return RedirectToAction("Index", "Panel");
+            }
+
             return View();
         }
 
@@ -263,12 +268,12 @@ namespace OnlineLearningSystem.Controllers
         // GET: /User/DuplicateName
 
         [Description("检查用户名")]
-        public JsonResult DuplicateName(String U_Name)
+        public JsonResult DuplicateName(Int32 U_Id, String U_Name)
         {
 
             Boolean matching;
 
-            matching = um.DuplicateName(U_Name);
+            matching = um.DuplicateName(U_Id, U_Name);
 
             return Json(!matching, JsonRequestBehavior.AllowGet);
         }
@@ -277,14 +282,12 @@ namespace OnlineLearningSystem.Controllers
         // GET: /User/DuplicateLoginName
 
         [Description("检查登录名")]
-        public JsonResult DuplicateLoginName(String U_LoginName)
+        public JsonResult DuplicateLoginName(Int32 U_Id, String U_LoginName)
         {
 
-            Int32 uId;
             Boolean matching;
 
-            uId = 0;
-            matching = um.DuplicateLoginName(uId, U_LoginName);
+            matching = um.DuplicateLoginName(U_Id, U_LoginName);
 
             return Json(!matching, JsonRequestBehavior.AllowGet);
         }

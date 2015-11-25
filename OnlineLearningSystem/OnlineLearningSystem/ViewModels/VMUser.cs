@@ -36,27 +36,26 @@ namespace OnlineLearningSystem.ViewModels
         public List<Permission> U_PermissionList { get; set; }
 
         [DisplayName("用户名")]
-        [Remote("DuplicateName", "User", ErrorMessage = "用户名已存在。")]
+        [Remote("DuplicateName", "User", ErrorMessage = "用户名已存在", AdditionalFields = "U_Id")]
         [Required(ErrorMessage = "请输入{0}")]
+        [RegularExpression(@"^[\u4E00-\u9FA5\uF900-\uFA2D]{1}[\u4E00-\u9FA5\uF900-\uFA2D0-9]{1,11}$", ErrorMessage = "请输入2至12位，中文开头的字符，可带数字")]
         public String U_Name { get; set; }
 
         [DisplayName("登录名")]
-        [Remote("DuplicateLoginName", "User", ErrorMessage = "登录名已存在。")]
+        [Remote("DuplicateLoginName", "User", ErrorMessage = "登录名已存在", AdditionalFields = "U_Id")]
         [Required(ErrorMessage = "请输入{0}")]
+        [RegularExpression(@"^[A-Za-z]{1}[A-Za-z0-9]{4,21}$", ErrorMessage = "请输入5至22位，字母开头的字符，可带数字")]
         public String U_LoginName { get; set; }
-
-        [DisplayName("旧密码")]
-        [Remote("CheckOldPassword", "User", ErrorMessage = "旧密码不正确")]
-        [Required(ErrorMessage = "请输入{0}")]
-        public String U_OldPassword { get; set; }
 
         [DisplayName("输入密码")]
         [Required(ErrorMessage = "请输入{0}")]
+        [RegularExpression(@"^[\@A-Za-z0-9\!\#\$\%\^\&\*\.\~]{6,22}$", ErrorMessage = "请输入6至22位，字母、数字或英文标点的混合字符")]
         public String U_Password { get; set; }
 
         [DisplayName("重复密码")]
         [Compare("U_Password", ErrorMessage = "重复密码不一致")]
         [Required(ErrorMessage = "请输入{0}")]
+        [RegularExpression(@"^[\@A-Za-z0-9\!\#\$\%\^\&\*\.\~]{6,22}$", ErrorMessage = "请输入6至22位，字母、数字或英文标点的混合字符")]
         public String U_RePassword { get; set; }
 
         [DisplayName("备注")]
