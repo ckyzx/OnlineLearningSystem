@@ -1,5 +1,18 @@
 $(function() {
 
+    var ueContent;
+    var typeInput, contentInput, optionalAnswerInput, modelAnswerInput;
+    var cacheFlag = true; // 用于指定是否需要缓存原数据
+
+    typeInput = $('#Q_Type');
+    contentInput = $('#Q_Content');
+    optionalAnswerInput = $('#Q_OptionalAnswer');
+    modelAnswerInput = $('#Q_ModelAnswer');
+
+    // 缓存原数据
+    typeInput.attr('data-origin-value', typeInput.val());
+    typeInput.attr('data-last-value', typeInput.val());
+
     showContentAndAnswer();
 
     // 编辑单选题/多选题的备选答案
@@ -8,10 +21,8 @@ $(function() {
 
             var taValue;
 
-            qOptionalAnswer = $('#Q_OptionalAnswer').val();
-            qOptionalAnswer = qOptionalAnswer == '' ? []: JSON.parse(qOptionalAnswer);
-            qModelAnswer = $('#Q_ModelAnswer').val();
-            qModelAnswer = qModelAnswer == '' ? [] : JSON.parse(qModelAnswer);
+            qOptionalAnswer = getOptionalAnswerArrayWithInput();
+            qModelAnswer = getModelAnswerArrayWithInput();
             taValue = '';
             for (var p in qOptionalAnswer) {
                 taValue += (whetherAnswerCheck(qModelAnswer, p) ? '√' : '') + p + '.' + qOptionalAnswer[p] + '\n';
@@ -22,8 +33,7 @@ $(function() {
                 '', {
                     title: '编辑答案',
                     area: ['500px', '360px'],
-                    content: 
-                        '请一行输入一条备选答案，√ 开头表示选中。'+
+                    content: '请一行输入一条备选答案，√ 开头表示选中。' +
                         '<a id="SampleTip" href="javascript:void(0);" style="color:orange;" onclick="layer.tips(\'√A.备选答案a<br />B.备选答案b<br />C.备选答案c<br />……\', \'#SampleTip\');">示例</a><br />' +
                         '<textarea id="ModifyAnswer" class="textarea" cols="20" rows="2" style="height:200px;">' + taValue + '</textarea>'
                 },
@@ -81,18 +91,23 @@ $(function() {
             changeContentAndAnswer();
         });
 
-    $('select#Q_Type').on('change', function() {
+    $('select#Q_Type')
+        .on('change', function() {
 
-        showContentAndAnswer();
-    });
+            showContentAndAnswer(true);
+        })
+        .on('mousedown', function() {
+
+            typeInput.attr('data-last-value', typeInput.val());
+        });
 
     // 提交前修改数据
     $('form').submit(function(e) {
 
-        if(confirm('确定提交吗？')){
-            
+        if (confirm('确定提交吗？')) {
+
             changeContentAndAnswer();
-        }else{
+        } else {
 
             e.preventDefault();
         }
@@ -131,13 +146,20 @@ $(function() {
         $('#SelectItemContainer').html(controlHtml);
     }
 
-    function changeContentAndAnswer() {
+    function changeContentAndAnswer(getOriginType) {
 
         var qType, modelAnswers, answer;
 
         modelAnswers = [];
 
-        qType = $('#Q_Type').val();
+        if (getOriginType) {
+
+            qType = $('#Q_Type').attr('data-origin-value');
+        } else {
+
+            qType = $('#Q_Type').val();
+        }
+
         switch (qType) {
             case '单选题':
 
@@ -146,7 +168,7 @@ $(function() {
                 modelAnswers = modelAnswers.length > 0 ? JSON.stringify(modelAnswers) : '';
 
                 $('#Q_Content').val($('[name="Content"]').val());
-                $('#Q_OptionalAnswer').val(getOptionalAnswer());
+                $('#Q_OptionalAnswer').val(getOptionalAnswer(qType));
                 $('#Q_ModelAnswer').val(modelAnswers);
 
                 break;
@@ -160,7 +182,7 @@ $(function() {
                 modelAnswers = modelAnswers.length > 0 ? JSON.stringify(modelAnswers) : '';
 
                 $('#Q_Content').val($('[name="Content"]').val());
-                $('#Q_OptionalAnswer').val(getOptionalAnswer());
+                $('#Q_OptionalAnswer').val(getOptionalAnswer(qType));
                 $('#Q_ModelAnswer').val(modelAnswers);
 
                 break;
@@ -170,7 +192,7 @@ $(function() {
                 answer = undefined == answer ? '' : answer;
 
                 $('#Q_Content').val($('[name="Content"]').val());
-                $('#Q_OptionalAnswer').val(getOptionalAnswer());
+                $('#Q_OptionalAnswer').val(getOptionalAnswer(qType));
                 $('#Q_ModelAnswer').val(answer);
 
                 break;
@@ -187,21 +209,28 @@ $(function() {
         }
     }
 
-    function getOptionalAnswer(json) {
+    function getOptionalAnswer(qType, returnJson) {
 
         var container;
-        var qType, selector;
+        var selector;
         var qOptionalAnswer;
 
         container = $('#SelectItemContainer');
-        qType = $('#Q_Type').val();
+
+        if (undefined == qType) {
+
+            qType = $('#Q_Type').val();
+        }
 
         if ('单选题' == qType) {
+
             selector = ':radio';
         } else if ('多选题' == qType) {
+
             selector = ':checkbox';
         } else {
-            return {};
+
+            return returnJson ? {} : '{}';
         }
 
         qOptionalAnswer = {};
@@ -216,18 +245,37 @@ $(function() {
             qOptionalAnswer[key] = text;
         });
 
-        return json ? qOptionalAnswer : JSON.stringify(qOptionalAnswer);
+        return returnJson ? qOptionalAnswer : JSON.stringify(qOptionalAnswer);
     }
 
-    function showContentAndAnswer() {
+    function getOptionalAnswerArrayWithInput() {
+
+        var qOptionalAnswer;
+
+        qOptionalAnswer = $('#Q_OptionalAnswer').val();
+        qOptionalAnswer = qOptionalAnswer == '' ? [] : (qOptionalAnswer.substring(0, 1) == '[' ? JSON.parse(qOptionalAnswer) : []);
+
+        return qOptionalAnswer;
+    }
+
+    function getModelAnswerArrayWithInput() {
+
+        var qModelAnswer;
+
+        qModelAnswer = $('#Q_ModelAnswer').val();
+        qModelAnswer = qModelAnswer == '' ? [] : (qModelAnswer.substring(0, 1) == '[' ? JSON.parse(qModelAnswer) : []);
+
+        return qModelAnswer;
+    }
+
+    function showContentAndAnswer(clear) {
 
         var container;
         var templateHtml, controlHtml, validationMessageHtml, html;
         var tmpHtml1;
-        var qType, qContent, qOptionalAnswer, qModelAnswer;
+        var qType, qTypeOrigin, qContent, qOptionalAnswer, qModelAnswer;
 
         container = $('#QuestionContentAndAnswer');
-        container.html('');
 
         templateHtml =
             '<div class="row cl">' +
@@ -240,10 +288,49 @@ $(function() {
             '    </div>' +
             '</div>';
 
-        qType = $('#Q_Type').val();
-        qContent = $('#Q_Content').val();
-        qOptionalAnswer = $('#Q_OptionalAnswer').val();
-        qModelAnswer = $('#Q_ModelAnswer').val();
+        qType = typeInput.val();
+        qTypeOrigin = typeInput.attr('data-origin-value');
+
+        if (clear && qType != qTypeOrigin) {
+
+            qContent = '';
+            qOptionalAnswer = '';
+            qModelAnswer = '';
+
+            if (cacheFlag) {
+
+                // 缓存原数据
+                changeContentAndAnswer(true);
+                contentInput.attr('data-origin-value', contentInput.val());
+                optionalAnswerInput.attr('data-origin-value', optionalAnswerInput.val());
+                modelAnswerInput.attr('data-origin-value', modelAnswerInput.val());
+
+                cacheFlag = false;
+            }
+        } else if (clear && qType == qTypeOrigin) {
+
+            // 恢复原数据
+            qContent = contentInput.attr('data-origin-value');
+            qOptionalAnswer = optionalAnswerInput.attr('data-origin-value');
+            qModelAnswer = modelAnswerInput.attr('data-origin-value');
+
+            contentInput.val(qContent);
+            optionalAnswerInput.val(qOptionalAnswer);
+            modelAnswerInput.val(qModelAnswer);
+
+            cacheFlag = true;
+        } else if (!clear) {
+
+            qContent = contentInput.val();
+            qOptionalAnswer = optionalAnswerInput.val();
+            qModelAnswer = modelAnswerInput.val();
+        }
+
+        // 重新初始化控件前，清除原控件
+        container.html('');
+        // 清除 UEditor 残余的控件
+        $('[name="Content"]').remove();
+        //$('[name="Answer"]').remove();
 
         switch (qType) {
             case '单选题':
@@ -360,8 +447,9 @@ $(function() {
                 html = tmpHtml1.replace('{ValidationMessage}', validationMessageHtml);
 
                 tmpHtml1 = templateHtml;
-                qModelAnswer = qModelAnswer.replace(/\\r\\n/g, '<br />');
-                controlHtml = '<script id="UEditorAnswer" name="Answer" type="text/plain" style="width:100%;height:400px;">' + qModelAnswer + '</script>';
+                qModelAnswer = qModelAnswer.replace(/\\r\\n/g, '\n');
+                //controlHtml = '<script id="UEditorAnswer" name="Answer" type="text/plain" style="width:100%;height:400px;">' + qModelAnswer + '</script>';
+                controlHtml = '<textarea name="Answer" class="textarea" cols="20" rows="2" style="height:400px;">' + qModelAnswer + '</textarea>';
                 validationMessageHtml = '<span class="field-validation-valid" data-valmsg-for="Q_ModelAnswer" data-valmsg-replace="true"></span>';
 
                 tmpHtml1 = tmpHtml1.replace('{Name}', '答案');
@@ -370,8 +458,12 @@ $(function() {
                 html += tmpHtml1.replace('{ValidationMessage}', validationMessageHtml);
 
                 container.html(html);
+
+                if (ueContent) {
+                    ueContent.destroy();
+                }
                 ueContent = UE.getEditor('UEditorContent');
-                ueAnswer = UE.getEditor('UEditorAnswer');
+                //ueAnswer = UE.getEditor('UEditorAnswer');
 
                 break;
             default:

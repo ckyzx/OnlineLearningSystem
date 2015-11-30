@@ -28,6 +28,9 @@ namespace OnlineLearningSystem.Controllers
         [Description("试题列表")]
         public ActionResult List()
         {
+
+            ViewBag.QuestionClassifies = new UQuestionClassify().GetZTreeJson();
+
             return View();
         }
 
@@ -35,14 +38,14 @@ namespace OnlineLearningSystem.Controllers
         // POST: /Question/ListDataTablesAjax
 
         [Description("查询试题")]
-        public JsonResult ListDataTablesAjax(Byte status = 1)
+        public JsonResult ListDataTablesAjax(Byte status = 1, Int32 qcId = 0)
         {
 
             DataTablesRequest dtRequest;
             DataTablesResponse dtResponse;
 
             dtRequest = GetDataTablesRequest();
-            dtResponse = um.ListDataTablesAjax(status, dtRequest);
+            dtResponse = um.ListDataTablesAjax(status, qcId, dtRequest);
 
             return Json(dtResponse, JsonRequestBehavior.DenyGet);
         }

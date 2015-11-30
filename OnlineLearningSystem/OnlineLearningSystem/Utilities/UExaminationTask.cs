@@ -148,7 +148,7 @@ namespace OnlineLearningSystem.Utilities
                 ET_Attendee = "[]",
                 ET_StartTime = initDateTime,
                 ET_EndTime = initDateTime.AddDays(7),
-                ET_TimeSpan = 60,
+                ET_TimeSpan = 0,
                 ET_PaperTemplates = "[]",
                 ET_Questions = "[]",
                 ET_Remark = "",

@@ -113,10 +113,16 @@
 
     $('#DocxImport').on('click', function() {
 
+        var layerIndex;
         var btn;
         var filePath, jqXHR;
 
+        layerIndex = layer.load(0, {
+            shade: [0.3, '#FFF']
+        });
+        
         btn = $(this);
+        btn.hide();
         filePath = btn.attr('file-path');
 
         jqXHR = $.post('/Question/Import', {
@@ -135,6 +141,7 @@
                 }
             } else if (0 == data.Status) {
 
+                layer.close(layerIndex);
                 alert(data.Message);
             }
         }, 'json');

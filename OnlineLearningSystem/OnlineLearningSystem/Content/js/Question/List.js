@@ -1,11 +1,14 @@
 ﻿$(function() {
 
     var table;
-    var status;
+    var status, qcId;
 
     QueryString.Initial();
     status = QueryString.GetValue('status');
     status = undefined == status ? 1 :status;
+    qcId = QueryString.GetValue('qcId');
+    qcId = undefined == qcId ? 0 :qcId;
+
 
     // 显示“试题缓存导入面板”
     if(4 == status){
@@ -23,7 +26,8 @@
             "url": "/Question/ListDataTablesAjax",
             "type": "POST",
             "data": {
-                status: status
+                status: status,
+                qcId: qcId
             }
         },
         "stateSave": false,
@@ -34,7 +38,7 @@
         ],
         "columnDefs": [{
             "orderable": false,
-            "targets": [0, 5, 6, 7]
+            "targets": [0, 1, 2, 3, 4, 5, 6, 7]
         }],
         "columns": [{
             "width": "10px",
@@ -247,7 +251,8 @@
     });
 
     $('#DocxUploadBtn').on('click', function() {
-        ShowPageWithSize('导入试题', '/Question/DocxUploadAndImport', 800, 300);
+        //ShowPageWithSize('导入试题', '/Question/DocxUploadAndImport', 800, 300);
+        ShowPage('导入试题', '/Question/DocxUploadAndImport');
     });
 
     $('#CacheClearBtn').on('click',function(){
@@ -323,6 +328,27 @@
                 alert('请求返回错误！');
             });
     });
+
+    var ul;
+    var settings, nodes;
+    var ztree;
+
+    settings = {
+        check: {
+            enable: true
+        },
+        data: {
+            simpleData: {
+                enable: true
+            }
+        }
+    };
+
+    ul = $('.question-classify-list ul');
+    nodes = ul.attr('data-value');
+    nodes = $.parseJSON(nodes);
+
+    ztree = $.fn.zTree.init(ul, settings, nodes);
 
 });
 

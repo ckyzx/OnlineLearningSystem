@@ -85,7 +85,7 @@ function initQuestionSelectTable() {
         ],
         "columnDefs": [{
             "orderable": false,
-            "targets": [0, 5, 6]
+            "targets": [0, 1, 2, 3, 4, 5, 6]
         }],
         "columns": [{
             "width": "10px",

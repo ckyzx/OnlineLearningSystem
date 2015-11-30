@@ -18,7 +18,7 @@
 <script type="text/javascript" src="@Url.Content("/Content/js/ExaminationPaper/Paper.js")"></script>
 <script id="TypeItemTmpl" type="text/x-jquery-tmpl">
     <li id="Item_${i}" class="item" index="${i}">
-        <h4>${type}<b>+</b></h4>
+        <h4>${type}(<span data-id="Done">${done}</span>/<span data-id="Total">${total}</span>)<b>+</b></h4>
         <div class="info">
             {{each questions}}
             <div class="info-item"><a href="javascript:void(0);" index="${$value.i}">${$value.i}</a></div>
@@ -35,7 +35,7 @@
         <div class="swiper-button-container">
             <button class="btn btn-primary radius swiper-button-question swiper-button-prev-question ml-80 mr-10" type="button">上一题</button>
             <button class="btn btn-primary radius swiper-button-question swiper-button-next-question mr-30" type="button">下一题</button>
-            <button class="btn btn-primary radius paper-hand-in" type="button">交卷</button>
+            <button class="btn btn-primary radius f-r paper-hand-in mr-20" type="button">交卷</button>
         </div>
     </div>
 </script>

@@ -15,7 +15,7 @@
 #ExaminationPaperContainer { height: 100%; }
 
 #ExaminationPaperContainer .Huifold{ border-bottom:1px solid #FFF; }
-#ExaminationPaperContainer .Huifold .item h4 { padding-left: 30px; }
+#ExaminationPaperContainer .Huifold .item h4 { padding-left: 30px; font-size:14px; font-weight: normal; }
 #ExaminationPaperContainer .Huifold .item h4 b{ color:#999; font-weight:normal; }
 #ExaminationPaperContainer .Huifold .item h4.active{ background: #FFF; }
 #ExaminationPaperContainer .Huifold .item .info { padding: 0; }
@@ -43,3 +43,8 @@
 #ExaminationPaperContainer #QuestionList .question-answer { padding: 0 80px 81px 80px; }
 #ExaminationPaperContainer #QuestionList .question-answer textarea { height:200px; }
 #ExaminationPaperContainer #QuestionList span.tip { padding: 2px 6px; margin-right: 10px; font-size: 18px; color: #FFF; background: #666; }
+
+.time-picker{padding-top: 5px; height: 26px;}
+
+.question-list-container {padding-left:260px;}
+.question-classify-list { position: absolute; padding: 20px 0 44px 0; width: 250px; overflow: hidden; /* overflow-y: scroll; */ }

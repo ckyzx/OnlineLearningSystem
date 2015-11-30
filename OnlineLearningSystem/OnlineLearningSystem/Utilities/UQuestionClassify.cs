@@ -5,6 +5,7 @@ using System.Data;
 using System.Web;
 using System.Web.Mvc;
 using OnlineLearningSystem.Models;
+using System.Text;
 
 namespace OnlineLearningSystem.Utilities
 {
@@ -241,6 +242,34 @@ namespace OnlineLearningSystem.Utilities
             {
                 return false;
             }
+        }
+
+        public String GetZTreeJson()
+        {
+
+            List<QuestionClassify> qcs;
+            StringBuilder zTreeJson;
+
+            qcs = olsEni.QuestionClassifies.Where(m => m.QC_Status == (Byte)Status.Available).ToList();
+
+            zTreeJson = new StringBuilder();
+            zTreeJson.Append("[");
+
+            foreach (var qc in qcs)
+            {
+
+                zTreeJson.Append("{");
+                zTreeJson.Append(
+                    "\"questionClassifyId\":" + qc.QC_Id + ", " +
+                    "\"click\":\"location.href='/Question/List?qcId=" + qc.QC_Id + "'\", " + 
+                    "\"name\":\"" + qc.QC_Name + "\"");
+                zTreeJson.Append("},");
+            }
+
+            zTreeJson.Remove(zTreeJson.Length - 1, 1);
+            zTreeJson.Append("]");
+
+            return zTreeJson.ToString();
         }
     }
 }

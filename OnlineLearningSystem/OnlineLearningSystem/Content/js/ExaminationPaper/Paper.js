@@ -311,7 +311,9 @@ $(function() {
                         if ('function' == typeof(successCallback)) {
                             successCallback();
                         }
-                    };
+                    }
+
+                    //updateAnswerProgress(questionTypesAry);
                 } else if (0 == data.status) {
 
                     alert(data.message);
@@ -321,6 +323,11 @@ $(function() {
 
                 alert('请求返回错误！');
             });
+    }
+
+    function updateAnswerProgress(questionTypesAry){
+
+        //TODO: 刷新答题进度
     }
 
     function saveAnswers() {
@@ -468,6 +475,9 @@ $(function() {
             a = getAnswer(as, q.EPTQ_Id);
 
             if (undefined != a.EPQ_Id) {
+
+                q.hasAnswer = true;
+
                 for (var k in a) {
                     q[k] = a[k];
                 }
@@ -479,6 +489,8 @@ $(function() {
                 obj = {
                     i: i1,
                     type: q.EPTQ_Type,
+                    total: 0,
+                    done: 0,
                     questions: []
                 };
                 ary.push(obj);
@@ -489,6 +501,11 @@ $(function() {
 
             q.i = i2;
             obj.questions.push(q);
+            obj.total = i2;
+
+            if (q.hasAnswer) {
+                obj.done += 1;
+            }
 
             i2 += 1;
         }

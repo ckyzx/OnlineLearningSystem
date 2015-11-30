@@ -44,10 +44,10 @@ namespace OnlineLearningSystem.Utilities
                 now = DateTime.Now;
 
                 typeRegex = new Regex(@"^题型[:：]{1}");
-                contentRegex1 = new Regex(@"^\s*\d+[\.．]");
-                contentRegex2 = new Regex(@"^\s*\(.+\)|^\s*（.+）");
-                optionalAnswerRegex = new Regex(@"^\s*[a-zA-Z]{1}[\.．]{1}");
-                modelAnswerRegex = new Regex(@"^\s*答案：|^\s*答案:|^\s*【答】");
+                contentRegex1 = new Regex(@"^\s*\d+[\.．、]"); // 示例：1.
+                contentRegex2 = new Regex(@"^\s*\(.+\)|^\s*（.+）"); // 示例：(一) （一）
+                optionalAnswerRegex = new Regex(@"^\s*[a-zA-Z]{1}[\.．]{1}"); // 示例：A. B. C.
+                modelAnswerRegex = new Regex(@"^\s*((答案|参考答案){1}[:：]{1})|【答】");
                 difficultyCoefficientRegex = new Regex(@"^难度系数：|难度系数:");
 
                 qType = "";
@@ -432,13 +432,13 @@ namespace OnlineLearningSystem.Utilities
 
         }
 
-        public DataTablesResponse ListDataTablesAjax(Byte status, DataTablesRequest dtRequest)
+        public DataTablesResponse ListDataTablesAjax(Byte status, Int32 qcId, DataTablesRequest dtRequest)
         {
 
             DataTablesResponse dtResponse;
             Int32 recordsTotal, recordsFiltered;
             String whereSql, orderColumn, classfyName;
-            List<Question> ms;
+            List<Question> tmpMs, ms;
 
 
             dtResponse = new DataTablesResponse();
@@ -464,43 +464,49 @@ namespace OnlineLearningSystem.Utilities
             //TODO:指定排序列
             orderColumn = dtRequest.Columns[dtRequest.OrderColumn].Name;
 
-            var tmpMs =
-                olsEni
-                .Questions
-                .OrderBy(model => model.Q_Id)
-                .Where(model =>
-                    (model.Q_Type.Contains(dtRequest.SearchValue)
-                    || model.Q_Content.Contains(dtRequest.SearchValue)
-                    || model.Q_OptionalAnswer.Contains(dtRequest.SearchValue)
-                    || model.Q_ModelAnswer.Contains(dtRequest.SearchValue))
-                    && model.Q_Status == status)
-                .Select(model => new
-                {
-                    Q_Id = model.Q_Id,
-                    Q_Type = model.Q_Type,
-                    Q_Classify = model.QC_Id,
-                    Q_DifficultyCoefficient = model.Q_DifficultyCoefficient,
-                    Q_Content = model.Q_Content,
-                    Q_OptionalAnswer = model.Q_OptionalAnswer,
-                    Q_AddTime = model.Q_AddTime,
-                    Q_Status = model.Q_Status,
-                    Q_Remark = model.Q_Remark
-                })
-                .ToList();
+            if (qcId == 0)
+            {
+                tmpMs =
+                    olsEni
+                    .Questions
+                    .OrderBy(model => model.Q_Id)
+                    .Where(model =>
+                        (model.Q_Type.Contains(dtRequest.SearchValue)
+                        || model.Q_Content.Contains(dtRequest.SearchValue)
+                        || model.Q_OptionalAnswer.Contains(dtRequest.SearchValue)
+                        || model.Q_ModelAnswer.Contains(dtRequest.SearchValue))
+                        && model.Q_Status == status)
+                    .ToList();
+            }
+            else
+            {
 
-            // 获取分类名称
+                tmpMs =
+                    olsEni
+                    .Questions
+                    .OrderBy(model => model.Q_Id)
+                    .Where(model =>
+                        (model.Q_Type.Contains(dtRequest.SearchValue)
+                        || model.Q_Content.Contains(dtRequest.SearchValue)
+                        || model.Q_OptionalAnswer.Contains(dtRequest.SearchValue)
+                        || model.Q_ModelAnswer.Contains(dtRequest.SearchValue))
+                        && model.Q_Status == status
+                        && model.QC_Id == qcId)
+                    .ToList();
+            }
+
             ms = new List<Question>();
 
             foreach (var model in tmpMs)
             {
 
-                classfyName = olsEni.QuestionClassifies.SingleOrDefault(m1 => m1.QC_Id == model.Q_Classify).QC_Name;
+                classfyName = olsEni.QuestionClassifies.SingleOrDefault(m1 => m1.QC_Id == model.QC_Id).QC_Name;
 
                 ms.Add(new Question()
                 {
                     Q_Id = model.Q_Id,
                     Q_Type = model.Q_Type,
-                    QC_Id = model.Q_Classify,
+                    QC_Id = model.QC_Id,
                     QC_Name = classfyName,
                     Q_DifficultyCoefficient = model.Q_DifficultyCoefficient,
                     Q_Content = model.Q_Content,

@@ -307,7 +307,7 @@ namespace OnlineLearningSystem.Utilities
             }
         }
 
-        public String GetPermissionCategoriesZTreeJson()
+        public String GetZTreeJson()
         {
 
             List<PermissionCategory> pcs;

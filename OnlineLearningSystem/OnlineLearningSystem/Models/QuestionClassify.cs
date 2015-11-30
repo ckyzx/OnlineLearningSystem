@@ -19,7 +19,7 @@ namespace OnlineLearningSystem.Models
         [DisplayName("名称")]
         [Remote("DuplicateName", "QuestionClassify", ErrorMessage = "名称已存在", AdditionalFields = "QC_Id")]
         [Required(ErrorMessage = "请输入{0}")]
-        [RegularExpression(@"^[\u4E00-\u9FA5\uF900-\uFA2D]{1}[\u4E00-\u9FA5\uF900-\uFA2D0-9、，。-：“”（）【】]{1,21}$", ErrorMessage = "请输入2至22位，中文开头的字符，可带数字、中文标点")]
+        [RegularExpression(@"^[\u4E00-\u9FA5\uF900-\uFA2D]{1}[\u4E00-\u9FA5\uF900-\uFA2D0-9、，。-：“”（）【】]{1,99}$", ErrorMessage = "请输入2至100位，中文开头的字符，可带数字、中文标点")]
         public String QC_Name { get; set; }
 
         [DisplayName("层级")]

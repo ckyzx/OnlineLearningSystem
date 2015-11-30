@@ -133,28 +133,82 @@ $(function() {
         setNodeChecked(ztree, nodes, departmentIds, userIds);
     });
 
-    $('#ET_AutoType').on('change', function() {
+    $('#ET_AutoType')
+        .on('change', function() {
 
-        var container;
-        var table;
+            var container;
+            var table;
 
-        container = $('#QuestionListSelectContainer');
+            container = $('#QuestionListSelectContainer');
 
-        table = $('.question-table').DataTable();
-        table.destroy();
+            table = $('.question-table').DataTable();
+            table.destroy();
 
-        if ($(this).val() != 0) {
+            if ($(this).val() != 0) {
 
-            container.show();
+                container.show();
 
-            initQuestionSelectTable();
+                initQuestionSelectTable();
 
-        }else{
-            container.hide();
+            } else {
+                container.hide();
+            }
+        });
+    $('#ET_AutoType').change();
+
+    $('#StartTime')
+        .on('change', 'select', function() {
+
+            var container, hourcombo, mincombo, seccombo;
+            var hour, min, sec, datetime;
+
+            container = $(this).parent();
+            hourcombo = container.find('select.hourcombo');
+            mincombo = container.find('select.mincombo');
+            seccombo = container.find('select.seccombo');
+
+            hour = hourcombo.val();
+            min = mincombo.val();
+            sec = seccombo.val();
+
+            datetime = '1970/1/1 ' + hour + ':' + min + ':' + sec;
+
+            $('#ET_StartTime').val(datetime);
+        });
+
+    // 设置默认时间
+    $('body').everyTime('1s', 'SetHour', function() {
+
+        var startTimeDiv, hourcombo, mincombo, seccombo;
+        var startTime;
+
+        startTimeDiv = $('#StartTime');
+        hourcombo = startTimeDiv.find('select.hourcombo');
+
+        if (hourcombo.length > 0) {
+
+            startTime = $('#ET_StartTime').val();
+            startTime = startTime.toDate();
+
+            if (startTime.getHours() == 0 
+                && startTime.getMinutes() == 0 
+                && startTime.getSeconds() == 0) {
+
+                hourcombo.val(10);
+                hourcombo.change();
+            }else{
+
+                mincombo = startTimeDiv.find('select.mincombo');
+                seccombo = startTimeDiv.find('select.seccombo');
+
+                mincombo.val(startTime.getMinutes());
+                seccombo.val(startTime.getSeconds())
+            }
+            $('body').stopTime('SetHour');
         }
     });
 
-    $('#ET_AutoType').change();
+
 });
 
 var AutoType;

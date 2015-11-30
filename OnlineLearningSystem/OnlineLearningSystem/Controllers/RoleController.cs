@@ -58,7 +58,7 @@ namespace OnlineLearningSystem.Controllers
             Role m;
 
             m = um.GetNew();
-            ViewBag.PermissionCategories = new UPermissionCategory().GetPermissionCategoriesZTreeJson();
+            ViewBag.PermissionCategories = new UPermissionCategory().GetZTreeJson();
 
             return View(m);
         }
@@ -80,7 +80,7 @@ namespace OnlineLearningSystem.Controllers
                 }
             }
 
-            ViewBag.PermissionCategories = new UPermissionCategory().GetPermissionCategoriesZTreeJson();
+            ViewBag.PermissionCategories = new UPermissionCategory().GetZTreeJson();
 
             return View(m);
         }
@@ -96,7 +96,7 @@ namespace OnlineLearningSystem.Controllers
             Role m;
 
             m = um.Get(id);
-            ViewBag.PermissionCategories = new UPermissionCategory().GetPermissionCategoriesZTreeJson();
+            ViewBag.PermissionCategories = new UPermissionCategory().GetZTreeJson();
 
             return View(m);
         }
@@ -118,7 +118,7 @@ namespace OnlineLearningSystem.Controllers
                 }
             }
 
-            ViewBag.PermissionCategories = new UPermissionCategory().GetPermissionCategoriesZTreeJson();
+            ViewBag.PermissionCategories = new UPermissionCategory().GetZTreeJson();
 
             return View(m);
         }
