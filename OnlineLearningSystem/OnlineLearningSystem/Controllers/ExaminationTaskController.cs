@@ -169,5 +169,33 @@ namespace OnlineLearningSystem.Controllers
             return Json(resJson, JsonRequestBehavior.AllowGet);
         }
 
+        //
+        // GET: /ExaminationTask/StartTask
+
+        [Description("开始考试任务")]
+        public JsonResult StartTask(Int32 id)
+        {
+
+            ResponseJson resJson;
+
+            resJson = um.StartTask(id);
+
+            return Json(resJson, JsonRequestBehavior.AllowGet);
+        }
+
+        //
+        // GET: /ExaminationTask/StopTask
+
+        [Description("结束考试任务")]
+        public JsonResult StopTask(Int32 id)
+        {
+
+            ResponseJson resJson;
+
+            resJson = um.StopTask(id);
+
+            return Json(resJson, JsonRequestBehavior.AllowGet);
+        }
+
     }
 }

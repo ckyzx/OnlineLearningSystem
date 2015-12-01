@@ -88,8 +88,8 @@
 
             span = row.find('span.Q_Content');
             content = data['Q_Content'];
-            content = content.replace(/\\r\\n/g, '<br />');
-
+            content = content.replace(/\\r\\n/g, '<br />').trim();
+            //span.css({'overflow':'hidden','white-space':'nowrap','text-overflow':'ellipsis'});
             span.html(content);
 
             status = data['Q_Status'];

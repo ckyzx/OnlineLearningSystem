@@ -29,7 +29,11 @@ $(function() {
             questions = ary[0];
             answers = ary[1];
 
-            renderQuestions(questions, answers);
+            try {
+                renderQuestions(questions, answers);
+            } catch (e) {
+                alert(e.name + '\\r\\n' + e.message + '\\r\\n' + e.stack);
+            }
 
         } else if (0 == data.status) {
 
@@ -325,7 +329,7 @@ $(function() {
             });
     }
 
-    function updateAnswerProgress(questionTypesAry){
+    function updateAnswerProgress(questionTypesAry) {
 
         //TODO: 刷新答题进度
     }
@@ -515,21 +519,26 @@ $(function() {
 
     function formatQuestion(q) {
 
-        q.EPTQ_Content = q.EPTQ_Content.replace(/\\r\\n/g, '<br />');
+        try {
+            q.EPTQ_Content = q.EPTQ_Content.replace(/\\r\\n/g, '<br />');
 
-        if (q.EPTQ_Type == '单选题' || q.EPTQ_Type == '多选题') {
+            if (q.EPTQ_Type == '单选题' || q.EPTQ_Type == '多选题') {
 
-            tmpObj = JSON.parse(q.EPTQ_OptionalAnswer);
-            tmpAry = [];
-            for (var p in tmpObj) {
+                tmpObj = JSON.parse(q.EPTQ_OptionalAnswer);
+                tmpAry = [];
+                for (var p in tmpObj) {
 
-                tmpAry.push({
-                    qId: q.EPTQ_Id,
-                    key: p,
-                    text: tmpObj[p]
-                });
+                    tmpAry.push({
+                        qId: q.EPTQ_Id,
+                        key: p,
+                        text: tmpObj[p]
+                    });
+                }
+                q.EPTQ_OptionalAnswer = tmpAry;
             }
-            q.EPTQ_OptionalAnswer = tmpAry;
+        } catch (e) {
+            //alert(e.name + '\\r\\n' + e.message + '\\r\\n' + e.stack);
+            alert(q.EPTQ_Id);
         }
 
         return q;

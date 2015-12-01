@@ -18,6 +18,7 @@ namespace OnlineLearningSystem.Utilities
             Int32 recordsTotal, recordsFiltered;
             String whereSql, orderColumn;
             List<ExaminationTask> ms;
+            List<ExaminationPaperTemplate> epts;
 
 
             dtResponse = new DataTablesResponse();
@@ -43,52 +44,24 @@ namespace OnlineLearningSystem.Utilities
             //TODO:指定排序列
             orderColumn = dtRequest.Columns[dtRequest.OrderColumn].Name;
 
-            var tmpMs =
+            ms =
                 olsEni
                 .ExaminationTasks
                 .OrderBy(model => model.ET_Id)
                 .Where(model =>
                     model.ET_Name.Contains(dtRequest.SearchValue)
                     && model.ET_Status != (Byte)Status.Delete)
-                .Select(model => new
-                {
-                    ET_Id = model.ET_Id,
-                    ET_Name = model.ET_Name,
-                    ET_ParticipatingDepartment = model.ET_ParticipatingDepartment,
-                    ET_Attendee = model.ET_Attendee,
-                    ET_AutoType = model.ET_AutoType,
-                    ET_StartTime = model.ET_StartTime,
-                    ET_EndTime = model.ET_EndTime,
-                    ET_TimeSpan = model.ET_TimeSpan,
-                    ET_Remark = model.ET_Remark,
-                    ET_AddTime = model.ET_AddTime,
-                    ET_Status = model.ET_Status
-                })
                 .ToList();
 
-            // 获取分类名称
-            ms = new List<ExaminationTask>();
-
-            foreach (var model in tmpMs)
+            foreach (var model in ms)
             {
 
-                ms.Add(new ExaminationTask()
+                epts = olsEni.ExaminationPaperTemplates.Where(m => m.ET_Id == model.ET_Id).ToList();
+                if (epts.Count == 1)
                 {
-                    ET_Id = model.ET_Id,
-                    ET_Name = model.ET_Name,
-                    ET_ParticipatingDepartment = model.ET_ParticipatingDepartment,
-                    ET_Attendee = model.ET_Attendee,
-                    ET_AutoType = model.ET_AutoType,
-                    ET_StartTime = model.ET_StartTime,
-                    ET_EndTime = model.ET_EndTime,
-                    ET_TimeSpan = model.ET_TimeSpan,
-                    ET_Remark = model.ET_Remark,
-                    ET_AddTime = model.ET_AddTime,
-                    ET_Status = model.ET_Status
-                });
+                    model.EPT_PaperTemplateStatus = epts[0].EPT_PaperTemplateStatus;
+                }
             }
-
-            tmpMs = null;
 
             recordsFiltered = ms.Count();
             dtResponse.recordsFiltered = recordsFiltered;
@@ -222,25 +195,27 @@ namespace OnlineLearningSystem.Utilities
                 case 1: // 每日
                     
                     eptStartTime = new DateTime(now.Year, now.Month, now.Day, etStartTime.Hour, etStartTime.Minute, etStartTime.Second);
-
+                    eptEndTime = eptStartTime.AddDays(7); // 过期日设置在7天后
                     break;
                 case 2: // 每周
                     
                     eptStartTime = new DateTime(now.Year, now.Month, now.Day, etStartTime.Hour, etStartTime.Minute, etStartTime.Second);
                     eptStartTime = eptStartTime.AddDays(7 - (Int32)eptStartTime.DayOfWeek + model.ET_AutoOffsetDay);
-
+                    eptEndTime = eptStartTime.AddDays(7); // 过期日设置在7天后
                     break;
                 case 3: // 每月
                     
                     eptStartTime = new DateTime(now.Year, now.Month, 1, etStartTime.Hour, etStartTime.Minute, etStartTime.Second);
                     eptStartTime.AddMonths(1).AddDays(model.ET_AutoOffsetDay);
-
+                    eptEndTime = eptStartTime.AddDays(7); // 过期日设置在7天后
                     break;
                 //case 0: // 手动
                 default:
-                    return;
+
+                    eptStartTime = new DateTime(1970, 1, 1);
+                    eptEndTime = eptStartTime;
+                    break;
             }
-            eptEndTime = eptStartTime.AddDays(7); // 过期日设置在7天后
 
             ept = new ExaminationPaperTemplate
             {
@@ -350,6 +325,64 @@ namespace OnlineLearningSystem.Utilities
                 olsEni.Entry(model).State = EntityState.Modified;
                 olsEni.SaveChanges();
 
+                resJson.status = ResponseStatus.Success;
+                return resJson;
+            }
+            catch (Exception ex)
+            {
+                resJson.status = ResponseStatus.Error;
+                resJson.message = StaticHelper.GetExceptionMessage(ex);
+                return resJson;
+            }
+        }
+
+        public ResponseJson StartTask(Int32 id)
+        {
+            return SetPaperTemplateStatus(id, PaperTemplateStatus.Doing);
+        }
+
+        public ResponseJson StopTask(Int32 id)
+        {
+            return SetPaperTemplateStatus(id, PaperTemplateStatus.Done);
+        }
+
+        public ResponseJson SetPaperTemplateStatus(Int32 etId, PaperTemplateStatus ptStatus)
+        {
+
+            ResponseJson resJson;
+
+            resJson = new ResponseJson();
+
+            try
+            {
+                ExaminationTask model;
+                List<ExaminationPaperTemplate> epts;
+
+                model = olsEni.ExaminationTasks.SingleOrDefault(m => m.ET_Id == etId);
+
+                if (null == model)
+                {
+                    resJson.message = "数据不存在！";
+                    return resJson;
+                }
+
+                epts = olsEni.ExaminationPaperTemplates.Where(m => m.ET_Id == model.ET_Id).ToList();
+                if (epts.Count != 1)
+                {
+                    resJson.status = ResponseStatus.Error;
+                    resJson.message = "试卷模板不匹配。";
+                    return resJson;
+                }
+
+                epts[0].EPT_PaperTemplateStatus = (Byte)ptStatus;
+                olsEni.Entry(epts[0]).State = EntityState.Modified;
+                if (0 == olsEni.SaveChanges())
+                {
+                    resJson.status = ResponseStatus.Error;
+                    resJson.message = ResponseMessage.SaveChangeError;
+                    return resJson;
+                }
+                
                 resJson.status = ResponseStatus.Success;
                 return resJson;
             }

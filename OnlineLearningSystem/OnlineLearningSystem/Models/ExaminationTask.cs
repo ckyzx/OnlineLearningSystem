@@ -77,5 +77,9 @@ namespace OnlineLearningSystem.Models
         [DisplayName("状态")]
         [Required(ErrorMessage = "请选择{0}")]
         public Byte ET_Status { get; set; }
+
+        [NotMapped]
+        [DisplayName("模板状态")]
+        public Byte EPT_PaperTemplateStatus { get; set; }
     }
 }

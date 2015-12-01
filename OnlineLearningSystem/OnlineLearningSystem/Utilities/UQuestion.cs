@@ -401,16 +401,12 @@ namespace OnlineLearningSystem.Utilities
             Regex spaceRegex, dotRegex, suffixRegex;
 
             spaceRegex = new Regex(@"\s+");
-            dotRegex = new Regex(@"(\.|．)\s*");
+            dotRegex = new Regex(@"[\.．、]+\s*");
             suffixRegex = new Regex(", \"$");
 
             qOptionalAnswer = qOptionalAnswer.Trim();
             qOptionalAnswer = dotRegex.Replace(qOptionalAnswer, "\":\"");
             qOptionalAnswer = spaceRegex.Replace(qOptionalAnswer, "\", \"");
-            //if (suffixRegex.IsMatch(qOptionalAnswer))
-            //{
-            //    qOptionalAnswer = qOptionalAnswer.Substring(0, qOptionalAnswer.Length - 3);
-            //}
             qOptionalAnswer = "{\"" + qOptionalAnswer;
             qOptionalAnswer = qOptionalAnswer + "\"}";
 

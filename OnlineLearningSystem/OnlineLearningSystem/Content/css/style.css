@@ -46,5 +46,6 @@
 
 .time-picker{padding-top: 5px; height: 26px;}
 
-.question-list-container {padding-left:260px;}
-.question-classify-list { position: absolute; padding: 20px 0 44px 0; width: 250px; overflow: hidden; /* overflow-y: scroll; */ }
+.question-classify-list { position: absolute; width: 250px; height: 100%; background-color: #EEE; overflow: hidden; overflow-y: scroll; }
+.question-classify-list ul {padding: 20px 0 44px 0;}
+.question-list-container {padding-left:260px;/* height: 100%; overflow: hidden; overflow-y: scroll; */}

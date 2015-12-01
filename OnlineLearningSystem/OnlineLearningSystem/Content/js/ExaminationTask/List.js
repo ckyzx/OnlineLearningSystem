@@ -17,7 +17,7 @@ $(function() {
         ],
         "columnDefs": [{
             "orderable": false,
-            "targets": [0, 4, 5, 6, 7]
+            "targets": [0, 1, 2, 3, 4, 5, 6, 7]
         }],
         "columns": [{
             "width": "10px",
@@ -46,11 +46,13 @@ $(function() {
         }, {
             "width": "180px",
             "className": "text-c",
-            "defaultContent": '<a style="text-decoration: none" class="btn btn-primary radius size-MINI paper-template fz-10" href="javascript:;" title="试卷模板">试卷模板</a>' +
-                '<a style="text-decoration: none" class="recycle ml-5 fz-18 hide" href="javascript:;" title="回收"><i class="Hui-iconfont">&#xe631;</i></a>' +
-                '<a style="text-decoration: none" class="resume ml-5 fz-18 hide" href="javascript:;" title="恢复"><i class="Hui-iconfont">&#xe615;</i></a>' +
-                '<a style="text-decoration: none" class="edit ml-5 fz-18 hide" href="javascript:;" title="编辑"><i class="Hui-iconfont">&#xe60c;</i></a>' +
-                '<a style="text-decoration: none" class="delete ml-5 fz-18 hide" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a>'
+            "defaultContent": '<a style="display:none;text-decoration:none;" class="btn btn-primary radius size-MINI start-task fz-10" href="javascript:;" title="开始任务">开始任务</a>' +
+                '<a style="display:none;text-decoration:none;" class="btn btn-primary radius size-MINI stop-task fz-10" href="javascript:;" title="结束任务">结束任务</a>' +
+                '<a style="display:none;text-decoration:none;" class="btn btn-primary radius size-MINI paper-template fz-10" href="javascript:;" title="试卷模板">试卷模板</a>' +
+                '<a style="text-decoration:none;" class="recycle ml-5 fz-18 hide" href="javascript:;" title="回收"><i class="Hui-iconfont">&#xe631;</i></a>' +
+                '<a style="text-decoration:none;" class="resume ml-5 fz-18 hide" href="javascript:;" title="恢复"><i class="Hui-iconfont">&#xe615;</i></a>' +
+                '<a style="text-decoration:none;" class="edit ml-5 fz-18 hide" href="javascript:;" title="编辑"><i class="Hui-iconfont">&#xe60c;</i></a>' +
+                '<a style="text-decoration:none;" class="delete ml-5 fz-18 hide" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a>'
         }],
         "createdRow": function(row, data, dataIndex) {
 
@@ -58,20 +60,39 @@ $(function() {
 
             row = $(row);
 
+            // 设置开始时间
             span = row.find('span.ET_StartTime');
             strDate = data['ET_StartTime'];
             date = strDate.jsonDateToDate();
-            strDate = date.format('hh时 mm分');
-            span.text(strDate);
+            if (date.getHours() == 0 && date.getMinutes() == 0 && date.getSeconds() == 0) {
+                span.text('[手动开始]');
+            } else {
+                strDate = date.format('hh时 mm分');
+                span.text(strDate);
+            }
 
+            // 设置考试时长
             span = row.find('span.ET_TimeSpan');
             timeSpan = data['ET_TimeSpan'];
-            span.text(timeSpan + '分钟');
+            if (0 == timeSpan) {
+                span.text('[无限制]');
+            } else {
+                span.text(timeSpan + '分钟');
+            }
 
+            // 设置类型
             span = row.find('span.ET_AutoType');
             autoType = data['ET_AutoType'];
             span.text(AutoType[autoType]);
+            switch (autoType) {
+                case 0:
+                    break;
+                default:
+                    row.find('a.paper-template').show();
+                    break;
+            }
 
+            // 呈现按钮
             status = data['ET_Status'];
             switch (status) {
                 case 1:
@@ -84,6 +105,20 @@ $(function() {
                     row.find('a.delete').show();
                     break;
                 case 3:
+                    break;
+                default:
+                    break;
+            }
+
+            status = data['EPT_PaperTemplateStatus']
+            switch (status) {
+                case 0:
+                    row.find('a.start-task').show();
+                    break;
+                case 1:
+                    row.find('a.stop-task').show();
+                    break;
+                case 2:
                     break;
                 default:
                     break;
@@ -226,6 +261,65 @@ $(function() {
         id = data['ET_Id'];
 
         location.href = '/ExaminationPaperTemplate/List?etId=' + id;
+    });
+
+    $('.table-sort tbody').on('click', 'a.start-task', function() {
+
+        var tr, data, id;
+
+        tr = $(this).parents('tr');
+        data = table.row(tr).data();
+        id = data['ET_Id'];
+
+        $.post('/ExaminationTask/StartTask', {
+                id: id
+            }, function(data) {
+
+                var btn, td;
+
+                if (1 == data.status) {
+
+                    tr.find('a.start-task').hide();
+                    tr.find('a.stop-task').show();
+
+                    alert('操作成功。');
+                } else if (0 == data.status) {
+
+                    alert(data.message);
+                }
+            }, 'json')
+            .error(function() {
+
+                alert('请求返回错误！');
+            });
+    });
+
+    $('.table-sort tbody').on('click', 'a.stop-task', function() {
+
+        var tr, data, id;
+
+        tr = $(this).parents('tr');
+        data = table.row(tr).data();
+        id = data['ET_Id'];
+
+        $.post('/ExaminationTask/StopTask', {
+                id: id
+            }, function(data) {
+
+                if (1 == data.status) {
+
+                    tr.find('a.stop-task').hide();
+                    
+                    alert('操作成功。');
+                } else if (0 == data.status) {
+
+                    alert(data.message);
+                }
+            }, 'json')
+            .error(function() {
+
+                alert('请求返回错误！');
+            });
     });
 
     $('#CreateBtn').on('click', function() {

@@ -141,13 +141,11 @@ $(function() {
 
             container = $('#QuestionListSelectContainer');
 
-            table = $('.question-table').DataTable();
-            table.destroy();
-
-            if ($(this).val() != 0) {
+            if ($(this).val() == 0) {
 
                 container.show();
-
+                table = $('.question-table').DataTable();
+                table.destroy();
                 initQuestionSelectTable();
 
             } else {
@@ -190,20 +188,20 @@ $(function() {
             startTime = $('#ET_StartTime').val();
             startTime = startTime.toDate();
 
-            if (startTime.getHours() == 0 
+            /*if (startTime.getHours() == 0 
                 && startTime.getMinutes() == 0 
                 && startTime.getSeconds() == 0) {
 
                 hourcombo.val(10);
                 hourcombo.change();
-            }else{
+            }else{*/
 
                 mincombo = startTimeDiv.find('select.mincombo');
                 seccombo = startTimeDiv.find('select.seccombo');
 
                 mincombo.val(startTime.getMinutes());
                 seccombo.val(startTime.getSeconds())
-            }
+            //}
             $('body').stopTime('SetHour');
         }
     });

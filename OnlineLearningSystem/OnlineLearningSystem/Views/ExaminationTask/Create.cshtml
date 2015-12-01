@@ -53,7 +53,7 @@
                 @Html.ValidationMessageFor(m => m.ET_Type)
             </div>
         </div>
-        <div class="row cl">
+        <div class="row cl hidden">
             <label class="form-label col-2">
                 @Html.LabelFor(m => m.ET_Mode)
             </label>
@@ -64,7 +64,7 @@
                 @Html.ValidationMessageFor(m => m.ET_Mode)
             </div>
         </div>
-        <div class="row cl">
+        <div class="row cl hidden">
             <label class="form-label col-2">
                 @Html.LabelFor(m => m.ET_DifficultyCoefficient)
             </label>
@@ -88,7 +88,7 @@
                 @Html.ValidationMessageFor(m => m.ET_Attendee)
             </div>
         </div>
-        <div class="row cl">
+        <div class="row cl hidden">
             <label class="form-label col-2">
                 @Html.LabelFor(m => m.ET_AutoType)
             </label>
@@ -99,7 +99,7 @@
                 @Html.ValidationMessageFor(m => m.ET_AutoType)
             </div>
         </div>
-        <div class="row cl">
+        <div class="row cl hidden">
             <label class="form-label col-2">
                 @Html.LabelFor(m => m.ET_AutoOffsetDay)
             </label>
@@ -108,7 +108,7 @@
                 @Html.ValidationMessageFor(m => m.ET_AutoOffsetDay)
             </div>
         </div>
-        <div class="row cl">
+        <div class="row cl hidden">
             <label class="form-label col-2">
                 @Html.LabelFor(m => m.ET_StartTime)
             </label>
@@ -118,7 +118,7 @@
                 @Html.ValidationMessageFor(m => m.ET_StartTime)
             </div>
         </div>
-        <div class="row cl">
+        <div class="row cl hidden">
             <label class="form-label col-2">
                 @Html.LabelFor(m => m.ET_TimeSpan)
             </label>
@@ -194,5 +194,5 @@
 <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/lib/jtimepicker/css/ui/base/ui.slider.css")" />
 <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/lib/jtimepicker/css/jquery.timepicker.css")" />
 <script type="text/javascript" src="@Url.Content("~/Content/lib/jtimepicker/lib/jquery.jtimepicker.bundle.js")"></script>
-<script type="text/javascript" src="@Url.Content("/Content/js/ExaminationTask/Edit.js")"></script>
 <script type="text/javascript" src="@Url.Content("/Content/js/Question/ListSelect.js")"></script>
+<script type="text/javascript" src="@Url.Content("/Content/js/ExaminationTask/Edit.js")"></script>
