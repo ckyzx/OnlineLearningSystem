@@ -164,6 +164,8 @@
     <Content Include="Content\js\ExaminationTaskTemplate\Edit.js" />
     <Content Include="Content\js\ExaminationTask\Edit.js" />
     <Content Include="Content\js\init-background.js" />
+    <Content Include="Content\js\init-common.js" />
+    <Content Include="Content\js\init-page.js" />
     <Content Include="Content\js\init-menu.js" />
     <Content Include="Content\js\init-page-edit.js" />
     <Content Include="Content\js\PermissionCategory\Edit.js" />
@@ -218,8 +220,14 @@
     <Content Include="Content\lib\datatables\1.10.9\jquery.dataTables.js" />
     <Content Include="Content\lib\datatables\1.10.9\jquery.dataTables.min.js" />
     <Content Include="Content\lib\DD_belatedPNG_0.0.8a-min.js" />
+    <Content Include="Content\lib\swiper_2.7.0\idangerous.swiper.css" />
+    <Content Include="Content\lib\swiper_2.7.0\idangerous.swiper.js" />
+    <Content Include="Content\lib\swiper_2.7.0\idangerous.swiper.min.js" />
     <Content Include="Content\lib\jquery.cookie.js" />
     <Content Include="Content\lib\jquery.timers-1.2.js" />
+    <Content Include="Content\lib\js.array.js" />
+    <Content Include="Content\lib\js.classlist.js" />
+    <Content Include="Content\lib\js.string.js" />
     <Content Include="Content\lib\jtimepicker\css\jquery.timepicker.css" />
     <Content Include="Content\lib\jtimepicker\css\style.css" />
     <Content Include="Content\lib\jtimepicker\css\ui\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />

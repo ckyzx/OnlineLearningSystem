@@ -81,6 +81,7 @@ $(function() {
                     $('#ModifyAnswer').val('');
                 }
             );
+            $('.layui-layer-content').height(234); //[IECompatible]
         })
         .on('click', ':checkbox', function() {
 
@@ -203,6 +204,7 @@ $(function() {
             default:
 
                 $('#Q_Content').val($('[name="Content"]').val());
+                $('#Q_OptionalAnswer').val('');//[IECompatible]
                 $('#Q_ModelAnswer').val($('[name="Answer"]').val());
 
                 break;
@@ -253,7 +255,7 @@ $(function() {
         var qOptionalAnswer;
 
         qOptionalAnswer = $('#Q_OptionalAnswer').val();
-        qOptionalAnswer = qOptionalAnswer == '' ? [] : (qOptionalAnswer.substring(0, 1) == '[' ? JSON.parse(qOptionalAnswer) : []);
+        qOptionalAnswer = qOptionalAnswer == '' ? {} : (qOptionalAnswer.substring(0, 1) == '{' ? JSON.parse(qOptionalAnswer) : []);
 
         return qOptionalAnswer;
     }

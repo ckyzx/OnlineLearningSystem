@@ -261,7 +261,6 @@ namespace OnlineLearningSystem.Utilities
                 zTreeJson.Append("{");
                 zTreeJson.Append(
                     "\"questionClassifyId\":" + qc.QC_Id + ", " +
-                    "\"click\":\"location.href='/Question/List?qcId=" + qc.QC_Id + "'\", " + 
                     "\"name\":\"" + qc.QC_Name + "\"");
                 zTreeJson.Append("},");
             }

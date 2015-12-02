@@ -221,6 +221,7 @@ namespace OnlineLearningSystem.Utilities
             {
                 EPT_Id = id + 1,
                 ET_Id = model.ET_Id,
+                ET_Type = model.ET_Type,
                 EPT_StartTime = eptStartTime,
                 EPT_EndTime = eptEndTime,
                 EPT_TimeSpan = model.ET_TimeSpan,

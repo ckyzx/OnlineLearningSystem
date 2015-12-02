@@ -79,3 +79,7 @@ Date.prototype.diff = function (interval, objDate2) {
     i['s'] = Math.floor(t2 / 1000) - Math.floor(t / 1000);
     return i[interval];
 };
+
+Date.now = function(){
+    return new Date();
+};

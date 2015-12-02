@@ -22,7 +22,7 @@ $(function() {
         ],
         "columnDefs": [{
             "orderable": false,
-            "targets": [0, 3, 4, 5, 6]
+            "targets": [0, 2, 3, 4, 5, 6]
         }],
         "columns": [{
             "width": "10px",
@@ -37,7 +37,7 @@ $(function() {
             "defaultContent": '<span class="EPT_StartTime"></span>'
         }, {
             "name": "EPT_TimeSpan",
-            "data": "EPT_TimeSpan"
+            "defaultContent": '<span class="EPT_TimeSpan"></span>'
         }, {
             "name": "EPT_AddTime",
             "defaultContent": '<span class="EPT_AddTime"></span>'
@@ -46,34 +46,41 @@ $(function() {
             "name": "EPT_Remark",
             "data": 'EPT_Remark'
         }, {
-            "width": "180px",
+            "width": "100px",
             "className": "text-c",
-            "defaultContent": 
-                '<a style="text-decoration: none" class="btn btn-primary radius size-MINI enter-exam fz-10" href="javascript:;" title="进入考试">进入考试</a>' +
-                '<a style="text-decoration: none" class="recycle ml-5 fz-18 hide" href="javascript:;" title="回收"><i class="Hui-iconfont">&#xe631;</i></a>' +
-                '<a style="text-decoration: none" class="resume ml-5 fz-18 hide" href="javascript:;" title="恢复"><i class="Hui-iconfont">&#xe615;</i></a>' +
-                '<a style="text-decoration: none" class="edit ml-5 fz-18 hide" href="javascript:;" title="编辑"><i class="Hui-iconfont">&#xe60c;</i></a>' +
-                '<a style="text-decoration: none" class="delete ml-5 fz-18 hide" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a>'
+            "defaultContent": '<a style="display:none;text-decoration: none;" class="btn btn-primary radius size-MINI enter-exam fz-10" href="javascript:;" title="进入考试">进入考试</a>'
         }],
         "createdRow": function(row, data, dataIndex) {
 
-            var span, strDate, date, status;
+            var span, addTime, startTime, status, type;
 
             row = $(row);
 
             span = row.find('span.EPT_AddTime');
-            strDate = data['EPT_AddTime'];
-            date = strDate.jsonDateToDate();
-            strDate = date.format('yyyy-MM-dd hh:mm:ss');
-            span.text(strDate);
+            addTime = data['EPT_AddTime'];
+            addTime = addTime.jsonDateToDate();
+            span.text(addTime.format('yyyy-MM-dd hh:mm:ss'));
 
+            // 设置开始时间
             span = row.find('span.EPT_StartTime');
-            strDate = data['EPT_StartTime'];
-            date = strDate.jsonDateToDate();
-            strDate = date.format('yyyy-MM-dd hh:mm:ss');
-            span.text(strDate);
+            startTime = data['EPT_StartTime'];
+            startTime = startTime.jsonDateToDate();
+            if (startTime.getHours() == 0 && startTime.getMinutes() == 0 && startTime.getSeconds() == 0) {
+                span.text(addTime.format('yyyy年MM月dd日 hh时mm分'));
+            } else {
+                span.text(startTime.format('yyyy年MM月dd日 hh时 mm分'));
+            }
 
-            status = data['EPT_Status'];
+            // 设置考试时长
+            span = row.find('span.EPT_TimeSpan');
+            timeSpan = data['EPT_TimeSpan'];
+            if (0 == timeSpan) {
+                span.text('[无限制]');
+            } else {
+                span.text(timeSpan + '分钟');
+            }
+
+            /*status = data['EPT_Status'];
             switch (status) {
                 case 1:
                     row.find('a.recycle').show();
@@ -88,11 +95,29 @@ $(function() {
                     break;
                 default:
                     break;
+            }*/
+
+            type = data['ET_Type'];
+            status = data['EPT_PaperTemplateStatus'];
+            switch (status) {
+                case 0:
+                    break;
+                case 1:
+
+                    a = row.find('a.enter-exam');
+                    if(1 == type){
+                        a.text('进入练习').attr('title', '进入练习');
+                    }
+                    a.show();
+                    break;
+                case 2:
+                default:
+                    break;
             }
         }
     });
 
-    $('.table-sort tbody').on('click', 'a.edit', function() {
+    /*$('.table-sort tbody').on('click', 'a.edit', function() {
 
         var data, id;
 
@@ -216,7 +241,7 @@ $(function() {
 
                 alert('请求返回错误！');
             });
-    });
+    });*/
 
     $('.table-sort tbody').on('click', 'a.enter-exam', function() {
 

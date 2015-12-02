@@ -1,8 +1,9 @@
 $(function() {
 
-    var valueSelector;
+    var tableSelector, valueSelector;
 
-    valueSelector = $('.question-table').attr('value-selector');
+    tableSelector = '.question-table';
+    valueSelector = $(tableSelector).attr('value-selector');
 
     // 取消试题复选时，清除试题数据
     $('.question-table').on('change', ':checkbox', function() {
@@ -17,7 +18,7 @@ $(function() {
 
         if ('all' == id) {
 
-            checkStatus = GetDataTablesAllCheckStatus('.question-table');
+            checkStatus = GetDataTablesAllCheckStatus1(tableSelector, checkbox.get(0).checked);
 
             // 去除复选项
             for (var i = 0; i < checkStatus[1].length; i++) {
@@ -57,7 +58,7 @@ $(function() {
                 .replace(',,', ',');
         }
 
-        hidden.val(questions);
+        hidden.val(questions);//alert(questions);
     });
 
     initQuestionSelectTable();

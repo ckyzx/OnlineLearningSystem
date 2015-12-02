@@ -13,7 +13,7 @@ namespace OnlineLearningSystem.Utilities
         {
 
             //[禁用权限验证]
-            return;
+            //return;
 
             String path, controller, action;
             User u;

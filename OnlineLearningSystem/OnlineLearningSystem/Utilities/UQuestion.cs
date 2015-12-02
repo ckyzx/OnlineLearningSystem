@@ -8,6 +8,7 @@ using OnlineLearningSystem.Models;
 
 using System.Text.RegularExpressions;
 using Newtonsoft.Json;
+using System.Text;
 
 namespace OnlineLearningSystem.Utilities
 {
@@ -38,6 +39,11 @@ namespace OnlineLearningSystem.Utilities
                 List<Question> qs;
                 List<QuestionClassify> qcs;
                 QuestionClassify classify;
+                Boolean formatFlag;
+                StringBuilder errorIds;
+
+                formatFlag = true;
+                errorIds = new StringBuilder();
 
                 docxPara = OpenXmlHelper.GetDocxParagraphs(filePath);
 
@@ -46,7 +52,7 @@ namespace OnlineLearningSystem.Utilities
                 typeRegex = new Regex(@"^题型[:：]{1}");
                 contentRegex1 = new Regex(@"^\s*\d+[\.．、]"); // 示例：1.
                 contentRegex2 = new Regex(@"^\s*\(.+\)|^\s*（.+）"); // 示例：(一) （一）
-                optionalAnswerRegex = new Regex(@"^\s*[a-zA-Z]{1}[\.．]{1}"); // 示例：A. B. C.
+                optionalAnswerRegex = new Regex(@"^\s*[a-zA-Z]{1}[\.．、]{1}"); // 示例：A. B. C.
                 modelAnswerRegex = new Regex(@"^\s*((答案|参考答案){1}[:：]{1})|【答】");
                 difficultyCoefficientRegex = new Regex(@"^难度系数：|难度系数:");
 
@@ -93,6 +99,7 @@ namespace OnlineLearningSystem.Utilities
                                 {
                                     qOptionalAnswer = FormatOptionalAnswer(qOptionalAnswer);
                                     qModelAnswer = FormatModelAnswer(qModelAnswer);
+
                                 }
 
                                 id += 1;
@@ -109,6 +116,13 @@ namespace OnlineLearningSystem.Utilities
                                     Q_AddTime = now,
                                     Q_Status = 4
                                 });
+
+                                // 标识数据错误
+                                if (qOptionalAnswer == "{}" || qModelAnswer == "[]")
+                                {
+                                    formatFlag = true;
+                                    errorIds.Append(id + ", ");
+                                }
 
                                 qContent = "";
                                 qOptionalAnswer = "";
@@ -250,8 +264,15 @@ namespace OnlineLearningSystem.Utilities
 
                                 len = i2 - i1 - 1;
                                 qModelAnswer = qContent.Substring(i1 + 1, len);
-                                qContent = qContent.Replace(qModelAnswer, "  ");
-                                qModelAnswer = qModelAnswer.Trim();
+                                if (qModelAnswer != "")
+                                {
+                                    qContent = qContent.Replace(qModelAnswer, "  ");
+                                    qModelAnswer = qModelAnswer.Trim();
+                                }
+                                else // 避免模板中没有设置答案时不添加试题
+                                {
+                                    qModelAnswer = " ";
+                                }
 
                                 continue;
 
@@ -344,6 +365,7 @@ namespace OnlineLearningSystem.Utilities
                     {
                         qOptionalAnswer = FormatOptionalAnswer(qOptionalAnswer);
                         qModelAnswer = FormatModelAnswer(qModelAnswer);
+
                     }
 
                     id += 1;
@@ -360,6 +382,13 @@ namespace OnlineLearningSystem.Utilities
                         Q_AddTime = now,
                         Q_Status = 4
                     });
+
+                    // 标识数据错误
+                    if (qOptionalAnswer == "{}" || qModelAnswer == "[]")
+                    {
+                        formatFlag = true;
+                        errorIds.Append(id + ", ");
+                    }
 
                     qContent = "";
                     qOptionalAnswer = "";
@@ -384,6 +413,11 @@ namespace OnlineLearningSystem.Utilities
 
                 dic["Status"] = "1";
 
+                if (formatFlag)
+                {
+                    dic["Message"] = "试题模板数据存在错误（" + errorIds.Remove(errorIds.Length - 2, 2).ToString() + "）。";
+                }
+
                 return dic;
             }
             catch (Exception ex)
@@ -398,17 +432,40 @@ namespace OnlineLearningSystem.Utilities
         private String FormatOptionalAnswer(String qOptionalAnswer)
         {
 
-            Regex spaceRegex, dotRegex, suffixRegex;
+            Regex spaceRegex, dotRegex, suffixRegex, formatRegex;
+            String[] qoas;
+            Int32 count;
 
             spaceRegex = new Regex(@"\s+");
-            dotRegex = new Regex(@"[\.．、]+\s*");
+            dotRegex = new Regex(@"\s*[\.．、]+\s*");
             suffixRegex = new Regex(", \"$");
+            formatRegex = new Regex("^(\"[a-zA-Z]{1}\":\"[^:\"]*\"){1}$");
 
             qOptionalAnswer = qOptionalAnswer.Trim();
             qOptionalAnswer = dotRegex.Replace(qOptionalAnswer, "\":\"");
-            qOptionalAnswer = spaceRegex.Replace(qOptionalAnswer, "\", \"");
-            qOptionalAnswer = "{\"" + qOptionalAnswer;
-            qOptionalAnswer = qOptionalAnswer + "\"}";
+            qOptionalAnswer = spaceRegex.Replace(qOptionalAnswer, "\",\"");
+            qOptionalAnswer = "\"" + qOptionalAnswer + "\"";
+
+            count = 0;
+            qoas = qOptionalAnswer.Split(',');
+            foreach (String qoa in qoas)
+            {
+                if (formatRegex.IsMatch(qoa))
+                {
+                    count += qoa.Length;
+                }
+            }
+
+            count = count + qoas.Length - 1;
+
+            // 格式化后的字符串不合符规则
+            if (count != qOptionalAnswer.Length)
+            {
+                qOptionalAnswer = "";
+            }
+
+            qOptionalAnswer = "{" + qOptionalAnswer;
+            qOptionalAnswer = qOptionalAnswer + "}";
 
             return qOptionalAnswer;
         }
@@ -507,6 +564,7 @@ namespace OnlineLearningSystem.Utilities
                     Q_DifficultyCoefficient = model.Q_DifficultyCoefficient,
                     Q_Content = model.Q_Content,
                     Q_OptionalAnswer = model.Q_OptionalAnswer,
+                    Q_ModelAnswer = model.Q_ModelAnswer,
                     Q_Remark = model.Q_Remark,
                     Q_AddTime = model.Q_AddTime,
                     Q_Status = model.Q_Status
@@ -755,10 +813,22 @@ namespace OnlineLearningSystem.Utilities
             {
 
                 List<Question> qs;
+                Boolean errorFlag;
+
+                errorFlag = false;
 
                 qs = olsEni.Questions.Where(m => m.Q_Status == (Byte)Status.Cache).ToList();
                 foreach (var q in qs)
                 {
+                    if (("单选题" == q.Q_Type
+                        || "多选题" == q.Q_Type)
+                        && ("{}" == q.Q_OptionalAnswer
+                        || "[]" == q.Q_ModelAnswer))
+                    {
+                        errorFlag = true;
+                        continue;
+                    }
+
                     q.Q_Status = (Byte)Status.Available;
                     olsEni.Entry(q).State = EntityState.Modified;
                 }
@@ -771,6 +841,11 @@ namespace OnlineLearningSystem.Utilities
                 }
 
                 resJson.status = ResponseStatus.Success;
+                if (errorFlag)
+                {
+                    resJson.message = "未导入部分存在错误的试题模板数据。";
+                }
+
                 return resJson;
 
             }

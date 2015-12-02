@@ -91,6 +91,8 @@ namespace OnlineLearningSystem.Controllers
                 return RedirectToAction("Paper", "ExaminationPaper", new { epId = resJson.addition });
             }
 
+            resJson.message = resJson.message.Replace("\\r\\n", "||r||n").Replace("\r\n", "|r|n");
+
             return Redirect("/Content/html/prompt_redirect.htm?prompt=" + resJson.message + "&close=1");
         }
 

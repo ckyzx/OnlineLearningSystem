@@ -116,6 +116,7 @@
         var layerIndex;
         var btn;
         var filePath, jqXHR;
+        var message;
 
         layerIndex = layer.load(0, {
             shade: [0.3, '#FFF']
@@ -131,7 +132,14 @@
 
             if (1 == data.Status) {
 
-                alert('题库导入成功。');
+                message = '题库导入成功。';
+                if(data.Message != ''){
+
+                    message += '但含有以下问题：\r\n';
+                    message += '    ' + data.Message + '\r\n';
+                    message += '    请手工检查试题缓存列表。';
+                }
+                alert(message);
 
                 if (parent.name.toLowerCase().indexOf('list') != -1) {
 

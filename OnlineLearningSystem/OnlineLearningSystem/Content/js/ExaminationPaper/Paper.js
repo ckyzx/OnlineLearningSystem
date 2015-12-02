@@ -1,7 +1,9 @@
 $(function() {
 
     var epId;
+    var questionContainers;
     var swipers;
+
 
     QueryString.Initial();
     epId = QueryString.GetValue('epId');
@@ -30,9 +32,11 @@ $(function() {
             answers = ary[1];
 
             try {
+
                 renderQuestions(questions, answers);
             } catch (e) {
-                alert(e.name + '\\r\\n' + e.message + '\\r\\n' + e.stack);
+
+                alert('ErrorName: ' + e.name + '\r\nMessage: ' + e.message + '\r\nStack: ' + e.stack);
             }
 
         } else if (0 == data.status) {
@@ -47,7 +51,6 @@ $(function() {
     function renderQuestions(questions, answers) {
 
         var ary;
-        var questionContainers;
 
         ary = adjustQuestions(questions, answers);
 
@@ -60,92 +63,107 @@ $(function() {
         /* 5个参数顺序不可打乱，分别是：响应区,隐藏显示的内容,速度,类型,事件 */
         $.Huifold("#TypeList ul .item h4", "#TypeList ul .item .info", "fast", 1, "click");
 
-        // 显示第一个题型
-        questionContainers = $('div[id^="Questions_"]');
+        //[BrowerCompasible]判断浏览器类型，以决定不同的初始化操作
+        // 非 IE浏览器/ IE11及以上
+        if (!brower.ieVersion || (brower.ieVersion && brower.ieVersion > 10)) {
 
-        $('#TypeList')
-            .on('click', 'li.item', function() {
+            // 显示第一个题型
+            questionContainers = $('div[id^="Questions_"]');
 
-                var li;
-                var i, i1;
-                var oldContainer;
+            $('#TypeList')
+                .on('click', 'li.item', function() {
 
-                li = $(this);
-                i = li.attr('index');
+                    clickTypeItem(this);
+                })
+                .on('click', '.info-item a', function() {
 
-                // 销毁并隐藏 Swiper
-                oldContainer = $('.question-container-active');
-                i1 = oldContainer.attr('index');
+                    clickTypeSubItem(this);
+                });
 
-                if (i == i1) {
-                    return;
-                }
+            $('#TypeList li.item h4').first().click();
+            // ---------------------------------------
 
-                if (swipers[i1] != null) {
+            $('#QuestionList')
+                // 提交考题数据
+                .on('mousedown', 'button.swiper-button-question', function() {
 
-                    swipers[i1].destroy();
-                    swipers[i1] = null;
-                }
-                oldContainer.removeClass('question-container-active').hide();
+                    var btn;
 
-                questionContainers.eq(i).addClass('question-container-active').show();
-                swipers[i] = initSwiper(questionContainers.eq(i).get(0));
+                    btn = $(this);
 
-                $('li.item h4.active').removeClass('active');
-                li.find('h4').addClass('active');
+                    // 切换至下一题型
+                    if (btn.hasClass('swiper-button-disabled')) {
+                        switchNextQuestionType(btn);
+                    }
+                })
+                .on('click', 'button.paper-hand-in', function() {
 
-                li.find('a').first().click();
-            })
-            .on('click', '.info-item a', function() {
+                    if (confirm('确定要结束考试吗？')) {
 
-                var a, li, questionContainer;
-                var i1, i2;
+                        saveLocalAnswers1();
+                        submitAnswers(function() {
+                            layer_close();
+                        });
 
-                a = $(this);
-                li = a.parentsUntil('ul').last();
+                    }
+                });
+        }else{
 
-                i1 = li.attr('index');
-                i2 = a.attr('index');
+            alert('浏览器版本过低，无法进入考试。\r\n请升级您的浏览器至 Internet Explorer 11 。');
+        }
+    }
 
-                questionContainer = $('#Questions_' + i1);
-                questionContainer.find('.bullet-' + i2).click();
+    function clickTypeItem(thisElem) {
 
-                $('li.item a.active').removeClass('active');
-                a.addClass('active');
+        var li;
+        var i, i1;
+        var oldContainer;
 
-                setCurrentQuestionId(questionContainer);
-            });
+        li = $(thisElem);
+        i = li.attr('index');
 
-        $('#TypeList li.item h4').first().click();
-        // ---------------------------------------
+        // 销毁并隐藏 Swiper
+        oldContainer = $('.question-container-active');
+        i1 = oldContainer.attr('index');
 
-        $('#QuestionList')
-            // 提交考题数据
-            .on('mousedown', 'button.swiper-button-question', function() {
+        if (i == i1) {
+            return;
+        }
 
-                var btn;
+        if (swipers[i1] != null) {
 
-                btn = $(this);
+            swipers[i1].destroy();
+            swipers[i1] = null;
+        }
+        oldContainer.removeClass('question-container-active').hide();
 
-                //saveLocalAnswers(btn);
-                //submitAnswers();
+        questionContainers.eq(i).addClass('question-container-active').show();
+        swipers[i] = initSwiper(questionContainers.eq(i).get(0));
 
-                // 切换至下一题型
-                if (btn.hasClass('swiper-button-disabled')) {
-                    switchNextQuestionType(btn);
-                }
-            })
-            .on('click', 'button.paper-hand-in', function() {
+        $('li.item h4.active').removeClass('active');
+        li.find('h4').addClass('active');
 
-                if (confirm('确定要结束考试吗？')) {
+        li.find('a').first().click();
+    }
 
-                    saveLocalAnswers1();
-                    submitAnswers(function() {
-                        layer_close();
-                    });
+    function clickTypeSubItem(thisElem) {
 
-                }
-            });
+        var a, li, questionContainer;
+        var i1, i2;
+
+        a = $(thisElem);
+        li = a.parentsUntil('ul').last();
+
+        i1 = li.attr('index');
+        i2 = a.attr('index');
+
+        questionContainer = $('#Questions_' + i1);
+        questionContainer.find('.bullet-' + i2).click();
+
+        $('li.item a.active').removeClass('active');
+        a.addClass('active');
+
+        setCurrentQuestionId(questionContainer);
     }
 
     function saveLocalAnswers(switchBtn) {
@@ -165,7 +183,7 @@ $(function() {
         // 获取原答题数据
         adInput = $('#AnswerData_' + qId);
         answer = adInput.val();
-        answer = answer == '' ? {} : JSON.parse(answer);
+        answer = answer == undefined || answer == '' ? {} : JSON.parse(answer);
 
         answer.submitStatus = false;
         answer.EP_Id = epId;
@@ -495,23 +513,21 @@ $(function() {
                     type: q.EPTQ_Type,
                     total: 0,
                     done: 0,
-                    questions: []
+                    questions: [],
                 };
                 ary.push(obj);
 
                 i1 += 1;
-                i2 = 1;
             }
 
-            q.i = i2;
+            obj.total = obj.total + 1;
+            q.i = obj.total;
             obj.questions.push(q);
-            obj.total = i2;
 
             if (q.hasAnswer) {
                 obj.done += 1;
             }
 
-            i2 += 1;
         }
 
         return ary;
@@ -537,8 +553,8 @@ $(function() {
                 q.EPTQ_OptionalAnswer = tmpAry;
             }
         } catch (e) {
-            //alert(e.name + '\\r\\n' + e.message + '\\r\\n' + e.stack);
-            alert(q.EPTQ_Id);
+
+            alert('ErrorName: ' + e.name + '\r\nMessage: ' + e.message + '\r\nStack: ' + e.stack + '\r\nEPTQ_Id: ' + q.EPTQ_Id);
         }
 
         return q;

@@ -3552,6 +3552,7 @@
                 if (arguments.length === 1) {
                     if (typeof props === 'string') {
                         if (this[0]) return window.getComputedStyle(this[0], null).getPropertyValue(props);
+                        //if(this[0]) return parseInt(jQuery(this[0]).css(props));//[IECompatible]
                     }
                     else {
                         for (i = 0; i < this.length; i++) {
@@ -3570,7 +3571,7 @@
                 }
                 return this;
             },
-    
+            
             //Dom manipulation
             each: function (callback) {
                 for (var i = 0; i < this.length; i++) {

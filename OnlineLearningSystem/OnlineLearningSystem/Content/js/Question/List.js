@@ -5,16 +5,16 @@
 
     QueryString.Initial();
     status = QueryString.GetValue('status');
-    status = undefined == status ? 1 :status;
+    status = undefined == status ? 1 : status;
     qcId = QueryString.GetValue('qcId');
-    qcId = undefined == qcId ? 0 :qcId;
+    qcId = undefined == qcId ? 0 : qcId;
 
 
     // 显示“试题缓存导入面板”
-    if(4 == status){
+    if (4 == status) {
 
         $('#QuestionImportPanel').show();
-    }else{
+    } else {
 
         $('#FunctionPanel').show();
     }
@@ -75,9 +75,19 @@
         }],
         "createdRow": function(row, data, dataIndex) {
 
-            var span, strDate, date, content, status, coefficient, select;
+            var span, strDate, date, content, optionalAnswer, modelAnswer, status, coefficient, select;
 
             row = $(row);
+
+            optionalAnswer = data['Q_OptionalAnswer'];
+            if ('{}' == optionalAnswer) {
+                row.addClass('question-has-error');
+            }
+
+            modelAnswer = data['Q_ModelAnswer'];
+            if ('[]' == modelAnswer && !row.hasClass('question-has-error')) {
+                row.addClass('question-has-error');
+            }
 
             span = row.find('span.Q_AddTime');
             strDate = data['Q_AddTime'];
@@ -255,8 +265,8 @@
         ShowPage('导入试题', '/Question/DocxUploadAndImport');
     });
 
-    $('#CacheClearBtn').on('click',function(){
-        
+    $('#CacheClearBtn').on('click', function() {
+
         $.post('/Question/CacheClear', {}, function(data) {
 
                 if (1 == data.status) {
@@ -274,14 +284,28 @@
             });
     });
 
-    $('#CacheImportBtn').on('click',function(){
+    $('#CacheImportBtn').on('click', function() {
 
         $.post('/Question/CacheImport', {}, function(data) {
 
+                var message, href;
+
                 if (1 == data.status) {
 
-                    alert('缓存导入成功。');
-                    location.href = '/Question/List';
+                    message = '缓存导入成功。';
+                    href = '/Question/List?qcId' + qcId;
+
+                    if ('' != data.message) {
+
+                        message += '但含有以下问题：\r\n';
+                        message += '    ' + data.message + '\r\n';
+                        message += '    请手工检查试题缓存列表。';
+
+                        href += '&status=' + status;
+                    }
+
+                    alert(message);
+                    location.href = href;
                 } else if (0 == data.status) {
 
                     alert(data.message);
@@ -344,9 +368,21 @@
         }
     };
 
-    ul = $('.question-classify-list ul');
+    ul = $('.question-classify-list-container ul');
     nodes = ul.attr('data-value');
     nodes = $.parseJSON(nodes);
+
+    for (var i = 0; i < nodes.length; i++) {
+
+        n = nodes[i];
+
+        if(n.questionClassifyId == qcId){
+
+            n.checked = true;
+        }
+
+        n.click = 'location.href = \'/Question/List?status='+status+'&qcId='+n.questionClassifyId+'\';';
+    };
 
     ztree = $.fn.zTree.init(ul, settings, nodes);
 

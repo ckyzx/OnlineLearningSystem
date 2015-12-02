@@ -22,6 +22,8 @@
     close = undefined == close ? false : close;
 
     if (prompt) {
+
+        prompt = prompt.replace(/\|\|r\|\|n/g, '\r\n').replace(/\|r\|n/g, '\r\n');
         alert(prompt);
     }
 

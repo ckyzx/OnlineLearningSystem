@@ -112,7 +112,7 @@ function GetDataTablesChecked(tableSelector, valueSelector, increment) {
             break;
         }
     }
-    
+
     if (increment) {
 
         ms = $(valueSelector).val();
@@ -159,4 +159,27 @@ function GetDataTablesAllCheckStatus(tableSelector) {
     }
 
     return [checked, unchecked];
+}
+
+//[IECompatible]
+function GetDataTablesAllCheckStatus1(tableSelector, checked) {
+
+    var table, dtData, id, checkedAry, uncheckedAry;
+
+    table = $(tableSelector);
+    checkboxs = table.find(':checkbox[value!=all]');
+
+    checkedAry = [];
+    uncheckedAry = [];
+    for (var i = 0; i < checkboxs.length; i++) {
+
+        id = checkboxs[i].value;
+        if (checked) {
+            checkedAry.push(id);
+        } else {
+            uncheckedAry.push(id);
+        }
+    }
+
+    return [checkedAry, uncheckedAry];
 }

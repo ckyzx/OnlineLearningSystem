@@ -128,7 +128,7 @@ namespace OnlineLearningSystem.Utilities
             //TODO:指定排序列
             orderColumn = dtRequest.Columns[dtRequest.OrderColumn].Name;
 
-            var tmpMs =
+            ms =
                 olsEni
                 .ExaminationPaperTemplates
                 .OrderBy(model => model.EPT_Id)
@@ -136,35 +136,7 @@ namespace OnlineLearningSystem.Utilities
                     model.EPT_Status != (Byte)Status.Delete
                     && model.ET_Type == type
                     && model.EPT_PaperTemplateStatus == paperTemplateStatus)
-                .Select(model => new
-                {
-                    EPT_Id = model.EPT_Id,
-                    EPT_StartTime = model.EPT_StartTime,
-                    EPT_TimeSpan = model.EPT_TimeSpan,
-                    EPT_Remark = model.EPT_Remark,
-                    EPT_AddTime = model.EPT_AddTime,
-                    EPT_Status = model.EPT_Status
-                })
                 .ToList();
-
-            // 获取分类名称
-            ms = new List<ExaminationPaperTemplate>();
-
-            foreach (var model in tmpMs)
-            {
-
-                ms.Add(new ExaminationPaperTemplate()
-                {
-                    EPT_Id = model.EPT_Id,
-                    EPT_StartTime = model.EPT_StartTime,
-                    EPT_TimeSpan = model.EPT_TimeSpan,
-                    EPT_Remark = model.EPT_Remark,
-                    EPT_AddTime = model.EPT_AddTime,
-                    EPT_Status = model.EPT_Status
-                });
-            }
-
-            tmpMs = null;
 
             recordsFiltered = ms.Count();
             dtResponse.recordsFiltered = recordsFiltered;
@@ -423,7 +395,7 @@ namespace OnlineLearningSystem.Utilities
 
                             //TODO: 添加试卷
                             rowCount = olsEni.ExaminationPapers.Count();
-                            epId = 0 == rowCount ? 1 : olsEni.ExaminationPapers.Max(m => m.EP_AutoId);
+                            epId = 0 == rowCount ? 1 : olsEni.ExaminationPapers.Max(m => m.EP_AutoId) + 1;
 
                             ep = new ExaminationPaper
                             {
