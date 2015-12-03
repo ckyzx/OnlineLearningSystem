@@ -7,6 +7,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace OnlineLearningSystem.Models
 {
+    [Serializable]
     public class Permission
     {
         [Key]

@@ -19,6 +19,7 @@ namespace OnlineLearningSystem.Utilities
             items.Add(new SelectListItem() { Text = "启用", Value = "1" });
             items.Add(new SelectListItem() { Text = "回收", Value = "2" });
             items.Add(new SelectListItem() { Text = "删除", Value = "3" });
+            items.Add(new SelectListItem() { Text = "缓存", Value = "4" });
 
             foreach (var i in items)
             {

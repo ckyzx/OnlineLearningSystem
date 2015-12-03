@@ -1,0 +1,5 @@
+操作系统：Windows Server 2008 R2
+数 据 库：SQL Server 2008 R2
+框    架：DotNetFx 4.0
+          ASP.NET MVC 3
+设    置：启用 ASP.NET State Server 服务

@@ -8,6 +8,7 @@ using System.Web.Mvc;
 
 namespace OnlineLearningSystem.Models
 {
+    [Serializable]
     public class PermissionCategory
     {
         [Key]

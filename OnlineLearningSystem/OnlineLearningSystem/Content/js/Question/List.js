@@ -384,6 +384,20 @@
         n.click = 'location.href = \'/Question/List?status='+status+'&qcId='+n.questionClassifyId+'\';';
     };
 
+    // 添加根节点“全部”
+    nodes = [{
+        name: '全部', 
+        questionClassifyId: 0, 
+        open: true, 
+        click: 'location.href = \'/Question/List?status='+status+'&qcId=0\';',
+        children: nodes
+    }];
+
+    if(0 == qcId){
+
+        nodes[0].checked = true;
+    }
+
     ztree = $.fn.zTree.init(ul, settings, nodes);
 
 });

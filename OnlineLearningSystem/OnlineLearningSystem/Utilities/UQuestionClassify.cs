@@ -244,13 +244,13 @@ namespace OnlineLearningSystem.Utilities
             }
         }
 
-        public String GetZTreeJson()
+        public String GetZTreeJson(Byte status)
         {
 
             List<QuestionClassify> qcs;
             StringBuilder zTreeJson;
 
-            qcs = olsEni.QuestionClassifies.Where(m => m.QC_Status == (Byte)Status.Available).ToList();
+            qcs = olsEni.QuestionClassifies.Where(m => m.QC_Status == status).ToList();
 
             zTreeJson = new StringBuilder();
             zTreeJson.Append("[");

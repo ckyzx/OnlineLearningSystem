@@ -26,10 +26,10 @@ namespace OnlineLearningSystem.Controllers
         // GET: /Question/List
 
         [Description("试题列表")]
-        public ActionResult List()
+        public ActionResult List(Byte status = 1)
         {
 
-            ViewBag.QuestionClassifies = new UQuestionClassify().GetZTreeJson();
+            ViewBag.QuestionClassifies = new UQuestionClassify().GetZTreeJson(status);
 
             return View();
         }

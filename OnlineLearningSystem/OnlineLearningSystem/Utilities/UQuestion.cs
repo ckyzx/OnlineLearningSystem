@@ -189,7 +189,7 @@ namespace OnlineLearningSystem.Utilities
                                 QC_Name = qClassify,
                                 QC_Level = "000" + id1.ToString(),
                                 QC_AddTime = now,
-                                QC_Status = 1
+                                QC_Status = 4
                             });
                         }
                         else
@@ -622,7 +622,7 @@ namespace OnlineLearningSystem.Utilities
 
             List<SelectListItem> list;
 
-            var items = olsEni.QuestionClassifies.Where(m => m.QC_Status == (Byte)Status.Available).Select(model => new { model.QC_Name, model.QC_Id });
+            var items = olsEni.QuestionClassifies.Select(model => new { model.QC_Name, model.QC_Id });
 
             list = new List<SelectListItem>();
             list.Add(new SelectListItem() { Text = "[未设置]", Value = "" });
@@ -814,6 +814,7 @@ namespace OnlineLearningSystem.Utilities
 
                 List<Question> qs;
                 Boolean errorFlag;
+                List<QuestionClassify> qcs;
 
                 errorFlag = false;
 
@@ -844,6 +845,23 @@ namespace OnlineLearningSystem.Utilities
                 if (errorFlag)
                 {
                     resJson.message = "未导入部分存在错误的试题模板数据。";
+                }
+
+                // 设置分类状态
+                qcs = olsEni.QuestionClassifies.Where(m => m.QC_Status == (Byte)Status.Cache).ToList();
+                foreach (var qc in qcs)
+                {
+                    if (olsEni.Questions.Where(m => m.QC_Id == qc.QC_Id).Count() > 0)
+                    {
+                        qc.QC_Status = (Byte)Status.Available;
+                        olsEni.Entry(qc).State = EntityState.Modified;
+                    }
+                }
+                if (olsEni.SaveChanges() == 0)
+                {
+                    //resJson.status = ResponseStatus.Error;
+                    //resJson.message = "设置分类状态失败。";
+                    //return resJson;
                 }
 
                 return resJson;

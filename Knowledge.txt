@@ -1,5 +1,0 @@
-<i>需要设置为 position:absolute ，才能使用 transform:rotate(180deg) 旋转成功。
-如果未设置为 position:absolute ，将在旋转后恢复原状态。
---------------------------------------------------
-InnerException	{"当 IDENTITY_INSERT 设置为 OFF 时，不能为表 'QuestionClassifies' 中的标识列插入显式值。"}	System.Exception {System.Data.SqlClient.SqlException}
---------------------------------------------------
