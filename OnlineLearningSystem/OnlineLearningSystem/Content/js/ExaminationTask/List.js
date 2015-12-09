@@ -50,7 +50,8 @@ $(function() {
         }],
         "createdRow": function(row, data, dataIndex) {
 
-            var span, strDate, date, timeSpan, autoType, status;
+            var span, timeSpan, startTask, stopTask;
+            var strDate, date, autoType, status, enabled;
 
             row = $(row);
 
@@ -78,10 +79,32 @@ $(function() {
             span = row.find('span.ET_AutoType');
             autoType = data['ET_AutoType'];
             span.text(AutoType[autoType]);
+
+            enabled = data['ET_Enabled'];
+            startTask = row.find('a.start-task');
+            stopTask = row.find('a.stop-task');
+
             switch (autoType) {
                 case 0:
+
+                    // 手动任务呈现按钮“开始/结束”
+                    if(0 == enabled){
+                        startTask.attr('title', '开始').text('开始').show();
+                    }else if(1 == enabled){
+                        stopTask.attr('title', '结束').text('结束').show();
+                    }else if(2 == enabled){
+                        // 不呈现按钮
+                    }
                     break;
                 default:
+
+                    // 自动任务呈现按钮“开启/关闭”
+                    if(1 == enabled){
+                        stopTask.attr('title', '关闭').text('关闭').show();
+                    }else{
+                        startTask.attr('title', '开启').text('开启').show();
+                    }
+
                     row.find('a.paper-template').show();
                     break;
             }
@@ -99,20 +122,6 @@ $(function() {
                     row.find('a.delete').show();
                     break;
                 case 3:
-                    break;
-                default:
-                    break;
-            }
-
-            status = data['EPT_PaperTemplateStatus']
-            switch (status) {
-                case 0:
-                    row.find('a.start-task').show();
-                    break;
-                case 1:
-                    row.find('a.stop-task').show();
-                    break;
-                case 2:
                     break;
                 default:
                     break;
@@ -259,22 +268,31 @@ $(function() {
 
     $('.table-sort tbody').on('click', 'a.start-task', function() {
 
-        var tr, data, id;
+        var tr;
+        var data, id, autoType;
 
         tr = $(this).parents('tr');
         data = table.row(tr).data();
         id = data['ET_Id'];
+        autoType = data['ET_AutoType'];
 
         $.post('/ExaminationTask/StartTask', {
                 id: id
             }, function(data) {
 
-                var btn, td;
+                var stopTask;
 
                 if (1 == data.status) {
 
                     tr.find('a.start-task').hide();
-                    tr.find('a.stop-task').show();
+                    stopTask = tr.find('a.stop-task');
+
+                    if(0 == autoType){
+                        stopTask.attr('title', '结束').text('结束');
+                    }else{
+                        stopTask.attr('title', '关闭').text('关闭');
+                    }
+                    stopTask.show();
 
                     alert('操作成功。');
                 } else if (0 == data.status) {
@@ -290,20 +308,32 @@ $(function() {
 
     $('.table-sort tbody').on('click', 'a.stop-task', function() {
 
-        var tr, data, id;
+        var tr;
+        var data, id, autoType;
 
         tr = $(this).parents('tr');
         data = table.row(tr).data();
         id = data['ET_Id'];
+        autoType = data['ET_AutoType'];
 
         $.post('/ExaminationTask/StopTask', {
                 id: id
             }, function(data) {
 
+                var startTask;
+
                 if (1 == data.status) {
 
                     tr.find('a.stop-task').hide();
-                    
+
+                    // 自动任务切换按钮
+                    if(0 != autoType){
+
+                        startTask = tr.find('a.start-task');
+                        startTask.attr('title', '开启').text('开启');
+                        startTask.show();
+                    }
+
                     alert('操作成功。');
                 } else if (0 == data.status) {
 

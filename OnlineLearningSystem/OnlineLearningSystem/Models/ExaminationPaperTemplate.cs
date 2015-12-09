@@ -22,6 +22,10 @@ namespace OnlineLearningSystem.Models
         [DisplayName("试卷模板状态")]
         public Byte EPT_PaperTemplateStatus { get; set; }
 
+        [DisplayName("开始日期")]
+        [DataType(DataType.DateTime)]
+        public DateTime EPT_StartDate { get; set; }
+
         [DisplayName("开始时间")]
         [DataType(DataType.DateTime)]
         public DateTime EPT_StartTime { get; set; }

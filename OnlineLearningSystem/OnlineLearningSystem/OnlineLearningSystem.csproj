@@ -119,6 +119,7 @@
     <Compile Include="Utilities\DataTablesRequest.cs" />
     <Compile Include="Utilities\DataTablesResponse.cs" />
     <Compile Include="Utilities\DocxParagraph.cs" />
+    <Compile Include="Utilities\ExaminationTaskStatus.cs" />
     <Compile Include="Utilities\PaperStatus.cs" />
     <Compile Include="Utilities\PaperTemplateStatus.cs" />
     <Compile Include="Utilities\ResponseJson.cs" />
@@ -140,6 +141,7 @@
     <Compile Include="Utilities\UExaminationPaperTemplate.cs" />
     <Compile Include="Utilities\UExminationPaper.cs" />
     <Compile Include="Utilities\UQuestionClassify.cs" />
+    <Compile Include="Utilities\AutoType.cs" />
     <Compile Include="ViewModels\VMUser.cs" />
     <Compile Include="ViewModels\VMUserModifyPassword.cs" />
   </ItemGroup>

@@ -22,6 +22,10 @@ namespace OnlineLearningSystem.Models
         [RegularExpression(@"^[\u4E00-\u9FA5\uF900-\uFA2D]{1}[\u4E00-\u9FA5\uF900-\uFA2D0-9]{1,11}$", ErrorMessage = "请输入2至12位，中文开头的字符，可带数字")]
         public String ET_Name { get; set; }
 
+        [DisplayName("启用状态")]
+        [Required(ErrorMessage = "请选择{0}")]
+        public Byte ET_Enabled { get; set; }
+
         [NotMapped]
         [DisplayName("任务模板")]
         public String ET_Template { get; set; }
@@ -106,8 +110,5 @@ namespace OnlineLearningSystem.Models
         [Required(ErrorMessage = "请选择{0}")]
         public Byte ET_Status { get; set; }
 
-        [NotMapped]
-        [DisplayName("模板状态")]
-        public Byte EPT_PaperTemplateStatus { get; set; }
     }
 }

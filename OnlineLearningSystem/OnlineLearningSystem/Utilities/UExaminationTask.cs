@@ -53,16 +53,6 @@ namespace OnlineLearningSystem.Utilities
                     && model.ET_Status != (Byte)Status.Delete)
                 .ToList();
 
-            foreach (var model in ms)
-            {
-
-                epts = olsEni.ExaminationPaperTemplates.Where(m => m.ET_Id == model.ET_Id).ToList();
-                if (epts.Count == 1)
-                {
-                    model.EPT_PaperTemplateStatus = epts[0].EPT_PaperTemplateStatus;
-                }
-            }
-
             recordsFiltered = ms.Count();
             dtResponse.recordsFiltered = recordsFiltered;
 
@@ -199,18 +189,18 @@ namespace OnlineLearningSystem.Utilities
             switch (model.ET_AutoType)
             {
                 case 1: // 每日
-                    
+
                     eptStartTime = new DateTime(now.Year, now.Month, now.Day, etStartTime.Hour, etStartTime.Minute, etStartTime.Second);
                     eptEndTime = eptStartTime.AddDays(7); // 过期日设置在7天后
                     break;
                 case 2: // 每周
-                    
+
                     eptStartTime = new DateTime(now.Year, now.Month, now.Day, etStartTime.Hour, etStartTime.Minute, etStartTime.Second);
                     eptStartTime = eptStartTime.AddDays(7 - (Int32)eptStartTime.DayOfWeek + model.ET_AutoOffsetDay);
                     eptEndTime = eptStartTime.AddDays(7); // 过期日设置在7天后
                     break;
                 case 3: // 每月
-                    
+
                     eptStartTime = new DateTime(now.Year, now.Month, 1, etStartTime.Hour, etStartTime.Minute, etStartTime.Second);
                     eptStartTime.AddMonths(1).AddDays(model.ET_AutoOffsetDay);
                     eptEndTime = eptStartTime.AddDays(7); // 过期日设置在7天后
@@ -345,15 +335,15 @@ namespace OnlineLearningSystem.Utilities
 
         public ResponseJson StartTask(Int32 id)
         {
-            return SetPaperTemplateStatus(id, PaperTemplateStatus.Doing);
+            return SetExaminationTaskStatus(id, ExaminationTaskStatus.Enabled);
         }
 
         public ResponseJson StopTask(Int32 id)
         {
-            return SetPaperTemplateStatus(id, PaperTemplateStatus.Done);
+            return SetExaminationTaskStatus(id, ExaminationTaskStatus.Disabled);
         }
 
-        public ResponseJson SetPaperTemplateStatus(Int32 etId, PaperTemplateStatus ptStatus)
+        public ResponseJson SetExaminationTaskStatus(Int32 etId, ExaminationTaskStatus etStatus)
         {
 
             ResponseJson resJson;
@@ -373,23 +363,30 @@ namespace OnlineLearningSystem.Utilities
                     return resJson;
                 }
 
-                epts = olsEni.ExaminationPaperTemplates.Where(m => m.ET_Id == model.ET_Id).ToList();
-                if (epts.Count != 1)
+                // 手动任务处理
+                if ((Byte)AutoType.Manual == model.ET_AutoType)
                 {
-                    resJson.status = ResponseStatus.Error;
-                    resJson.message = "试卷模板不匹配。";
-                    return resJson;
+
+                    epts = olsEni.ExaminationPaperTemplates.Where(m => m.ET_Id == model.ET_Id).ToList();
+                    if (epts.Count != 1)
+                    {
+                        resJson.status = ResponseStatus.Error;
+                        resJson.message = "试卷模板不匹配。";
+                        return resJson;
+                    }
+
+                    epts[0].EPT_PaperTemplateStatus = (Byte)etStatus;
+                    olsEni.Entry(epts[0]).State = EntityState.Modified;
                 }
 
-                epts[0].EPT_PaperTemplateStatus = (Byte)ptStatus;
-                olsEni.Entry(epts[0]).State = EntityState.Modified;
+                model.ET_Enabled = (Byte)etStatus;
                 if (0 == olsEni.SaveChanges())
                 {
                     resJson.status = ResponseStatus.Error;
                     resJson.message = ResponseMessage.SaveChangeError;
                     return resJson;
                 }
-                
+
                 resJson.status = ResponseStatus.Success;
                 return resJson;
             }
@@ -421,6 +418,94 @@ namespace OnlineLearningSystem.Utilities
             {
                 return false;
             }
+        }
+
+        public ResponseJson AutoGeneratePaperTemplate()
+        {
+
+            ResponseJson resJson;
+
+            resJson = new ResponseJson();
+
+            try
+            {
+
+                List<ExaminationTask> ets;
+                Int32 eptCount, dayOfWeek, dayOfMonth;
+                DateTime now, nowDate;
+
+                ets =
+                    olsEni
+                    .ExaminationTasks
+                    .Where(m =>
+                        m.ET_AutoType != (Byte)AutoType.Manual
+                        && m.ET_Enabled == (Byte)ExaminationTaskStatus.Enabled)
+                    .ToList();
+
+                now = DateTime.Now;
+                nowDate = new DateTime(now.Year, now.Month, now.Day);
+
+                foreach (var et in ets)
+                {
+
+                    switch (et.ET_AutoType)
+                    {
+                        case (Byte)AutoType.Day:
+
+                            eptCount =
+                                olsEni
+                                .ExaminationPaperTemplates
+                                .Where(m => m.EPT_StartDate == nowDate)
+                                .Count();
+
+                            if (0 != eptCount)
+                            {
+                                continue;
+                            }
+
+                            break;
+                        case (Byte)AutoType.Week:
+
+                            dayOfWeek = ((Int32)now.DayOfWeek) + 1;
+
+                            if (et.ET_AutoOffsetDay != dayOfWeek)
+                            {
+                                continue;
+                            }
+
+                            break;
+                        case (Byte)AutoType.Month:
+
+                            dayOfMonth = now.Day;
+
+                            if (et.ET_AutoOffsetDay != dayOfMonth)
+                            {
+                                continue;
+                            }
+
+                            break;
+                        default:
+                            break;
+                    }
+
+                    //TODO: 自动生成试卷模板
+                    GeneratePaperTemplate(et);
+                }
+
+                resJson.status = ResponseStatus.Success;
+                return resJson;
+            }
+            catch (Exception ex)
+            {
+                resJson.status = ResponseStatus.Error;
+                resJson.message = StaticHelper.GetExceptionMessage(ex);
+                return resJson;
+            }
+        }
+
+        private void GeneratePaperTemplate(ExaminationTask et)
+        {
+            //throw new NotImplementedException();
         }
 
     }
