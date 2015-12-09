@@ -33,38 +33,35 @@
         "stateSave": false,
         "lengthChange": false,
         "pageLength": 15,
-        "sorting": [
-            [1, "asc"]
-        ],
-        "columnDefs": [{
-            "orderable": false,
-            "targets": [0, 1, 2, 3, 4, 5, 6, 7]
-        }],
+        "ordering": false, 
         "columns": [{
             "width": "10px",
             "className": "text-c",
-            "defaultContent": '<input type="checkbox" value="" name="">'
+            "defaultContent": '<input type="checkbox" />'
         }, {
             "width": "30px",
             "name": "Q_Id",
             "data": "Q_Id"
         }, {
+            "width": "100px",
             "name": "Q_Type",
             "data": "Q_Type"
         }, {
+            "width": "150px",
             "name": "QC_Name",
             "data": "QC_Name"
         }, {
-            "name": "Q_AddTime",
-            "defaultContent": '<span class="Q_AddTime"></span>'
-        }, {
-            "width": "40%",
             "name": "Q_Content",
             "defaultContent": '<span class="Q_Content"></span>'
         }, {
             "width": "50px",
             "name": "Q_DifficultyCoefficient",
             "defaultContent": '<span class="select-box size-MINI"><select class="dif-coe select"></select></span>'
+        }, {
+            "width": "30px",
+            "className": "text-r",
+            "name": "Q_Score",
+            "data": "Q_Score"
         }, {
             "width": "80px",
             "className": "text-c",
@@ -88,13 +85,6 @@
             if ('[]' == modelAnswer && !row.hasClass('question-has-error')) {
                 row.addClass('question-has-error');
             }
-
-            span = row.find('span.Q_AddTime');
-            strDate = data['Q_AddTime'];
-            date = strDate.jsonDateToDate();
-            strDate = date.format('yyyy-MM-dd hh:mm:ss');
-
-            span.text(strDate);
 
             span = row.find('span.Q_Content');
             content = data['Q_Content'];

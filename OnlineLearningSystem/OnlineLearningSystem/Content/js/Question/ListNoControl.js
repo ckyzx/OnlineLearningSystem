@@ -27,22 +27,25 @@
             "name": "Q_Id",
             "data": "Q_Id"
         }, {
+            "width": "100px",
             "name": "Q_Type",
             "data": "Q_Type"
         }, {
+            "width": "150px",
             "name": "QC_Name",
             "data": "QC_Name"
         }, {
-            "name": "Q_AddTime",
-            "defaultContent": '<span class="Q_AddTime"></span>'
-        }, {
-            "width": "40%",
             "name": "Q_Content",
             "defaultContent": '<span class="Q_Content"></span>'
         }, {
             "width": "50px",
             "name": "Q_DifficultyCoefficient",
             "data": 'Q_DifficultyCoefficient'
+        }, {
+            "width": "30px",
+            "className": "text-r",
+            "name": "Q_Score",
+            "data": 'Q_Score'
         }],
         "createdRow": function(row, data, dataIndex) {
 
@@ -55,13 +58,6 @@
             checkbox = row.find(':checkbox');
             id = data['Q_Id'];
             checkbox.val(id);
-
-            span = row.find('span.Q_AddTime');
-            strDate = data['Q_AddTime'];
-            date = strDate.jsonDateToDate();
-            strDate = date.format('yyyy-MM-dd hh:mm:ss');
-
-            span.text(strDate);
 
             span = row.find('span.Q_Content');
             content = data['Q_Content'];

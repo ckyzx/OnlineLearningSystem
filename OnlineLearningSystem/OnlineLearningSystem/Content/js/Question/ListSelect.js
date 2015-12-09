@@ -1,5 +1,7 @@
 $(function() {
 
+    'use strict';
+
     var tableSelector, valueSelector;
 
     tableSelector = '.question-table';
@@ -9,6 +11,7 @@ $(function() {
     $('.question-table').on('change', ':checkbox', function() {
 
         var checkbox, id, hidden, questions, checkStatus, checked;
+        var countSpan;
 
         checkbox = $(this);
         id = checkbox.val();
@@ -18,7 +21,7 @@ $(function() {
 
         if ('all' == id) {
 
-            checkStatus = GetDataTablesAllCheckStatus1(tableSelector, checkbox.get(0).checked);
+            checkStatus = GetDataTablesAllCheckStatus1(tableSelector, $(':checkbox[value=all]').get(0).checked);
 
             // 去除复选项
             for (var i = 0; i < checkStatus[1].length; i++) {
@@ -58,7 +61,12 @@ $(function() {
                 .replace(',,', ',');
         }
 
-        hidden.val(questions);//alert(questions);
+        // 显示已选数据数量
+        $('.select-data-item').remove();
+        countSpan = $('<div class="select-data-item mb-10">已选 <span class="select-data-count">' + JSON.parse(questions).length + '</span> 条</div>');
+        countSpan.prependTo($(tableSelector).parent());
+
+        hidden.val(questions);
     });
 
     initQuestionSelectTable();
@@ -67,12 +75,15 @@ $(function() {
 
 function initQuestionSelectTable() {
 
-    var table;
+    'use strict';
+
+    var jqTable, table;
     var valueSelector;
 
-    valueSelector = $('.question-table').attr('value-selector');
+    jqTable = $('.question-table');
+    valueSelector = jqTable.attr('value-selector');
 
-    table = $('.question-table').DataTable({
+    table = jqTable.DataTable({
         "processing": true,
         "serverSide": true,
         "ajax": {
@@ -81,13 +92,7 @@ function initQuestionSelectTable() {
         },
         "stateSave": false,
         "pageLength": 10,
-        "sorting": [
-            [1, "asc"]
-        ],
-        "columnDefs": [{
-            "orderable": false,
-            "targets": [0, 1, 2, 3, 4, 5, 6]
-        }],
+        "ordering": false,
         "columns": [{
             "width": "10px",
             "className": "text-c",
@@ -97,28 +102,33 @@ function initQuestionSelectTable() {
             "name": "Q_Id",
             "data": "Q_Id"
         }, {
+            "width": "100px",
             "name": "Q_Type",
-            "data": "Q_Type"
+            "defaultContent": '<span class="Q_Type"></span>'
         }, {
+            "width": "150px",
             "name": "QC_Name",
-            "data": "QC_Name"
+            "className": "QC_Name",
+            "defaultContent": '<span class="QC_Name"></span>'
         }, {
-            "name": "Q_AddTime",
-            "defaultContent": '<span class="Q_AddTime"></span>'
-        }, {
-            "width": "40%",
             "name": "Q_Content",
+            "className": "Q_Content",
             "defaultContent": '<span class="Q_Content"></span>'
         }, {
             "width": "50px",
             "name": "Q_DifficultyCoefficient",
             "data": 'Q_DifficultyCoefficient'
+        }, {
+            "width": "30px",
+            "className": "text-r",
+            "name": "Q_Score",
+            "data": "Q_Score"
         }],
         "createdRow": function(row, data, dataIndex) {
 
             var checkbox, id;
-            var span, strDate, date;
-            var content;
+            var span, th;
+            var qType, qcName, qContent;
 
             row = $(row);
 
@@ -126,21 +136,27 @@ function initQuestionSelectTable() {
             id = data['Q_Id'];
             checkbox.val(id);
 
-            span = row.find('span.Q_AddTime');
-            strDate = data['Q_AddTime'];
-            date = strDate.jsonDateToDate(strDate);
-            strDate = date.format('yyyy-MM-dd hh:mm:ss');
+            th = jqTable.find('th.Q_Type');
+            span = row.find('span.Q_Type');
+            qType = data['Q_Type'];
+            span.addClass('ellipsis').width(th.width()).text(qType);
 
-            span.text(strDate);
+            th = jqTable.find('th.QC_Name');
+            span = row.find('span.QC_Name');
+            qcName = data['QC_Name'];
+            span.addClass('ellipsis').width(th.width()).text(qcName);
 
+            th = jqTable.find('th.Q_Content');
             span = row.find('span.Q_Content');
-            content = data['Q_Content'];
-            content = content.replace(/\\r\\n/g, '<br />');
-
-            span.html(content);
-
+            qContent = data['Q_Content'];
+            qContent = qContent.trim().replace(/^(\\r\\n)+/, '').replace(/(\\r\\n)+$/, '').replace(/\\r\\n/g, '[换行]');
+            span.addClass('ellipsis').width(th.width()).html(qContent).attr('title', qContent);
         },
-        "footerCallback": function(settings, json) {
+        /*"footerCallback": function(settings, json) {
+
+            SetDataTablesChecked('.question-table', valueSelector);
+        },*/
+        'initComplete': function(settings, json) {
 
             SetDataTablesChecked('.question-table', valueSelector);
         }

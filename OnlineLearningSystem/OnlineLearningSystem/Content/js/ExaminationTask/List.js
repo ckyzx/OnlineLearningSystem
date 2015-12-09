@@ -12,13 +12,7 @@ $(function() {
         "stateSave": false,
         "lengthChange": false,
         "pageLength": 15,
-        "sorting": [
-            [1, "asc"]
-        ],
-        "columnDefs": [{
-            "orderable": false,
-            "targets": [0, 1, 2, 3, 4, 5, 6, 7]
-        }],
+        "ordering": false,
         "columns": [{
             "width": "10px",
             "className": "text-c",
@@ -45,10 +39,10 @@ $(function() {
             "data": 'ET_Remark'
         }, {
             "width": "180px",
-            "className": "text-c",
-            "defaultContent": '<a style="display:none;text-decoration:none;" class="btn btn-primary radius size-MINI start-task fz-9" href="javascript:;" title="开始任务">开始任务</a>' +
-                '<a style="display:none;text-decoration:none;" class="btn btn-primary radius size-MINI stop-task fz-9" href="javascript:;" title="结束任务">结束任务</a>' +
-                '<a style="display:none;text-decoration:none;" class="btn btn-primary radius size-MINI paper-template fz-9" href="javascript:;" title="试卷模板">试卷模板</a>' +
+            "className": "text-l",
+            "defaultContent": '<a style="display:none;text-decoration:none;" class="btn btn-primary radius size-MINI start-task fz-9" href="javascript:;" title="开始">开始</a>' +
+                '<a style="display:none;text-decoration:none;" class="btn btn-primary radius size-MINI stop-task fz-9" href="javascript:;" title="结束">结束</a>' +
+                '<a style="display:none;text-decoration:none;" class="btn btn-primary radius size-MINI ml-5 paper-template fz-9" href="javascript:;" title="试卷">试卷</a>' +
                 '<a style="text-decoration:none;" class="recycle ml-5 fz-18 hide" href="javascript:;" title="回收"><i class="Hui-iconfont">&#xe631;</i></a>' +
                 '<a style="text-decoration:none;" class="resume ml-5 fz-18 hide" href="javascript:;" title="恢复"><i class="Hui-iconfont">&#xe615;</i></a>' +
                 '<a style="text-decoration:none;" class="edit ml-5 fz-18 hide" href="javascript:;" title="编辑"><i class="Hui-iconfont">&#xe60c;</i></a>' +

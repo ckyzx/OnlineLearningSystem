@@ -31,9 +31,10 @@ namespace OnlineLearningSystem.Utilities
                 List<DocxParagraph> docxPara;
                 const String qTypes = "单选题；多选题；判断题；公文改错题；计算题；案例分析题；问答题；";
                 DateTime now;
-                Regex typeRegex, contentRegex1, contentRegex2, optionalAnswerRegex, modelAnswerRegex, difficultyCoefficientRegex;
+                Regex typeRegex, contentRegex1, contentRegex2, optionalAnswerRegex, modelAnswerRegex, 
+                    difficultyCoefficientRegex, scoreRegex, digitRegex;
                 String text, qType, qClassify, qContent, qOptionalAnswer, qModelAnswer;
-                Int32 i1, i2, len, rowCount, id, id1;
+                Int32 i1, i2, len, rowCount, id, id1, score;
                 Byte difficultyCoefficient;
                 Boolean isContent;
                 List<Question> qs;
@@ -54,7 +55,9 @@ namespace OnlineLearningSystem.Utilities
                 contentRegex2 = new Regex(@"^\s*\(.+\)|^\s*（.+）"); // 示例：(一) （一）
                 optionalAnswerRegex = new Regex(@"^\s*[a-zA-Z]{1}[\.．、]{1}"); // 示例：A. B. C.
                 modelAnswerRegex = new Regex(@"^\s*((答案|参考答案){1}[:：]{1})|【答】");
-                difficultyCoefficientRegex = new Regex(@"^难度系数：|难度系数:");
+                difficultyCoefficientRegex = new Regex(@"^难度系数[：:]{1}\d{1}");
+                scoreRegex = new Regex(@"^分数[：:]{1}\d+$");
+                digitRegex = new Regex(@"\d+");
 
                 qType = "";
                 qClassify = "";
@@ -73,6 +76,7 @@ namespace OnlineLearningSystem.Utilities
                 id1 = 0 == rowCount ? 0 : olsEni.QuestionClassifies.Max(model => model.QC_AutoId);
 
                 difficultyCoefficient = 0;
+                score = 0;
 
                 foreach (var para in docxPara)
                 {
@@ -110,6 +114,7 @@ namespace OnlineLearningSystem.Utilities
                                     Q_Type = qType,
                                     QC_Id = id1,
                                     Q_DifficultyCoefficient = difficultyCoefficient,
+                                    Q_Score = score,
                                     Q_Content = qContent,
                                     Q_OptionalAnswer = qOptionalAnswer,
                                     Q_ModelAnswer = qModelAnswer,
@@ -124,6 +129,8 @@ namespace OnlineLearningSystem.Utilities
                                     errorIds.Append(id + ", ");
                                 }
 
+                                difficultyCoefficient = 0;
+                                score = 0;
                                 qContent = "";
                                 qOptionalAnswer = "";
                                 qModelAnswer = "";
@@ -146,6 +153,7 @@ namespace OnlineLearningSystem.Utilities
                                     Q_Type = qType,
                                     QC_Id = id1,
                                     Q_DifficultyCoefficient = difficultyCoefficient,
+                                    Q_Score = score,
                                     Q_Content = qContent,
                                     Q_OptionalAnswer = qOptionalAnswer,
                                     Q_ModelAnswer = qModelAnswer,
@@ -153,6 +161,8 @@ namespace OnlineLearningSystem.Utilities
                                     Q_Status = 4
                                 });
 
+                                difficultyCoefficient = 0;
+                                score = 0;
                                 qContent = "";
                                 qOptionalAnswer = "";
                                 qModelAnswer = "";
@@ -228,7 +238,17 @@ namespace OnlineLearningSystem.Utilities
 
                     if (difficultyCoefficientRegex.IsMatch(text))
                     {
-                        difficultyCoefficient = Convert.ToByte(difficultyCoefficientRegex.Replace(text, ""));
+                        difficultyCoefficient = Convert.ToByte(digitRegex.Match(text).Value);
+                        continue;
+                    }
+
+                    #endregion
+
+                    #region 判断是否为分数行
+
+                    if (scoreRegex.IsMatch(text))
+                    {
+                        score = Convert.ToInt32(digitRegex.Match(text).Value);
                         continue;
                     }
 
@@ -376,6 +396,7 @@ namespace OnlineLearningSystem.Utilities
                         Q_Type = qType,
                         QC_Id = id1,
                         Q_DifficultyCoefficient = difficultyCoefficient,
+                        Q_Score = score,
                         Q_Content = qContent,
                         Q_OptionalAnswer = qOptionalAnswer,
                         Q_ModelAnswer = qModelAnswer,
@@ -390,6 +411,8 @@ namespace OnlineLearningSystem.Utilities
                         errorIds.Append(id + ", ");
                     }
 
+                    difficultyCoefficient = 0;
+                    score = 0;
                     qContent = "";
                     qOptionalAnswer = "";
                     qModelAnswer = "";
@@ -491,7 +514,7 @@ namespace OnlineLearningSystem.Utilities
             DataTablesResponse dtResponse;
             Int32 recordsTotal, recordsFiltered;
             String whereSql, orderColumn, classfyName;
-            List<Question> tmpMs, ms;
+            List<Question> ms;
 
 
             dtResponse = new DataTablesResponse();
@@ -519,7 +542,7 @@ namespace OnlineLearningSystem.Utilities
 
             if (qcId == 0)
             {
-                tmpMs =
+                ms =
                     olsEni
                     .Questions
                     .OrderBy(model => model.Q_Id)
@@ -534,7 +557,7 @@ namespace OnlineLearningSystem.Utilities
             else
             {
 
-                tmpMs =
+                ms =
                     olsEni
                     .Questions
                     .OrderBy(model => model.Q_Id)
@@ -548,30 +571,12 @@ namespace OnlineLearningSystem.Utilities
                     .ToList();
             }
 
-            ms = new List<Question>();
-
-            foreach (var model in tmpMs)
+            foreach (var model in ms)
             {
 
                 classfyName = olsEni.QuestionClassifies.SingleOrDefault(m1 => m1.QC_Id == model.QC_Id).QC_Name;
-
-                ms.Add(new Question()
-                {
-                    Q_Id = model.Q_Id,
-                    Q_Type = model.Q_Type,
-                    QC_Id = model.QC_Id,
-                    QC_Name = classfyName,
-                    Q_DifficultyCoefficient = model.Q_DifficultyCoefficient,
-                    Q_Content = model.Q_Content,
-                    Q_OptionalAnswer = model.Q_OptionalAnswer,
-                    Q_ModelAnswer = model.Q_ModelAnswer,
-                    Q_Remark = model.Q_Remark,
-                    Q_AddTime = model.Q_AddTime,
-                    Q_Status = model.Q_Status
-                });
+                model.QC_Name = classfyName;
             }
-
-            tmpMs = null;
 
             recordsFiltered = ms.Count();
             dtResponse.recordsFiltered = recordsFiltered;
@@ -654,6 +659,7 @@ namespace OnlineLearningSystem.Utilities
                 Q_OptionalAnswer = "",
                 Q_ModelAnswer = "",
                 Q_DifficultyCoefficient = 0,
+                Q_Score = 0,
                 Q_Remark = "",
                 Q_AddTime = DateTime.Now,
                 Q_Status = (Byte)Status.Available

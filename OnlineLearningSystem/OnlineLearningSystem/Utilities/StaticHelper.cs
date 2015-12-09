@@ -54,6 +54,27 @@ namespace OnlineLearningSystem.Utilities
             return items;
         }
 
+        public static List<SelectListItem> GetExaminationTaskStatisticType(String currentValue)
+        {
+
+            List<SelectListItem> items;
+
+            items = new List<SelectListItem>();
+            items.Add(new SelectListItem() { Text = "[未设置]", Value = "0" });
+            items.Add(new SelectListItem() { Text = "得分", Value = "1" });
+            items.Add(new SelectListItem() { Text = "正确率", Value = "2" });
+
+            foreach (var i in items)
+            {
+                if (i.Value == currentValue)
+                {
+                    i.Selected = true;
+                }
+            }
+
+            return items;
+        }
+
         public static List<SelectListItem> GetExaminationTaskType(String currentValue)
         {
 

@@ -244,6 +244,11 @@ namespace OnlineLearningSystem.Utilities
             }
         }
 
+        public String GetZTreeJson(Status status)
+        {
+            return GetZTreeJson((Byte)status);
+        }
+
         public String GetZTreeJson(Byte status)
         {
 
@@ -265,7 +270,10 @@ namespace OnlineLearningSystem.Utilities
                 zTreeJson.Append("},");
             }
 
-            zTreeJson.Remove(zTreeJson.Length - 1, 1);
+            if (zTreeJson.Length > 1)
+            {
+                zTreeJson.Remove(zTreeJson.Length - 1, 1);
+            }
             zTreeJson.Append("]");
 
             return zTreeJson.ToString();

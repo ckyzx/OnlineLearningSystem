@@ -119,6 +119,12 @@ namespace OnlineLearningSystem.Utilities
                 ET_Name = "",
                 ET_ParticipatingDepartment = "[]",
                 ET_Attendee = "[]",
+                ET_AutoType = 0,
+                ET_StatisticType = 0,
+                ET_TotalScore = 100,
+                ET_AutoClassifies = "[]",
+                ET_AutoNumber = 10,
+                ET_AutoRatio = "[]",
                 ET_StartTime = initDateTime,
                 ET_EndTime = initDateTime.AddDays(7),
                 ET_TimeSpan = 0,
@@ -392,6 +398,28 @@ namespace OnlineLearningSystem.Utilities
                 resJson.status = ResponseStatus.Error;
                 resJson.message = StaticHelper.GetExceptionMessage(ex);
                 return resJson;
+            }
+        }
+
+        public Boolean DuplicateName(Int32 etId, String name)
+        {
+            try
+            {
+
+                Int32 count;
+
+                count = olsEni.ExaminationTasks.Where(m => m.ET_Id != etId && m.ET_Name == name).Count();
+
+                if (count > 0)
+                {
+                    return true;
+                }
+
+                return false;
+            }
+            catch (Exception ex)
+            {
+                return false;
             }
         }
 

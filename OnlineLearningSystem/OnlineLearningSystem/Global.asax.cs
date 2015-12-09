@@ -36,5 +36,14 @@ namespace OnlineLearningSystem
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
         }
+
+        /*protected void Application_BeginRequest()
+        {
+            // 当访问根目录时，重定向至起始页
+            if (Context.Request.Path == "/")
+            {
+                Context.RewritePath("/index.htm");
+            }
+        }*/
     }
 }

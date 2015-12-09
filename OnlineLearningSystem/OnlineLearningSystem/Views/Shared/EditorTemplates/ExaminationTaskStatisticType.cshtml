@@ -1,0 +1,3 @@
+﻿@model Byte
+@using OnlineLearningSystem.Utilities
+@Html.DropDownList("", StaticHelper.GetExaminationTaskStatisticType(Model.ToString()), new { @class = "select" })

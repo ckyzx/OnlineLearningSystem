@@ -60,6 +60,7 @@ namespace OnlineLearningSystem.Controllers
             m = um.GetNew();
             ViewBag.DepartmentsAndUsers = new UDepartment().GetDepartmentsAndUsersZTreeJson();
             ViewBag.ExaminationTaskTemplates = um.GetTemplateList();
+            ViewBag.QuestionClassifies = new UQuestionClassify().GetZTreeJson(Status.Available);
 
             return View(m);
         }
@@ -83,6 +84,7 @@ namespace OnlineLearningSystem.Controllers
 
             ViewBag.DepartmentsAndUsers = new UDepartment().GetDepartmentsAndUsersZTreeJson();
             ViewBag.ExaminationTaskTemplates = um.GetTemplateList();
+            ViewBag.QuestionClassifies = new UQuestionClassify().GetZTreeJson(Status.Available);
 
             return View(m);
         }
@@ -100,6 +102,7 @@ namespace OnlineLearningSystem.Controllers
             m = um.Get(id);
             ViewBag.DepartmentsAndUsers = new UDepartment().GetDepartmentsAndUsersZTreeJson();
             ViewBag.ExaminationTaskTemplates = um.GetTemplateList();
+            ViewBag.QuestionClassifies = new UQuestionClassify().GetZTreeJson(Status.Available);
 
             return View(m);
         }
@@ -123,6 +126,7 @@ namespace OnlineLearningSystem.Controllers
 
             ViewBag.DepartmentsAndUsers = new UDepartment().GetDepartmentsAndUsersZTreeJson();
             ViewBag.ExaminationTaskTemplates = um.GetTemplateList();
+            ViewBag.QuestionClassifies = new UQuestionClassify().GetZTreeJson(Status.Available);
 
             return View(m);
         }
@@ -195,6 +199,20 @@ namespace OnlineLearningSystem.Controllers
             resJson = um.StopTask(id);
 
             return Json(resJson, JsonRequestBehavior.AllowGet);
+        }
+
+        //
+        // GET: /ExaminationTask/DuplicateName
+
+        [Description("检查考试任务名称")]
+        public JsonResult DuplicateName(Int32 ET_Id, String ET_Name)
+        {
+
+            Boolean matching;
+
+            matching = um.DuplicateName(ET_Id, ET_Name);
+
+            return Json(!matching, JsonRequestBehavior.AllowGet);
         }
 
     }

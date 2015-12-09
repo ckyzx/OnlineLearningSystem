@@ -57,6 +57,15 @@
                 @Html.ValidationMessageFor(m => m.Q_DifficultyCoefficient)
             </div>
         </div>
+        <div class="row cl">
+            <label class="form-label col-2">
+                @Html.LabelFor(m => m.Q_Score)
+            </label>
+            <div class="formControls col-2">
+                @Html.TextBoxFor(m => m.Q_Score, new { @class = "input-text" })
+                @Html.ValidationMessageFor(m => m.Q_Score)
+            </div>
+        </div>
         <div id="QuestionContentAndAnswer"></div>
         <div class="row cl">
             <label class="form-label col-2">

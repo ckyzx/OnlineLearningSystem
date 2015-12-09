@@ -1,3 +1,4 @@
-use OLS;
+USE OLS;
 
-delete from Questions;
+DELETE FROM Questions;
+DELETE FROM QuestionClassifies;

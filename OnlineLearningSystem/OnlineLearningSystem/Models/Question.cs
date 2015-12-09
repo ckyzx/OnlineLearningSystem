@@ -26,6 +26,14 @@ namespace OnlineLearningSystem.Models
         [NotMapped]
         public String QC_Name { get; set; }
 
+        [DisplayName("难度系数")]
+        [Required(ErrorMessage = "请选择{0}")]
+        public Byte Q_DifficultyCoefficient { get; set; }
+
+        [DisplayName("分数")]
+        [Required(ErrorMessage = "请输入{0}")]
+        public Int32 Q_Score { get; set; }
+
         [DisplayName("内容")]
         [Required(ErrorMessage = "请输入{0}")]
         public String Q_Content { get; set; }
@@ -36,10 +44,6 @@ namespace OnlineLearningSystem.Models
         [DisplayName("标准答案")]
         [Required(ErrorMessage = "请输入{0}")]
         public String Q_ModelAnswer { get; set; }
-
-        [DisplayName("难度系数")]
-        [Required(ErrorMessage = "请选择{0}")]
-        public Byte Q_DifficultyCoefficient { get; set; }
 
         [DisplayName("备注")]
         public String Q_Remark { get; set; }

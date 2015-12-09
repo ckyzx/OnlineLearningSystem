@@ -1,19 +1,20 @@
 ﻿@model OnlineLearningSystem.Models.ExaminationTask
 @{
-    ViewBag.Title = "修改考试任务";
+    ViewBag.Title = "编辑考试任务";
     Layout = "~/Views/Shared/_PageEdit.cshtml";
 }
 <div class="pd-20">
-    @using (Html.BeginForm("Edit", "ExaminationTask", FormMethod.Post, new { name = "create", @class = "form form-horizontal" }))
+    @using (Html.BeginForm("Edit", "ExaminationTask", FormMethod.Post, new { name = "edit", @class = "form form-horizontal" }))
     {
         @Html.ValidationSummary(true)
         @Html.HiddenFor(m => m.ET_Id)
         @Html.HiddenFor(m => m.ET_AutoId)
         @Html.HiddenFor(m => m.ET_EndTime)
         @Html.HiddenFor(m => m.ET_AddTime)
+        @Html.HiddenFor(m => m.ET_PaperTemplates)
         <div class="row cl">
             <label class="form-label col-2">
-                @Html.LabelFor(m => m.ET_Status)    
+                @Html.LabelFor(m => m.ET_Status)
             </label>
             <div class="formControls col-2">
                 <span class="select-box">
@@ -43,7 +44,7 @@
         </div>
         <div class="row cl">
             <label class="form-label col-2">
-                @Html.LabelFor(m => m.ET_Type)    
+                @Html.LabelFor(m => m.ET_Type)
             </label>
             <div class="formControls col-2">
                 <span class="select-box">
@@ -52,9 +53,53 @@
                 @Html.ValidationMessageFor(m => m.ET_Type)
             </div>
         </div>
-        <div class="row cl hidden">
+        <div class="row cl">
             <label class="form-label col-2">
-                @Html.LabelFor(m => m.ET_Mode)    
+                @Html.LabelFor(m => m.ET_Attendee)
+            </label>
+            <div class="formControls col-10">
+                <ul id="DepartmentsAndUsers" class="ztree" data-value='@ViewBag.DepartmentsAndUsers'>
+                </ul>
+                <div class="cl"></div>
+                @Html.HiddenFor(m => m.ET_ParticipatingDepartment)
+                @Html.ValidationMessageFor(m => m.ET_ParticipatingDepartment)
+                <div class="cl"></div>
+                @Html.HiddenFor(m => m.ET_Attendee)
+                @Html.ValidationMessageFor(m => m.ET_Attendee)
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-2">
+                @Html.LabelFor(m => m.ET_StatisticType)
+            </label>
+            <div class="formControls col-2">
+                <span class="select-box">
+                    @Html.EditorFor(m => m.ET_StatisticType, "ExaminationTaskStatisticType")
+                </span>
+                @Html.ValidationMessageFor(m => m.ET_StatisticType)
+            </div>
+        </div>
+        <div class="row cl" style="display:none;">
+            <label class="form-label col-2">
+                @Html.LabelFor(m => m.ET_TotalScore)
+            </label>
+            <div class="formControls col-2">
+                @Html.TextBoxFor(m => m.ET_TotalScore, new { @class = "input-text" })
+                @Html.ValidationMessageFor(m => m.ET_TotalScore)
+            </div>
+        </div>
+        <div class="row cl" style="display:none;">
+            <label class="form-label col-2">
+                @Html.LabelFor(m => m.ET_AutoNumber)
+            </label>
+            <div class="formControls col-2">
+                @Html.TextBoxFor(m => m.ET_AutoNumber, new { @class = "input-text" })
+                @Html.ValidationMessageFor(m => m.ET_AutoNumber)
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-2">
+                @Html.LabelFor(m => m.ET_Mode)
             </label>
             <div class="formControls col-2">
                 <span class="select-box">
@@ -63,33 +108,9 @@
                 @Html.ValidationMessageFor(m => m.ET_Mode)
             </div>
         </div>
-        <div class="row cl hidden">
+        <div class="row cl" style="display:none;">
             <label class="form-label col-2">
-                @Html.LabelFor(m => m.ET_DifficultyCoefficient)    
-            </label>
-            <div class="formControls col-2">
-                <span class="select-box">
-                    @Html.EditorFor(m => m.ET_DifficultyCoefficient, "ExaminationTaskDifficultyCoefficient")
-                </span>
-                @Html.ValidationMessageFor(m => m.ET_DifficultyCoefficient)
-            </div>
-        </div>
-        <div class="row cl">
-            <label class="form-label col-2">
-                @Html.LabelFor(m => m.ET_Attendee)
-            </label>
-            <div class="formControls col-10">
-                <ul id="DepartmentsAndUsers" class="ztree" value='@ViewBag.DepartmentsAndUsers'>
-                </ul>
-                @Html.HiddenFor(m => m.ET_ParticipatingDepartment)
-                @Html.ValidationMessageFor(m => m.ET_ParticipatingDepartment)
-                @Html.HiddenFor(m => m.ET_Attendee)
-                @Html.ValidationMessageFor(m => m.ET_Attendee)
-            </div>
-        </div>
-        <div class="row cl hidden">
-            <label class="form-label col-2">
-                @Html.LabelFor(m => m.ET_AutoType)    
+                @Html.LabelFor(m => m.ET_AutoType)
             </label>
             <div class="formControls col-2">
                 <span class="select-box">
@@ -98,16 +119,50 @@
                 @Html.ValidationMessageFor(m => m.ET_AutoType)
             </div>
         </div>
-        <div class="row cl hidden">
+        <div class="row cl" style="display:none;">
             <label class="form-label col-2">
                 @Html.LabelFor(m => m.ET_AutoOffsetDay)
             </label>
             <div class="formControls col-2">
-                @Html.TextBoxFor(m => m.ET_AutoOffsetDay, new { @class = "input-text" })
+                <div id="AutoOffsetDayContainer"></div>
+                @Html.HiddenFor(m => m.ET_AutoOffsetDay)
                 @Html.ValidationMessageFor(m => m.ET_AutoOffsetDay)
             </div>
         </div>
-        <div class="row cl hidden">
+        <div class="row cl" style="display:none;">
+            <label class="form-label col-2">
+                @Html.LabelFor(m => m.ET_DifficultyCoefficient)
+            </label>
+            <div class="formControls col-2">
+                <span class="select-box">
+                    @Html.EditorFor(m => m.ET_DifficultyCoefficient, "ExaminationTaskDifficultyCoefficient")
+                </span>
+                @Html.ValidationMessageFor(m => m.ET_DifficultyCoefficient)
+            </div>
+        </div>
+        <div class="row cl" style="display:none;">
+            <label class="form-label col-2">
+                @Html.LabelFor(m => m.ET_AutoClassifies)
+            </label>
+            <div class="formControls col-10">
+                <ul id="QuestionClassifies" class="ztree" data-value='@ViewBag.QuestionClassifies'>
+                </ul>
+                <div class="cl"></div>
+                @Html.HiddenFor(m => m.ET_AutoClassifies)
+                @Html.ValidationMessageFor(m => m.ET_AutoClassifies)
+            </div>
+        </div>
+        <div class="row cl" style="display:none;">
+            <label class="form-label col-2">
+                @Html.LabelFor(m => m.ET_AutoRatio)
+            </label>
+            <div class="formControls col-10">
+                <div id="RatioContainer"></div>
+                @Html.HiddenFor(m => m.ET_AutoRatio)
+                @Html.ValidationMessageFor(m => m.ET_AutoRatio)
+            </div>
+        </div>
+        <div class="row cl" style="display:none;">
             <label class="form-label col-2">
                 @Html.LabelFor(m => m.ET_StartTime)
             </label>
@@ -117,7 +172,7 @@
                 @Html.ValidationMessageFor(m => m.ET_StartTime)
             </div>
         </div>
-        <div class="row cl hidden">
+        <div class="row cl">
             <label class="form-label col-2">
                 @Html.LabelFor(m => m.ET_TimeSpan)
             </label>
@@ -126,11 +181,11 @@
                 @Html.ValidationMessageFor(m => m.ET_TimeSpan)
             </div>
         </div>
-        <div id="QuestionListSelectContainer" class="row cl">
+        <div id="QuestionListSelectContainer" class="row cl" style="display:none;">
             <label class="form-label col-2">
                 @Html.LabelFor(m => m.ET_Questions)
             </label>
-            <div class="formControls col-10">
+            <div class="formControls col-10 pt-3">
                 <table class="table table-border table-bordered table-bg table-hover table-sort question-table" 
                        value-selector="#ET_Questions">
                     <thead>
@@ -147,14 +202,17 @@
                             <th>
                                 分类
                             </th>
-                            <th>
+                            <!--th>
                                 添加时间
-                            </th>
+                            </th-->
                             <th>
                                 试题
                             </th>
                             <th>
                                 难度系数
+                            </th>
+                            <th>
+                                分数
                             </th>
                         </tr>
                     </thead>
