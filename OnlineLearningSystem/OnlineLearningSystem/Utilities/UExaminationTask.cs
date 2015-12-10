@@ -376,6 +376,15 @@ namespace OnlineLearningSystem.Utilities
                     }
 
                     epts[0].EPT_PaperTemplateStatus = (Byte)etStatus;
+                    if (ExaminationTaskStatus.Enabled == etStatus)
+                    {
+                        epts[0].EPT_StartTime = DateTime.Now;
+                        epts[0].EPT_StartDate = DateTime.Now.Date;
+                    }
+                    else if (ExaminationTaskStatus.Disabled == etStatus)
+                    {
+                        epts[0].EPT_EndTime = DateTime.Now;
+                    }
                     olsEni.Entry(epts[0]).State = EntityState.Modified;
                 }
 
@@ -418,94 +427,6 @@ namespace OnlineLearningSystem.Utilities
             {
                 return false;
             }
-        }
-
-        public ResponseJson AutoGeneratePaperTemplate()
-        {
-
-            ResponseJson resJson;
-
-            resJson = new ResponseJson();
-
-            try
-            {
-
-                List<ExaminationTask> ets;
-                Int32 eptCount, dayOfWeek, dayOfMonth;
-                DateTime now, nowDate;
-
-                ets =
-                    olsEni
-                    .ExaminationTasks
-                    .Where(m =>
-                        m.ET_AutoType != (Byte)AutoType.Manual
-                        && m.ET_Enabled == (Byte)ExaminationTaskStatus.Enabled)
-                    .ToList();
-
-                now = DateTime.Now;
-                nowDate = new DateTime(now.Year, now.Month, now.Day);
-
-                foreach (var et in ets)
-                {
-
-                    switch (et.ET_AutoType)
-                    {
-                        case (Byte)AutoType.Day:
-
-                            eptCount =
-                                olsEni
-                                .ExaminationPaperTemplates
-                                .Where(m => m.EPT_StartDate == nowDate)
-                                .Count();
-
-                            if (0 != eptCount)
-                            {
-                                continue;
-                            }
-
-                            break;
-                        case (Byte)AutoType.Week:
-
-                            dayOfWeek = ((Int32)now.DayOfWeek) + 1;
-
-                            if (et.ET_AutoOffsetDay != dayOfWeek)
-                            {
-                                continue;
-                            }
-
-                            break;
-                        case (Byte)AutoType.Month:
-
-                            dayOfMonth = now.Day;
-
-                            if (et.ET_AutoOffsetDay != dayOfMonth)
-                            {
-                                continue;
-                            }
-
-                            break;
-                        default:
-                            break;
-                    }
-
-                    //TODO: 自动生成试卷模板
-                    GeneratePaperTemplate(et);
-                }
-
-                resJson.status = ResponseStatus.Success;
-                return resJson;
-            }
-            catch (Exception ex)
-            {
-                resJson.status = ResponseStatus.Error;
-                resJson.message = StaticHelper.GetExceptionMessage(ex);
-                return resJson;
-            }
-        }
-
-        private void GeneratePaperTemplate(ExaminationTask et)
-        {
-            //throw new NotImplementedException();
         }
 
     }

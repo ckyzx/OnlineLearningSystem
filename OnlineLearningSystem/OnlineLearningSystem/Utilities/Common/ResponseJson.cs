@@ -20,5 +20,12 @@ namespace OnlineLearningSystem.Utilities
             message = "";
             remark = "";
         }
+        public ResponseJson(ResponseStatus status)
+        {
+            this.status = status;
+            data = "{}";
+            message = "";
+            remark = "";
+        }
     }
 }

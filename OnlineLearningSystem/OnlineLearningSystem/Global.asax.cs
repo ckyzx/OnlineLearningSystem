@@ -38,7 +38,7 @@ namespace OnlineLearningSystem
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
 
-            TimerTask();
+            //TimerTask();
         }
 
         /*protected void Application_BeginRequest()
@@ -54,20 +54,20 @@ namespace OnlineLearningSystem
         {
             Timer timer;
 
-            timer = new Timer(1000);//new Timer(24 * 60 * 60 * 1000);
+            timer = new Timer(24 * 60 * 60 * 1000);
             timer.Elapsed += new ElapsedEventHandler(AutoTask);
             timer.Enabled = true;
-            timer.AutoReset = false;
+            timer.AutoReset = true;
         }
 
         private static void AutoTask(object source, ElapsedEventArgs e)
         {
 
-            UExaminationTask uet;
+            GeneratePaperTemplate gpt;
             ResponseJson resJson;
 
-            uet = new UExaminationTask();
-            resJson = uet.AutoGeneratePaperTemplate();
+            gpt = new GeneratePaperTemplate();
+            resJson = gpt.Generate();
 
             //TODO: 记录错误日志
         }
