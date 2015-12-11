@@ -212,6 +212,20 @@ namespace OnlineLearningSystem.Controllers
         }
 
         //
+        // GET: /Question/SetScore
+
+        [Description("设置分数")]
+        public JsonResult SetScore(Int32 id, Int32 score)
+        {
+
+            ResponseJson resJson;
+
+            resJson = um.SetScore(id, score);
+
+            return Json(resJson, JsonRequestBehavior.AllowGet);
+        }
+
+        //
         // GET: /Question/CacheImport
 
         [Description("缓存导入")]

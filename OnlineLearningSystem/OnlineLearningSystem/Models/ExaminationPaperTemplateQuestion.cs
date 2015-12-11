@@ -29,6 +29,10 @@ namespace OnlineLearningSystem.Models
         [Required(ErrorMessage = "请选择{0}")]
         public Byte EPTQ_DifficultyCoefficient { get; set; }
 
+        [DisplayName("分数")]
+        [Required(ErrorMessage = "请输入{0}")]
+        public Int32 EPTQ_Score { get; set; }
+
         [DisplayName("内容")]
         [Required(ErrorMessage = "请输入{0}")]
         public String EPTQ_Content { get; set; }

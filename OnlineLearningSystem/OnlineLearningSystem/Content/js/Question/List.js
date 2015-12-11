@@ -58,10 +58,10 @@
             "name": "Q_DifficultyCoefficient",
             "defaultContent": '<span class="select-box size-MINI"><select class="dif-coe select"></select></span>'
         }, {
-            "width": "30px",
+            "width": "40px",
             "className": "text-r",
             "name": "Q_Score",
-            "data": "Q_Score"
+            "defaultContent": '<span class="size-MINI"><input type="text" class="score input-text" /></span>'
         }, {
             "width": "80px",
             "className": "text-c",
@@ -72,7 +72,8 @@
         }],
         "createdRow": function(row, data, dataIndex) {
 
-            var span, strDate, date, content, optionalAnswer, modelAnswer, status, coefficient, select;
+            var span, select, input;
+            var content, optionalAnswer, modelAnswer, status, coefficient, score;
 
             row = $(row);
 
@@ -89,7 +90,6 @@
             span = row.find('span.Q_Content');
             content = data['Q_Content'];
             content = content.replace(/\\r\\n/g, '<br />').trim();
-            //span.css({'overflow':'hidden','white-space':'nowrap','text-overflow':'ellipsis'});
             span.html(content);
 
             status = data['Q_Status'];
@@ -116,6 +116,10 @@
             select = row.find('select.dif-coe');
             select.html(options);
             select.val(coefficient);
+
+            score = data['Q_Score'];
+            input = row.find('input.score');
+            input.val(score);
 
         }
     });
@@ -311,12 +315,11 @@
     var options;
 
     options = '';
-
     for (var p in difficultyCoefficient) {
         options += '<option value="' + p + '">' + difficultyCoefficient[p] + '</option>';
     }
 
-    $('.table-sort tbody').on('change', 'select.dif-coe', function() {
+    $('.question-table tbody').on('change', 'select.dif-coe', function() {
 
         var select, tr, data, id, coefficient;
 
@@ -343,6 +346,36 @@
             });
     });
 
+    // 初始化分数设置框
+    $('.question-table tbody').on('change', 'input.score', function(){
+
+        var input, tr;
+        var data, id, score;
+
+        input = $(this);
+        tr = input.parents('tr');
+        data = table.row(tr).data();
+        id = data['Q_Id'];
+
+        score = input.val();
+
+        $.post('/Question/SetScore', {
+                id: id,
+                score: score
+            }, function(data) {
+
+                if (0 == data.status) {
+
+                    alert(data.message);
+                }
+            }, 'json')
+            .error(function() {
+
+                alert('请求返回错误！');
+            });
+    });
+
+    // 初始化分类列表
     var ul;
     var settings, nodes;
     var ztree;

@@ -411,7 +411,9 @@ $(function() {
             if (nodes[i].children != undefined) {
 
                 checked = setQuestionClassifiesNodeChecked(ztree, nodes[i].children, autoClassifies);
-                ztree.checkNode(nodes[i], checked, true);
+                if(checked){
+                    ztree.checkNode(nodes[i], true, true);
+                }
             }
         }
 

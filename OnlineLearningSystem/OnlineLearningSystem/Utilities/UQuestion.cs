@@ -808,6 +808,40 @@ namespace OnlineLearningSystem.Utilities
             }
         }
 
+        public ResponseJson SetScore(int id, int score)
+        {
+
+            ResponseJson resJson;
+
+            resJson = new ResponseJson();
+
+            try
+            {
+                Question model;
+
+                model = olsEni.Questions.SingleOrDefault(m => m.Q_Id == id);
+
+                if (null == model)
+                {
+                    resJson.message = "数据不存在！";
+                    return resJson;
+                }
+
+                model.Q_Score = score;
+                olsEni.Entry(model).State = EntityState.Modified;
+                olsEni.SaveChanges();
+
+                resJson.status = ResponseStatus.Success;
+                return resJson;
+            }
+            catch (Exception ex)
+            {
+                resJson.status = ResponseStatus.Error;
+                resJson.message = StaticHelper.GetExceptionMessage(ex);
+                return resJson;
+            }
+        }
+
         public ResponseJson CacheImport()
         {
 

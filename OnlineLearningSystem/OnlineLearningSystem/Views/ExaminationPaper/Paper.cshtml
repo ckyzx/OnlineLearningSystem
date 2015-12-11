@@ -48,18 +48,18 @@
     <div id="Question_${EPTQ_Id}" class="swiper-slide" q-id="${EPTQ_Id}" q-type="${EPTQ_Type}">
         <div class="question">
             <div class="col-12 cl question-content">
-                <div class="col-8"><span class="tip">题</span>{{html EPTQ_Content}}</div>
+                <div class="col-12"><span class="tip">题</span>{{html EPTQ_Content}}</div>
             </div>
             <div class="col-12 cl question-answer">
-                <div class="col-8">
+                <div class="col-12">
                     <span class="tip">答</span>
                     {{if EPTQ_Type == '单选题'}}
                         {{each(i, oa) EPTQ_OptionalAnswer}}
-                        <span class="mr-10"><input type="radio" name="question_radios_${EPTQ_Id}" value="${oa.key}" class="mr-5" />${oa.text}</span>
+                        <span class="mr-10"><input type="radio" name="question_radios_${EPTQ_Id}" value="${oa.key}" class="mr-5" />${oa.key}.${oa.text}</span>
                         {{/each}}
                     {{else EPTQ_Type == '多选题'}}
                         {{each(i, oa) EPTQ_OptionalAnswer}}
-                        <span class="mr-10"><input type="checkbox" name="question_checkboxs_${EPTQ_Id}" value="${oa.key}" class="mr-5" />${oa.text}</span>
+                        <span class="mr-10"><input type="checkbox" name="question_checkboxs_${EPTQ_Id}" value="${oa.key}" class="mr-5" />${oa.key}.${oa.text}</span>
                         {{/each}}
                     {{else EPTQ_Type == '判断题'}}
                     <span class="mr-10"><input type="radio" name="question_radios_${EPTQ_Id}" value="√" class="mr-5" />√</span>
