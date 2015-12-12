@@ -18,7 +18,7 @@ namespace OnlineLearningSystem.Utilities
 
             ResponseJson resJson;
 
-            resJson = new ResponseJson(ResponseStatus.Success);
+            resJson = new ResponseJson(ResponseStatus.Success, now);
 
             try
             {
@@ -64,7 +64,6 @@ namespace OnlineLearningSystem.Utilities
                     }
 
                 }
-
 
                 return resJson;
             }

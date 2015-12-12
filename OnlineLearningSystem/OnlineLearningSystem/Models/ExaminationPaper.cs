@@ -21,6 +21,12 @@ namespace OnlineLearningSystem.Models
         [DisplayName("试卷状态")]
         public Byte EP_PaperStatus { get; set; }
 
+        [DisplayName("结束时间")]
+        public DateTime EP_EndTime { get; set; }
+
+        [DisplayName("时长")]
+        public Int32 EP_TimeSpan { get; set; }
+
         [DisplayName("用户编号")]
         public Int32 EP_UserId { get; set; }
 

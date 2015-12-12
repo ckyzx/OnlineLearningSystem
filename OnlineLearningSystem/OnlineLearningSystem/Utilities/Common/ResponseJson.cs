@@ -11,6 +11,7 @@ namespace OnlineLearningSystem.Utilities
         public String data { get; set; }
         public String message { get; set; }
         public Object addition { get; set; }
+        public DateTime time { get; set; }
         public String remark { get; set; }
 
         public ResponseJson()
@@ -18,13 +19,25 @@ namespace OnlineLearningSystem.Utilities
             status = ResponseStatus.Error;
             data = "{}";
             message = "";
+            time = DateTime.Now;
             remark = "";
         }
+
         public ResponseJson(ResponseStatus status)
         {
             this.status = status;
             data = "{}";
             message = "";
+            time = DateTime.Now;
+            remark = "";
+        }
+
+        public ResponseJson(ResponseStatus status, DateTime time)
+        {
+            this.status = status;
+            data = "{}";
+            message = "";
+            this.time = time;
             remark = "";
         }
     }

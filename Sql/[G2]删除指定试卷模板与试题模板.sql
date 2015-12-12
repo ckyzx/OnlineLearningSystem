@@ -2,7 +2,7 @@ USE OLS;
 
 DECLARE @eptId int, @epId INT;
 
-SET @eptId = 16;
+SET @eptId = 18;
 select @epId = EP_Id from ExaminationPapers where EPT_Id = @eptId;
 delete from ExaminationPaperQuestions where EP_Id = @epId;
 delete from ExaminationPapers where EPT_Id = @eptId;

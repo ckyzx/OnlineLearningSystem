@@ -353,7 +353,8 @@ namespace OnlineLearningSystem.Utilities
             }
         }
 
-        public ResponseJson Paper(Int32 id, Int32 userId)
+        // 进入考试
+        public ResponseJson EnterExamination(Int32 id, Int32 userId)
         {
 
             ResponseJson resJson;
@@ -363,14 +364,10 @@ namespace OnlineLearningSystem.Utilities
             try
             {
 
-                DateTime now;
-                Int32 rowCount, epId;
+                Int32 epId;
                 ExaminationPaperTemplate ept;
                 ExaminationPaper ep;
-                List<ExaminationPaperTemplateQuestion> eptqs;
-                ExaminationPaperQuestion epq;
 
-                now = DateTime.Now;
 
                 ept = Get(id);
 
@@ -394,20 +391,22 @@ namespace OnlineLearningSystem.Utilities
                         {
 
                             //TODO: 添加试卷
-                            rowCount = olsEni.ExaminationPapers.Count();
-                            epId = 0 == rowCount ? 1 : olsEni.ExaminationPapers.Max(m => m.EP_AutoId) + 1;
+                            epId = olsEni.ExaminationPapers.Count();
+                            epId = 0 == epId ? 1 : olsEni.ExaminationPapers.Max(m => m.EP_AutoId) + 1;
 
                             ep = new ExaminationPaper
                             {
                                 EP_Id = epId,
                                 EPT_Id = ept.EPT_Id,
-                                EP_PaperStatus = 0,
+                                EP_PaperStatus = (Byte)PaperStatus.Doing,
+                                EP_EndTime = ept.EPT_EndTime,
+                                EP_TimeSpan = ept.EPT_TimeSpan,
                                 EP_UserId = userId,
                                 EP_UserName = "",
                                 EP_Score = 0,
                                 EP_Remark = "",
                                 EP_AddTime = now,
-                                EP_Status = 0
+                                EP_Status = (Byte)Status.Available
                             };
 
                             olsEni.Entry(ep).State = EntityState.Added;

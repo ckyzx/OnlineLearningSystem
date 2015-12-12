@@ -7,7 +7,8 @@ namespace OnlineLearningSystem.Utilities
 {
     public enum PaperStatus
     {
-        Doing = 0,
-        Done = 1
+        Undone = 0,
+        Doing = 1,
+        Done = 2
     }
 }

@@ -4,7 +4,6 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
-using System.Timers;
 using OnlineLearningSystem.Utilities;
 
 namespace OnlineLearningSystem
@@ -38,7 +37,10 @@ namespace OnlineLearningSystem
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
 
-            //TimerTask();
+            // 运行定时任务
+            /*TimerTask.Run(6 * 60 * 60 * 1000, TimerTask.GeneratePaperTemplate);
+            TimerTask.Run(5 * 60 * 1000, TimerTask.ChangePaperStatus);
+            TimerTask.Run(5 * 60 * 1000, TimerTask.ChangePaperTemplateStatus);*/
         }
 
         /*protected void Application_BeginRequest()
@@ -50,26 +52,5 @@ namespace OnlineLearningSystem
             }
         }*/
 
-        private static void TimerTask()
-        {
-            Timer timer;
-
-            timer = new Timer(24 * 60 * 60 * 1000);
-            timer.Elapsed += new ElapsedEventHandler(AutoTask);
-            timer.Enabled = true;
-            timer.AutoReset = true;
-        }
-
-        private static void AutoTask(object source, ElapsedEventArgs e)
-        {
-
-            GeneratePaperTemplate gpt;
-            ResponseJson resJson;
-
-            gpt = new GeneratePaperTemplate();
-            resJson = gpt.Generate();
-
-            //TODO: 记录错误日志
-        }
     }
 }

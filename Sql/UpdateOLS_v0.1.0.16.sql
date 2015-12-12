@@ -4,7 +4,7 @@ USE OLS;
 
 GO
 
-/*-- 添加字段“试卷模板试题分数”
+-- 添加字段“试卷模板试题分数”
 ALTER TABLE ExaminationPaperTemplateQuestions
 ADD EPTQ_Score INT NULL;
 
@@ -63,7 +63,7 @@ ALTER COLUMN EPT_EndTime DATETIME2 NOT NULL;
 ALTER TABLE ExaminationPaperTemplates
 ALTER COLUMN EPT_Questions TEXT NOT NULL;
 
-GO*/
+GO
 
 -- 添加角色权限“设置分数”
 SET IDENTITY_INSERT [dbo].[Permissions] ON
@@ -74,6 +74,34 @@ UPDATE Roles SET
 R_Permissions = '[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116]',
 R_PermissionCategories = '[1,2,3,4,5,6,7,8,9,10,11]'
 WHERE R_Id = 1
+
+GO
+
+-- 添加试卷字段“结束时间”、“时长”
+ALTER TABLE ExaminationPapers
+ADD EP_EndTime DATETIME2 NULL;
+ALTER TABLE ExaminationPapers
+ADD EP_TimeSpan INT NULL;
+
+GO
+
+UPDATE ExaminationPapers 
+SET EP_EndTime = ept.EPT_EndTime, 
+	EP_TimeSpan = ept.EPT_TimeSpan
+FROM 
+	ExaminationPapers ep LEFT JOIN
+	ExaminationPaperTemplates ept
+	ON ept.EPT_Id = ep.EPT_Id	
+
+GO
+
+ALTER TABLE ExaminationPapers
+ALTER COLUMN EP_EndTime DATETIME2 NOT NULL;
+ALTER TABLE ExaminationPapers
+ALTER COLUMN EP_TimeSpan INT NOT NULL;
+
+ALTER TABLE ExaminationPapers
+ALTER COLUMN EP_PaperStatus INT NOT NULL;
 
 GO
 

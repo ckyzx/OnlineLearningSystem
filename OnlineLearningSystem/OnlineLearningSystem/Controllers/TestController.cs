@@ -26,5 +26,21 @@ namespace OnlineLearningSystem.Controllers
             return JsonConvert.SerializeObject(new GeneratePaperTemplate().Generate());
         }
 
+        //
+        // GET: /Test/RunChangePaperStatus
+
+        public String RunChangePaperStatus()
+        {
+            return JsonConvert.SerializeObject(new ChangePaperStatus().Change());
+        }
+
+        //
+        // GET: /Test/RunChangePaperTemplateStatus
+
+        public String RunChangePaperTemplateStatus()
+        {
+            return JsonConvert.SerializeObject(new ChangePaperTemplateStatus().Change());
+        }
+
     }
 }

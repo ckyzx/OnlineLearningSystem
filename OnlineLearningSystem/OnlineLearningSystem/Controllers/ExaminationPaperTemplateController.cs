@@ -84,7 +84,7 @@ namespace OnlineLearningSystem.Controllers
             ResponseJson resJson;
 
             u = (User)Session["User"];
-            resJson = um.Paper(id, u.U_Id);
+            resJson = um.EnterExamination(id, u.U_Id);
 
             if (ResponseStatus.Success == resJson.status)
             {
