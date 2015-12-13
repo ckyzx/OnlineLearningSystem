@@ -32,5 +32,9 @@ namespace OnlineLearningSystem.Models
         [DisplayName("状态")]
         [Required(ErrorMessage = "请选择{0}")]
         public Byte Du_Status { get; set; }
+
+        [DisplayName("排序")]
+        [Required(ErrorMessage = "请设置{0}")]
+        public Double Du_Sort { get; set; }
     }
 }

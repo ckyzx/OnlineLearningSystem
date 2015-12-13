@@ -22,7 +22,8 @@ namespace OnlineLearningSystem.Utilities
             Int32 recordsTotal, recordsFiltered;
             Duty d;
             String whereSql, orderColumn, dutyName;
-            List<User> us;
+            Object[] modelData;
+            List<User> ms;
 
 
             dtResponse = new DataTablesResponse();
@@ -48,64 +49,70 @@ namespace OnlineLearningSystem.Utilities
             //TODO:指定排序列
             orderColumn = dtRequest.Columns[dtRequest.OrderColumn].Name;
 
-            var tmpQs =
-                olsEni
+            modelData = GetModels(dtRequest);
+            ms = (List<User>)modelData[1];
+
+            foreach (var m in ms)
+            {
+
+                d = olsEni.Duties.SingleOrDefault(m1 => m1.Du_Id == m.Du_Id);
+                dutyName = null == d ? "" : d.Du_Name;
+                m.Du_Name = dutyName;
+                m.U_Password = "**********";
+            }
+
+            recordsFiltered = (Int32)modelData[0];
+            dtResponse.recordsFiltered = recordsFiltered;
+            dtResponse.data = ms;
+
+            return dtResponse;
+        }
+
+        private Object[] GetModels(DataTablesRequest dtRequest)
+        {
+
+            Int32 count;
+            List<User> us;
+
+            count = olsEni
                 .Users
-                .OrderBy(m => m.U_Id)
+                .OrderBy(m => m.U_Sort)
                 .Where(m =>
                     (m.U_Name.Contains(dtRequest.SearchValue)
                     || m.U_LoginName.Contains(dtRequest.SearchValue))
                     && m.U_Status != (Byte)Status.Delete)
-                .Select(m => new
-                {
-                    U_Id = m.U_Id,
-                    U_Duty = m.Du_Id,
-                    U_Name = m.U_Name,
-                    U_LoginName = m.U_LoginName,
-                    U_Remark = m.U_Remark,
-                    U_AddTime = m.U_AddTime,
-                    U_Status = m.U_Status
-                })
-                .ToList();
+                .Count();
 
-            // 获取分类名称
-            us = new List<User>();
-
-            foreach (var m in tmpQs)
+            if (-1 == dtRequest.Length)
             {
 
-                d = olsEni.Duties.SingleOrDefault(m1 => m1.Du_Id == m.U_Duty);
-                dutyName = null == d ? "" : d.Du_Name;
-
-                us.Add(new User()
-                {
-                    U_Id = m.U_Id,
-                    Du_Id = m.U_Duty,
-                    Du_Name = dutyName,
-                    U_Name = m.U_Name,
-                    U_LoginName = m.U_LoginName,
-                    U_Remark = m.U_Remark,
-                    U_AddTime = m.U_AddTime,
-                    U_Status = m.U_Status
-                });
-            }
-
-            tmpQs = null;
-
-            recordsFiltered = us.Count();
-            dtResponse.recordsFiltered = recordsFiltered;
-
-            if (-1 != dtRequest.Length)
-            {
                 us =
-                    us
+                    olsEni
+                    .Users
+                    .OrderBy(m => m.U_Sort)
+                    .Where(m =>
+                        (m.U_Name.Contains(dtRequest.SearchValue)
+                        || m.U_LoginName.Contains(dtRequest.SearchValue))
+                        && m.U_Status != (Byte)Status.Delete)
+                    .ToList();
+
+            }
+            else
+            {
+
+                us =
+                    olsEni
+                    .Users
+                    .Where(m =>
+                        (m.U_Name.Contains(dtRequest.SearchValue)
+                        || m.U_LoginName.Contains(dtRequest.SearchValue))
+                        && m.U_Status != (Byte)Status.Delete)
+                    .OrderBy(m => m.U_Sort)
                     .Skip(dtRequest.Start).Take(dtRequest.Length)
                     .ToList();
             }
 
-            dtResponse.data = us;
-
-            return dtResponse;
+            return new Object[] { count, us };
         }
 
         public List<SelectListItem> GetDutyList(Int32? currentValue)
@@ -142,7 +149,6 @@ namespace OnlineLearningSystem.Utilities
 
             model = new VMUser()
             {
-                U_Id = 0,
                 Du_Id = 0,
                 Du_Name = "",
                 U_Name = "",
@@ -192,7 +198,8 @@ namespace OnlineLearningSystem.Utilities
                 U_Roles = model.U_Roles,
                 U_Remark = model.U_Remark,
                 U_AddTime = model.U_AddTime,
-                U_Status = model.U_Status
+                U_Status = model.U_Status,
+                U_Sort = model.U_Sort
             };
 
             return vmModel;
@@ -221,7 +228,8 @@ namespace OnlineLearningSystem.Utilities
                     U_Roles = vmModel.U_Roles,
                     U_Remark = vmModel.U_Remark,
                     U_AddTime = vmModel.U_AddTime,
-                    U_Status = vmModel.U_Status
+                    U_Status = vmModel.U_Status,
+                    U_Sort = uId
                 };
 
                 olsEni.Users.Add(model);
@@ -325,6 +333,7 @@ namespace OnlineLearningSystem.Utilities
                 model.U_Roles = vmModel.U_Roles;
                 model.U_Remark = vmModel.U_Remark;
                 model.U_Status = vmModel.U_Status;
+                model.U_Sort = vmModel.U_Sort;
 
                 if ("**********" != vmModel.U_Password)
                 {
@@ -678,6 +687,131 @@ namespace OnlineLearningSystem.Utilities
             catch (Exception ex)
             {
                 return false;
+            }
+        }
+
+        public ResponseJson Sort(Int32 originId, Byte sortFlag)
+        {
+
+            ResponseJson resJson;
+
+            resJson = new ResponseJson();
+
+            try
+            {
+
+                Double originSort, destSort;
+                User originUser, destUser, adjustUser;
+                User[] userAry;
+                List<User> us;
+
+                userAry = new User[2];
+
+                originUser = olsEni.Users.Single(m => m.U_Id == originId);
+                originSort = originUser.U_Sort;
+
+                // 置顶
+                if (1 == sortFlag)
+                {
+
+                    destSort = olsEni.Users.Min(m => m.U_Sort);
+                    destUser = olsEni.Users.Single(m => m.U_Sort == destSort);
+
+                    if (destSort == originSort)
+                    {
+                        resJson.status = ResponseStatus.Error;
+                        resJson.message = "该用户已置顶。";
+                        return resJson;
+                    }
+
+                    originSort = destSort - 1;
+                    originUser.U_Sort = originSort;
+                }
+                else if (2 == sortFlag)
+                {
+
+                    us =
+                        olsEni
+                        .Users
+                        .Where(m => m.U_Sort < originSort)
+                        .OrderByDescending(m => m.U_Sort)
+                        .Take(2).ToList();
+
+                    if (us.Count == 0)
+                    {
+                        resJson.status = ResponseStatus.Error;
+                        resJson.message = "该用户已处于顶部。";
+                        return resJson;
+                    }
+                    else if (us.Count == 1)
+                    {
+                        destUser = us[0];
+                        originSort = destUser.U_Sort;
+                        destSort = originUser.U_Sort;
+                        originUser.U_Sort = originSort;
+                        destUser.U_Sort = destSort;
+                    }
+                    else
+                    {
+                        destUser = us[1];
+                        destSort = destUser.U_Sort;
+                        originSort = Math.Round(destSort + 0.00001, 5, MidpointRounding.AwayFromZero);
+                        originUser.U_Sort = originSort;
+                    }
+
+                }
+                else// if (3 == sortFlag)
+                {
+
+                    us =
+                        olsEni
+                        .Users
+                        .Where(m => m.U_Sort > originSort)
+                        .OrderBy(m => m.U_Sort)
+                        .Take(1).ToList();
+
+                    if (us.Count == 0)
+                    {
+                        resJson.status = ResponseStatus.Error;
+                        resJson.message = "该用户已处于底部。";
+                        return resJson;
+                    }
+
+                    destUser = us[0];
+                    destSort = destUser.U_Sort;
+
+                    originSort = Math.Round(destSort + 0.00001, 5, MidpointRounding.AwayFromZero);
+                    originUser.U_Sort = originSort;
+                }
+
+                adjustUser = olsEni.Users.SingleOrDefault(m => m.U_Sort == originSort);
+                if (adjustUser != null)
+                {
+                    adjustUser.U_Sort = Math.Round(originSort + 0.00001, 5, MidpointRounding.AwayFromZero);
+                }
+
+                if (0 == olsEni.SaveChanges())
+                {
+                    resJson.status = ResponseStatus.Error;
+                    resJson.message = ResponseMessage.SaveChangeError;
+                    return resJson;
+                }
+
+                originUser.U_Password = "**********";
+                destUser.U_Password = "**********";
+
+                userAry[0] = originUser;
+                userAry[1] = destUser;
+
+                resJson.addition = userAry;
+                resJson.status = ResponseStatus.Success;
+                return resJson;
+            }
+            catch (Exception ex)
+            {
+                resJson.status = ResponseStatus.Error;
+                resJson.message = StaticHelper.GetExceptionMessage(ex);
+                return resJson;
             }
         }
     }

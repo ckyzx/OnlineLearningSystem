@@ -16,23 +16,23 @@
 <!--script type="text/javascript" src="@Url.Content("/Content/lib/js.array.js")"></script>
 <script type="text/javascript" src="@Url.Content("/Content/lib/js.classlist.js")"></script>
 <script type="text/javascript" src="@Url.Content("/Content/lib/js.datetime.js")"></script-->
-<!--script type="text/javascript" src="@Url.Content("/Content/lib/swiper_3.1.0/js/swiper.min.js")"></script-->
-<script type="text/javascript" src="@Url.Content("/Content/lib/swiper_2.7.0/idangerous.swiper.js")"></script>
+<script type="text/javascript" src="@Url.Content("/Content/lib/swiper_3.1.0/js/swiper.min.js")"></script>
+<!--script type="text/javascript" src="@Url.Content("/Content/lib/swiper_2.7.0/idangerous.swiper.js")"></script-->
 <script type="text/javascript" src="@Url.Content("/Content/lib/jquery.timers-1.2.js")"></script>
 <script type="text/javascript" src="@Url.Content("/Content/lib/js.request.js")"></script>
 <script type="text/javascript" src="@Url.Content("/Content/js/ExaminationPaper/Paper.js")"></script>
 <script id="TypeItemTmpl" type="text/x-jquery-tmpl">
-    <li id="Item_${i}" class="item" data-item-index="${i}">
+    <li id="Item_${i}" class="item" index="${i}">
         <h4>${type}(<span data-id="Done">${done}</span>/<span data-id="Total">${total}</span>)<b>+</b></h4>
         <div class="info">
             {{each questions}}
-            <div class="info-item"><a href="javascript:void(0);" data-question-index="${$value.i}">${$value.i+1}</a></div>
+            <div class="info-item"><a href="javascript:void(0);" index="${$value.i}">${$value.i}</a></div>
             {{/each}}
         </div>
     </li>
 </script>
 <script id="QuestionListTmpl" type="text/x-jquery-tmpl">
-    <div id="Questions_${i}" class="swiper-container hide" data-questions-index="${i}">
+    <div id="Questions_${i}" class="swiper-container hide" index="${i}">
         <div class="swiper-wrapper">
         {{tmpl(questions) '#QuestionsTmpl'}}
         </div>
@@ -45,7 +45,7 @@
     </div>
 </script>
 <script id="QuestionsTmpl" type="text/x-jquery-tmpl">
-    <div id="Question_${EPTQ_Id}" class="swiper-slide" data-question-id="${EPTQ_Id}" data-question-type="${EPTQ_Type}">
+    <div id="Question_${EPTQ_Id}" class="swiper-slide" q-id="${EPTQ_Id}" q-type="${EPTQ_Type}">
         <div class="question">
             <div class="col-12 cl question-content">
                 <div class="col-12"><span class="tip">题</span>{{html EPTQ_Content}}</div>

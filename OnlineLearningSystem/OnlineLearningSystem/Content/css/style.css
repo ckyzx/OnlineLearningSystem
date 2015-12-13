@@ -50,9 +50,10 @@ body{ min-width:1280px; }
 .time-picker{ }
 
 .question-container{ background-color: #EEE; }
-.question-classify-list-container { position: absolute; width: 250px; height: 100%; background-color: #EEE; /* overflow: hidden; overflow-y: scroll; */; }
-.question-classify-list-container ul { padding: 20px 0 44px 0; }
-.question-list-container { margin-left:250px; padding:20px; /* height: 100%; overflow: hidden; overflow-y: scroll; */ background-color:#FFF; }
+.question-classify-list-container { position: absolute; width: 200px; height: 100%; background-color: #EEE; /* overflow: hidden; overflow-y: scroll; */; }
+.question-classify-list-container ul.ztree { padding: 20px 0 44px 0; overflow: hidden;}
+.question-classify-list-container ul.ztree li {width: 200px;}
+.question-list-container { margin-left:200px; padding:20px; /* height: 100%; overflow: hidden; overflow-y: scroll; */ background-color:#FFF; }
 .question-table input.score { height: 23px; font-size: 12px; text-align: right; }
 
 .dataTable tr.question-has-error{ background:#FFCCCC; }
@@ -69,3 +70,7 @@ body{ min-width:1280px; }
 #AutoOffsetDayContainer .offset-day-item .offset-day-text { margin-right:5px; }
 #AutoOffsetDayContainer .offset-day-item .select-box, #StartTime .select { margin-right:5px; padding: 0 3px; width: 50px; height: 24px; }
 #AutoOffsetDayContainer .offset-day-item .offset-day-num { width: 40px; border: 0; }
+
+.table-sort tr.even td {background-color: #EEE;}
+.table-sort tr.hover td {background-color: #DDD;}
+.table-sort td.nowrap {white-space:nowrap;}

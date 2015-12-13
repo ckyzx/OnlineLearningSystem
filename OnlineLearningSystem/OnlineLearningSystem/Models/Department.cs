@@ -20,7 +20,7 @@ namespace OnlineLearningSystem.Models
         [DisplayName("名称")]
         [Remote("DuplicateName", "Department", ErrorMessage = "名称已存在", AdditionalFields = "D_Id")]
         [Required(ErrorMessage = "请输入{0}")]
-        [RegularExpression(@"^[\u4E00-\u9FA5\uF900-\uFA2D]{1}[\u4E00-\u9FA5\uF900-\uFA2D0-9]{1,21}$", ErrorMessage = "请输入2至22位，中文开头的字符，可带数字")]
+        [RegularExpression(@"^[\u4E00-\u9FA5\uF900-\uFA2D]{1}[\u4E00-\u9FA5\uF900-\uFA2D0-9（）]{1,21}$", ErrorMessage = "请输入2至22位，中文开头的字符，可带数字")]
         public String D_Name { get; set; }
 
         [DisplayName("角色")]
@@ -39,5 +39,9 @@ namespace OnlineLearningSystem.Models
         [DisplayName("状态")]
         [Required(ErrorMessage="请选择{0}")]
         public Byte D_Status { get; set; }
+
+        [DisplayName("排序")]
+        [Required(ErrorMessage = "请设置{0}")]
+        public Double D_Sort { get; set; }
     }
 }

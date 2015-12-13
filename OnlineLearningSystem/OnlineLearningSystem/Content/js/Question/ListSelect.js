@@ -149,7 +149,7 @@ function initQuestionSelectTable() {
             th = jqTable.find('th.Q_Content');
             span = row.find('span.Q_Content');
             qContent = data['Q_Content'];
-            qContent = qContent.trim().replace(/^(\\r\\n)+/, '').replace(/(\\r\\n)+$/, '').replace(/\\r\\n/g, '[换行]');
+            qContent = qContent.replace(/^(\\r\\n)+/g, '').replace(/(\\r\\n)+$/g, '').replace(/\\r\\n/g, '[换行]').replace(/\s+/g,'');
             span.addClass('ellipsis').width(th.width()).html(qContent).attr('title', qContent);
         },
         /*"footerCallback": function(settings, json) {

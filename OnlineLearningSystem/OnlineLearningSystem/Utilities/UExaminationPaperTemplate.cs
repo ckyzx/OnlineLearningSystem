@@ -419,7 +419,7 @@ namespace OnlineLearningSystem.Utilities
 
                         // 试卷已存在
                         // 考试未结束
-                        if (ep.EP_PaperStatus == 0)
+                        if (ep.EP_PaperStatus != (Byte)PaperStatus.Done)
                         {
                             resJson.status = ResponseStatus.Success;
                             resJson.addition = ep.EP_Id;

@@ -41,11 +41,15 @@
             "data": "Du_Name"
         }, {
             "width": "80px",
-            "className": "text-c",
-            "defaultContent": '<a style="text-decoration: none" class="recycle fz-18 hide" href="javascript:;" title="回收"><i class="Hui-iconfont">&#xe631;</i></a>' +
-                '<a style="text-decoration: none" class="resume ml-5 fz-18 hide" href="javascript:;" title="恢复"><i class="Hui-iconfont">&#xe615;</i></a>' +
-                '<a style="text-decoration: none" class="edit ml-5 fz-18 hide" href="javascript:;" title="编辑"><i class="Hui-iconfont">&#xe60c;</i></a>' +
-                '<a style="text-decoration: none" class="delete ml-5 fz-18 hide" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a>'
+            "className": "text-c nowrap",
+            "defaultContent": 
+                '<a class="recycle fz-18 hide" href="javascript:;" title="回收"><i class="Hui-iconfont">&#xe631;</i></a>' +
+                '<a class="resume ml-5 fz-18 hide" href="javascript:;" title="恢复"><i class="Hui-iconfont">&#xe615;</i></a>' +
+                '<a class="edit ml-5 fz-18 hide" href="javascript:;" title="编辑"><i class="Hui-iconfont">&#xe60c;</i></a>' +
+                '<a class="delete ml-5 fz-18 hide" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a>' +
+                '<a class="btn btn-primary radius size-MINI sort-top ml-5 fz-9 hide" href="javascript:;" title="置顶">置顶</a>' +
+                '<a class="btn btn-primary radius size-MINI sort-up ml-5 fz-9 hide" href="javascript:;" title="上移">上移</a>' +
+                '<a class="btn btn-primary radius size-MINI sort-down ml-5 fz-9 hide" href="javascript:;" title="下移">下移</a>'
         }],
         "createdRow": function(row, data, dataIndex) {
 
@@ -66,6 +70,10 @@
                     row.find('a.recycle').show();
                     row.find('a.edit').show();
                     row.find('a.delete').show();
+
+                    row.find('a.sort-top').removeClass('hide');
+                    row.find('a.sort-up').removeClass('hide');
+                    row.find('a.sort-down').removeClass('hide');
                     break;
                 case 2:
                     row.find('a.resume').show();
@@ -76,7 +84,6 @@
                 default:
                     break;
             }
-
         }
     });
 
@@ -202,6 +209,145 @@
             }, 'json')
             .error(function() {
 
+                alert('请求返回错误！');
+            });
+    });
+
+    $('.table-sort tbody').on('click', 'a.sort-top', function() {
+
+        var originTr, destTr;
+        var data, originId, destId;
+        var layerIndex;
+
+        layerIndex = layer.load(0, {
+            shade: [0.3, '#FFF']
+        });
+        
+        originTr = $(this).parents('tr');
+        data = table.row(originTr).data();
+        originId = data['U_Id'];
+
+        destTr = originTr.parent().find('tr').first();
+        data = table.row(destTr).data();
+        destId = data['U_Id'];
+
+        $.post('/User/Sort', {
+                originId: originId,
+                sortFlag: 1
+            }, function(data) {
+
+                var remoteDest, remoteDestId;
+
+                layer.close(layerIndex);
+
+                if (1 == data.status) {
+
+                    remoteDest = data.addition[1];
+                    remoteDestId = remoteDest['U_Id'];
+
+                    if(destId == remoteDestId){
+                        originTr.insertBefore(destTr);
+                    }
+                    else{
+                        originTr.remove();
+                    }
+                } else if (0 == data.status) {
+
+                    alert(data.message);
+                }
+
+            }, 'json')
+            .error(function() {
+
+                layer.close(layerIndex);
+                alert('请求返回错误！');
+            });
+    });
+
+    $('.table-sort tbody').on('click', 'a.sort-up', function() {
+
+        var originTr, destTr;
+        var data, originId, destId;
+        var layerIndex;
+
+        layerIndex = layer.load(0, {
+            shade: [0.3, '#FFF']
+        });
+        
+        originTr = $(this).parents('tr');
+        data = table.row(originTr).data();
+        originId = data['U_Id'];
+
+        destTr = originTr.prev();
+
+        $.post('/User/Sort', {
+                originId: originId,
+                sortFlag: 2
+            }, function(data) {
+
+                layer.close(layerIndex);
+
+                if (1 == data.status) {
+
+                    if(destTr.length == 0){
+                        originTr.remove();
+                    }
+                    else{
+                        originTr.insertBefore(destTr);
+                    }
+                } else if (0 == data.status) {
+
+                    alert(data.message);
+                }
+
+            }, 'json')
+            .error(function() {
+
+                layer.close(layerIndex);
+                alert('请求返回错误！');
+            });
+    });
+
+    $('.table-sort tbody').on('click', 'a.sort-down', function() {
+
+        var originTr, destTr;
+        var data, originId, destId;
+        var layerIndex;
+
+        layerIndex = layer.load(0, {
+            shade: [0.3, '#FFF']
+        });
+        
+        originTr = $(this).parents('tr');
+        data = table.row(originTr).data();
+        originId = data['U_Id'];
+
+        destTr = originTr.next();
+
+        $.post('/User/Sort', {
+                originId: originId,
+                sortFlag: 3
+            }, function(data) {
+
+                layer.close(layerIndex);
+                
+                if (1 == data.status) {
+
+                    if(destTr.length == 0){
+                        originTr.remove();
+                    }
+                    else{
+                        originTr.insertAfter(destTr);
+                    }
+                } else if (0 == data.status) {
+
+                    alert(data.message);
+                }
+
+            }, 'json')
+            .error(function() {
+
+                layer.close(layerIndex);
                 alert('请求返回错误！');
             });
     });

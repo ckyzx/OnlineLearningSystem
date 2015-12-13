@@ -219,6 +219,13 @@ namespace OnlineLearningSystem.Utilities
                     return resJson;
                 }
 
+                if (ep.EP_PaperStatus == (Byte)PaperStatus.Done)
+                {
+                    resJson.status = ResponseStatus.Error;
+                    resJson.message = "考试已结束。";
+                    return resJson;
+                }
+
                 eptId = ep.EPT_Id;
 
                 eptqs =

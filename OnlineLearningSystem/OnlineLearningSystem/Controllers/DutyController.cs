@@ -173,5 +173,17 @@ namespace OnlineLearningSystem.Controllers
             return Json(!matching, JsonRequestBehavior.AllowGet);
         }
 
+        //
+        // GET: /Duty/Sort
+
+        [Description("职务排序")]
+        public JsonResult Sort(Int32 originId, Byte sortFlag)
+        {
+            ResponseJson resJson;
+
+            resJson = um.Sort(originId, sortFlag);
+
+            return Json(resJson, JsonRequestBehavior.AllowGet);
+        }
     }
 }

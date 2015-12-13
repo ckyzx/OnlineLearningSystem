@@ -63,54 +63,175 @@ $(function() {
         /* 5个参数顺序不可打乱，分别是：响应区,隐藏显示的内容,速度,类型,事件 */
         $.Huifold("#TypeList ul .item h4", "#TypeList ul .item .info", "fast", 1, "click");
 
-        //[BrowerCompasible]判断浏览器类型，以决定不同的初始化操作
-        // 非 IE浏览器/ IE11及以上
-        if (!brower.ieVersion || (brower.ieVersion && brower.ieVersion > 10)) {
+        // 显示第一个题型
+        questionContainers = $('div[id^="Questions_"]');
 
-            // 显示第一个题型
-            questionContainers = $('div[id^="Questions_"]');
+        $('#TypeList')
+            .on('click', 'li.item', function() {
 
-            $('#TypeList')
-                .on('click', 'li.item', function() {
+                clickTypeItem(this);
+            })
+            .on('click', '.info-item a', function() {
 
-                    clickTypeItem(this);
-                })
-                .on('click', '.info-item a', function() {
+                clickTypeSubItem(this);
+            });
 
-                    clickTypeSubItem(this);
+        $('#TypeList li.item h4').first().click();
+
+        $('.swiper-button-prev-question').on('click', function() {
+            //TODO
+        });
+
+        $('.swiper-button-next-question').on('click', function() {
+            //TODO
+        });
+
+        $('#QuestionList').on('click', 'button.paper-hand-in', function() {
+
+            if (confirm('确定要结束考试吗？')) {
+
+                saveLocalAnswers();
+                submitAnswers(function() {
+                    layer_close();
                 });
 
-            $('#TypeList li.item h4').first().click();
-            // ---------------------------------------
+            }
+        });
+    }
 
-            $('#QuestionList')
-                // 提交考题数据
-                .on('mousedown', 'button.swiper-button-question', function() {
+    function adjustQuestions(qs, as) {
 
-                    var btn;
+        var ary;
+        var obj;
+        var i1, i2;
 
-                    btn = $(this);
+        ary = [];
+        i1 = 0;
+        i2 = 1;
 
-                    // 切换至下一题型
-                    if (btn.hasClass('swiper-button-disabled')) {
-                        switchNextQuestionType(btn);
-                    }
-                })
-                .on('click', 'button.paper-hand-in', function() {
+        for (var i = 0; i < qs.length; i++) {
 
-                    if (confirm('确定要结束考试吗？')) {
+            q = qs[i];
 
-                        saveLocalAnswers1();
-                        submitAnswers(function() {
-                            layer_close();
-                        });
+            // 将数据格式化
+            q = formatQuestion(q);
 
-                    }
-                });
-        }else{
+            a = getAnswer(as, q.EPTQ_Id);
 
-            alert('浏览器版本过低，无法进入考试。\r\n请升级您的浏览器至 Internet Explorer 11 。');
+            if (undefined != a.EPQ_Id) {
+
+                q.hasAnswer = true;
+
+                for (var k in a) {
+                    q[k] = a[k];
+                }
+            }
+
+            obj = duplicateType(ary, q.EPTQ_Type);
+            if (undefined == obj) {
+
+                obj = {
+                    i: i1,
+                    type: q.EPTQ_Type,
+                    total: 0,
+                    done: 0,
+                    questions: [],
+                };
+                ary.push(obj);
+
+                i1 += 1;
+            }
+
+            q.i = obj.total;
+            obj.total = obj.total + 1;
+            obj.questions.push(q);
+
+            if (q.hasAnswer) {
+                obj.done += 1;
+            }
+
         }
+
+        return ary;
+    }
+
+    function duplicateType(ary, type) {
+
+        for (var i = 0; i < ary.length; i++) {
+
+            if (ary[i].type == type) {
+
+                return ary[i];
+            }
+        }
+
+        return undefined;
+    }
+
+    function formatQuestion(q) {
+
+        try {
+            q.EPTQ_Content = q.EPTQ_Content.replace(/\\r\\n/g, '<br />');
+
+            if (q.EPTQ_Type == '单选题' || q.EPTQ_Type == '多选题') {
+
+                tmpObj = JSON.parse(q.EPTQ_OptionalAnswer);
+                tmpAry = [];
+                for (var p in tmpObj) {
+
+                    tmpAry.push({
+                        qId: q.EPTQ_Id,
+                        key: p,
+                        text: tmpObj[p]
+                    });
+                }
+                q.EPTQ_OptionalAnswer = tmpAry;
+            }
+        } catch (e) {
+
+            alert('ErrorName: ' + e.name + '\r\nMessage: ' + e.message + '\r\nStack: ' + e.stack + '\r\nEPTQ_Id: ' + q.EPTQ_Id);
+        }
+
+        return q;
+    }
+
+    function initLocalQuestions(qs, as) {
+
+        var qList, qsdInput, asdInput, tmpInput;
+
+        qList = $('#QuestionList');
+
+        qsdInput = $('<input type="hidden" id="QuestionsData" />');
+        asdInput = $('<input type="hidden" id="AnswersData" />')
+
+        qsdInput.val(JSON.stringify(qs));
+        asdInput.val(JSON.stringify(as));
+
+        qList.append(qsdInput);
+        qList.append(asdInput);
+
+        for (var i = 0; i < qs.length; i++) {
+
+            q = qs[i];
+            qId = q.EPTQ_Id;
+
+            tmpInput = $('<input type="hidden" id="QuestionData_' + qId + '" />');
+            tmpInput.val(JSON.stringify(q));
+            $('#Question_' + qId).append(tmpInput);
+
+            a = getAnswer(as, qId);
+            tmpInput = $('<input type="hidden" id="AnswerData_' + qId + '" />');
+            tmpInput.val(JSON.stringify(a));
+            $('#Question_' + qId).append(tmpInput);
+
+            // 设置考题答案
+            if (undefined != a.EPQ_Id) {
+                setAnswer(q.EPTQ_Type, a);
+            }
+        }
+
+        // 添加记录当前考题编号的控件
+        qList.append($('<input type="hidden" id="CurrentQuestionId" />'));
     }
 
     function clickTypeItem(thisElem) {
@@ -120,11 +241,11 @@ $(function() {
         var oldContainer;
 
         li = $(thisElem);
-        i = li.attr('index');
+        i = li.attr('data-item-index');
 
         // 销毁并隐藏 Swiper
         oldContainer = $('.question-container-active');
-        i1 = oldContainer.attr('index');
+        i1 = oldContainer.attr('data-questions-index');
 
         if (i == i1) {
             return;
@@ -146,6 +267,17 @@ $(function() {
         li.find('a').first().click();
     }
 
+    function initSwiper(elem) {
+
+        var swiper;
+
+        swiper = new Swiper(elem, {
+            mode: 'vertical'
+        });
+
+        return swiper;
+    }
+
     function clickTypeSubItem(thisElem) {
 
         var a, li, questionContainer;
@@ -154,91 +286,109 @@ $(function() {
         a = $(thisElem);
         li = a.parentsUntil('ul').last();
 
-        i1 = li.attr('index');
-        i2 = a.attr('index');
+        i1 = li.attr('data-item-index');
+        i2 = a.attr('data-question-index');
 
         questionContainer = $('#Questions_' + i1);
-        questionContainer.find('.bullet-' + i2).click();
+        swipers[i1].swipeTo(i2);
 
         $('li.item a.active').removeClass('active');
         a.addClass('active');
 
+        saveAnswers();
+
         setCurrentQuestionId(questionContainer);
     }
 
-    function saveLocalAnswers(switchBtn) {
+    function setCurrentQuestionId(questionContainer) {
 
-        var liActive, qSlide, adInput;
-        var liIndex;
-        var qId, qType, qAnswer;
-        var answer;
+        $('#CurrentQuestionId').val(questionContainer.find('.swiper-slide-active').attr('data-question-id'));
+    }
 
-        liActive = $('h4.active').parent();
-        liIndex = liActive.attr('index');
+    function getAnswer(answers, eptqId) {
 
-        qSlide = $('#Questions_' + liIndex + ' .swiper-slide-active');
-        qId = qSlide.attr('q-id');
-        qType = qSlide.attr('q-type');
+        for (var i = 0; i < answers.length; i++) {
 
-        // 获取原答题数据
-        adInput = $('#AnswerData_' + qId);
-        answer = adInput.val();
-        answer = answer == undefined || answer == '' ? {} : JSON.parse(answer);
+            if (answers[i].EPTQ_Id == eptqId) {
+                return answers[i];
+            }
+        }
 
-        answer.submitStatus = false;
-        answer.EP_Id = epId;
-        answer.EPTQ_Id = qId;
+        return {};
+    }
+
+    function setAnswer(qType, answer) {
+
+        var eptqId, answerContent;
+
+        eptqId = answer.EPTQ_Id;
+        answerContent = answer.EPQ_Answer;
 
         switch (qType) {
             case '单选题':
 
-                qAnswer = $('input[name="question_radios_' + qId + '"]:checked').val();
-                qAnswer = undefined == qAnswer ? [] : [qAnswer];
+                tmpAnswer = answerContent;
+                tmpAnswer = JSON.parse(tmpAnswer);
+                tmpAnswer = tmpAnswer.length == 1 ? tmpAnswer[0] : '';
 
-                answer.EPQ_Answer = JSON.stringify(qAnswer);
+                tmpRadio = $('input[name="question_radios_' + eptqId + '"][value="' + tmpAnswer + '"]');
+                if (tmpRadio.length == 1) {
+                    tmpRadio.get(0).checked = true;
+                }
 
                 break;
             case '多选题':
 
-                qAnswer = [];
-                $('input[name="question_checkboxs_' + qId + '"]:checked').each(function() {
+                tmpAnswer = answerContent;
+                tmpAnswer = JSON.parse(tmpAnswer);
 
-                    qAnswer.push($(this).val());
-                });
+                for (var i = 0; i < tmpAnswer.length; i++) {
 
-                answer.EPQ_Answer = JSON.stringify(qAnswer);
+                    tmpAnswer1 = tmpAnswer[i];
+
+                    tmpCheckbox = $('input[name="question_checkboxs_' + eptqId + '"][value="' + tmpAnswer1 + '"]');
+                    if (tmpCheckbox.length == 1) {
+                        tmpCheckbox.get(0).checked = true;
+                    }
+                }
 
                 break;
+
             case '判断题':
 
-                qAnswer = $('input[name="question_radios_' + qId + '"]:checked').val();
-                qAnswer = undefined == qAnswer ? '' : qAnswer;
-
-                answer.EPQ_Answer = qAnswer;
+                tmpRadio = $('input[name="question_radios_' + eptqId + '"][value="' + answerContent + '"]');
+                if (tmpRadio.length == 1) {
+                    tmpRadio.get(0).checked = true;
+                }
 
                 break;
             default:
 
-                qAnswer = $('textarea[name="question_textarea_' + qId + '"]').val();
-
-                answer.EPQ_Answer = qAnswer;
+                $('textarea[name="question_textarea_' + eptqId + '"]').val(answerContent);
 
                 break;
         }
-
-        adInput.val(JSON.stringify(answer));
     }
 
-    function saveLocalAnswers1() {
+    function saveAnswers() {
+
+        saveLocalAnswers();
+        submitAnswers();
+    }
+
+    function saveLocalAnswers() {
 
         var qId;
         var qSlide;
 
         qId = $('#CurrentQuestionId').val();
 
+        if ('' == qId) {
+            return;
+        }
+
         qSlide = $('#Question_' + qId);
-        qId = qSlide.attr('q-id');
-        qType = qSlide.attr('q-type');
+        qType = qSlide.attr('data-question-type');
 
         // 获取原答题数据
         adInput = $('#AnswerData_' + qId);
@@ -310,7 +460,11 @@ $(function() {
             }
         });
 
-        answers = answers.substring(0, answers.length - 2)
+        if (answers == '[') {
+            return;
+        }
+
+        answers = answers.substring(0, answers.length - 2);
         answers += ']';
 
         $.post('/ExaminationPaper/SubmitAnswers', {
@@ -345,304 +499,6 @@ $(function() {
 
                 alert('请求返回错误！');
             });
-    }
-
-    function updateAnswerProgress(questionTypesAry) {
-
-        //TODO: 刷新答题进度
-    }
-
-    function saveAnswers() {
-
-        saveLocalAnswers1();
-        submitAnswers();
-    }
-
-    function switchNextQuestionType(btn) {
-
-        var btn, li;
-        var direction;
-
-        btn = $(btn);
-
-        direction = btn.hasClass('swiper-button-prev-question') ? 'prev' : 'next';
-        if ('prev' == direction) {
-
-            li = $('#TypeList li.item h4.active').parent().prev();
-        } else if ('next' == direction) {
-
-            li = $('#TypeList li.item h4.active').parent().next();
-        }
-
-        if (li.length == 1) {
-
-            li.find('h4').click();
-
-            if ('prev' == direction) {
-
-                li.find('a').last().click();
-            }
-        }
-    }
-
-    function initLocalQuestions(qs, as) {
-
-        var qList, qsdInput, asdInput, tmpInput;
-
-        qList = $('#QuestionList');
-
-        qsdInput = $('<input type="hidden" id="QuestionsData" />');
-        asdInput = $('<input type="hidden" id="AnswersData" />')
-
-        qsdInput.val(JSON.stringify(qs));
-        asdInput.val(JSON.stringify(as));
-
-        qList.append(qsdInput);
-        qList.append(asdInput);
-
-        for (var i = 0; i < qs.length; i++) {
-
-            q = qs[i];
-            qId = q.EPTQ_Id;
-
-            tmpInput = $('<input type="hidden" id="QuestionData_' + qId + '" />');
-            tmpInput.val(JSON.stringify(q));
-            $('#Question_' + qId).append(tmpInput);
-
-            a = getAnswer(as, qId);
-            tmpInput = $('<input type="hidden" id="AnswerData_' + qId + '" />');
-            tmpInput.val(JSON.stringify(a));
-            $('#Question_' + qId).append(tmpInput);
-
-            // 设置考题答案
-            if (undefined != a.EPQ_Id) {
-                setAnswer(q.EPTQ_Type, a);
-            }
-        }
-
-        // 添加记录当前考题编号的控件
-        qList.append($('<input type="hidden" id="CurrentQuestionId" />'));
-    }
-
-    function setAnswer(qType, answer) {
-
-        var eptqId, answerContent;
-
-        eptqId = answer.EPTQ_Id;
-        answerContent = answer.EPQ_Answer;
-
-        switch (qType) {
-            case '单选题':
-
-                tmpAnswer = answerContent;
-                tmpAnswer = JSON.parse(tmpAnswer);
-                tmpAnswer = tmpAnswer.length == 1 ? tmpAnswer[0] : '';
-
-                tmpRadio = $('input[name="question_radios_' + eptqId + '"][value="' + tmpAnswer + '"]');
-                if (tmpRadio.length == 1) {
-                    tmpRadio.get(0).checked = true;
-                }
-
-                break;
-            case '多选题':
-
-                tmpAnswer = answerContent;
-                tmpAnswer = JSON.parse(tmpAnswer);
-
-                for (var i = 0; i < tmpAnswer.length; i++) {
-
-                    tmpAnswer1 = tmpAnswer[i];
-
-                    tmpCheckbox = $('input[name="question_checkboxs_' + eptqId + '"][value="' + tmpAnswer1 + '"]');
-                    if (tmpCheckbox.length == 1) {
-                        tmpCheckbox.get(0).checked = true;
-                    }
-                }
-
-                break;
-
-            case '判断题':
-
-                tmpRadio = $('input[name="question_radios_' + eptqId + '"][value="' + answerContent + '"]');
-                if (tmpRadio.length == 1) {
-                    tmpRadio.get(0).checked = true;
-                }
-
-                break;
-            default:
-
-                $('textarea[name="question_textarea_' + eptqId + '"]').val(answerContent);
-
-                break;
-        }
-    }
-
-    function adjustQuestions(qs, as) {
-
-        var ary;
-        var obj;
-        var i1, i2;
-
-        ary = [];
-        i1 = 0;
-        i2 = 1;
-
-        for (var i = 0; i < qs.length; i++) {
-
-            q = qs[i];
-
-            // 将数据格式化
-            q = formatQuestion(q);
-
-            a = getAnswer(as, q.EPTQ_Id);
-
-            if (undefined != a.EPQ_Id) {
-
-                q.hasAnswer = true;
-
-                for (var k in a) {
-                    q[k] = a[k];
-                }
-            }
-
-            obj = duplicateType(ary, q.EPTQ_Type);
-            if (undefined == obj) {
-
-                obj = {
-                    i: i1,
-                    type: q.EPTQ_Type,
-                    total: 0,
-                    done: 0,
-                    questions: [],
-                };
-                ary.push(obj);
-
-                i1 += 1;
-            }
-
-            obj.total = obj.total + 1;
-            q.i = obj.total;
-            obj.questions.push(q);
-
-            if (q.hasAnswer) {
-                obj.done += 1;
-            }
-
-        }
-
-        return ary;
-    }
-
-    function formatQuestion(q) {
-
-        try {
-            q.EPTQ_Content = q.EPTQ_Content.replace(/\\r\\n/g, '<br />');
-
-            if (q.EPTQ_Type == '单选题' || q.EPTQ_Type == '多选题') {
-
-                tmpObj = JSON.parse(q.EPTQ_OptionalAnswer);
-                tmpAry = [];
-                for (var p in tmpObj) {
-
-                    tmpAry.push({
-                        qId: q.EPTQ_Id,
-                        key: p,
-                        text: tmpObj[p]
-                    });
-                }
-                q.EPTQ_OptionalAnswer = tmpAry;
-            }
-        } catch (e) {
-
-            alert('ErrorName: ' + e.name + '\r\nMessage: ' + e.message + '\r\nStack: ' + e.stack + '\r\nEPTQ_Id: ' + q.EPTQ_Id);
-        }
-
-        return q;
-    }
-
-    function initSwiper(questionContainer) {
-
-        var swiper;
-        var liIndex;
-
-        liIndex = $(questionContainer).attr('index');
-
-        swiper = new Swiper(questionContainer, {
-            direction: 'vertical',
-            pagination: '.swiper-pagination',
-            paginationClickable: true,
-            prevButton: '.swiper-button-prev-question',
-            nextButton: '.swiper-button-next-question',
-            paginationBulletRender: function(index, className) {
-
-                var i;
-
-                i = index + 1;
-
-                return '<span class="' + className + ' bullet-' + i + '" li-index="' + liIndex + '" a-index="' + i + '">' + i + '</span>';
-            },
-            onSlideChangeStart: function(swiper) {
-
-                saveLocalAnswers1();
-                submitAnswers();
-            },
-            onSlideChangeEnd: function(swiper) {
-
-                activeQuestion($(questionContainer));
-            },
-            onDestroy: function(swiper) {
-
-                saveLocalAnswers1();
-                submitAnswers();
-            }
-        });
-
-        return swiper;
-    }
-
-    function activeQuestion(questionContainer) {
-
-        var container, bullet;
-        var liIndex, aIndex;
-
-        bullet = questionContainer.find('.swiper-pagination-bullet-active');
-        liIndex = bullet.attr('li-index');
-        aIndex = bullet.attr('a-index');
-
-        $('#Item_' + liIndex).find('a.active').removeClass('active');
-        $('#Item_' + liIndex).find('a[index="' + aIndex + '"]').addClass('active');
-
-        setCurrentQuestionId(questionContainer);
-    }
-
-    function setCurrentQuestionId(questionContainer) {
-
-        $('#CurrentQuestionId').val(questionContainer.find('.swiper-slide-active').attr('q-id'));
-    }
-
-    function getAnswer(answers, eptqId) {
-
-        for (var i = 0; i < answers.length; i++) {
-
-            if (answers[i].EPTQ_Id == eptqId) {
-                return answers[i];
-            }
-        }
-
-        return {};
-    }
-
-    function duplicateType(ary, type) {
-
-        for (var i = 0; i < ary.length; i++) {
-
-            if (ary[i].type == type) {
-
-                return ary[i];
-            }
-        }
-
-        return undefined;
     }
 
 });

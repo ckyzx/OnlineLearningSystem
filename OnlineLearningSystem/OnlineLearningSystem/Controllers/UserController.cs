@@ -291,5 +291,18 @@ namespace OnlineLearningSystem.Controllers
 
             return Json(!matching, JsonRequestBehavior.AllowGet);
         }
+
+        //
+        // GET: /User/Sort
+
+        [Description("用户排序")]
+        public JsonResult Sort(Int32 originId, Byte sortFlag)
+        {
+            ResponseJson resJson;
+
+            resJson = um.Sort(originId, sortFlag);
+
+            return Json(resJson, JsonRequestBehavior.AllowGet);
+        }
     }
 }

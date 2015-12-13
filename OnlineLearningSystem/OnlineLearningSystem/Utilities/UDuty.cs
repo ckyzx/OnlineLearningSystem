@@ -16,6 +16,7 @@ namespace OnlineLearningSystem.Utilities
             DataTablesResponse dtResponse;
             Int32 recordsTotal, recordsFiltered;
             String whereSql, orderColumn;
+            Object[] modelData;
             List<Duty> ms;
 
 
@@ -42,55 +43,58 @@ namespace OnlineLearningSystem.Utilities
             //TODO:指定排序列
             orderColumn = dtRequest.Columns[dtRequest.OrderColumn].Name;
 
-            var tmpMs =
-                olsEni
-                .Duties
-                .OrderBy(model => model.Du_Id)
-                .Where(model =>
-                    model.Du_Name.Contains(dtRequest.SearchValue)
-                    && model.Du_Status != (Byte)Status.Delete)
-                .Select(model => new
-                {
-                    Du_Id = model.Du_Id,
-                    Du_Name = model.Du_Name,
-                    Du_Remark = model.Du_Remark,
-                    Du_AddTime = model.Du_AddTime,
-                    Du_Status = model.Du_Status
-                })
-                .ToList();
+            modelData = GetModels(dtRequest);
+            ms = (List<Duty>)modelData[1];
 
-            // 获取分类名称
-            ms = new List<Duty>();
-
-            foreach (var model in tmpMs)
-            {
-
-                ms.Add(new Duty()
-                {
-                    Du_Id = model.Du_Id,
-                    Du_Name = model.Du_Name,
-                    Du_Remark = model.Du_Remark,
-                    Du_AddTime = model.Du_AddTime,
-                    Du_Status = model.Du_Status
-                });
-            }
-
-            tmpMs = null;
-
-            recordsFiltered = ms.Count();
+            recordsFiltered = (Int32)modelData[0];
             dtResponse.recordsFiltered = recordsFiltered;
+            dtResponse.data = ms;
 
-            if (-1 != dtRequest.Length)
+            return dtResponse;
+        }
+
+        private object[] GetModels(DataTablesRequest dtRequest)
+        {
+
+            Int32 count;
+            List<Duty> ms;
+
+            count = olsEni
+                .Duties
+                .OrderBy(m => m.Du_Sort)
+                .Where(m =>
+                    m.Du_Name.Contains(dtRequest.SearchValue)
+                    && m.Du_Status != (Byte)Status.Delete)
+                .Count();
+
+            if (-1 == dtRequest.Length)
             {
+
                 ms =
-                    ms
+                    olsEni
+                    .Duties
+                    .OrderBy(m => m.Du_Sort)
+                    .Where(m =>
+                        m.Du_Name.Contains(dtRequest.SearchValue)
+                        && m.Du_Status != (Byte)Status.Delete)
+                    .ToList();
+
+            }
+            else
+            {
+
+                ms =
+                    olsEni
+                    .Duties
+                    .Where(m =>
+                        m.Du_Name.Contains(dtRequest.SearchValue)
+                        && m.Du_Status != (Byte)Status.Delete)
+                    .OrderBy(m => m.Du_Sort)
                     .Skip(dtRequest.Start).Take(dtRequest.Length)
                     .ToList();
             }
 
-            dtResponse.data = ms;
-
-            return dtResponse;
+            return new Object[] { count, ms };
         }
 
         public Duty GetNew()
@@ -100,7 +104,6 @@ namespace OnlineLearningSystem.Utilities
 
             model = new Duty()
             {
-                Du_Id = 0,
                 Du_Name = "",
                 Du_Remark = "",
                 Du_AddTime = DateTime.Now,
@@ -129,13 +132,13 @@ namespace OnlineLearningSystem.Utilities
             try
             {
 
-                Int32 rowCount;
                 Int32 id;
 
-                rowCount = olsEni.Duties.Count();
-                id = 0 == rowCount ? 0 : olsEni.Duties.Max(m => m.Du_AutoId);
+                id= olsEni.Duties.Count();
+                id = 0 == id ? 1 : olsEni.Duties.Max(m => m.Du_AutoId) + 1;
 
-                model.Du_Id = id + 1;
+                model.Du_Id = id;
+                model.Du_Sort = id;
                 olsEni.Duties.Add(model);
                 olsEni.SaveChanges();
 
@@ -236,6 +239,130 @@ namespace OnlineLearningSystem.Utilities
             catch (Exception ex)
             {
                 return false;
+            }
+        }
+
+        public ResponseJson Sort(Int32 originId, Byte sortFlag)
+        {
+
+            ResponseJson resJson;
+
+            resJson = new ResponseJson();
+
+            try
+            {
+
+                String name;
+                Double originSort, destSort;
+                Duty originModel, destModel, adjustModel;
+                Duty[] modelAry;
+                List<Duty> us;
+
+                name = "职务";
+                modelAry = new Duty[2];
+
+                originModel = olsEni.Duties.Single(m => m.Du_Id == originId);
+                originSort = originModel.Du_Sort;
+
+                // 置顶
+                if (1 == sortFlag)
+                {
+
+                    destSort = olsEni.Duties.Min(m => m.Du_Sort);
+                    destModel = olsEni.Duties.Single(m => m.Du_Sort == destSort);
+
+                    if (destSort == originSort)
+                    {
+                        resJson.status = ResponseStatus.Error;
+                        resJson.message = "该" + name + "已置顶。";
+                        return resJson;
+                    }
+
+                    originSort = destSort - 1;
+                    originModel.Du_Sort = originSort;
+                }
+                else if (2 == sortFlag)
+                {
+
+                    us =
+                        olsEni
+                        .Duties
+                        .Where(m => m.Du_Sort < originSort)
+                        .OrderByDescending(m => m.Du_Sort)
+                        .Take(2).ToList();
+
+                    if (us.Count == 0)
+                    {
+                        resJson.status = ResponseStatus.Error;
+                        resJson.message = "该" + name + "已处于顶部。";
+                        return resJson;
+                    }
+                    else if (us.Count == 1)
+                    {
+                        destModel = us[0];
+                        originSort = destModel.Du_Sort;
+                        destSort = originModel.Du_Sort;
+                        originModel.Du_Sort = originSort;
+                        destModel.Du_Sort = destSort;
+                    }
+                    else
+                    {
+                        destModel = us[1];
+                        destSort = destModel.Du_Sort;
+                        originSort = Math.Round(destSort + 0.00001, 5, MidpointRounding.AwayFromZero);
+                        originModel.Du_Sort = originSort;
+                    }
+
+                }
+                else// if (3 == sortFlag)
+                {
+
+                    us =
+                        olsEni
+                        .Duties
+                        .Where(m => m.Du_Sort > originSort)
+                        .OrderBy(m => m.Du_Sort)
+                        .Take(1).ToList();
+
+                    if (us.Count == 0)
+                    {
+                        resJson.status = ResponseStatus.Error;
+                        resJson.message = "该" + name + "已处于底部。";
+                        return resJson;
+                    }
+
+                    destModel = us[0];
+                    destSort = destModel.Du_Sort;
+
+                    originSort = Math.Round(destSort + 0.00001, 5, MidpointRounding.AwayFromZero);
+                    originModel.Du_Sort = originSort;
+                }
+
+                adjustModel = olsEni.Duties.SingleOrDefault(m => m.Du_Sort == originSort);
+                if (adjustModel != null)
+                {
+                    adjustModel.Du_Sort = Math.Round(originSort + 0.00001, 5, MidpointRounding.AwayFromZero);
+                }
+
+                if (0 == olsEni.SaveChanges())
+                {
+                    resJson.status = ResponseStatus.Error;
+                    resJson.message = ResponseMessage.SaveChangeError;
+                    return resJson;
+                }
+
+                modelAry[0] = originModel;
+                modelAry[1] = destModel;
+
+                resJson.addition = modelAry;
+                resJson.status = ResponseStatus.Success;
+                return resJson;
+            }
+            catch (Exception ex)
+            {
+                resJson.status = ResponseStatus.Error;
+                resJson.message = StaticHelper.GetExceptionMessage(ex);
+                return resJson;
             }
         }
     }

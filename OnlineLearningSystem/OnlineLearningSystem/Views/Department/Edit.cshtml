@@ -4,13 +4,14 @@
     Layout = "~/Views/Shared/_PageEdit.cshtml";
 }
 <div class="pd-20">
-    @using (Html.BeginForm("Edit", "Department", FormMethod.Post, new { name = "create", @class = "form form-horizontal" }))
+    @using (Html.BeginForm("Edit", "Department", FormMethod.Post, new { name = "edit", @class = "form form-horizontal" }))
     {
         @Html.ValidationSummary(true)
         @Html.HiddenFor(m => m.D_Id)
         @Html.HiddenFor(m => m.D_AutoId)
         @Html.HiddenFor(m => m.D_Level)
         @Html.HiddenFor(m => m.D_AddTime)
+        @Html.HiddenFor(m => m.D_Sort)
         <div class="row cl">
             <label class="form-label col-2">
                 @Html.LabelFor(m => m.D_Status)    

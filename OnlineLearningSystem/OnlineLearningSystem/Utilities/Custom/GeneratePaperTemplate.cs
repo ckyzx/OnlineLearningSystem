@@ -343,12 +343,12 @@ namespace OnlineLearningSystem.Utilities
                     throw new Exception("“" + r.type + "”没有备选试题。");
                 }
 
-                maxValue = qIds.Length - 1;
+                maxValue = qIds.Length;
 
                 while (tmpScore < typeScore)
                 {
 
-                    qId = qIds[random.Next(maxValue)];
+                    qId = qIds[random.Next(0, maxValue)];
                     q = qs.Single(m => m.Q_Id == qId);
 
                     // 避免重复
@@ -530,7 +530,7 @@ namespace OnlineLearningSystem.Utilities
                 EPT_PaperTemplateStatus = (Byte)PaperTemplateStatus.Undone,
                 EPT_StartDate = nowDate,
                 EPT_StartTime = startTime,
-                EPT_EndTime = et.ET_StartTime.AddMinutes(et.ET_TimeSpan),
+                EPT_EndTime = startTime.AddMinutes(et.ET_TimeSpan),
                 EPT_TimeSpan = et.ET_TimeSpan,
                 EPT_Questions = eptQs,
                 EPT_Remark = "本试卷模板由系统于" + now.ToString("yyyy年MM月dd日") + "自动生成。",

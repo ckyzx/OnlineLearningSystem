@@ -68,5 +68,9 @@ namespace OnlineLearningSystem.ViewModels
         [DisplayName("状态")]
         [Required(ErrorMessage = "请选择{0}")]
         public Byte U_Status { get; set; }
+
+        [DisplayName("排序")]
+        [Required(ErrorMessage = "请设置{0}")]
+        public Double U_Sort { get; set; }
     }
 }

@@ -17,7 +17,6 @@ namespace OnlineLearningSystem.Models
         public Int32 U_AutoId { get; set; }
 
         [DisplayName("职务")]
-        [Required(ErrorMessage = "请选择{0}")]
         public Int32? Du_Id { get; set; }
 
         [NotMapped]
@@ -60,5 +59,9 @@ namespace OnlineLearningSystem.Models
         [DisplayName("状态")]
         [Required(ErrorMessage = "请选择{0}")]
         public Byte U_Status { get; set; }
+
+        [DisplayName("排序")]
+        [Required(ErrorMessage = "请设置{0}")]
+        public Double U_Sort { get; set; }
     }
 }

@@ -1,6 +1,8 @@
-﻿$(function() {
+$(function() {
 
-    var table;
+    'use strict';
+
+    var table, jqTable;
     var status, qcId;
 
     QueryString.Initial();
@@ -18,6 +20,8 @@
 
         $('#FunctionPanel').show();
     }
+
+    jqTable = $('.question-table');
 
     table = $('.question-table').DataTable({
         "processing": true,
@@ -49,9 +53,11 @@
         }, {
             "width": "150px",
             "name": "QC_Name",
-            "data": "QC_Name"
+            "className": "QC_Name",
+            "defaultContent": '<span class="QC_Name"></span>'
         }, {
             "name": "Q_Content",
+            "className": "Q_Content",
             "defaultContent": '<span class="Q_Content"></span>'
         }, {
             "width": "50px",
@@ -72,8 +78,8 @@
         }],
         "createdRow": function(row, data, dataIndex) {
 
-            var span, select, input;
-            var content, optionalAnswer, modelAnswer, status, coefficient, score;
+            var span, select, input, th;
+            var qcName, qContent, optionalAnswer, modelAnswer, status, coefficient, score;
 
             row = $(row);
 
@@ -87,10 +93,16 @@
                 row.addClass('question-has-error');
             }
 
+            th = jqTable.find('th.QC_Name');
+            span = row.find('span.QC_Name');
+            qcName = data['QC_Name'];
+            span.addClass('ellipsis').width(th.width()).text(qcName);
+
+            th = jqTable.find('th.Q_Content');
             span = row.find('span.Q_Content');
-            content = data['Q_Content'];
-            content = content.replace(/\\r\\n/g, '<br />').trim();
-            span.html(content);
+            qContent = data['Q_Content'];
+            qContent = qContent.replace(/^(\\r\\n)+/g, '').replace(/(\\r\\n)+$/g, '').replace(/\\r\\n/g, '[换行]').replace(/\s+/g,'');
+            span.addClass('ellipsis').width(th.width()).html(qContent).attr('title', qContent);
 
             status = data['Q_Status'];
             switch (status) {
@@ -377,7 +389,7 @@
 
     // 初始化分类列表
     var ul;
-    var settings, nodes;
+    var settings, nodes, n;
     var ztree;
 
     settings = {

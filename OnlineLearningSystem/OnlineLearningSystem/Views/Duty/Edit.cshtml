@@ -4,15 +4,16 @@
     Layout = "~/Views/Shared/_PageEdit.cshtml";
 }
 <div class="pd-20">
-    @using (Html.BeginForm("Edit", "Duty", FormMethod.Post, new { name = "create", @class = "form form-horizontal" }))
+    @using (Html.BeginForm("Edit", "Duty", FormMethod.Post, new { name = "edit", @class = "form form-horizontal" }))
     {
         @Html.ValidationSummary(true)
         @Html.HiddenFor(m => m.Du_Id)
         @Html.HiddenFor(m => m.Du_AutoId)
         @Html.HiddenFor(m => m.Du_AddTime)
+        @Html.HiddenFor(m => m.Du_Sort)
         <div class="row cl">
             <label class="form-label col-2">
-                @Html.LabelFor(m=>m.Du_Status)    
+                @Html.LabelFor(m => m.Du_Status)    
             </label>
             <div class="formControls col-2">
                 <span class="select-box">
@@ -23,10 +24,10 @@
         </div>
         <div class="row cl">
             <label class="form-label col-2">
-                @Html.LabelFor(m=>m.Du_Name)
+                @Html.LabelFor(m => m.Du_Name)
             </label>
             <div class="formControls col-2">
-                @Html.TextBoxFor(m=>m.Du_Name, new{ @class = "input-text" })
+                @Html.TextBoxFor(m => m.Du_Name, new { @class = "input-text" })
                 @Html.ValidationMessageFor(m => m.Du_Name)
             </div>
         </div>
