@@ -37,7 +37,7 @@ body{ min-width:1280px; }
 #ExaminationPaperContainer .swiper-button-question{ }
 #ExaminationPaperContainer .swiper-button-prev-question{ }
 #ExaminationPaperContainer .swiper-button-next-question{ }
-/*#ExaminationPaperContainer .swiper-button-disabled{ background-color: #e6e6e6; border-color: #e6e6e6; }*/
+#ExaminationPaperContainer .disabled{ background-color: #CCC; border-color: #CCC; }
 
 #ExaminationPaperContainer #TypeList { position: absolute; width: 200px; height: 100%; background-color: #EEE; overflow-y: scroll; }
 #ExaminationPaperContainer #QuestionList { padding-left: 200px; height: 100%; }

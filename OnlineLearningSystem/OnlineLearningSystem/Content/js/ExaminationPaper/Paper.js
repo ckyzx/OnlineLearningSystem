@@ -79,11 +79,13 @@ $(function() {
         $('#TypeList li.item h4').first().click();
 
         $('.swiper-button-prev-question').on('click', function() {
-            //TODO
+
+            prevQuestion(this);
         });
 
         $('.swiper-button-next-question').on('click', function() {
-            //TODO
+
+            nextQuestion(this);
         });
 
         $('#QuestionList').on('click', 'button.paper-hand-in', function() {
@@ -97,6 +99,65 @@ $(function() {
 
             }
         });
+    }
+
+    function prevQuestion(btn) {
+
+        var h4, li, prevLi, a, prevA, infoItem;
+
+        btn = $(btn);
+        h4 = $('li.item h4.active');
+        li = h4.parent();
+        a = li.find('a.active');
+        infoItem = a.parent();
+        prevA = infoItem.prev().find('a');
+
+        if (prevA.length == 0) {
+
+            prevLi = li.prev();
+
+            if (prevLi.length == 0) {
+
+                return;
+            } else {
+
+                prevLi.find('h4').click();
+
+                a = prevLi.find('a').last();
+                a.click();
+            }
+        } else {
+
+            prevA.click();
+        }
+    }
+
+    function nextQuestion(btn) {
+
+        var h4, li, nextLi, a, nextA, infoItem;
+
+        btn = $(btn);
+        h4 = $('li.item h4.active');
+        li = h4.parent();
+        a = li.find('a.active');
+        infoItem = a.parent();
+        nextA = infoItem.next().find('a');
+
+        if (nextA.length == 0) {
+
+            nextLi = li.next();
+
+            if (nextLi.length == 0) {
+
+                return;
+            } else {
+
+                nextLi.find('h4').click();
+            }
+        } else {
+
+            nextA.click();
+        }
     }
 
     function adjustQuestions(qs, as) {
@@ -294,6 +355,17 @@ $(function() {
 
         $('li.item a.active').removeClass('active');
         a.addClass('active');
+
+        // 控制按钮状态
+        $('.swiper-button-question').removeClass('disabled');
+
+        if(a.parent().prev().length == 0 && a.parentsUntil('ul').last().prev().length == 0){
+            $('.swiper-button-prev-question').addClass('disabled');
+        }
+
+        if(a.parent().next().length == 0 && a.parentsUntil('ul').last().next().length == 0){
+            $('.swiper-button-next-question').addClass('disabled');
+        }
 
         saveAnswers();
 
