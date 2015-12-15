@@ -38,15 +38,15 @@ $(function() {
             "name": "ET_Remark",
             "data": 'ET_Remark'
         }, {
-            "width": "180px",
-            "className": "text-l",
-            "defaultContent": '<a style="display:none;text-decoration:none;" class="btn btn-primary radius size-MINI start-task fz-9" href="javascript:;" title="开始">开始</a>' +
-                '<a style="display:none;text-decoration:none;" class="btn btn-primary radius size-MINI stop-task fz-9" href="javascript:;" title="结束">结束</a>' +
-                '<a style="display:none;text-decoration:none;" class="btn btn-primary radius size-MINI ml-5 paper-template fz-9" href="javascript:;" title="试卷">试卷</a>' +
-                '<a style="text-decoration:none;" class="recycle ml-5 fz-18 hide" href="javascript:;" title="回收"><i class="Hui-iconfont">&#xe631;</i></a>' +
-                '<a style="text-decoration:none;" class="resume ml-5 fz-18 hide" href="javascript:;" title="恢复"><i class="Hui-iconfont">&#xe615;</i></a>' +
-                '<a style="text-decoration:none;" class="edit ml-5 fz-18 hide" href="javascript:;" title="编辑"><i class="Hui-iconfont">&#xe60c;</i></a>' +
-                '<a style="text-decoration:none;" class="delete ml-5 fz-18 hide" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a>'
+            "width": "50px",
+            "className": "text-l nowrap",
+            "defaultContent": '<a class="btn btn-primary radius size-MINI mr-5 start-task fz-9" href="javascript:;" title="开始">开始</a>' +
+                '<a class="btn btn-primary radius size-MINI mr-5 stop-task fz-9" href="javascript:;" title="结束">结束</a>' +
+                '<a class="btn btn-primary radius size-MINI mr-5 paper-template fz-9" href="javascript:;" title="试题">试题</a>' +
+                '<a class="recycle mr-5 fz-18 hide" href="javascript:;" title="回收"><i class="Hui-iconfont">&#xe631;</i></a>' +
+                '<a class="resume mr-5 fz-18 hide" href="javascript:;" title="恢复"><i class="Hui-iconfont">&#xe615;</i></a>' +
+                '<a class="edit mr-5 fz-18 hide" href="javascript:;" title="编辑"><i class="Hui-iconfont">&#xe60c;</i></a>' +
+                '<a class="delete mr-5 fz-18 hide" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a>'
         }],
         "createdRow": function(row, data, dataIndex) {
 
@@ -115,7 +115,6 @@ $(function() {
                 case 1:
                     row.find('a.recycle').show();
                     row.find('a.edit').show();
-                    row.find('a.delete').show();
                     break;
                 case 2:
                     row.find('a.resume').show();
@@ -156,6 +155,7 @@ $(function() {
                     tr.fadeOut(function() {
 
                         tr.remove();
+                        refreshRowBackgroundColor('.table-sort');
                     });
                 } else if (0 == data.status) {
 
@@ -185,35 +185,7 @@ $(function() {
                     tr.fadeOut(function() {
 
                         tr.remove();
-                    });
-                } else if (0 == data.status) {
-
-                    alert(data.message);
-                }
-            }, 'json')
-            .error(function() {
-
-                alert('请求返回错误！');
-            });
-    });
-
-    $('.table-sort tbody').on('click', 'a.resume', function() {
-
-        var tr, data, id;
-
-        tr = $(this).parents('tr');
-        data = table.row(tr).data();
-        id = data['ET_Id'];
-
-        $.post('/ExaminationTask/Resume', {
-                id: id
-            }, function(data) {
-
-                if (1 == data.status) {
-
-                    tr.fadeOut(function() {
-
-                        tr.remove();
+                        refreshRowBackgroundColor('.table-sort');
                     });
                 } else if (0 == data.status) {
 
@@ -243,6 +215,7 @@ $(function() {
                     tr.fadeOut(function() {
 
                         tr.remove();
+                        refreshRowBackgroundColor('.table-sort');
                     });
                 } else if (0 == data.status) {
 

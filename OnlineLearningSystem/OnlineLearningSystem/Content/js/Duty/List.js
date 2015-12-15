@@ -12,13 +12,7 @@ $(function() {
         "stateSave": false,
         "lengthChange": false,
         "pageLength": 15,
-        "sorting": [
-            [1, "asc"]
-        ],
-        "columnDefs": [{
-            "orderable": false,
-            "targets": [0, 4, 5]
-        }],
+        "ordering": false,
         "columns": [{
             "width": "10px",
             "className": "text-c",
@@ -40,13 +34,13 @@ $(function() {
         }, {
             "width": "80px",
             "className": "text-c nowrap",
-            "defaultContent": '<a class="recycle fz-18 hide" href="javascript:;" title="回收"><i class="Hui-iconfont">&#xe631;</i></a>' +
-                '<a class="resume ml-5 fz-18 hide" href="javascript:;" title="恢复"><i class="Hui-iconfont">&#xe615;</i></a>' +
-                '<a class="edit ml-5 fz-18 hide" href="javascript:;" title="编辑"><i class="Hui-iconfont">&#xe60c;</i></a>' +
-                '<a class="delete ml-5 fz-18 hide" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a>' +
-                '<a class="btn btn-primary radius size-MINI sort-top ml-5 fz-9 hide" href="javascript:;" title="置顶">置顶</a>' +
-                '<a class="btn btn-primary radius size-MINI sort-up ml-5 fz-9 hide" href="javascript:;" title="上移">上移</a>' +
-                '<a class="btn btn-primary radius size-MINI sort-down ml-5 fz-9 hide" href="javascript:;" title="下移">下移</a>'
+            "defaultContent": '<a class="recycle mr-5 fz-18 hide" href="javascript:;" title="回收"><i class="Hui-iconfont">&#xe631;</i></a>' +
+                '<a class="resume mr-5 fz-18 hide" href="javascript:;" title="恢复"><i class="Hui-iconfont">&#xe615;</i></a>' +
+                '<a class="edit mr-5 fz-18 hide" href="javascript:;" title="编辑"><i class="Hui-iconfont">&#xe60c;</i></a>' +
+                '<a class="delete mr-5 fz-18 hide" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a>' +
+                '<a class="btn btn-primary radius size-MINI sort-top mr-5 fz-9 hide" href="javascript:;">置顶</a>' +
+                '<a class="btn btn-primary radius size-MINI sort-up mr-5 fz-9 hide" href="javascript:;">上移</a>' +
+                '<a class="btn btn-primary radius size-MINI sort-down mr-5 fz-9 hide" href="javascript:;">下移</a>'
         }],
         "createdRow": function(row, data, dataIndex) {
 
@@ -65,7 +59,6 @@ $(function() {
                 case 1:
                     row.find('a.recycle').show();
                     row.find('a.edit').show();
-                    row.find('a.delete').show();
 
                     row.find('a.sort-top').removeClass('hide');
                     row.find('a.sort-up').removeClass('hide');
@@ -110,6 +103,7 @@ $(function() {
                     tr.fadeOut(function() {
 
                         tr.remove();
+                        refreshRowBackgroundColor('.table-sort');
                     });
                 } else if (0 == data.status) {
 
@@ -139,35 +133,7 @@ $(function() {
                     tr.fadeOut(function() {
 
                         tr.remove();
-                    });
-                } else if (0 == data.status) {
-
-                    alert(data.message);
-                }
-            }, 'json')
-            .error(function() {
-
-                alert('请求返回错误！');
-            });
-    });
-
-    $('.table-sort tbody').on('click', 'a.resume', function() {
-
-        var tr, data, id;
-
-        tr = $(this).parents('tr');
-        data = table.row(tr).data();
-        id = data['Du_Id'];
-
-        $.post('/Duty/Resume', {
-                id: id
-            }, function(data) {
-
-                if (1 == data.status) {
-
-                    tr.fadeOut(function() {
-
-                        tr.remove();
+                        refreshRowBackgroundColor('.table-sort');
                     });
                 } else if (0 == data.status) {
 
@@ -197,6 +163,7 @@ $(function() {
                     tr.fadeOut(function() {
 
                         tr.remove();
+                        refreshRowBackgroundColor('.table-sort');
                     });
                 } else if (0 == data.status) {
 

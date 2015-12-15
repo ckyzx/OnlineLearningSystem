@@ -15,5 +15,6 @@ namespace OnlineLearningSystem.Utilities
         public Int32 Length { get; set; }
         public String SearchValue { get; set; }
         public Boolean SearchRegex { get; set; }
+        public Byte Status { get; set; } 
     }
 }

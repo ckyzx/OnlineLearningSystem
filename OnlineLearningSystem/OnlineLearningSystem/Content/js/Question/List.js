@@ -7,9 +7,9 @@ $(function() {
 
     QueryString.Initial();
     status = QueryString.GetValue('status');
-    status = undefined == status ? 1 : status;
+    status = undefined == status || 'undefined' == status ? 1 : status;
     qcId = QueryString.GetValue('qcId');
-    qcId = undefined == qcId ? 0 : qcId;
+    qcId = undefined == qcId || 'undefined' == qcId ? 0 : qcId;
 
 
     // 显示“试题缓存导入面板”
@@ -69,12 +69,12 @@ $(function() {
             "name": "Q_Score",
             "defaultContent": '<span class="size-MINI"><input type="text" class="score input-text" /></span>'
         }, {
-            "width": "80px",
-            "className": "text-c",
-            "defaultContent": '<a style="text-decoration: none" class="recycle fz-18 hide" href="javascript:;" title="回收"><i class="Hui-iconfont">&#xe631;</i></a>' +
-                '<a style="text-decoration: none" class="resume ml-5 fz-18 hide" href="javascript:;" title="恢复"><i class="Hui-iconfont">&#xe615;</i></a>' +
-                '<a style="text-decoration: none" class="edit ml-5 fz-18 hide" href="javascript:;" title="编辑"><i class="Hui-iconfont">&#xe60c;</i></a>' +
-                '<a style="text-decoration: none" class="delete ml-5 fz-18 hide" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a>'
+            "width": "50px",
+            "className": "text-c nowrap",
+            "defaultContent": '<a class="recycle mr-5 fz-18 hide" href="javascript:;" title="回收"><i class="Hui-iconfont">&#xe631;</i></a>' +
+                '<a class="resume mr-5 fz-18 hide" href="javascript:;" title="恢复"><i class="Hui-iconfont">&#xe615;</i></a>' +
+                '<a class="edit mr-5 fz-18 hide" href="javascript:;" title="编辑"><i class="Hui-iconfont">&#xe60c;</i></a>' +
+                '<a class="delete mr-5 fz-18 hide" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a>'
         }],
         "createdRow": function(row, data, dataIndex) {
 
@@ -109,7 +109,6 @@ $(function() {
                 case 1:
                     row.find('a.recycle').show();
                     row.find('a.edit').show();
-                    row.find('a.delete').show();
                     break;
                 case 2:
                     row.find('a.resume').show();
@@ -163,6 +162,7 @@ $(function() {
                     tr.fadeOut(function() {
 
                         tr.remove();
+                        refreshRowBackgroundColor('.table-sort');
                     });
                 } else if (0 == data.status) {
 
@@ -192,35 +192,7 @@ $(function() {
                     tr.fadeOut(function() {
 
                         tr.remove();
-                    });
-                } else if (0 == data.status) {
-
-                    alert(data.message);
-                }
-            }, 'json')
-            .error(function() {
-
-                alert('请求返回错误！');
-            });
-    });
-
-    $('.table-sort tbody').on('click', 'a.resume', function() {
-
-        var tr, data, id;
-
-        tr = $(this).parents('tr');
-        data = table.row(tr).data();
-        id = data['Q_Id'];
-
-        $.post('/Question/Resume', {
-                id: id
-            }, function(data) {
-
-                if (1 == data.status) {
-
-                    tr.fadeOut(function() {
-
-                        tr.remove();
+                        refreshRowBackgroundColor('.table-sort');
                     });
                 } else if (0 == data.status) {
 
@@ -250,6 +222,7 @@ $(function() {
                     tr.fadeOut(function() {
 
                         tr.remove();
+                        refreshRowBackgroundColor('.table-sort');
                     });
                 } else if (0 == data.status) {
 
@@ -267,7 +240,6 @@ $(function() {
     });
 
     $('#DocxUploadBtn').on('click', function() {
-        //ShowPageWithSize('导入试题', '/Question/DocxUploadAndImport', 800, 300);
         ShowPage('导入试题', '/Question/DocxUploadAndImport');
     });
 

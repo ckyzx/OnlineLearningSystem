@@ -63,6 +63,7 @@ namespace OnlineLearningSystem.Controllers
             dtRequest.SearchValue = Request["search[value]"];
             searchRegex = Request["search[regex]"];
             dtRequest.SearchRegex = "true" == searchRegex ? true : false;
+            dtRequest.Status = null == Request["status"] ? Convert.ToByte(1) : Convert.ToByte(Request["status"]);
 
             return dtRequest;
         }

@@ -71,16 +71,23 @@ namespace OnlineLearningSystem.Utilities
         private Object[] GetModels(DataTablesRequest dtRequest)
         {
 
+            Byte status, statusDelete;
             Int32 count;
+            String searchValue;
             List<User> us;
+
+            status = dtRequest.Status;
+            statusDelete = (Byte)Status.Delete;
+            searchValue = dtRequest.SearchValue;
 
             count = olsEni
                 .Users
                 .OrderBy(m => m.U_Sort)
                 .Where(m =>
-                    (m.U_Name.Contains(dtRequest.SearchValue)
-                    || m.U_LoginName.Contains(dtRequest.SearchValue))
-                    && m.U_Status != (Byte)Status.Delete)
+                    (m.U_Name.Contains(searchValue)
+                    || m.U_LoginName.Contains(searchValue))
+                    && m.U_Status == status
+                    && m.U_Status != statusDelete)
                 .Count();
 
             if (-1 == dtRequest.Length)
@@ -91,9 +98,10 @@ namespace OnlineLearningSystem.Utilities
                     .Users
                     .OrderBy(m => m.U_Sort)
                     .Where(m =>
-                        (m.U_Name.Contains(dtRequest.SearchValue)
-                        || m.U_LoginName.Contains(dtRequest.SearchValue))
-                        && m.U_Status != (Byte)Status.Delete)
+                        (m.U_Name.Contains(searchValue)
+                        || m.U_LoginName.Contains(searchValue))
+                        && m.U_Status == status
+                        && m.U_Status != statusDelete)
                     .ToList();
 
             }
@@ -104,9 +112,10 @@ namespace OnlineLearningSystem.Utilities
                     olsEni
                     .Users
                     .Where(m =>
-                        (m.U_Name.Contains(dtRequest.SearchValue)
-                        || m.U_LoginName.Contains(dtRequest.SearchValue))
-                        && m.U_Status != (Byte)Status.Delete)
+                        (m.U_Name.Contains(searchValue)
+                        || m.U_LoginName.Contains(searchValue))
+                        && m.U_Status == status
+                        && m.U_Status != statusDelete)
                     .OrderBy(m => m.U_Sort)
                     .Skip(dtRequest.Start).Take(dtRequest.Length)
                     .ToList();

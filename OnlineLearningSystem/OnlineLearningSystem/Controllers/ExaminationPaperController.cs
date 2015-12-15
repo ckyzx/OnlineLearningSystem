@@ -32,6 +32,15 @@ namespace OnlineLearningSystem.Controllers
         }
 
         //
+        // GET: /ExaminationPaper/ListGrade
+
+        [Description("打分列表")]
+        public ActionResult ListGrade()
+        {
+            return View();
+        }
+
+        //
         // POST: /ExaminationPaper/GetQuestions
 
         [Description("获取试题")]

@@ -74,3 +74,4 @@ body{ min-width:1280px; }
 .table-sort tr.even td {background-color: #EEE;}
 .table-sort tr.hover td {background-color: #DDD;}
 .table-sort td.nowrap {white-space:nowrap;}
+.table-sort a:hover{text-decoration:none;}

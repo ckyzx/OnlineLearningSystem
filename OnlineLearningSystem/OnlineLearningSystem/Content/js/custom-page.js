@@ -7,6 +7,6 @@
 
     trs.removeClass('odd');
     trs.removeClass('even');
-    table.find('tbody tr:odd').addClass('odd');
-    table.find('tbody tr:even').addClass('even');
+    table.find('tbody tr:odd').addClass('even');
+    table.find('tbody tr:even').addClass('odd');
 }

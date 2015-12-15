@@ -195,7 +195,7 @@ namespace OnlineLearningSystem.Utilities
             }
         }
 
-        public ResponseJson GetQuestions(Int32 epId, Int32 uId)
+        public ResponseJson GetQuestions(Int32 epId, Int32 uId, Boolean hasModelAnswer = false)
         {
 
             ResponseJson resJson;
@@ -235,6 +235,15 @@ namespace OnlineLearningSystem.Utilities
                     .ToList();
                 epqs = olsEni.ExaminationPaperQuestions.Where(m => m.EP_Id == epId).ToList();
 
+                // 清除标准答案
+                if (!hasModelAnswer)
+                {
+                    foreach (var eptq in eptqs)
+                    {
+                        eptq.EPTQ_ModelAnswer = null;
+                    }
+                }
+
                 resJson.status = ResponseStatus.Success;
                 resJson.data = JsonConvert.SerializeObject(new Object[] { eptqs, epqs });
                 return resJson;
@@ -257,9 +266,10 @@ namespace OnlineLearningSystem.Utilities
             try
             {
 
-                List<ExaminationPaperQuestion> epqs;
-                ExaminationPaperQuestion epq1;
                 Int32 epqId, rowCount;
+                ExaminationPaperQuestion epq1;
+                ExaminationPaper ep;
+                List<ExaminationPaperQuestion> epqs;
 
                 epqs = JsonConvert.DeserializeObject<List<ExaminationPaperQuestion>>(answersJson);
 
@@ -268,6 +278,13 @@ namespace OnlineLearningSystem.Utilities
 
                 foreach (var epq in epqs)
                 {
+
+                    // 检查是否在考试时间内
+                    ep = olsEni.ExaminationPapers.SingleOrDefault(m => m.EP_Id == epq.EP_Id);
+                    if (null != ep && ep.EP_PaperStatus != (Byte)PaperStatus.Doing)
+                    {
+                        continue;
+                    }
 
                     epq1 =
                         olsEni
@@ -287,6 +304,8 @@ namespace OnlineLearningSystem.Utilities
 
                         epq.EPQ_Id = epqId;
                         epq.EPQ_AddTime = now;
+                        epq.EPQ_Exactness = (Byte)AnswerStatus.Unset;
+                        epq.EPQ_Critique = null;
                         olsEni.Entry(epq).State = EntityState.Added;
 
                         epqId += 1;

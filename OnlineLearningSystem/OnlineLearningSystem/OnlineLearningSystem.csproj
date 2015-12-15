@@ -125,6 +125,7 @@
     <Compile Include="Utilities\Custom\DataTablesResponse.cs" />
     <Compile Include="Utilities\Custom\DocxParagraph.cs" />
     <Compile Include="Utilities\Custom\TimerTask.cs" />
+    <Compile Include="Utilities\Enums\AnswerStatus.cs" />
     <Compile Include="Utilities\Enums\ExaminationTaskStatus.cs" />
     <Compile Include="Utilities\Enums\PaperStatus.cs" />
     <Compile Include="Utilities\Enums\PaperTemplateStatus.cs" />
