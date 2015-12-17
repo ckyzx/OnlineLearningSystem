@@ -173,9 +173,10 @@
     <Content Include="Content\js\Department\ListLocal.js" />
     <Content Include="Content\js\Duty\List.js" />
     <Content Include="Content\js\ExaminationPaperTemplate\Edit.js" />
+    <Content Include="Content\js\ExaminationPaperTemplate\ListGrade.js" />
     <Content Include="Content\js\ExaminationPaperTemplate\ListStudent.js" />
+    <Content Include="Content\js\ExaminationPaperTemplate\ListGrade.js" />
     <Content Include="Content\js\ExaminationPaper\Paper.js" />
-    <Content Include="Content\js\ExaminationPaper\Paper_Backup.js" />
     <Content Include="Content\js\ExaminationTaskTemplate\Edit.js" />
     <Content Include="Content\js\ExaminationTask\Edit.js" />
     <Content Include="Content\js\init-background.js" />
@@ -942,7 +943,7 @@
     <Content Include="Views\QuestionClassify\Edit.cshtml" />
     <Content Include="Views\QuestionClassify\List.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\ExaminationTaskStatisticType.cshtml" />
-    <Content Include="Views\ExaminationPaper\Paper_Backup.cshtml" />
+    <Content Include="Views\ExaminationPaperTemplate\ListGrade.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

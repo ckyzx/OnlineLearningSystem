@@ -50,15 +50,15 @@ $(function() {
 
     function renderQuestions(questions, answers) {
 
-        var ary;
+        var questionAry;
 
-        ary = adjustQuestions(questions, answers);
+        questionAry = adjustQuestions(questions, answers);
 
-        $('#TypeItemTmpl').tmpl(ary).appendTo('#TypeList ul');
-        $('#QuestionListTmpl').tmpl(ary).appendTo('#QuestionList');
+        $('#TypeItemTmpl').tmpl(questionAry).appendTo('#TypeList ul');
+        $('#QuestionListTmpl').tmpl(questionAry).appendTo('#QuestionList');
 
         // 在本地保存考题数据
-        initLocalQuestions(questions, answers);
+        initLocalQuestions('#QuestionList', questions, answers);
 
         /* 5个参数顺序不可打乱，分别是：响应区,隐藏显示的内容,速度,类型,事件 */
         $.Huifold("#TypeList ul .item h4", "#TypeList ul .item .info", "fast", 1, "click");
@@ -160,141 +160,6 @@ $(function() {
         }
     }
 
-    function adjustQuestions(qs, as) {
-
-        var ary;
-        var obj;
-        var i1, i2;
-
-        ary = [];
-        i1 = 0;
-        i2 = 1;
-
-        for (var i = 0; i < qs.length; i++) {
-
-            q = qs[i];
-
-            // 将数据格式化
-            q = formatQuestion(q);
-
-            a = getAnswer(as, q.EPTQ_Id);
-
-            if (undefined != a.EPQ_Id) {
-
-                q.hasAnswer = true;
-
-                for (var k in a) {
-                    q[k] = a[k];
-                }
-            }
-
-            obj = duplicateType(ary, q.EPTQ_Type);
-            if (undefined == obj) {
-
-                obj = {
-                    i: i1,
-                    type: q.EPTQ_Type,
-                    total: 0,
-                    done: 0,
-                    questions: [],
-                };
-                ary.push(obj);
-
-                i1 += 1;
-            }
-
-            q.i = obj.total;
-            obj.total = obj.total + 1;
-            obj.questions.push(q);
-
-            if (q.hasAnswer) {
-                obj.done += 1;
-            }
-
-        }
-
-        return ary;
-    }
-
-    function duplicateType(ary, type) {
-
-        for (var i = 0; i < ary.length; i++) {
-
-            if (ary[i].type == type) {
-
-                return ary[i];
-            }
-        }
-
-        return undefined;
-    }
-
-    function formatQuestion(q) {
-
-        try {
-            q.EPTQ_Content = q.EPTQ_Content.replace(/\\r\\n/g, '<br />');
-
-            if (q.EPTQ_Type == '单选题' || q.EPTQ_Type == '多选题') {
-
-                tmpObj = JSON.parse(q.EPTQ_OptionalAnswer);
-                tmpAry = [];
-                for (var p in tmpObj) {
-
-                    tmpAry.push({
-                        qId: q.EPTQ_Id,
-                        key: p,
-                        text: tmpObj[p]
-                    });
-                }
-                q.EPTQ_OptionalAnswer = tmpAry;
-            }
-        } catch (e) {
-
-            alert('ErrorName: ' + e.name + '\r\nMessage: ' + e.message + '\r\nStack: ' + e.stack + '\r\nEPTQ_Id: ' + q.EPTQ_Id);
-        }
-
-        return q;
-    }
-
-    function initLocalQuestions(qs, as) {
-
-        var qList, qsdInput, asdInput, tmpInput;
-
-        qList = $('#QuestionList');
-
-        qsdInput = $('<input type="hidden" id="QuestionsData" />');
-        asdInput = $('<input type="hidden" id="AnswersData" />')
-
-        qsdInput.val(JSON.stringify(qs));
-        asdInput.val(JSON.stringify(as));
-
-        qList.append(qsdInput);
-        qList.append(asdInput);
-
-        for (var i = 0; i < qs.length; i++) {
-
-            q = qs[i];
-            qId = q.EPTQ_Id;
-
-            tmpInput = $('<input type="hidden" id="QuestionData_' + qId + '" />');
-            tmpInput.val(JSON.stringify(q));
-            $('#Question_' + qId).append(tmpInput);
-
-            a = getAnswer(as, qId);
-            tmpInput = $('<input type="hidden" id="AnswerData_' + qId + '" />');
-            tmpInput.val(JSON.stringify(a));
-            $('#Question_' + qId).append(tmpInput);
-
-            // 设置考题答案
-            if (undefined != a.EPQ_Id) {
-                setAnswer(q.EPTQ_Type, a);
-            }
-        }
-
-        // 添加记录当前考题编号的控件
-        qList.append($('<input type="hidden" id="CurrentQuestionId" />'));
-    }
-
     function clickTypeItem(thisElem) {
 
         var li;
@@ -317,9 +182,9 @@ $(function() {
             swipers[i1].destroy();
             swipers[i1] = null;
         }
-        oldContainer.removeClass('question-container-active').hide();
+        oldContainer.removeClass('question-container-active').addClass('hide');
 
-        questionContainers.eq(i).addClass('question-container-active').show();
+        questionContainers.eq(i).addClass('question-container-active').removeClass('hide');
         swipers[i] = initSwiper(questionContainers.eq(i).get(0));
 
         $('li.item h4.active').removeClass('active');
@@ -375,71 +240,6 @@ $(function() {
     function setCurrentQuestionId(questionContainer) {
 
         $('#CurrentQuestionId').val(questionContainer.find('.swiper-slide-active').attr('data-question-id'));
-    }
-
-    function getAnswer(answers, eptqId) {
-
-        for (var i = 0; i < answers.length; i++) {
-
-            if (answers[i].EPTQ_Id == eptqId) {
-                return answers[i];
-            }
-        }
-
-        return {};
-    }
-
-    function setAnswer(qType, answer) {
-
-        var eptqId, answerContent;
-
-        eptqId = answer.EPTQ_Id;
-        answerContent = answer.EPQ_Answer;
-
-        switch (qType) {
-            case '单选题':
-
-                tmpAnswer = answerContent;
-                tmpAnswer = JSON.parse(tmpAnswer);
-                tmpAnswer = tmpAnswer.length == 1 ? tmpAnswer[0] : '';
-
-                tmpRadio = $('input[name="question_radios_' + eptqId + '"][value="' + tmpAnswer + '"]');
-                if (tmpRadio.length == 1) {
-                    tmpRadio.get(0).checked = true;
-                }
-
-                break;
-            case '多选题':
-
-                tmpAnswer = answerContent;
-                tmpAnswer = JSON.parse(tmpAnswer);
-
-                for (var i = 0; i < tmpAnswer.length; i++) {
-
-                    tmpAnswer1 = tmpAnswer[i];
-
-                    tmpCheckbox = $('input[name="question_checkboxs_' + eptqId + '"][value="' + tmpAnswer1 + '"]');
-                    if (tmpCheckbox.length == 1) {
-                        tmpCheckbox.get(0).checked = true;
-                    }
-                }
-
-                break;
-
-            case '判断题':
-
-                tmpRadio = $('input[name="question_radios_' + eptqId + '"][value="' + answerContent + '"]');
-                if (tmpRadio.length == 1) {
-                    tmpRadio.get(0).checked = true;
-                }
-
-                break;
-            default:
-
-                $('textarea[name="question_textarea_' + eptqId + '"]').val(answerContent);
-
-                break;
-        }
     }
 
     function saveAnswers() {

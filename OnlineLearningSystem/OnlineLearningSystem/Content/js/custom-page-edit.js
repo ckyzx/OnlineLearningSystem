@@ -1,4 +1,4 @@
-﻿// 给 DataTables 的数据设置复选状态
+// 给 DataTables 的数据设置复选状态
 function SetDataTablesChecked(tableSelector, valueSelector) {
 
     var table, tableId, settings, dtData, ms, cells, checkbox, id;
@@ -200,3 +200,282 @@ function GetDataTablesAllCheckStatus1(tableSelector, checked) {
 
     return [checkedAry, uncheckedAry];
 }
+/*----------------------------------------------------------------------*/
+
+function adjustQuestions(qs, as) {
+
+    var ary;
+    var obj;
+    var i1, i2;
+
+    ary = [];
+    i1 = 0;
+    i2 = 1;
+
+    for (var i = 0; i < qs.length; i++) {
+
+        q = qs[i];
+
+        // 将数据格式化
+        q = formatQuestion(q);
+
+        a = getAnswer(as, q.EPTQ_Id);
+
+        if (undefined != a.EPQ_Id) {
+
+            q.hasAnswer = true;
+
+            for (var k in a) {
+                q[k] = a[k];
+            }
+        }
+
+        obj = duplicateType(ary, q.EPTQ_Type);
+        if (undefined == obj) {
+
+            obj = {
+                i: i1,
+                type: q.EPTQ_Type,
+                total: 0,
+                done: 0,
+                questions: [],
+            };
+            ary.push(obj);
+
+            i1 += 1;
+        }
+
+        q.i = obj.total;
+        obj.total = obj.total + 1;
+        obj.questions.push(q);
+
+        if (q.hasAnswer) {
+            obj.done += 1;
+        }
+
+    }
+
+    return ary;
+}
+
+function duplicateType(ary, type) {
+
+    for (var i = 0; i < ary.length; i++) {
+
+        if (ary[i].type == type) {
+
+            return ary[i];
+        }
+    }
+
+    return undefined;
+}
+
+function formatQuestion(q) {
+
+    try {
+        q.EPTQ_Content =
+            q.EPTQ_Content
+            .replace(/^(\\r\\n)+/, '')
+            .replace(/(\\r\\n)+$/, '')
+            .replace(/\\r\\n/g, '<br />');
+
+        if (q.EPTQ_Type == '单选题' || q.EPTQ_Type == '多选题') {
+
+            tmpObj = JSON.parse(q.EPTQ_OptionalAnswer);
+            tmpAry = [];
+            for (var p in tmpObj) {
+
+                tmpAry.push({
+                    qId: q.EPTQ_Id,
+                    key: p,
+                    text: tmpObj[p]
+                });
+            }
+            q.EPTQ_OptionalAnswer = tmpAry;
+        }
+    } catch (e) {
+
+        alert('ErrorName: ' + e.name + '\r\nMessage: ' + e.message + '\r\nStack: ' + e.stack + '\r\nEPTQ_Id: ' + q.EPTQ_Id);
+    }
+
+    return q;
+}
+
+function getAnswer(answers, eptqId) {
+
+    for (var i = 0; i < answers.length; i++) {
+
+        if (answers[i].EPTQ_Id == eptqId) {
+            return answers[i];
+        }
+    }
+
+    return {};
+}
+
+function initLocalQuestions(selector, qs, as) {
+
+    var qList, qsdInput, asdInput, tmpInput;
+
+    qList = $(selector);
+
+    qsdInput = $('<input type="hidden" id="QuestionsData" />');
+    asdInput = $('<input type="hidden" id="AnswersData" />')
+
+    qsdInput.val(JSON.stringify(qs));
+    asdInput.val(JSON.stringify(as));
+
+    qList.append(qsdInput);
+    qList.append(asdInput);
+
+    for (var i = 0; i < qs.length; i++) {
+
+        q = qs[i];
+        qId = q.EPTQ_Id;
+
+        tmpInput = $('<input type="hidden" id="QuestionData_' + qId + '" />');
+        tmpInput.val(JSON.stringify(q));
+        $('#Question_' + qId).append(tmpInput);
+
+        a = getAnswer(as, qId);
+        tmpInput = $('<input type="hidden" id="AnswerData_' + qId + '" />');
+        tmpInput.val(JSON.stringify(a));
+        $('#Question_' + qId).append(tmpInput);
+
+        // 设置考题答案
+        if (undefined != a.EPQ_Id) {
+
+            setAnswer(q.EPTQ_Type, a);
+            setModelAnswer(q, a.EPQ_Exactness);
+        }
+    }
+
+    // 添加记录当前考题编号的控件
+    qList.append($('<input type="hidden" id="CurrentQuestionId" />'));
+}
+
+function setAnswer(qType, answer) {
+
+    var eptqId, answerContent;
+
+    eptqId = answer.EPTQ_Id;
+    answerContent = answer.EPQ_Answer;
+
+    switch (qType) {
+        case '单选题':
+
+            tmpAnswer = answerContent;
+            tmpAnswer = JSON.parse(tmpAnswer);
+            tmpAnswer = tmpAnswer.length == 1 ? tmpAnswer[0] : '';
+
+            tmpRadio = $('input[name="question_radios_' + eptqId + '"][value="' + tmpAnswer + '"]');
+            if (tmpRadio.length == 1) {
+                tmpRadio.get(0).checked = true;
+            }
+
+            break;
+        case '多选题':
+
+            tmpAnswer = answerContent;
+            tmpAnswer = JSON.parse(tmpAnswer);
+
+            for (var i = 0; i < tmpAnswer.length; i++) {
+
+                tmpAnswer1 = tmpAnswer[i];
+
+                tmpCheckbox = $('input[name="question_checkboxs_' + eptqId + '"][value="' + tmpAnswer1 + '"]');
+                if (tmpCheckbox.length == 1) {
+                    tmpCheckbox.get(0).checked = true;
+                }
+            }
+
+            break;
+
+        case '判断题':
+
+            tmpRadio = $('input[name="question_radios_' + eptqId + '"][value="' + answerContent + '"]');
+            if (tmpRadio.length == 1) {
+                tmpRadio.get(0).checked = true;
+            }
+
+            break;
+        default:
+
+            answerContent =
+                answerContent
+                .replace(/^(\\r\\n)+/, '')
+                .replace(/(\\r\\n)+$/, '')
+                .replace(/\\r\\n/g, '\n');;
+            $('textarea[name="question_textarea_' + eptqId + '"]').val(answerContent);
+
+            break;
+    }
+}
+
+function setModelAnswer(eptq, exactness) {
+
+    var qType, eptqId, modelAnswer, exactness;
+
+    if (null == eptq.EPTQ_ModelAnswer) {
+        return;
+    }
+
+    qType = eptq.EPTQ_Type;
+    eptqId = eptq.EPTQ_Id;
+    modelAnswer = eptq.EPTQ_ModelAnswer;
+
+    $('input[name="question_radios_' + eptqId + '_grade"][value="' + exactness + '"]').get(0).checked = true;
+
+    switch (qType) {
+        case '单选题':
+
+            tmpAnswer = modelAnswer;
+            tmpAnswer = JSON.parse(tmpAnswer);
+            tmpAnswer = tmpAnswer.length == 1 ? tmpAnswer[0] : '';
+
+            tmpRadio = $('input[name="question_radios_' + eptqId + '_model_answer"][value="' + tmpAnswer + '"]');
+            if (tmpRadio.length == 1) {
+                tmpRadio.get(0).checked = true;
+            }
+
+            break;
+        case '多选题':
+
+            tmpAnswer = modelAnswer;
+            tmpAnswer = JSON.parse(tmpAnswer);
+
+            for (var i = 0; i < tmpAnswer.length; i++) {
+
+                tmpAnswer1 = tmpAnswer[i];
+
+                tmpCheckbox = $('input[name="question_checkboxs_' + eptqId + '_model_answer"][value="' + tmpAnswer1 + '"]');
+                if (tmpCheckbox.length == 1) {
+                    tmpCheckbox.get(0).checked = true;
+                }
+            }
+
+            break;
+
+        case '判断题':
+
+            tmpRadio = $('input[name="question_radios_' + eptqId + '_model_answer"][value="' + modelAnswer + '"]');
+            if (tmpRadio.length == 1) {
+                tmpRadio.get(0).checked = true;
+            }
+
+            break;
+        default:
+
+            modelAnswer =
+                modelAnswer
+                .replace(/^(\\r\\n)+/, '')
+                .replace(/(\\r\\n)+$/, '')
+                .replace(/\\r\\n/g, '\n');
+            $('textarea[name="question_textarea_' + eptqId + '_model_answer"]').val(modelAnswer);
+
+            break;
+    }
+}
+
+/*----------------------------------------------------------------------*/

@@ -17,13 +17,7 @@ $(function() {
         "stateSave": false,
         "lengthChange": false,
         "pageLength": 15,
-        "sorting": [
-            [1, "asc"]
-        ],
-        "columnDefs": [{
-            "orderable": false,
-            "targets": [0, 2, 3, 4, 5, 6]
-        }],
+        "ordering": false,
         "columns": [{
             "width": "10px",
             "className": "text-c",
@@ -32,6 +26,9 @@ $(function() {
             "width": "30px",
             "name": "EPT_Id",
             "data": "EPT_Id"
+        }, {
+            "name": "ET_Name",
+            "data": "ET_Name"
         }, {
             "name": "EPT_StartTime",
             "defaultContent": '<span class="EPT_StartTime"></span>'

@@ -19,6 +19,9 @@ namespace OnlineLearningSystem.Models
 
         public Byte ET_Type { get; set; }
 
+        [NotMapped]
+        public String ET_Name { get; set; }
+
         [DisplayName("试卷模板状态")]
         public Byte EPT_PaperTemplateStatus { get; set; }
 

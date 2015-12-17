@@ -4,7 +4,7 @@ USE OLS;
 
 GO
 
-/*-- 添加字段“试卷模板试题分数”
+-- 添加字段“试卷模板试题分数”
 ALTER TABLE ExaminationPaperTemplateQuestions
 ADD EPTQ_Score INT NULL;
 
@@ -131,7 +131,7 @@ R_Permissions = '[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24
 R_PermissionCategories = '[1,2,3,4,5,6,7,8,9,10,11]'
 WHERE R_Id = 1
 
-GO*/
+GO
 
 -- 添加职务字段“排序”
 ALTER TABLE Duties

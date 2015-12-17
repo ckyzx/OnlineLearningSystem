@@ -43,42 +43,14 @@ namespace OnlineLearningSystem.Utilities
             //TODO:指定排序列
             orderColumn = dtRequest.Columns[dtRequest.OrderColumn].Name;
 
-            var tmpMs =
+            ms =
                 olsEni
                 .ExaminationPaperTemplates
                 .OrderBy(model => model.EPT_Id)
                 .Where(model =>
                     model.EPT_Status != (Byte)Status.Delete
                     && model.ET_Id == etId)
-                .Select(model => new
-                {
-                    EPT_Id = model.EPT_Id,
-                    EPT_StartTime = model.EPT_StartTime,
-                    EPT_TimeSpan = model.EPT_TimeSpan,
-                    EPT_Remark = model.EPT_Remark,
-                    EPT_AddTime = model.EPT_AddTime,
-                    EPT_Status = model.EPT_Status
-                })
                 .ToList();
-
-            // 获取分类名称
-            ms = new List<ExaminationPaperTemplate>();
-
-            foreach (var model in tmpMs)
-            {
-
-                ms.Add(new ExaminationPaperTemplate()
-                {
-                    EPT_Id = model.EPT_Id,
-                    EPT_StartTime = model.EPT_StartTime,
-                    EPT_TimeSpan = model.EPT_TimeSpan,
-                    EPT_Remark = model.EPT_Remark,
-                    EPT_AddTime = model.EPT_AddTime,
-                    EPT_Status = model.EPT_Status
-                });
-            }
-
-            tmpMs = null;
 
             recordsFiltered = ms.Count();
             dtResponse.recordsFiltered = recordsFiltered;
@@ -102,7 +74,7 @@ namespace OnlineLearningSystem.Utilities
             DataTablesResponse dtResponse;
             Int32 recordsTotal, recordsFiltered;
             String whereSql, orderColumn;
-            List<ExaminationPaperTemplate> ms;
+            Object[] modelData;
 
 
             dtResponse = new DataTablesResponse();
@@ -128,6 +100,32 @@ namespace OnlineLearningSystem.Utilities
             //TODO:指定排序列
             orderColumn = dtRequest.Columns[dtRequest.OrderColumn].Name;
 
+            modelData = GetModels(dtRequest, type, paperTemplateStatus);
+
+            recordsFiltered = (Int32)modelData[0];
+            dtResponse.recordsFiltered = recordsFiltered;
+
+            dtResponse.data = (List<ExaminationPaperTemplate>)modelData[1];
+
+            return dtResponse;
+        }
+
+        public Object[] GetModels(DataTablesRequest dtRequest, Byte type, Byte paperTemplateStatus)
+        {
+
+            Int32 count;
+            List<ExaminationPaperTemplate> ms;
+
+            count =
+                olsEni
+                .ExaminationPaperTemplates
+                .OrderBy(model => model.EPT_Id)
+                .Where(model =>
+                    model.EPT_Status != (Byte)Status.Delete
+                    && model.ET_Type == type
+                    && model.EPT_PaperTemplateStatus == paperTemplateStatus)
+                .Count();
+
             ms =
                 olsEni
                 .ExaminationPaperTemplates
@@ -136,22 +134,15 @@ namespace OnlineLearningSystem.Utilities
                     model.EPT_Status != (Byte)Status.Delete
                     && model.ET_Type == type
                     && model.EPT_PaperTemplateStatus == paperTemplateStatus)
+                .Skip(dtRequest.Start).Take(dtRequest.Length)
                 .ToList();
 
-            recordsFiltered = ms.Count();
-            dtResponse.recordsFiltered = recordsFiltered;
-
-            if (-1 != dtRequest.Length)
+            foreach (var m1 in ms)
             {
-                ms =
-                    ms
-                    .Skip(dtRequest.Start).Take(dtRequest.Length)
-                    .ToList();
+                m1.ET_Name = olsEni.ExaminationTasks.Single(m => m.ET_Id == m1.ET_Id).ET_Name;
             }
 
-            dtResponse.data = ms;
-
-            return dtResponse;
+            return new Object[] { count, ms };
         }
 
         public ExaminationPaperTemplate GetNew(Int32 etId)
@@ -442,6 +433,221 @@ namespace OnlineLearningSystem.Utilities
             catch (Exception ex)
             {
 
+                resJson.status = ResponseStatus.Error;
+                resJson.message = StaticHelper.GetExceptionMessage(ex);
+                return resJson;
+            }
+        }
+
+        // 终止考试
+        public ResponseJson Terminate(Int32 id)
+        {
+
+            ResponseJson resJson;
+
+            resJson = new ResponseJson();
+
+            try
+            {
+                ExaminationPaperTemplate model;
+                List<ExaminationPaper> eps;
+
+                model = olsEni.ExaminationPaperTemplates.SingleOrDefault(m => m.EPT_Id == id);
+
+                if (null == model)
+                {
+                    resJson.message = "数据不存在！";
+                    return resJson;
+                }
+
+                model.EPT_PaperTemplateStatus = (Byte)PaperTemplateStatus.Done;
+                olsEni.Entry(model).State = EntityState.Modified;
+
+                eps = olsEni.ExaminationPapers.Where(m => m.EPT_Id == id).ToList();
+                foreach (var ep in eps)
+                {
+                    ep.EP_PaperStatus = (Byte)PaperStatus.Done;
+                }
+
+                if (0 == olsEni.SaveChanges())
+                {
+                    resJson.status = ResponseStatus.Error;
+                    resJson.message = ResponseMessage.SaveChangeError;
+                    return resJson;
+                }
+
+                resJson.status = ResponseStatus.Success;
+                return resJson;
+            }
+            catch (Exception ex)
+            {
+                resJson.status = ResponseStatus.Error;
+                resJson.message = StaticHelper.GetExceptionMessage(ex);
+                return resJson;
+            }
+        }
+
+        public ResponseJson GetUsers(Int32 id)
+        {
+            ResponseJson resJson;
+
+            resJson = new ResponseJson(ResponseStatus.Success, now);
+
+            try
+            {
+
+                Int32 etId;
+                String users;
+                Int32[] userAry;
+                ExaminationPaperTemplate ept;
+                ExaminationTask et;
+                User u;
+                List<User> userModels;
+
+                userModels = new List<User>();
+
+                ept = Get(id);
+                etId = ept.ET_Id;
+                et = olsEni.ExaminationTasks.Single(m => m.ET_Id == etId);
+                users = et.ET_Attendee;
+                userAry = JsonConvert.DeserializeObject<Int32[]>(users);
+
+                foreach (var uId in userAry)
+                {
+                    u = olsEni.Users.SingleOrDefault(m => m.U_Id == uId);
+
+                    if (null != u)
+                    {
+                        u.U_Password = "**********";
+                        userModels.Add(u);
+                    }
+                }
+
+                if (userModels.Count == 0)
+                {
+                    resJson.status = ResponseStatus.Error;
+                    resJson.message = "没有参与人员。";
+                    return resJson;
+                }
+
+                resJson.data = JsonConvert.SerializeObject(userModels);
+                return resJson;
+            }
+            catch (Exception ex)
+            {
+
+                resJson.status = ResponseStatus.Error;
+                resJson.message = StaticHelper.GetExceptionMessage(ex);
+                return resJson;
+            }
+        }
+
+        public ResponseJson GetQuestions(Int32 id, Int32 uId)
+        {
+
+            ResponseJson resJson;
+
+            resJson = new ResponseJson();
+
+            try
+            {
+
+                Int32 epId;
+                ExaminationPaper ep;
+                List<ExaminationPaperQuestion> epqs;
+                List<ExaminationPaperTemplateQuestion> eptqs;
+
+                ep = olsEni.ExaminationPapers.SingleOrDefault(m => m.EPT_Id == id && m.EP_UserId == uId);
+
+                if (null == ep)
+                {
+                    resJson.status = ResponseStatus.Error;
+                    resJson.message = "试卷不存在。";
+                    return resJson;
+                }
+
+                if (ep.EP_PaperStatus != (Byte)PaperStatus.Done)
+                {
+                    resJson.status = ResponseStatus.Error;
+                    resJson.message = "考试未结束。";
+                    return resJson;
+                }
+
+                epId = ep.EP_Id;
+
+                eptqs =
+                    olsEni
+                    .ExaminationPaperTemplateQuestions
+                    .Where(m => m.EPT_Id == id)
+                    .ToList();
+                epqs = olsEni.ExaminationPaperQuestions.Where(m => m.EP_Id == epId).ToList();
+
+                resJson.status = ResponseStatus.Success;
+                resJson.data = JsonConvert.SerializeObject(new Object[] { eptqs, epqs, epId });
+                return resJson;
+            }
+            catch (Exception ex)
+            {
+                resJson.status = ResponseStatus.Error;
+                resJson.message = StaticHelper.GetExceptionMessage(ex);
+                return resJson;
+            }
+        }
+
+        public ResponseJson Grade(String gradeJson)
+        {
+
+            ResponseJson resJson;
+
+            resJson = new ResponseJson();
+
+            try
+            {
+
+                ExaminationPaperQuestion epq1;
+                ExaminationPaper ep;
+                List<ExaminationPaperQuestion> epqs;
+
+                epqs = JsonConvert.DeserializeObject<List<ExaminationPaperQuestion>>(gradeJson);
+
+                foreach (var epq in epqs)
+                {
+
+                    // 检查是否在考试时间内
+                    ep = olsEni.ExaminationPapers.SingleOrDefault(m => m.EP_Id == epq.EP_Id);
+                    if (null != ep && ep.EP_PaperStatus != (Byte)PaperStatus.Done)
+                    {
+                        continue;
+                    }
+
+                    epq1 =
+                        olsEni
+                        .ExaminationPaperQuestions
+                        .SingleOrDefault(m =>
+                            m.EP_Id == epq.EP_Id
+                            && m.EPTQ_Id == epq.EPTQ_Id);
+
+                    if (null != epq1)
+                    {
+
+                        epq1.EPQ_Exactness = epq.EPQ_Exactness;
+                        olsEni.Entry(epq1).State = EntityState.Modified;
+                    }
+                }
+
+                if (0 == olsEni.SaveChanges())
+                {
+
+                    resJson.status = ResponseStatus.Error;
+                    resJson.message = ResponseMessage.SaveChangeError;
+                    return resJson;
+                }
+
+                resJson.status = ResponseStatus.Success;
+                return resJson;
+            }
+            catch (Exception ex)
+            {
                 resJson.status = ResponseStatus.Error;
                 resJson.message = StaticHelper.GetExceptionMessage(ex);
                 return resJson;

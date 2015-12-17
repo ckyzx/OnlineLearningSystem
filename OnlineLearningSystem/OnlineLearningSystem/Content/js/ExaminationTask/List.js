@@ -40,8 +40,8 @@ $(function() {
         }, {
             "width": "50px",
             "className": "text-l nowrap",
-            "defaultContent": '<a class="btn btn-primary radius size-MINI mr-5 start-task fz-9" href="javascript:;" title="开始">开始</a>' +
-                '<a class="btn btn-primary radius size-MINI mr-5 stop-task fz-9" href="javascript:;" title="结束">结束</a>' +
+            "defaultContent": '<a class="btn btn-primary radius size-MINI mr-5 start-task fz-9 hide" href="javascript:;">开始</a>' +
+                '<a class="btn btn-primary radius size-MINI mr-5 stop-task fz-9 hide" href="javascript:;">结束</a>' +
                 '<a class="btn btn-primary radius size-MINI mr-5 paper-template fz-9" href="javascript:;" title="试题">试题</a>' +
                 '<a class="recycle mr-5 fz-18 hide" href="javascript:;" title="回收"><i class="Hui-iconfont">&#xe631;</i></a>' +
                 '<a class="resume mr-5 fz-18 hide" href="javascript:;" title="恢复"><i class="Hui-iconfont">&#xe615;</i></a>' +
@@ -89,9 +89,9 @@ $(function() {
 
                     // 手动任务呈现按钮“开始/结束”
                     if(0 == enabled){
-                        startTask.attr('title', '开始').text('开始').show();
+                        startTask.attr('title', '开始').text('开始').removeClass('hide');
                     }else if(1 == enabled){
-                        stopTask.attr('title', '结束').text('结束').show();
+                        stopTask.attr('title', '结束').text('结束').removeClass('hide');
                     }else if(2 == enabled){
                         // 不呈现按钮
                     }
@@ -100,12 +100,12 @@ $(function() {
 
                     // 自动任务呈现按钮“开启/关闭”
                     if(1 == enabled){
-                        stopTask.attr('title', '关闭').text('关闭').show();
+                        stopTask.attr('title', '关闭').text('关闭').removeClass('hide');
                     }else{
-                        startTask.attr('title', '开启').text('开启').show();
+                        startTask.attr('title', '开启').text('开启').removeClass('hide');
                     }
 
-                    row.find('a.paper-template').show();
+                    row.find('a.paper-template').removeClass('hide');
                     break;
             }
 
@@ -113,12 +113,12 @@ $(function() {
             status = data['ET_Status'];
             switch (status) {
                 case 1:
-                    row.find('a.recycle').show();
-                    row.find('a.edit').show();
+                    row.find('a.recycle').removeClass('hide');
+                    row.find('a.edit').removeClass('hide');
                     break;
                 case 2:
-                    row.find('a.resume').show();
-                    row.find('a.delete').show();
+                    row.find('a.resume').removeClass('hide');
+                    row.find('a.delete').removeClass('hide');
                     break;
                 case 3:
                     break;
@@ -265,7 +265,7 @@ $(function() {
                     }else{
                         stopTask.attr('title', '关闭').text('关闭');
                     }
-                    stopTask.show();
+                    stopTask.removeClass('hide');
 
                     alert('操作成功。');
                 } else if (0 == data.status) {
@@ -304,7 +304,7 @@ $(function() {
 
                         startTask = tr.find('a.start-task');
                         startTask.attr('title', '开启').text('开启');
-                        startTask.show();
+                        startTask.removeClass('hide');
                     }
 
                     alert('操作成功。');

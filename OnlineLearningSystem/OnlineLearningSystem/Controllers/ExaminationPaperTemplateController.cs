@@ -97,6 +97,43 @@ namespace OnlineLearningSystem.Controllers
         }
 
         //
+        // GET: /ExaminationPaperTemplate/ListGrade
+
+        [Description("改卷列表")]
+        public ActionResult ListGrade()
+        {
+            return View();
+        }
+
+        //
+        // GET: /ExaminationPaperTemplate/GetUsers
+
+        [Description("获取改卷用户数据")]
+        public JsonResult GetUsers(Int32 id)
+        {
+            return Json(um.GetUsers(id),JsonRequestBehavior.AllowGet);
+        }
+
+        //
+        // GET: /ExaminationPaperTemplate/GetQuestions
+
+        [Description("获取改卷试题数据")]
+        public JsonResult GetQuestions(Int32 id, Int32 uId)
+        {
+            return Json(um.GetQuestions(id, uId), JsonRequestBehavior.AllowGet);
+        }
+
+        //
+        // POST: /ExaminationPaperTemplate/Grade
+
+        [Description("提交改卷数据")]
+        [HttpPost]
+        public JsonResult Grade(String gradeJson)
+        {
+            return Json(um.Grade(gradeJson));
+        }
+
+        //
         // GET: /ExaminationPaperTemplate/Create
 
         [Description("新建试卷模板")]
@@ -204,6 +241,20 @@ namespace OnlineLearningSystem.Controllers
             ResponseJson resJson;
 
             resJson = um.Delete(id);
+
+            return Json(resJson, JsonRequestBehavior.AllowGet);
+        }
+
+        //
+        // GET: /ExaminationPaperTemplate/Terminate
+
+        [Description("终止考试")]
+        public JsonResult Terminate(Int32 id)
+        {
+
+            ResponseJson resJson;
+
+            resJson = um.Terminate(id);
 
             return Json(resJson, JsonRequestBehavior.AllowGet);
         }

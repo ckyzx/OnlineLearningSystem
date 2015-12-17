@@ -266,15 +266,15 @@ namespace OnlineLearningSystem.Utilities
             try
             {
 
-                Int32 epqId, rowCount;
+                Int32 epqId;
                 ExaminationPaperQuestion epq1;
                 ExaminationPaper ep;
                 List<ExaminationPaperQuestion> epqs;
 
                 epqs = JsonConvert.DeserializeObject<List<ExaminationPaperQuestion>>(answersJson);
 
-                rowCount = olsEni.ExaminationPaperQuestions.Count();
-                epqId = 0 == rowCount ? 1 : olsEni.ExaminationPaperQuestions.Max(m => m.EPQ_AutoId) + 1;
+                epqId = olsEni.ExaminationPaperQuestions.Count();
+                epqId = 0 == epqId ? 1 : olsEni.ExaminationPaperQuestions.Max(m => m.EPQ_AutoId) + 1;
 
                 foreach (var epq in epqs)
                 {

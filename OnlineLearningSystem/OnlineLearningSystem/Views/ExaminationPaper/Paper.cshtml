@@ -34,7 +34,7 @@
 <script id="QuestionListTmpl" type="text/x-jquery-tmpl">
     <div id="Questions_${i}" class="swiper-container hide" data-questions-index="${i}">
         <div class="swiper-wrapper">
-        {{tmpl(questions) '#QuestionsTmpl'}}
+        {{tmpl(questions) '#QuestionTmpl'}}
         </div>
         <div class="swiper-pagination"></div>
         <div class="swiper-button-container">
@@ -44,7 +44,7 @@
         </div>
     </div>
 </script>
-<script id="QuestionsTmpl" type="text/x-jquery-tmpl">
+<script id="QuestionTmpl" type="text/x-jquery-tmpl">
     <div id="Question_${EPTQ_Id}" class="swiper-slide" data-question-id="${EPTQ_Id}" data-question-type="${EPTQ_Type}">
         <div class="question">
             <div class="col-12 cl question-content">
