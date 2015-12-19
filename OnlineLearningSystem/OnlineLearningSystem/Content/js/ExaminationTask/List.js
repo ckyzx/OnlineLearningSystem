@@ -257,7 +257,7 @@ $(function() {
 
                 if (1 == data.status) {
 
-                    tr.find('a.start-task').hide();
+                    tr.find('a.start-task').addClass('hide');
                     stopTask = tr.find('a.stop-task');
 
                     if(0 == autoType){
@@ -267,7 +267,7 @@ $(function() {
                     }
                     stopTask.removeClass('hide');
 
-                    alert('操作成功。');
+                    layer.msg('操作成功', {offset: '100px'});
                 } else if (0 == data.status) {
 
                     alert(data.message);
@@ -297,7 +297,7 @@ $(function() {
 
                 if (1 == data.status) {
 
-                    tr.find('a.stop-task').hide();
+                    tr.find('a.stop-task').addClass('hide');
 
                     // 自动任务切换按钮
                     if(0 != autoType){
@@ -307,7 +307,7 @@ $(function() {
                         startTask.removeClass('hide');
                     }
 
-                    alert('操作成功。');
+                    layer.msg('操作成功', {offset: '100px'});
                 } else if (0 == data.status) {
 
                     alert(data.message);

@@ -18,7 +18,6 @@ namespace OnlineLearningSystem.Utilities
             Int32 recordsTotal, recordsFiltered;
             String whereSql, orderColumn;
             List<ExaminationTask> ms;
-            List<ExaminationPaperTemplate> epts;
 
 
             dtResponse = new DataTablesResponse();
@@ -147,15 +146,17 @@ namespace OnlineLearningSystem.Utilities
             try
             {
 
-                Int32 rowCount;
                 Int32 id;
 
-                rowCount = olsEni.ExaminationTasks.Count();
-                id = 0 == rowCount ? 0 : olsEni.ExaminationTasks.Max(m => m.ET_AutoId);
+                id = olsEni.ExaminationTasks.Count();
+                id = 0 == id ? 1 : olsEni.ExaminationTasks.Max(m => m.ET_AutoId) + 1;
 
-                model.ET_Id = id + 1;
+                model.ET_Id = id;
                 olsEni.ExaminationTasks.Add(model);
                 olsEni.SaveChanges();
+
+                // 添加参与人员
+                AddAttendees(model);
 
                 // 添加试卷模板与试题模板
                 AddPaperTemplateAndQuestionTemplate(model);
@@ -265,12 +266,58 @@ namespace OnlineLearningSystem.Utilities
 
         }
 
+        private void AddAttendees(ExaminationTask model)
+        {
+
+            User_Department ud;
+            ExaminationTaskAttendee eta;
+            Int32[] uIds;
+            List<ExaminationTaskAttendee> etas;
+
+            etas = olsEni.ExaminationTaskAttendees.Where(m => m.ET_Id == model.ET_Id).ToList();
+            foreach (var eta1 in etas)
+            {
+                olsEni.Entry(eta1).State = EntityState.Deleted;
+            }
+            olsEni.SaveChanges();
+
+            etas = new List<ExaminationTaskAttendee>();
+
+            uIds = JsonConvert.DeserializeObject<Int32[]>(model.ET_Attendee);
+            foreach (var uId in uIds)
+            {
+
+                ud = olsEni.User_Department.SingleOrDefault(m => m.U_Id == uId);
+                if (null == ud)
+                {
+                    continue;
+                }
+
+                eta = new ExaminationTaskAttendee
+                {
+                    ET_Id = model.ET_Id,
+                    U_Id = uId,
+                    D_Id = ud.D_Id
+                };
+
+                if (etas.Where(m => m.U_Id == uId).Count() == 0)
+                {
+                    etas.Add(eta);
+                    olsEni.Entry(eta).State = EntityState.Added;
+                }
+            }
+            olsEni.SaveChanges();
+        }
+
         public Boolean Edit(ExaminationTask model)
         {
             try
             {
                 olsEni.Entry(model).State = EntityState.Modified;
                 olsEni.SaveChanges();
+
+                // 添加参与人员
+                AddAttendees(model);
 
                 return true;
             }

@@ -8,6 +8,7 @@ namespace OnlineLearningSystem.Utilities
     public class Utility
     {
         public OLSEntities olsEni = new OLSEntities();
+        protected DbOperator olsDBO = new DbOperator("OLSDBO");
         public DateTime now = DateTime.Now;
     }
 }

@@ -21,6 +21,7 @@ namespace OnlineLearningSystem
 
         public DbSet<ExaminationTaskTemplate> ExaminationTaskTemplates { get; set; }
         public DbSet<ExaminationTask> ExaminationTasks { get; set; }
+        public DbSet<ExaminationTaskAttendee> ExaminationTaskAttendees { get; set; }
         public DbSet<ExaminationPaperTemplate> ExaminationPaperTemplates { get; set; }
         public DbSet<ExaminationPaperTemplateQuestion> ExaminationPaperTemplateQuestions { get; set; }
         public DbSet<ExaminationPaper> ExaminationPapers { get; set; }

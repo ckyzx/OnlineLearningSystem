@@ -64,11 +64,14 @@ namespace OnlineLearningSystem.Controllers
         public JsonResult ListDataTablesAjaxStudent(Byte type, Byte ptStatus)
         {
 
+            Int32 uId;
             DataTablesRequest dtRequest;
             DataTablesResponse dtResponse;
 
+            uId = ((User)Session["User"]).U_Id;
+
             dtRequest = GetDataTablesRequest();
-            dtResponse = um.ListDataTablesAjax(dtRequest, type, ptStatus);
+            dtResponse = um.ListDataTablesAjax(dtRequest, uId, type, ptStatus);
 
             return Json(dtResponse, JsonRequestBehavior.DenyGet);
         }

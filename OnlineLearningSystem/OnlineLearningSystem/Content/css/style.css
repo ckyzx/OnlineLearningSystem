@@ -48,12 +48,13 @@ body{ min-width:1280px; }
 #ExaminationPaperContainer #QuestionList span.tip, 
 #ExaminationPaperGradeContainer #PaperContainer .question-container span.tip{ padding: 2px 6px; margin-right: 10px; font-size: 18px; color: #FFF; background: #666; }
 
-#ExaminationPaperGradeContainer{ background-color: #EEE; }
+#ExaminationPaperGradeContainer{ min-height: 100%;background-color: #EEE; }
 #ExaminationPaperGradeContainer #UserList{ position: absolute; width: 200px; height: 100%; overflow-y: scroll; }
-#ExaminationPaperGradeContainer .Huifold .item h4.done{ color:#FFF; background-color:#DDD; }
-#ExaminationPaperGradeContainer .Huifold .item h4.active{ color:#FFF; background: #5a98de; }
-#ExaminationPaperGradeContainer .button-container{ padding: 20px 0; height: 31px; }
-#ExaminationPaperGradeContainer #PaperContainer{ padding:20px; margin-left: 200px; background-color: #FFF; }
+#ExaminationPaperGradeContainer #UserList .Huifold .item h4.done{ color:#FFF; background-color:#DDD; }
+#ExaminationPaperGradeContainer #UserList .Huifold .item h4.active{ color:#FFF; background: #5a98de; }
+#ExaminationPaperGradeContainer #UserList .Huifold .item h4 span.score{ float:right; }
+#ExaminationPaperGradeContainer #UserList .button-container{ padding: 20px 0; height: 31px; }
+#ExaminationPaperGradeContainer #PaperContainer{ padding:20px; margin-left: 200px; min-height: 100%;background-color: #FFF; }
 #ExaminationPaperGradeContainer #PaperContainer .question-container{ margin-bottom: 30px; background-color:#FFF; }
 #ExaminationPaperGradeContainer #PaperContainer .question-container .type-name{ margin-bottom:5px; padding:0 10px; font-size:24px; color:#FFF; background-color: #DDD; }
 #ExaminationPaperGradeContainer #PaperContainer .question-container .question{ margin-bottom:10px; }

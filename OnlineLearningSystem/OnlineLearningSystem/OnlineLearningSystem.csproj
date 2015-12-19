@@ -77,6 +77,7 @@
     <Compile Include="Content\lib\ueditor\1.4.3\net\App_Code\UploadHandler.cs" />
     <Compile Include="Controllers\ActionPermissionController.cs" />
     <Compile Include="Controllers\ExaminationPaperController.cs" />
+    <Compile Include="Controllers\ExaminationTaskStatisticController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PanelController.cs" />
     <Compile Include="Controllers\DutyController.cs" />
@@ -102,6 +103,11 @@
     <Compile Include="Models\ExaminationPaperTemplate.cs" />
     <Compile Include="Models\ExaminationPaperTemplateQuestion.cs" />
     <Compile Include="Models\ExaminationTask.cs" />
+    <Compile Include="Models\ExaminationTaskAttendee.cs" />
+    <Compile Include="Utilities\Common\DbOperator.cs" />
+    <Compile Include="Utilities\Common\ModelConvert.cs" />
+    <Compile Include="Utilities\UExaminationTaskStatistic.cs" />
+    <Compile Include="ViewModels\VMExaminationTaskStatistic.cs" />
     <Compile Include="Models\ExaminationTaskTemplate.cs" />
     <Compile Include="Models\OLSEntities.cs" />
     <Compile Include="Models\Permission.cs" />
@@ -177,6 +183,7 @@
     <Content Include="Content\js\ExaminationPaperTemplate\ListStudent.js" />
     <Content Include="Content\js\ExaminationPaperTemplate\ListGrade.js" />
     <Content Include="Content\js\ExaminationPaper\Paper.js" />
+    <Content Include="Content\js\ExaminationTaskStatistic\List.js" />
     <Content Include="Content\js\ExaminationTaskTemplate\Edit.js" />
     <Content Include="Content\js\ExaminationTask\Edit.js" />
     <Content Include="Content\js\init-background.js" />
@@ -944,6 +951,7 @@
     <Content Include="Views\QuestionClassify\List.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\ExaminationTaskStatisticType.cshtml" />
     <Content Include="Views\ExaminationPaperTemplate\ListGrade.cshtml" />
+    <Content Include="Views\ExaminationTaskStatistic\List.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

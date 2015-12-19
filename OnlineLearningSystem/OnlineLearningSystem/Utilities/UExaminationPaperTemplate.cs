@@ -68,7 +68,7 @@ namespace OnlineLearningSystem.Utilities
             return dtResponse;
         }
 
-        public DataTablesResponse ListDataTablesAjax(DataTablesRequest dtRequest, Byte type, Byte paperTemplateStatus)
+        public DataTablesResponse ListDataTablesAjax(DataTablesRequest dtRequest, Int32 uId, Byte type, Byte paperTemplateStatus)
         {
 
             DataTablesResponse dtResponse;
@@ -100,7 +100,7 @@ namespace OnlineLearningSystem.Utilities
             //TODO:指定排序列
             orderColumn = dtRequest.Columns[dtRequest.OrderColumn].Name;
 
-            modelData = GetModels(dtRequest, type, paperTemplateStatus);
+            modelData = GetModels(dtRequest, uId, type, paperTemplateStatus);
 
             recordsFiltered = (Int32)modelData[0];
             dtResponse.recordsFiltered = recordsFiltered;
@@ -110,11 +110,32 @@ namespace OnlineLearningSystem.Utilities
             return dtResponse;
         }
 
-        public Object[] GetModels(DataTablesRequest dtRequest, Byte type, Byte paperTemplateStatus)
+        public Object[] GetModels(DataTablesRequest dtRequest, Int32 uId, Byte type, Byte paperTemplateStatus)
         {
 
             Int32 count;
+            Int32[] userIds;
+            List<Int32> usableEtIds;
+            List<ExaminationTask> ets;
             List<ExaminationPaperTemplate> ms;
+
+            usableEtIds = new List<Int32>();
+
+            ets = olsEni
+                .ExaminationTasks
+                .Where(m => 
+                    m.ET_Status == (Byte)Status.Available
+                    && m.ET_Enabled == (Byte)ExaminationTaskStatus.Enabled)
+                .ToList();
+            foreach (var et in ets)
+            {
+
+                userIds = JsonConvert.DeserializeObject<Int32[]>(et.ET_Attendee);
+                if (userIds.Contains(uId))
+                {
+                    usableEtIds.Add(et.ET_Id);
+                }
+            }
 
             count =
                 olsEni
@@ -122,6 +143,7 @@ namespace OnlineLearningSystem.Utilities
                 .OrderBy(model => model.EPT_Id)
                 .Where(model =>
                     model.EPT_Status != (Byte)Status.Delete
+                    && usableEtIds.Contains(model.ET_Id)
                     && model.ET_Type == type
                     && model.EPT_PaperTemplateStatus == paperTemplateStatus)
                 .Count();
@@ -132,6 +154,7 @@ namespace OnlineLearningSystem.Utilities
                 .OrderBy(model => model.EPT_Id)
                 .Where(model =>
                     model.EPT_Status != (Byte)Status.Delete
+                    && usableEtIds.Contains(model.ET_Id)
                     && model.ET_Type == type
                     && model.EPT_PaperTemplateStatus == paperTemplateStatus)
                 .Skip(dtRequest.Start).Take(dtRequest.Length)
@@ -604,9 +627,16 @@ namespace OnlineLearningSystem.Utilities
             try
             {
 
-                ExaminationPaperQuestion epq1;
+                Int32 score, exactnessNumber, totalNumber;
+                ExaminationTask et;
                 ExaminationPaper ep;
+                ExaminationPaperTemplate ept;
+                ExaminationPaperQuestion epq1;
+                List<ExaminationPaper> eps;
+                List<ExaminationPaperTemplateQuestion> eptqs;
                 List<ExaminationPaperQuestion> epqs;
+
+                eps = new List<ExaminationPaper>();
 
                 epqs = JsonConvert.DeserializeObject<List<ExaminationPaperQuestion>>(gradeJson);
 
@@ -615,7 +645,7 @@ namespace OnlineLearningSystem.Utilities
 
                     // 检查是否在考试时间内
                     ep = olsEni.ExaminationPapers.SingleOrDefault(m => m.EP_Id == epq.EP_Id);
-                    if (null != ep && ep.EP_PaperStatus != (Byte)PaperStatus.Done)
+                    if (null == ep || ep.EP_PaperStatus != (Byte)PaperStatus.Done)
                     {
                         continue;
                     }
@@ -632,7 +662,64 @@ namespace OnlineLearningSystem.Utilities
 
                         epq1.EPQ_Exactness = epq.EPQ_Exactness;
                         olsEni.Entry(epq1).State = EntityState.Modified;
+
+                        if (eps.Where(m => m.EP_Id == ep.EP_Id).Count() == 0)
+                        {
+                            eps.Add(ep);
+                        }
                     }
+                }
+
+                epqs = null;
+
+                // 计算成绩
+                foreach (var ep1 in eps)
+                {
+
+                    ept = olsEni.ExaminationPaperTemplates.SingleOrDefault(m => m.EPT_Id == ep1.EPT_Id);
+
+                    if (null == ept || ept.EPT_PaperTemplateStatus != (Byte)PaperTemplateStatus.Done)
+                    {
+                        continue;
+                    }
+
+                    et = olsEni.ExaminationTasks.SingleOrDefault(m => m.ET_Id == ept.ET_Id);
+
+                    if (null == et || et.ET_Enabled != (Byte)ExaminationTaskStatus.Enabled)
+                    {
+                        continue;
+                    }
+
+                    score = 0;
+
+                    if (et.ET_StatisticType == (Byte)StatisticType.Score)
+                    {
+                        // 计算分数
+
+                        epqs = olsEni.ExaminationPaperQuestions.Where(m => m.EP_Id == ep1.EP_Id).ToList();
+                        eptqs = olsEni.ExaminationPaperTemplateQuestions.Where(m => m.EPT_Id == ep1.EPT_Id).ToList();
+
+                        foreach (var epq in epqs)
+                        {
+                            if (epq.EPQ_Exactness == (Byte)AnswerStatus.Exactness)
+                            {
+                                score += eptqs.Single(m => m.EPTQ_Id == epq.EPTQ_Id).EPTQ_Score;
+                            }
+                        }
+
+                    }
+                    else if (et.ET_StatisticType == (Byte)StatisticType.Number)
+                    {
+                        // 计算正确率
+
+                        exactnessNumber = olsEni.ExaminationPaperQuestions.Where(m => m.EP_Id == ep1.EP_Id && m.EPQ_Exactness == (Byte)AnswerStatus.Exactness).Count();
+                        totalNumber = olsEni.ExaminationPaperTemplateQuestions.Where(m => m.EPT_Id == ep1.EPT_Id).Count();
+
+                        score = (Int32)Math.Round((double)exactnessNumber / (double)totalNumber * 100, MidpointRounding.AwayFromZero);
+                    }
+
+                    ep1.EP_Score = score;
+                    olsEni.Entry(ep1).State = EntityState.Modified;
                 }
 
                 if (0 == olsEni.SaveChanges())
@@ -643,6 +730,7 @@ namespace OnlineLearningSystem.Utilities
                     return resJson;
                 }
 
+                resJson.data = JsonConvert.SerializeObject(eps);
                 resJson.status = ResponseStatus.Success;
                 return resJson;
             }

@@ -126,10 +126,30 @@
                 gradeJson: grades
             }, function(data) {
 
+                var userList, h4, scoreSpan;
+                var eps;
+
                 if (1 == data.status) {
 
-                    $('#UserList li[data-user-id=' + uId + '] h4').addClass('done');
-                    alert('评分提交成功。');
+                    userList = $('#UserList');
+                    userList.find('li[data-user-id=' + uId + '] h4').addClass('done');
+
+                    // 呈现分数
+                    eps = JSON.parse(data.data);
+                    for (var i = 0; i < eps.length; i++) {
+
+                        ep = eps[i];
+
+                        h4 = userList.find('li[data-user-id=' + ep.EP_UserId + '] h4');
+                        scoreSpan = h4.find('span.score');
+                        if (scoreSpan.length == 0) {
+                            h4.append('<span class="score">' + ep.EP_Score + '</span>');
+                        }else{
+                            scoreSpan.text(ep.EP_Score);
+                        }
+                    };
+
+                    layer.msg('评分提交成功', {offset: '100px'});
                 } else if (0 == data.status) {
 
                     gradeJsonInput.val(grades);

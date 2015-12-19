@@ -1,11 +1,12 @@
 // 给 DataTables 的数据设置复选状态
 function SetDataTablesChecked(tableSelector, valueSelector) {
 
-    var table, tableId, settings, dtData, ms, cells, checkbox, id;
+    var container, table, tableId, settings, dtData, ms, cells, checkbox, id;
     var countSpan, rows, allCheckbox;
     var checked;
 
     table = $(tableSelector);
+    container = table.parent();
     tableId = table.attr('id');
     settings = table.DataTable.settings;
 
@@ -37,9 +38,9 @@ function SetDataTablesChecked(tableSelector, valueSelector) {
     }
 
     // 显示已选数据数量
-    $('.select-data-item').remove();
+    container.find('.select-data-item').remove();
     countSpan = $('<div class="select-data-item mb-10">已选 <span class="select-data-count">' + ms.length + '</span> 条</div>');
-    countSpan.prependTo($(tableSelector).parent());
+    countSpan.prependTo(container);
 
     // 判断是否复选“全选”框
     rows = table.find('tbody tr');

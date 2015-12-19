@@ -312,9 +312,6 @@ $(function() {
 
                         ztree.checkNode(nodes[i], true, true);
                         checkedCount += 1;
-                    } else {
-
-                        ztree.checkNode(nodes[i], false, true);
                     }
                 }
             }
@@ -322,7 +319,9 @@ $(function() {
             if (nodes[i].children != undefined) {
 
                 checked = setDepartmentsAndUsersNodeChecked(ztree, nodes[i].children, departmentIds, userIds);
-                ztree.checkNode(nodes[i], checked, true);
+                if (checked) {
+                    ztree.checkNode(nodes[i], true, true);
+                }
             }
         }
 
@@ -402,16 +401,13 @@ $(function() {
 
                     ztree.checkNode(nodes[i], true, true);
                     checkedCount += 1;
-                } else {
-
-                    ztree.checkNode(nodes[i], false, true);
                 }
             }
 
             if (nodes[i].children != undefined) {
 
                 checked = setQuestionClassifiesNodeChecked(ztree, nodes[i].children, autoClassifies);
-                if(checked){
+                if (checked) {
                     ztree.checkNode(nodes[i], true, true);
                 }
             }

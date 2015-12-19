@@ -14,7 +14,6 @@ namespace OnlineLearningSystem.ViewModels
         public Int32 U_Id { get; set; }
 
         [DisplayName("职务")]
-        [Required(ErrorMessage = "请选择{0}")]
         public Int32? Du_Id { get; set; }
 
         [NotMapped]
