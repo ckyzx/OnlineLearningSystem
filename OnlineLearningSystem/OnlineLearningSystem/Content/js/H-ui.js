@@ -11,7 +11,7 @@ if (navigator.userAgent.match(/IEMobile\/10\.0/)) {
 
 
 /*添加收藏
-<a title="收藏本站" href="javascript:;" onClick="addFavoritepage('H-ui前端框架','http://www.h-ui.net/');">收藏本站</a>
+<a title="收藏本站" href="javascript:void(0);" onClick="addFavoritepage('H-ui前端框架','http://www.h-ui.net/');">收藏本站</a>
 */
 /*收藏主站*/
 function addFavorite(name,site){

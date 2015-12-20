@@ -313,6 +313,16 @@ namespace OnlineLearningSystem.Utilities
         {
             try
             {
+
+                ExaminationTask et;
+
+                et = olsEni.ExaminationTasks.SingleOrDefault(m => m.ET_Id == model.ET_Id);
+                // 已开始/已结束的手动任务不允许编辑；已开始的自动任务不允许编辑
+                if ((et.ET_AutoType == 0 && et.ET_Enabled != 0) || (et.ET_AutoType > 0 && et.ET_Enabled == 1))
+                {
+                    return false;
+                }
+
                 olsEni.Entry(model).State = EntityState.Modified;
                 olsEni.SaveChanges();
 
@@ -358,6 +368,12 @@ namespace OnlineLearningSystem.Utilities
                 ExaminationTask model;
 
                 model = olsEni.ExaminationTasks.SingleOrDefault(m => m.ET_Id == id);
+                // 已开始/已结束的手动任务不允许编辑；已开始的自动任务不允许编辑
+                if ((model.ET_AutoType == 0 && model.ET_Enabled != 0) || (model.ET_AutoType > 0 && model.ET_Enabled == 1))
+                {
+                    resJson.message = "不允许编辑。";
+                    return resJson;
+                }
 
                 if (null == model)
                 {

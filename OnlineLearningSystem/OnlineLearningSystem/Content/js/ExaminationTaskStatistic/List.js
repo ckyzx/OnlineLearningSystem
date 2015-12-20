@@ -46,7 +46,7 @@
         }, {
             "width": "50px",
             "className": "text-c nowrap",
-            "defaultContent": '<a class="btn btn-primary radius size-MINI mr-5 user-statistic fz-9" href="javascript:;">详情</a>'
+            "defaultContent": '<a class="btn btn-primary radius size-MINI mr-5 user-statistic fz-9" href="javascript:void(0);">详情</a>'
         }],
         "createdRow": function(row, data, dataIndex) {
 

@@ -45,7 +45,7 @@ $(function() {
         }, {
             "width": "100px",
             "className": "text-c",
-            "defaultContent": '<a style="display:none;text-decoration: none;" class="btn btn-primary radius size-MINI enter-exam fz-9" href="javascript:;" title="进入考试">进入考试</a>'
+            "defaultContent": '<a style="display:none;text-decoration: none;" class="btn btn-primary radius size-MINI enter-exam fz-9" href="javascript:void(0);" title="进入考试">进入考试</a>'
         }],
         "createdRow": function(row, data, dataIndex) {
 

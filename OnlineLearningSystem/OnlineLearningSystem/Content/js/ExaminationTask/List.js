@@ -40,13 +40,13 @@ $(function() {
         }, {
             "width": "50px",
             "className": "text-l nowrap",
-            "defaultContent": '<a class="btn btn-primary radius size-MINI mr-5 start-task fz-9 hide" href="javascript:;">开始</a>' +
-                '<a class="btn btn-primary radius size-MINI mr-5 stop-task fz-9 hide" href="javascript:;">结束</a>' +
-                '<a class="btn btn-primary radius size-MINI mr-5 paper-template fz-9" href="javascript:;" title="试题">试题</a>' +
-                '<a class="recycle mr-5 fz-18 hide" href="javascript:;" title="回收"><i class="Hui-iconfont">&#xe631;</i></a>' +
-                '<a class="resume mr-5 fz-18 hide" href="javascript:;" title="恢复"><i class="Hui-iconfont">&#xe615;</i></a>' +
-                '<a class="edit mr-5 fz-18 hide" href="javascript:;" title="编辑"><i class="Hui-iconfont">&#xe60c;</i></a>' +
-                '<a class="delete mr-5 fz-18 hide" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a>'
+            "defaultContent": '<a class="btn btn-primary radius size-MINI mr-5 start-task fz-9 hide" href="javascript:void(0);">开始</a>' +
+                '<a class="btn btn-primary radius size-MINI mr-5 stop-task fz-9 hide" href="javascript:void(0);">结束</a>' +
+                '<a class="btn btn-primary radius size-MINI mr-5 paper-template fz-9 hide" href="javascript:void(0);" title="试题">试题</a>' +
+                '<a class="recycle mr-5 fz-18 hide" href="javascript:void(0);" title="回收"><i class="Hui-iconfont">&#xe631;</i></a>' +
+                '<a class="resume mr-5 fz-18 hide" href="javascript:void(0);" title="恢复"><i class="Hui-iconfont">&#xe615;</i></a>' +
+                '<a class="edit mr-5 fz-18 hide" href="javascript:void(0);" title="编辑"><i class="Hui-iconfont">&#xe60c;</i></a>' +
+                '<a class="delete mr-5 fz-18 hide" href="javascript:void(0);" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a>'
         }],
         "createdRow": function(row, data, dataIndex) {
 
@@ -84,46 +84,57 @@ $(function() {
             startTask = row.find('a.start-task');
             stopTask = row.find('a.stop-task');
 
-            switch (autoType) {
-                case 0:
+            status = data['ET_Status'];
 
-                    // 手动任务呈现按钮“开始/结束”
-                    if(0 == enabled){
-                        startTask.attr('title', '开始').text('开始').removeClass('hide');
-                    }else if(1 == enabled){
-                        stopTask.attr('title', '结束').text('结束').removeClass('hide');
-                    }else if(2 == enabled){
-                        // 不呈现按钮
-                    }
-                    break;
-                default:
+            if(1 == status){
 
-                    // 自动任务呈现按钮“开启/关闭”
-                    if(1 == enabled){
-                        stopTask.attr('title', '关闭').text('关闭').removeClass('hide');
-                    }else{
-                        startTask.attr('title', '开启').text('开启').removeClass('hide');
-                    }
+                // 呈现任务控制按钮
+                switch (autoType) {
+                    case 0:
 
-                    row.find('a.paper-template').removeClass('hide');
-                    break;
+                        // 手动任务呈现按钮“开始/结束”
+                        if(0 == enabled){
+                            startTask.text('开始').removeClass('hide');
+                        }else if(1 == enabled){
+                            stopTask.text('结束').removeClass('hide');
+                        }else if(2 == enabled){
+                            // 不呈现按钮
+                        }
+                        break;
+                    default:
+
+                        // 自动任务呈现按钮“开启/关闭”
+                        if(1 == enabled){
+                            stopTask.text('关闭').removeClass('hide');
+                        }else{
+                            startTask.text('开启').removeClass('hide');
+                        }
+
+                        break;
+                }
+
+                // 呈现“试卷模板/试题”按钮
+                row.find('a.paper-template').removeClass('hide');
             }
 
-            // 呈现按钮
-            status = data['ET_Status'];
-            switch (status) {
-                case 1:
-                    row.find('a.recycle').removeClass('hide');
-                    row.find('a.edit').removeClass('hide');
-                    break;
-                case 2:
-                    row.find('a.resume').removeClass('hide');
-                    row.find('a.delete').removeClass('hide');
-                    break;
-                case 3:
-                    break;
-                default:
-                    break;
+            // “未开始/未结束”的任务才显示常规按钮
+            if(0 == enabled || (2 == enabled && autoType != 0)){
+
+                // 呈现常规按钮
+                switch (status) {
+                    case 1:
+                        row.find('a.recycle').removeClass('hide');
+                        row.find('a.edit').removeClass('hide');
+                        break;
+                    case 2:
+                        row.find('a.resume').removeClass('hide');
+                        row.find('a.delete').removeClass('hide');
+                        break;
+                    case 3:
+                        break;
+                    default:
+                        break;
+                }
             }
         }
     });
@@ -261,11 +272,14 @@ $(function() {
                     stopTask = tr.find('a.stop-task');
 
                     if(0 == autoType){
-                        stopTask.attr('title', '结束').text('结束');
+                        stopTask.text('结束');
                     }else{
-                        stopTask.attr('title', '关闭').text('关闭');
+                        stopTask.text('关闭');
                     }
                     stopTask.removeClass('hide');
+
+                    // 隐藏常规控制按钮
+                    tr.find('a.edit, a.recycle, a.resume, a.delete').addClass('hide');
 
                     layer.msg('操作成功', {offset: '100px'});
                 } else if (0 == data.status) {
@@ -299,12 +313,15 @@ $(function() {
 
                     tr.find('a.stop-task').addClass('hide');
 
+
                     // 自动任务切换按钮
                     if(0 != autoType){
 
                         startTask = tr.find('a.start-task');
-                        startTask.attr('title', '开启').text('开启');
+                        startTask.text('开启');
                         startTask.removeClass('hide');
+                        // 显示常规控制按钮
+                        tr.find('a.edit, a.recycle').removeClass('hide');
                     }
 
                     layer.msg('操作成功', {offset: '100px'});

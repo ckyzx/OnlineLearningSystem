@@ -63,6 +63,11 @@ namespace OnlineLearningSystem.Utilities
                     .ToList();
             }
 
+            foreach (var m1 in ms)
+            {
+                m1.ET_Name = olsEni.ExaminationTasks.Single(m => m.ET_Id == m1.ET_Id).ET_Name;
+            }
+
             dtResponse.data = ms;
 
             return dtResponse;
@@ -207,6 +212,9 @@ namespace OnlineLearningSystem.Utilities
 
         public Boolean Create(ExaminationPaperTemplate model)
         {
+
+            throw new NotImplementedException();
+
             try
             {
 
@@ -291,6 +299,9 @@ namespace OnlineLearningSystem.Utilities
 
         public Boolean Edit(ExaminationPaperTemplate model)
         {
+
+            throw new NotImplementedException();
+
             try
             {
 
@@ -334,6 +345,8 @@ namespace OnlineLearningSystem.Utilities
 
         public ResponseJson SetStatus(Int32 id, Status status)
         {
+
+            throw new NotImplementedException();
 
             ResponseJson resJson;
 
@@ -472,14 +485,16 @@ namespace OnlineLearningSystem.Utilities
             try
             {
                 ExaminationPaperTemplate model;
+                ExaminationTask et;
                 List<ExaminationPaper> eps;
 
-                model = olsEni.ExaminationPaperTemplates.SingleOrDefault(m => m.EPT_Id == id);
+                model = olsEni.ExaminationPaperTemplates.Single(m => m.EPT_Id == id);
 
-                if (null == model)
+                // 终止“手动”试卷模板时，应同时结束任务
+                et = olsEni.ExaminationTasks.Single(m => m.ET_Id == model.ET_Id);
+                if ((Byte)AutoType.Manual == et.ET_AutoType)
                 {
-                    resJson.message = "数据不存在！";
-                    return resJson;
+                    et.ET_Enabled = (Byte)ExaminationTaskStatus.Disabled;
                 }
 
                 model.EPT_PaperTemplateStatus = (Byte)PaperTemplateStatus.Done;

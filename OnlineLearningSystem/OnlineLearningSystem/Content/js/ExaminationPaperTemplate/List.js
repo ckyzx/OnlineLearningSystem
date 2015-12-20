@@ -25,6 +25,9 @@ $(function() {
             "name": "EPT_Id",
             "data": "EPT_Id"
         }, {
+            "name": "ET_Name",
+            "data": 'ET_Name'
+        }, {
             "name": "EPT_StartTime",
             "defaultContent": '<span class="EPT_StartTime"></span>'
         }, {
@@ -41,12 +44,12 @@ $(function() {
             "width": "50px",
             "className": "text-c nowrap",
             "defaultContent": 
-                '<a class="btn btn-primary radius size-MINI terminate mr-5 fz-9 hide" href="javascript:;">终止</a>' +
-                '<a class="btn btn-primary radius size-MINI list-grade mr-5 fz-9 hide" href="javascript:;">试卷</a>' +
-                '<a class="recycle mr-5 fz-18 hide" href="javascript:;" title="回收"><i class="Hui-iconfont">&#xe631;</i></a>' +
-                '<a class="resume mr-5 fz-18 hide" href="javascript:;" title="恢复"><i class="Hui-iconfont">&#xe615;</i></a>' +
-                '<a class="edit mr-5 fz-18 hide" href="javascript:;" title="编辑"><i class="Hui-iconfont">&#xe60c;</i></a>' +
-                '<a class="delete mr-5 fz-18 hide" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a>'
+                '<a class="btn btn-primary radius size-MINI terminate mr-5 fz-9 hide" href="javascript:void(0);">终止</a>' +
+                '<a class="btn btn-primary radius size-MINI list-grade mr-5 fz-9 hide" href="javascript:void(0);">试卷</a>' +
+                '<!--a class="recycle mr-5 fz-18 hide" href="javascript:void(0);" title="回收"><i class="Hui-iconfont">&#xe631;</i></a>' +
+                '<a class="resume mr-5 fz-18 hide" href="javascript:void(0);" title="恢复"><i class="Hui-iconfont">&#xe615;</i></a>' +
+                '<a class="edit mr-5 fz-18 hide" href="javascript:void(0);" title="编辑"><i class="Hui-iconfont">&#xe60c;</i></a>' +
+                '<a class="delete mr-5 fz-18 hide" href="javascript:void(0);" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a-->'
         }],
         "createdRow": function(row, data, dataIndex) {
 
@@ -83,8 +86,8 @@ $(function() {
             switch (status) {
                 case 1:
 
-                    row.find('a.recycle').removeClass('hide');
-                    row.find('a.edit').removeClass('hide');
+                    /*row.find('a.recycle').removeClass('hide');
+                    row.find('a.edit').removeClass('hide');*/
 
                     if(1 == ptStatus){
                         row.find('a.terminate').removeClass('hide');
@@ -93,9 +96,8 @@ $(function() {
                     }
                     break;
                 case 2:
-
-                    row.find('a.resume').removeClass('hide');
-                    row.find('a.delete').removeClass('hide');
+                    /*row.find('a.resume').removeClass('hide');
+                    row.find('a.delete').removeClass('hide');*/
                     break;
                 case 3:
                     break;
@@ -105,7 +107,7 @@ $(function() {
         }
     });
 
-    $('.table-sort tbody').on('click', 'a.edit', function() {
+    /*$('.table-sort tbody').on('click', 'a.edit', function() {
 
         var data, id;
 
@@ -200,7 +202,7 @@ $(function() {
 
                 alert('请求返回错误！');
             });
-    });
+    });*/
 
     $('.table-sort tbody').on('click', 'a.list-grade', function() {
 
@@ -233,7 +235,7 @@ $(function() {
                     tr.find('a.terminate').addClass('hide');
                     tr.find('a.list-grade').removeClass('hide');
 
-                    alert('操作成功。');
+                    layer.msg('操作成功', {offset: '100px'});
                 } else if (0 == data.status) {
 
                     alert(data.message);
@@ -245,8 +247,8 @@ $(function() {
             });
     });
 
-    $('#CreateBtn').on('click', function() {
+    /*$('#CreateBtn').on('click', function() {
         ShowPage('添加试卷模板', '/ExaminationPaperTemplate/Create?etId=' + etId);
-    });
+    });*/
 
 });
