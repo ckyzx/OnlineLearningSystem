@@ -25,22 +25,22 @@
             "name": "ETS_TaskName",
             "data": "ETS_TaskName"
         }, {
-            "name": "ETS_Date",
-            "defaultContent": '<span class="ETS_Date"></span>'
+            "name": "ETS_PaperTemplateDate",
+            "defaultContent": '<span class="ETS_PaperTemplateDate"></span>'
         }, {
-        	"className": "text-r",
+        	"className": "text-r ETS_AttendeeNumber",
             "name": "ETS_AttendeeNumber",
             "data": 'ETS_AttendeeNumber'
         }, {
-        	"className": "text-r",
+        	"className": "text-r ETS_PaperNumber",
             "name": "ETS_PaperNumber",
             "data": 'ETS_PaperNumber'
         }, {
-        	"className": "text-r",
+        	"className": "text-r ETS_PassNumber",
             "name": "ETS_PassNumber",
             "data": 'ETS_PassNumber'
         }, {
-        	"className": "text-r",
+        	"className": "text-r ETS_FlunkNumber",
             "name": "ETS_FlunkNumber",
             "data": 'ETS_FlunkNumber'
         }, {
@@ -55,11 +55,31 @@
 
             row = $(row);
 
-            span = row.find('span.ETS_Date');
-            etsDate = data['ETS_Date'];
+            span = row.find('span.ETS_PaperTemplateDate');
+            etsDate = data['ETS_PaperTemplateDate'];
             etsDate = etsDate.jsonDateToDate();
             span.text(etsDate.format('yyyy年MM月dd日'));
+        },
+        'initComplete': function(settings, json) {
+
+            $('tbody').find('.ETS_AttendeeNumber, .ETS_PaperNumber, .ETS_PassNumber, .ETS_FlunkNumber').each(function(){
+
+                var td;
+
+                td = $(this);
+                td.html('<span class="bold">' + td.text() + '</span> <span class="fz-9">人</span>');
+            });
         }
+    });
+
+    $('.table-sort tbody').on('click', 'a.user-statistic', function() {
+
+        var data, id;
+
+        data = table.row($(this).parents('tr')).data();
+        id = data['ETS_PaperTemplateId'];
+
+        ShowPageWithSize('统计详情', '/ExaminationTaskStatistic/ListUser?eptId=' + id, 800, 600);
     });
 
 });

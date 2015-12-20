@@ -12,7 +12,14 @@ function ShowPage(title, url) {
 }
 
 function ShowPageWithSize(title, url, w, h) {
-    layer_show(title, url, w, h);
+    layer.open({
+        type: 2,
+        area: [w + 'px', h + 'px'],
+        fix: false, //不固定
+        shade: 0.4,
+        title: title,
+        content: url
+    });
 }
 
 function renderMenu(authorize) {

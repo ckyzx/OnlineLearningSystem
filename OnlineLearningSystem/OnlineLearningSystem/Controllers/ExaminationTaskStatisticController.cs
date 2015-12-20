@@ -46,5 +46,30 @@ namespace OnlineLearningSystem.Controllers
             return Json(dtResponse, JsonRequestBehavior.DenyGet);
         }
 
+        //
+        // GET: /ExaminationTaskStatistic/ListUser
+
+        [Description("用户考试统计列表")]
+        public ActionResult ListUser()
+        {
+            return View();
+        }
+
+        //
+        // POST: /ExaminationTaskStatistic/ListUserDataTablesAjax
+
+        [Description("查询用户考试统计")]
+        public JsonResult ListUserDataTablesAjax(Int32 eptId)
+        {
+
+            DataTablesRequest dtRequest;
+            DataTablesResponse dtResponse;
+
+            dtRequest = GetDataTablesRequest();
+            dtResponse = um.ListUserDataTablesAjax(dtRequest, eptId);
+
+            return Json(dtResponse, JsonRequestBehavior.DenyGet);
+        }
+
     }
 }

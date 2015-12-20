@@ -11,7 +11,8 @@ RETURNS @table TABLE
     (
       ETS_TaskId INT ,
       ETS_TaskName VARCHAR(50) ,
-      ETS_Date DATETIME2 ,
+      ETS_PaperTemplateId INT,
+      ETS_PaperTemplateDate DATETIME2 ,
       ETS_AttendeeNumber INT ,
       ETS_PaperNumber INT ,
       ETS_PassNumber INT ,
@@ -23,7 +24,8 @@ AS
         INSERT  INTO @table
                 SELECT  et1.ET_Id AS ETS_TaskId ,
                         ET_Name AS ETS_TaskName ,
-                        EPT_StartDate AS ETS_Date ,
+                        EPT_Id AS ETS_PaperTemplateId,
+                        EPT_StartDate AS ETS_PaperTemplateDate ,
                         ( CASE WHEN LEN(ET_Attendee1) = 2 THEN 0
                                WHEN LEN(ET_Attendee1) > 2 THEN CASE WHEN LEN(ET_Attendee1) = 3 THEN 1
                                                                     ELSE LEN(REPLACE(ET_Attendee1, ',', '||')) - LEN(ET_Attendee1) + 1

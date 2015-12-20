@@ -49,7 +49,7 @@ AS
                                ELSE CASE WHEN et_ept.ET_StatisticType = 1 THEN CASE WHEN ep.EP_Score >= et_ept.ET_TotalScore * 0.6 THEN 2
                                                                                     ELSE 3
                                                                                END
-                                         WHEN et_ept.ET_StatisticType = 2 THEN CASE WHEN ep.EP_Score >= 60 THEN 3
+                                         WHEN et_ept.ET_StatisticType = 2 THEN CASE WHEN ep.EP_Score >= 60 THEN 2
                                                                                     ELSE 3
                                                                                END
                                          ELSE 0

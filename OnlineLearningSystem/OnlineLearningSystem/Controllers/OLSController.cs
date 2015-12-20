@@ -12,7 +12,7 @@ namespace OnlineLearningSystem.Controllers
     public class OLSController : Controller
     {
 
-        public OLSEntities olsEni = new OLSEntities();
+        protected OLSEntities olsEni = new OLSEntities();
 
         protected DataTablesRequest GetDataTablesRequest()
         {
@@ -24,7 +24,6 @@ namespace OnlineLearningSystem.Controllers
 
 
             dtRequest = new DataTablesRequest();
-
             dtRequest.Draw = Convert.ToInt32(Request["draw"]);
 
 

@@ -513,7 +513,7 @@ namespace OnlineLearningSystem.Utilities
 
             DataTablesResponse dtResponse;
             Int32 recordsTotal, recordsFiltered;
-            String whereSql, orderColumn, classfyName;
+            String classfyName;
             Object[] modelDatas;
             List<Question> ms;
 
@@ -524,22 +524,6 @@ namespace OnlineLearningSystem.Utilities
 
             recordsTotal = olsEni.Questions.Count();
             dtResponse.recordsTotal = recordsTotal;
-
-
-            //TODO:指定筛选条件
-            whereSql = "";
-            foreach (var col in dtRequest.Columns)
-            {
-
-                if ("" != col.Name)
-                {
-
-                    whereSql += col.Name + "||";
-                }
-            }
-
-            //TODO:指定排序列
-            orderColumn = dtRequest.Columns[dtRequest.OrderColumn].Name;
 
             modelDatas = GetModels(dtRequest, qcId, status);
             ms = (List<Question>)modelDatas[1];

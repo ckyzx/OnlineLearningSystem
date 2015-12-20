@@ -176,6 +176,31 @@ namespace OnlineLearningSystem.Utilities
 
         }
 
+        public string ExecuteSqlScalar(string sql, List<SqlParameter> sqlParameters)
+        {
+
+
+            object returnValue;
+
+
+            sqlConnection.Open();
+
+            sqlCommand = new SqlCommand(sql, sqlConnection);
+            sqlCommand.CommandType = CommandType.Text;
+            if (sqlParameters.Count != 0)
+            {
+                sqlCommand.Parameters.AddRange(sqlParameters.ToArray());
+            }
+            returnValue = sqlCommand.ExecuteScalar();
+            sqlCommand.Parameters.Clear();
+
+            sqlConnection.Close();
+
+
+            return returnValue == null ? null : returnValue.ToString();
+
+        }
+
         public string ExecuteSqlScalar(string sql, SqlParameter[] sqlParameters)
         {
 
@@ -373,29 +398,6 @@ namespace OnlineLearningSystem.Utilities
             return dt;
         }
 
-        public DataTable GetDataTableWithStart(string sql, int itemsPerPage, int startRecord)
-        {
-
-
-            DataSet ds = new DataSet();
-            DataTable dt = new DataTable();
-
-
-            sqlConnection.Open();
-
-            sqlCommand = new SqlCommand(sql, sqlConnection);
-            sqlDataAdapter = new SqlDataAdapter(sqlCommand);
-
-            sqlDataAdapter.Fill(ds, startRecord, itemsPerPage, "Table");
-            sqlCommand.Parameters.Clear();
-            dt = ds.Tables["Table"];
-
-            sqlConnection.Close();
-
-
-            return dt;
-        }
-
         public DataTable GetDataTable(string sql, SqlParameter sqlParameter, int itemsPerPage, int pagination)
         {
 
@@ -550,5 +552,60 @@ namespace OnlineLearningSystem.Utilities
 
             return dataTable.Rows[0];
         }
+
+        public DataTable GetDataTableWithStart(string sql, int itemsPerPage, int startRecord)
+        {
+
+
+            DataSet ds = new DataSet();
+            DataTable dt = new DataTable();
+
+
+            sqlConnection.Open();
+
+            sqlCommand = new SqlCommand(sql, sqlConnection);
+            sqlDataAdapter = new SqlDataAdapter(sqlCommand);
+
+            sqlDataAdapter.Fill(ds, startRecord, itemsPerPage, "Table");
+            sqlCommand.Parameters.Clear();
+            dt = ds.Tables["Table"];
+
+            sqlConnection.Close();
+
+
+            return dt;
+        }
+
+        public DataTable GetDataTableWithStart(string sql, List<SqlParameter> sqlParameters, int itemsPerPage, int startRecord)
+        {
+
+
+            DataSet ds;
+            DataTable dt;
+
+
+            ds = new DataSet();
+            dt = new DataTable();
+
+            sqlConnection.Open();
+
+            sqlCommand = new SqlCommand(sql, sqlConnection);
+            if (sqlParameters.Count != 0)
+            {
+                sqlCommand.Parameters.AddRange(sqlParameters.ToArray());
+            }
+            sqlDataAdapter = new SqlDataAdapter(sqlCommand);
+
+            sqlDataAdapter.Fill(ds, startRecord, itemsPerPage, "Table");
+            sqlCommand.Parameters.Clear();
+            dt = ds.Tables["Table"];
+
+            sqlConnection.Close();
+
+
+            return dt;
+
+        }
+
     }
 }

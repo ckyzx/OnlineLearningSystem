@@ -124,8 +124,7 @@ namespace OnlineLearningSystem.Utilities
             ets = olsEni
                 .ExaminationTasks
                 .Where(m => 
-                    m.ET_Status == (Byte)Status.Available
-                    && m.ET_Enabled == (Byte)ExaminationTaskStatus.Enabled)
+                    m.ET_Status == (Byte)Status.Available)
                 .ToList();
             foreach (var et in ets)
             {
@@ -685,7 +684,7 @@ namespace OnlineLearningSystem.Utilities
 
                     et = olsEni.ExaminationTasks.SingleOrDefault(m => m.ET_Id == ept.ET_Id);
 
-                    if (null == et || et.ET_Enabled != (Byte)ExaminationTaskStatus.Enabled)
+                    if (null == et)
                     {
                         continue;
                     }
