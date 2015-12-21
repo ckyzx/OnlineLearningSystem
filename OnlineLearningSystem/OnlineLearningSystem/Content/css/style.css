@@ -75,10 +75,13 @@ body.prompt{ min-width: 800px; }
 .question-list-container{ margin-left:200px; padding:20px; /* height: 100%; overflow: hidden; overflow-y: scroll; */ background-color:#FFF; }
 .question-table input.score{ height: 23px; font-size: 12px; text-align: right; }
 
-.dataTable tr.question-has-error{ background:#FFCCCC; }
-.dataTable tr.question-has-error td.sorting_1{ background-color: #FFCCCC; }
+.dataTable tr.even td{ background-color: #EEE; }
+.dataTable tr td.nowrap{ white-space:nowrap; }
+.dataTable tr.question-has-error td{ background-color:#FFCCCC; }
 .dataTable tr.question-has-error .select-box{ border:solid 1px #FFCCCC; }
-.table-bordered td span.ellipsis{ display:block; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; }
+.dataTable tr.hover td{ background-color: #DDD; }
+.dataTable tr td a:hover{ text-decoration:none; }
+.table-bordered tr td span.ellipsis{ display:block; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; }
 
 #RatioContainer{ height:28px; }
 #RatioContainer .ratio-item{ margin-right: 10px; padding: 2px 5px 5px 5px; border: 1px solid #CCC; }
@@ -90,7 +93,5 @@ body.prompt{ min-width: 800px; }
 #AutoOffsetDayContainer .offset-day-item .select-box, #StartTime .select{ margin-right:5px; padding: 0 3px; width: 50px; height: 24px; }
 #AutoOffsetDayContainer .offset-day-item .offset-day-num{ width: 40px; border: 0; }
 
-.table-sort tr.even td{ background-color: #EEE; }
-.table-sort tr.hover td{ background-color: #DDD; }
-.table-sort td.nowrap{ white-space:nowrap; }
-.table-sort a:hover{ text-decoration:none; }
+.validation-summary-errors{ color:red; }
+

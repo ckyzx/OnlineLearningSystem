@@ -141,8 +141,13 @@ namespace OnlineLearningSystem.Utilities
             return model;
         }
 
-        public Boolean Create(ExaminationTask model)
+        public ResponseJson Create(ExaminationTask model)
         {
+
+            ResponseJson resJson;
+
+            resJson = new ResponseJson(ResponseStatus.Success, now);
+
             try
             {
 
@@ -161,109 +166,169 @@ namespace OnlineLearningSystem.Utilities
                 // 添加试卷模板与试题模板
                 AddPaperTemplateAndQuestionTemplate(model);
 
-                return true;
+                return resJson;
             }
             catch (Exception ex)
             {
-
-                throw;
+                resJson.status = ResponseStatus.Error;
+                resJson.message = StaticHelper.GetExceptionMessage(ex);
+                return resJson;
             }
         }
 
         private void AddPaperTemplateAndQuestionTemplate(ExaminationTask model)
         {
 
-            DateTime now, etStartTime, eptStartTime, eptEndTime;
-            Int32 rowCount;
-            Int32 id, tmp;
-            ExaminationPaperTemplate ept;
-            Int32[] qs;
+            Int32 id, tmpId;
             Question q;
+            ExaminationPaperTemplate ept;
+            ExaminationPaperTemplateQuestion eptq;
+            List<ExaminationPaperTemplateQuestion> eptqs;
+            Int32[] qs;
 
-            now = DateTime.Now;
-
-            rowCount = olsEni.ExaminationPaperTemplates.Count();
-            id = 0 == rowCount ? 0 : olsEni.ExaminationPaperTemplates.Max(m => m.EPT_AutoId);
-
-            // 设置考试开始时间
-            etStartTime = model.ET_StartTime;
-            switch (model.ET_AutoType)
+            if ((Byte)AutoType.Manual != model.ET_AutoType)
             {
-                case 1: // 每日
-
-                    eptStartTime = new DateTime(now.Year, now.Month, now.Day, etStartTime.Hour, etStartTime.Minute, etStartTime.Second);
-                    eptEndTime = eptStartTime.AddDays(7); // 过期日设置在7天后
-                    break;
-                case 2: // 每周
-
-                    eptStartTime = new DateTime(now.Year, now.Month, now.Day, etStartTime.Hour, etStartTime.Minute, etStartTime.Second);
-                    eptStartTime = eptStartTime.AddDays(7 - (Int32)eptStartTime.DayOfWeek + model.ET_AutoOffsetDay);
-                    eptEndTime = eptStartTime.AddDays(7); // 过期日设置在7天后
-                    break;
-                case 3: // 每月
-
-                    eptStartTime = new DateTime(now.Year, now.Month, 1, etStartTime.Hour, etStartTime.Minute, etStartTime.Second);
-                    eptStartTime.AddMonths(1).AddDays(model.ET_AutoOffsetDay);
-                    eptEndTime = eptStartTime.AddDays(7); // 过期日设置在7天后
-                    break;
-                //case 0: // 手动
-                default:
-
-                    eptStartTime = new DateTime(1970, 1, 1);
-                    eptEndTime = eptStartTime;
-                    break;
+                return;
             }
+
+            id = olsEni.ExaminationPaperTemplates.Count();
+            id = 0 == id ? 1 : olsEni.ExaminationPaperTemplates.Max(m => m.EPT_AutoId) + 1;
 
             ept = new ExaminationPaperTemplate
             {
-                EPT_Id = id + 1,
+                EPT_Id = id,
                 ET_Id = model.ET_Id,
                 ET_Type = model.ET_Type,
-                EPT_StartTime = eptStartTime,
-                EPT_EndTime = eptEndTime,
+                EPT_StartDate = now.Date,
+                EPT_StartTime = now,
+                EPT_EndTime = now.AddMinutes(model.ET_TimeSpan),
                 EPT_TimeSpan = model.ET_TimeSpan,
                 EPT_Questions = model.ET_Questions,
                 EPT_AddTime = now,
                 EPT_Status = (Byte)Status.Available
             };
             olsEni.ExaminationPaperTemplates.Add(ept);
-            olsEni.SaveChanges();
 
             qs = JsonConvert.DeserializeObject<Int32[]>(model.ET_Questions);
+            eptqs = new List<ExaminationPaperTemplateQuestion>();
 
             // 获取试题模板Id
-            rowCount = olsEni.ExaminationPaperTemplateQuestions.Count();
-            id = 0 == rowCount ? 0 : olsEni.ExaminationPaperTemplateQuestions.Max(m => m.EPTQ_AutoId);
+            id = olsEni.ExaminationPaperTemplateQuestions.Count();
+            id = 0 == id ? 1 : olsEni.ExaminationPaperTemplateQuestions.Max(m => m.EPTQ_AutoId) + 1;
 
             for (var i = 0; i < qs.Length; i++)
             {
 
-                tmp = qs[i];
-                q = olsEni.Questions.SingleOrDefault(m => m.Q_Id == tmp);
+                tmpId = qs[i];
+                q = olsEni.Questions.SingleOrDefault(m => m.Q_Id == tmpId);
 
                 if (null != q)
                 {
 
-                    id += 1;
-
-                    olsEni.ExaminationPaperTemplateQuestions.Add(new ExaminationPaperTemplateQuestion
+                    eptq = new ExaminationPaperTemplateQuestion
                     {
                         EPTQ_Id = id,
                         EPT_Id = ept.EPT_Id,
                         EPTQ_Type = q.Q_Type,
                         EPTQ_Classify = q.QC_Id,
                         EPTQ_DifficultyCoefficient = q.Q_DifficultyCoefficient,
+                        EPTQ_Score = q.Q_Score,
                         EPTQ_Content = q.Q_Content,
                         EPTQ_OptionalAnswer = q.Q_OptionalAnswer,
                         EPTQ_ModelAnswer = q.Q_ModelAnswer,
                         EPTQ_Remark = q.Q_Remark,
                         EPTQ_AddTime = now,
                         EPTQ_Status = q.Q_Status
-                    });
+                    };
+
+                    eptqs.Add(eptq);
+
+                    id += 1;
                 }
             }
-            olsEni.SaveChanges();
 
+            eptqs = AdjustScore(eptqs, model.ET_StatisticType, model.ET_TotalScore);
+
+            if (0 == olsEni.SaveChanges())
+            {
+                throw new Exception(ResponseMessage.SaveChangeError);
+            }
+
+            foreach (var eptq1 in eptqs)
+            {
+                olsEni.Entry(eptq1).State = EntityState.Added;
+            }
+
+            if (0 == olsEni.SaveChanges())
+            {
+                throw new Exception(ResponseMessage.SaveChangeError);
+            }
+
+        }
+
+        private List<ExaminationPaperTemplateQuestion> AdjustScore(List<ExaminationPaperTemplateQuestion> eptqs, Byte statisticType, Int32 totalScore)
+        {
+
+            Int32 selectedScore, eptqScore, remainder;
+            Double ratio;
+
+            if (statisticType != (Byte)StatisticType.Score)
+            {
+                return eptqs;
+            }
+
+            // 选题数量必须 > 总分的1/10、<= 总分
+            if (eptqs.Count < totalScore / 10 || eptqs.Count > totalScore)
+            {
+                throw new Exception("选题总数不合理。");
+            }
+
+            selectedScore = eptqs.Sum(m => m.EPTQ_Score);
+
+            foreach (var eptq in eptqs)
+            {
+
+                eptqScore = eptq.EPTQ_Score;
+                ratio = Math.Round((Double)eptqScore / (Double)selectedScore, 2, MidpointRounding.AwayFromZero);
+                eptq.EPTQ_Score = (Int32)(ratio * totalScore);
+            }
+
+            // 调整分数（去除溢出/补足空缺）
+            selectedScore = eptqs.Sum(m => m.EPTQ_Score);
+            if (selectedScore > totalScore)
+            {
+                remainder = selectedScore - totalScore;
+                while (remainder > 0)
+                {
+                    foreach (var eptq in eptqs)
+                    {
+                        eptq.EPTQ_Score -= 1;
+                        remainder -= 1;
+                        if (0 == remainder)
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
+            else if (selectedScore < totalScore)
+            {
+                remainder = selectedScore - totalScore;
+                while (remainder < 0)
+                {
+                    foreach (var eptq in eptqs)
+                    {
+                        eptq.EPTQ_Score += 1;
+                        remainder += 1;
+                        if (0 == remainder)
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
+
+            return eptqs;
         }
 
         private void AddAttendees(ExaminationTask model)
@@ -441,10 +506,12 @@ namespace OnlineLearningSystem.Utilities
                     epts[0].EPT_PaperTemplateStatus = (Byte)etStatus;
                     if (ExaminationTaskStatus.Enabled == etStatus)
                     {
-                        epts[0].EPT_StartTime = DateTime.Now;
-                        epts[0].EPT_StartDate = DateTime.Now.Date;
+                        epts[0].EPT_StartTime = now;
+                        epts[0].EPT_StartDate = now.Date;
+                        epts[0].EPT_EndTime = now.AddMinutes(epts[0].EPT_TimeSpan);
                     }
-                    else if (ExaminationTaskStatus.Disabled == etStatus)
+                    else if (ExaminationTaskStatus.Disabled == etStatus 
+                        && epts[0].EPT_TimeSpan == 0)
                     {
                         epts[0].EPT_EndTime = DateTime.Now;
                     }

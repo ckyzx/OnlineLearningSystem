@@ -334,7 +334,9 @@ namespace OnlineLearningSystem.Utilities
 
                 qIds =
                     qs
-                    .Where(m => m.Q_Type == r.type)
+                    .Where(m =>
+                        m.Q_Type == r.type 
+                        && m.Q_Status == (Byte)Status.Available)
                     .Select(m => m.Q_Id)
                     .ToArray();
 
@@ -345,6 +347,7 @@ namespace OnlineLearningSystem.Utilities
 
                 maxValue = qIds.Length;
 
+                //随机选取试题，直至分数大于题型总分
                 while (tmpScore < typeScore)
                 {
 

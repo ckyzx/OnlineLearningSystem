@@ -15,10 +15,10 @@ $(function() {
     // 显示“试题缓存导入面板”
     if (4 == status) {
 
-        $('#QuestionImportPanel').show();
+        $('#QuestionImportPanel').removeClass('hide');
     } else {
 
-        $('#FunctionPanel').show();
+        $('#FunctionPanel').removeClass('hide');
     }
 
     jqTable = $('.question-table');

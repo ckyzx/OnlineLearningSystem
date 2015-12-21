@@ -161,6 +161,8 @@
     <Compile Include="ViewModels\VMUserModifyPassword.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\brower\360极速浏览器.exe" />
+    <Content Include="Content\brower\Internet Explorer 8.exe" />
     <Content Include="Content\css\H-ui.admin.css" />
     <Content Include="Content\css\H-ui.css" />
     <Content Include="Content\css\H-ui.login.css" />
@@ -173,6 +175,7 @@
     <Content Include="Content\html\prompt_redirect.htm" />
     <Content Include="Content\html\upgrade_brower.htm" />
     <Content Include="Content\html\test_swiper.htm" />
+    <Content Include="Content\images\switch_to_swift.png" />
     <Content Include="Content\js\custom-enum.js" />
     <Content Include="Content\js\custom-page-edit.js" />
     <Content Include="Content\js\custom-page.js" />
@@ -840,9 +843,7 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Content\brower\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="packages.config" />
   </ItemGroup>

@@ -4,7 +4,7 @@ USE OLS;
 
 GO
 
-/*UPDATE Departments SET D_Name = '新陂分局（大税源管理分局）' WHERE D_Name = '新陂分局（大税源管理分局） '
+UPDATE Departments SET D_Name = '新陂分局（大税源管理分局）' WHERE D_Name = '新陂分局（大税源管理分局） '
 
 GO
 
@@ -109,7 +109,7 @@ R_Permissions = '[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24
 R_PermissionCategories = '[1,2,3,4,5,6,7,8,9,10,11]'
 WHERE R_Id = 1
 
-GO*/
+GO
 
 -- 添加角色权限“用户考试统计列表”、“查询用户考试统计”
 SET IDENTITY_INSERT [dbo].[Permissions] ON

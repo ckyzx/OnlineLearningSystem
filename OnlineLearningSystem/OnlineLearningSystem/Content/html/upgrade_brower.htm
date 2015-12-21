@@ -17,10 +17,34 @@
 <script type="text/javascript" src="http://lib.h-ui.net/DD_belatedPNG_0.0.8a-min.js" ></script>
 <script>DD_belatedPNG.fix('*');</script>
 <![endif]-->
+<script type="text/javascript" src="/Content/lib/jquery/1.9.1/jquery.min.js"></script> 
+<script type="text/javascript" src="/Content/lib/layer/1.9.3/layer.js"></script> 
 <title>升级浏览器</title>
 <style>
 	.download{margin:0 auto;width:250px;}
+	.fz-14{font-size:14px;}
+	.container{padding:5px;}
+	.layui-layer-tips .layui-layer-content{line-height:1.2;}
+	.c3{color:#333;}
+	.bt1{margin-top:10px;padding-top:5px;border-top:1px dotted #DDD;}
 </style>
+<script type="text/javascript">
+
+	$(function(){
+
+		$('#tip').click(function(){
+
+			layer.tips(
+				'<div class="container">'+
+				'<span class="c3">请点击地址栏右侧小图标，<br />切换至“极速模式”</span><br />'+
+				'<img src="/Content/images/switch_to_swift.png" alt="" />'+
+				'</div>', this, {
+				tips: [2, '#EEE'],
+				area: '215px',
+	    		time: 60000});
+		});
+	});
+</script>
 </head>
 <body>
 <section class="page-404 minWP">
@@ -30,7 +54,11 @@
   	<br />
   	<a href="/Content/brower/360极速浏览器.exe" class="c-primary">下载 360极速浏览器</a>
   	<br />
-  	<a href="/Content/brower/Internet Explorer 8.exe" class="c-primary">下载 Internet Explorer 8</a></p>
+  	<a href="/Content/brower/Internet Explorer 8.exe" class="c-primary">下载 Internet Explorer 8</a>
+  </p>
+  <p class="error-info download bt1">已安装 360极速浏览器，仍不能访问？请点
+  	<a href="javascript:void(0);" id="tip" class="c-primary fz-14">这里</a>
+  </p>
 </section>
 </body>
 </html>

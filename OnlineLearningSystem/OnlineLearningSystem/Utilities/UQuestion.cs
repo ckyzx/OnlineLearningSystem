@@ -31,7 +31,7 @@ namespace OnlineLearningSystem.Utilities
                 List<DocxParagraph> docxPara;
                 const String qTypes = "单选题；多选题；判断题；公文改错题；计算题；案例分析题；问答题；";
                 DateTime now;
-                Regex typeRegex, contentRegex1, contentRegex2, optionalAnswerRegex, modelAnswerRegex, 
+                Regex typeRegex, contentRegex1, contentRegex2, optionalAnswerRegex, modelAnswerRegex,
                     difficultyCoefficientRegex, scoreRegex, digitRegex;
                 String text, qType, qClassify, qContent, qOptionalAnswer, qModelAnswer;
                 Int32 i1, i2, len, rowCount, id, id1, score;
@@ -114,7 +114,7 @@ namespace OnlineLearningSystem.Utilities
                                     Q_Type = qType,
                                     QC_Id = id1,
                                     Q_DifficultyCoefficient = difficultyCoefficient,
-                                    Q_Score = score,
+                                    Q_Score = SetDefaultScore(qType, score),
                                     Q_Content = qContent,
                                     Q_OptionalAnswer = qOptionalAnswer,
                                     Q_ModelAnswer = qModelAnswer,
@@ -153,7 +153,7 @@ namespace OnlineLearningSystem.Utilities
                                     Q_Type = qType,
                                     QC_Id = id1,
                                     Q_DifficultyCoefficient = difficultyCoefficient,
-                                    Q_Score = score,
+                                    Q_Score = SetDefaultScore(qType, score),
                                     Q_Content = qContent,
                                     Q_OptionalAnswer = qOptionalAnswer,
                                     Q_ModelAnswer = qModelAnswer,
@@ -396,7 +396,7 @@ namespace OnlineLearningSystem.Utilities
                         Q_Type = qType,
                         QC_Id = id1,
                         Q_DifficultyCoefficient = difficultyCoefficient,
-                        Q_Score = score,
+                        Q_Score = SetDefaultScore(qType, score),
                         Q_Content = qContent,
                         Q_OptionalAnswer = qOptionalAnswer,
                         Q_ModelAnswer = qModelAnswer,
@@ -450,6 +450,44 @@ namespace OnlineLearningSystem.Utilities
 
                 return dic;
             }
+        }
+
+        private Int32 SetDefaultScore(String qType, Int32 score)
+        {
+            if (0 != score)
+            {
+                return score;
+            }
+
+            switch (qType)
+            {
+                case "单选题":
+                    score = 5;
+                    break;
+                case "多选题":
+                    score = 8;
+                    break;
+                case "判断题":
+                    score = 5;
+                    break;
+                case "公文改错题":
+                    score = 10;
+                    break;
+                case "计算题":
+                    score = 20;
+                    break;
+                case "案例分析题":
+                    score = 25;
+                    break;
+                case "问答题":
+                    score = 15;
+                    break;
+                default:
+                    score = 0;
+                    break;
+            }
+
+            return score;
         }
 
         private String FormatOptionalAnswer(String qOptionalAnswer)

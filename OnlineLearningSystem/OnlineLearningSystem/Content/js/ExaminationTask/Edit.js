@@ -627,8 +627,11 @@ $(function() {
 
     function validateData() {
 
-        var errorSpan, etAutoType, container, etAutoClassifies, etAutoRatio, etQuestions, sdiContainer, etStartTime;
-        var autoType, autoClassifies, autoRatio, questions, startTime;
+        'use strict';
+
+        var errorSpan, etAutoType, container, etAutoClassifies, etAutoRatio, 
+            etQuestions, sdiContainer, etStartTime, etTotalScore, etStatisticType, etAutoNumber;
+        var autoType, autoClassifies, autoRatio, questions, qAry, startTime, totalScore, ratioNumber, statisticType, totalNumber;
         var acRegex, arRegex, qsRegex, stRegex, stRegex1;
         var valid;
 
@@ -638,6 +641,9 @@ $(function() {
         autoType = etAutoType.val();
 
         valid = true;
+
+        etTotalScore = $('#ET_TotalScore');
+        totalScore = parseInt(etTotalScore.val());
 
         // 自动任务
         if (0 != autoType) {
@@ -682,6 +688,25 @@ $(function() {
                 valid = false;
             }
 
+            // 限制出题比例 <= 100%
+            ratioNumber = 0;
+            autoRatio = JSON.parse(autoRatio);
+            for (var i = 0; i < autoRatio.length; i++) {
+                ratioNumber += autoRatio[i].percent;
+            }
+
+            if (ratioNumber > 1) {
+
+                $('<div class="custom-validation-error">' +
+                    '<div class="cl"></div>' +
+                    '<span class="field-validation-error">' +
+                    '<span htmlfor="ET_AutoRatio" generated="true" class="">出题比例必须小于100%</span>' +
+                    '</span>' +
+                    '<div>').appendTo(container);
+
+                valid = false;
+            }
+
             // 开始时间验证
             // 数据格式：1970/1/1 8:00:00
             stRegex = /^1970\/1\/1 (([0-9]{1})|(1{1}[0-9]{1})|(2{1}[0-3]{1})):[0-5]{1}[0-9]{0,1}:[0-5]{0,1}[0-9]{1}$/g;
@@ -702,7 +727,6 @@ $(function() {
 
                 valid = false;
             }
-
         } else { // 手动任务
 
             // 试题选择数据验证
@@ -712,6 +736,7 @@ $(function() {
             etQuestions = $('#ET_Questions');
             sdiContainer = $('.select-data-item');
             questions = etQuestions.val();
+            qAry = JSON.parse(questions);
 
             if (!qsRegex.test(questions)) {
 
@@ -726,8 +751,7 @@ $(function() {
             } else {
 
                 // 检查“已选试题数量”与“出题数量”是否一致
-                questions = JSON.parse(questions);
-                if ($('#ET_StatisticType').val() == 2 && questions.length != $('#ET_AutoNumber').val()) {
+                if ($('#ET_StatisticType').val() == 2 && qAry.length != $('#ET_AutoNumber').val()) {
 
                     $('<div class="custom-validation-error">' +
                         '<div class="cl"></div>' +
@@ -739,6 +763,48 @@ $(function() {
                     valid = false;
                 }
             }
+
+            // 限制选题数量
+            if (qAry.length < totalScore / 10 || qAry.length > totalScore) {
+
+                $('<div class="custom-validation-error">' +
+                    '<div class="cl"></div>' +
+                    '<span class="field-validation-error">' +
+                    '<span htmlfor="ET_TotalScore" generated="true" class="">已选试题数量与出题分数不合理</span>' +
+                    '</span>' +
+                    '<div>').appendTo(sdiContainer);
+
+                valid = false;
+            }
+        }
+
+        // 限制出题总分/出题总数为 10 的倍数
+        etStatisticType = $('#ET_StatisticType');
+        etAutoNumber = $('#ET_AutoNumber');
+
+        statisticType = etStatisticType.val();
+        totalNumber = parseInt(etAutoNumber.val());
+
+        if (1 == statisticType && totalScore % 10 != 0) {
+
+            $('<div class="custom-validation-error">' +
+                '<div class="cl"></div>' +
+                '<span class="field-validation-error">' +
+                '<span htmlfor="ET_TotalScore" generated="true" class="">出题总分必须为10的倍数</span>' +
+                '</span>' +
+                '<div>').appendTo(etTotalScore.parent());
+
+            valid = false;
+        }else if(2 == statisticType && totalNumber % 10 != 0){
+
+            $('<div class="custom-validation-error">' +
+                '<div class="cl"></div>' +
+                '<span class="field-validation-error">' +
+                '<span htmlfor="ET_AutoNumber" generated="true" class="">出题总数必须为10的倍数</span>' +
+                '</span>' +
+                '<div>').appendTo(etAutoNumber.parent());
+
+            valid = false;
         }
 
         return valid;

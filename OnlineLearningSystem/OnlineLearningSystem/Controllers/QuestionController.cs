@@ -29,7 +29,7 @@ namespace OnlineLearningSystem.Controllers
         public ActionResult List(Byte status = 1)
         {
 
-            ViewBag.QuestionClassifies = new UQuestionClassify().GetZTreeJson(status);
+            ViewBag.QuestionClassifies = new UQuestionClassify().GetZTreeJson(Status.Unset);
 
             return View();
         }

@@ -255,7 +255,19 @@ namespace OnlineLearningSystem.Utilities
             List<QuestionClassify> qcs;
             StringBuilder zTreeJson;
 
-            qcs = olsEni.QuestionClassifies.Where(m => m.QC_Status == status).ToList();
+            if (status == (Byte)Status.Unset)
+            {
+                qcs = olsEni
+                    .QuestionClassifies
+                    .Where(m => 
+                        m.QC_Status != (Byte)Status.Recycle 
+                        && m.QC_Status != (Byte)Status.Delete)
+                    .ToList();
+            }
+            else
+            {
+                qcs = olsEni.QuestionClassifies.Where(m => m.QC_Status == status).ToList();
+            }
 
             zTreeJson = new StringBuilder();
             zTreeJson.Append("[");
