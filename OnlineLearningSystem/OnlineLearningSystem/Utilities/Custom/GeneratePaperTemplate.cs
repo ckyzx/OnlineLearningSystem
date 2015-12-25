@@ -30,7 +30,8 @@ namespace OnlineLearningSystem.Utilities
                     .ExaminationTasks
                     .Where(m =>
                         m.ET_AutoType != (Byte)AutoType.Manual
-                        && m.ET_Enabled == (Byte)ExaminationTaskStatus.Enabled)
+                        && m.ET_Enabled == (Byte)ExaminationTaskStatus.Enabled
+                        && m.ET_Status == (Byte)Status.Available)
                     .ToList();
 
                 nowDate = now.Date;
@@ -81,8 +82,18 @@ namespace OnlineLearningSystem.Utilities
 
             Int32 eptCount, dayOfWeek, dayOfMonth;
             Boolean whether;
+            DateTime startTime;
 
             whether = true;
+
+            startTime = et.ET_StartTime;
+            startTime = new DateTime(nowDate.Year, nowDate.Month, nowDate.Day, startTime.Hour, startTime.Minute, startTime.Second);
+
+            // 当前时间已超过开始时间
+            if (now > startTime)
+            {
+                return false;
+            }
 
             switch (et.ET_AutoType)
             {
@@ -138,7 +149,7 @@ namespace OnlineLearningSystem.Utilities
         {
 
             Byte statisticType;
-
+            
             statisticType = et.ET_StatisticType;
 
             if ((Byte)StatisticType.Score == statisticType)
@@ -315,7 +326,7 @@ namespace OnlineLearningSystem.Utilities
         private List<Question> SelectQuestionsWithScore(List<AutoRatio> ratios, Int32 totalScore, List<Question> qs)
         {
 
-            Int32 typeScore, tmpScore, maxValue, qId;
+            Int32 typeScore, tmpScore, overflowScore, maxValue, qId;
             Random random;
             Question q;
             Int32[] qIds;
@@ -323,6 +334,7 @@ namespace OnlineLearningSystem.Utilities
 
             random = new Random((Int32)DateTime.Now.Ticks);
             readyQs = new List<Question>();
+            overflowScore = 0;
 
             foreach (var r in ratios)
             {
@@ -362,7 +374,7 @@ namespace OnlineLearningSystem.Utilities
                     }
                 }
 
-                if (tmpScore - typeScore > typeScore)
+                /*if (tmpScore - typeScore > typeScore)
                 {
                     throw new Exception("“" + r.type + "”溢出分数大于题型总分。");
                 }
@@ -395,9 +407,32 @@ namespace OnlineLearningSystem.Utilities
                             }
                         }
                     }
-                }
+                }*/
+
+                overflowScore += tmpScore - typeScore;
 
                 readyQs.AddRange(tmpQs);
+            }
+
+            if (overflowScore - readyQs.Select(m => m.Q_Score).Sum() >= readyQs.Count)
+            {
+                throw new Exception("无法减去溢出分数。");
+            }
+
+            while (0 != overflowScore)
+            {
+                foreach (var q1 in readyQs)
+                {
+                    if (q1.Q_Score > 1)
+                    {
+                        q1.Q_Score = q1.Q_Score - 1;
+                        overflowScore -= 1;
+                    }
+                    if (0 == overflowScore)
+                    {
+                        break;
+                    }
+                }
             }
 
             return readyQs;
@@ -417,7 +452,7 @@ namespace OnlineLearningSystem.Utilities
             qs = GetQuestions(classifies, diffCoef, true);
             optionTotalNumber = GetTotalNumber(qs);
 
-            totalNumber = et.ET_AutoNumber;
+            totalNumber = et.ET_TotalNumber;
 
             // “备选试题总数”必须大于“出题总数”，才能保证有足够试题可供选择
             if (optionTotalNumber > totalNumber)

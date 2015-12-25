@@ -59,6 +59,7 @@ namespace OnlineLearningSystem.Controllers
 
             m = um.GetNew();
             ViewBag.DepartmentsAndUsers = new UDepartment().GetDepartmentsAndUsersZTreeJson();
+            ViewBag.QuestionClassifies = new UQuestionClassify().GetZTreeJson(Status.Available);
 
             return View(m);
         }
@@ -81,6 +82,7 @@ namespace OnlineLearningSystem.Controllers
             }
 
             ViewBag.DepartmentsAndUsers = new UDepartment().GetDepartmentsAndUsersZTreeJson();
+            ViewBag.QuestionClassifies = new UQuestionClassify().GetZTreeJson(Status.Available);
 
             return View(m);
         }
@@ -97,6 +99,7 @@ namespace OnlineLearningSystem.Controllers
 
             m = um.Get(id);
             ViewBag.DepartmentsAndUsers = new UDepartment().GetDepartmentsAndUsersZTreeJson();
+            ViewBag.QuestionClassifies = new UQuestionClassify().GetZTreeJson(Status.Available);
 
             return View(m);
         }
@@ -119,6 +122,7 @@ namespace OnlineLearningSystem.Controllers
             }
 
             ViewBag.DepartmentsAndUsers = new UDepartment().GetDepartmentsAndUsersZTreeJson();
+            ViewBag.QuestionClassifies = new UQuestionClassify().GetZTreeJson(Status.Available);
 
             return View(m);
         }
@@ -163,6 +167,20 @@ namespace OnlineLearningSystem.Controllers
             resJson = um.Delete(id);
 
             return Json(resJson, JsonRequestBehavior.AllowGet);
+        }
+
+        //
+        // GET: /ExaminationTaskTemplate/DuplicateName
+
+        [Description("检查考试任务模板名称")]
+        public JsonResult DuplicateName(Int32 ETT_Id, String ETT_Name)
+        {
+
+            Boolean matching;
+
+            matching = um.DuplicateName(ETT_Id, ETT_Name);
+
+            return Json(!matching, JsonRequestBehavior.AllowGet);
         }
 
     }

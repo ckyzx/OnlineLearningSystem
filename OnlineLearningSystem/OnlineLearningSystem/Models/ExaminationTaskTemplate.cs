@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Web.Mvc;
 
 namespace OnlineLearningSystem.Models
 {
@@ -17,33 +18,60 @@ namespace OnlineLearningSystem.Models
 
         [DisplayName("名称")]
         [Required(ErrorMessage="请输入{0}")]
+        [Remote("DuplicateName", "ExaminationTaskTemplate", ErrorMessage = "名称已存在", AdditionalFields = "ETT_Id")]
+        [RegularExpression(@"^[\u4E00-\u9FA5\uF900-\uFA2D]{1}[\u4E00-\u9FA5\uF900-\uFA2D0-9]{1,11}$", ErrorMessage = "请输入2至12位，中文开头的字符，可带数字")]
         public String ETT_Name { get; set; }
 
         [DisplayName("任务类型")]
         [Required(ErrorMessage = "请选择{0}")]
         public Byte ETT_Type { get; set; }
 
-        [DisplayName("出题方式")]
+        [DisplayName("参与部门")]
+        [RegularExpression(@"^\[(\d+,{0,1}\s*)+\]$", ErrorMessage = "请选择参与部门")]
+        public String ETT_ParticipatingDepartment { get; set; }
+
+        [DisplayName("参与人员")]
+        [RegularExpression(@"^\[(\d+,{0,1}\s*)+\]$", ErrorMessage = "请选择参与人员")]
+        public String ETT_Attendee { get; set; }
+
+        [DisplayName("成绩计算")]
         [Required(ErrorMessage = "请选择{0}")]
-        public Byte ETT_Mode { get; set; }
+        [Range(1, 2, ErrorMessage = "请选择{0}")]
+        public Byte ETT_StatisticType { get; set; }
+
+        [DisplayName("出题总分")]
+        [Required(ErrorMessage = "请输入{0}")]
+        [Range(100, 1000, ErrorMessage = "请输入大于100且小于1000的整数")]
+        public Int32 ETT_TotalScore { get; set; }
+
+        [DisplayName("出题数量")]
+        [Required(ErrorMessage = "请输入{0}")]
+        [Range(10, 1000, ErrorMessage = "请输入大于10且小于1000的整数")]
+        public Int32 ETT_TotalNumber { get; set; }
 
         [DisplayName("出题难度")]
         [Required(ErrorMessage = "请输入{0}")]
         public Byte ETT_DifficultyCoefficient { get; set; }
 
-        [DisplayName("参与部门")]
-        public String ETT_ParticipatingDepartment { get; set; }
-
-        [DisplayName("参与人员")]
-        public String ETT_Attendee { get; set; }
+        [DisplayName("出题方式")]
+        [Required(ErrorMessage = "请选择{0}")]
+        public Byte ETT_Mode { get; set; }
 
         [DisplayName("自动类型")]
         [Required(ErrorMessage = "请选择{0}")]
         public Byte ETT_AutoType { get; set; }
 
-        [DisplayName("自动偏移日")]
+        [DisplayName("考试日期")]
         [Required(ErrorMessage = "请输入{0}")]
         public Byte ETT_AutoOffsetDay { get; set; }
+
+        [DisplayName("出题分类")]
+        [Required(ErrorMessage = "请选择{0}")]
+        public String ETT_AutoClassifies { get; set; }
+
+        [DisplayName("出题比例")]
+        [Required(ErrorMessage = "请输入{0}")]
+        public String ETT_AutoRatio { get; set; }
 
         [DisplayName("开始时间")]
         [DataType(DataType.DateTime)]
@@ -53,7 +81,7 @@ namespace OnlineLearningSystem.Models
         [DataType(DataType.DateTime)]
         public DateTime ETT_EndTime { get; set; }
 
-        [DisplayName("时长")]
+        [DisplayName("考试时长")]
         [Required(ErrorMessage = "请输入{0}")]
         public Int32 ETT_TimeSpan { get; set; }
 

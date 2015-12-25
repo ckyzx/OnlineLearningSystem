@@ -47,7 +47,7 @@
         var index;
 
         index = layer.load(0, {
-            shade: [0.3, '#FFF']
+            shade: [0.6, '#FFF']
         });
 
         $.post('/User/Login', {

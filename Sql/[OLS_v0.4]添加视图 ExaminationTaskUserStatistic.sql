@@ -11,3 +11,5 @@ CREATE VIEW ExaminationTaskUserStatistic
 AS
     SELECT  *
     FROM    dbo.fn_GetExaminationTaskUserStatistic()
+
+GO

@@ -19,6 +19,7 @@ namespace OnlineLearningSystem.Utilities
             {
 
                 Boolean changed;
+                ExaminationTask et;
                 List<ExaminationPaperTemplate> epts;
 
                 changed = false;
@@ -35,6 +36,12 @@ namespace OnlineLearningSystem.Utilities
                 foreach (var ept in epts)
                 {
 
+                    et = olsEni.ExaminationTasks.SingleOrDefault(m => m.ET_Id == ept.ET_Id);
+                    if ((Byte)ExaminationTaskStatus.Enabled != et.ET_Enabled)
+                    {
+                        continue;
+                    }
+
                     if (ept.EPT_PaperTemplateStatus == (Byte)PaperTemplateStatus.Undone
                         && now > ept.EPT_StartTime)
                     {
@@ -45,7 +52,14 @@ namespace OnlineLearningSystem.Utilities
                         && ept.EPT_TimeSpan != 0
                         && now > ept.EPT_EndTime)
                     {
+
                         ept.EPT_PaperTemplateStatus = (Byte)PaperTemplateStatus.Done;
+
+                        if ((Byte)AutoType.Manual == et.ET_AutoType)
+                        {
+                            et.ET_Enabled = (Byte)ExaminationTaskStatus.Disabled;
+                        }
+
                         changed = true;
                     }
                 }

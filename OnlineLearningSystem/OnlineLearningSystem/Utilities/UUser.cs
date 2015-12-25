@@ -158,10 +158,11 @@ namespace OnlineLearningSystem.Utilities
 
             model = new VMUser()
             {
+                U_Id = 0,
                 Du_Id = 0,
                 Du_Name = "",
                 U_Name = "",
-                U_LoginName = "",
+                U_LoginName = "LoginName0",
                 U_Password = "",
                 U_RePassword = "",
                 U_Departments = "[]",
@@ -231,7 +232,7 @@ namespace OnlineLearningSystem.Utilities
                     U_Id = uId,
                     Du_Id = vmModel.Du_Id,
                     U_Name = vmModel.U_Name,
-                    U_LoginName = vmModel.U_LoginName,
+                    U_LoginName = "LoginName" + uId,
                     U_Password = EncryptPassword(vmModel.U_Password),
                     U_Departments = vmModel.U_Departments,
                     U_Roles = vmModel.U_Roles,

@@ -36,29 +36,53 @@ $(function() {
         $('#ET_Template').on('change', function() {
 
             var select, template, departmentIds, userIds;
-            var ztree;
+            var ztree, nodes, autoClassifies;
 
             select = $(this);
             template = select.val();
+
+            if ('' == template) {
+                return;
+            }
+
             template = $.parseJSON(template);
 
             $('#ET_Type').val(template.ETT_Type);
-            $('#ET_Mode').val(template.ETT_Mode);
-            $('#ET_DifficultyCoefficient').val(template.ETT_DifficultyCoefficient);
             $('#ET_ParticipatingDepartment').val(template.ETT_ParticipatingDepartment);
             $('#ET_Attendee').val(template.ETT_Attendee);
-            $('#ET_AutoType').val(template.ETT_AutoType);
-            $('#ET_StartTime').val(template.ETT_StartTime);
+            $('#ET_StatisticType').val(template.ETT_StatisticType).change();
+            $('#ET_TotalScore').val(template.ETT_TotalScore);
+            $('#ET_TotalNumber').val(template.ETT_TotalNumber)
+            $('#ET_Mode').val(template.ETT_Mode).change();
+            $('#ET_AutoType').val(template.ETT_AutoType).change();
+            //$('#ET_AutoOffsetDay').val(template.ETT_AutoOffsetDay);
+            $('#AutoOffsetDayContainer .offset-day-num').val(template.ETT_AutoOffsetDay).change();
+            $('#ET_DifficultyCoefficient').val(template.ETT_DifficultyCoefficient);
+            $('#ET_AutoClassifies').val(template.ETT_AutoClassifies);
+            $('#ET_AutoRatio').val(template.ETT_AutoRatio);
+            $('#ET_StartTime').val(template.ETT_StartTime.toDate().format('yyyy/M/d hh:mm:ss'));
             $('#ET_EndTime').val(template.ETT_EndTime);
             $('#ET_TimeSpan').val(template.ETT_TimeSpan);
 
             departmentIds = $.parseJSON(template.ETT_ParticipatingDepartment);
             userIds = $.parseJSON(template.ETT_Attendee);
 
-            // 设置节点选中
-            ztree = $.fn.zTree.getZTreeObj("DepartmentsAndUsers");
+            // 设置参与人员
+            ztree = $.fn.zTree.getZTreeObj('DepartmentsAndUsers');
             nodes = ztree.getNodes();
             setDepartmentsAndUsersNodeChecked(ztree, nodes, departmentIds, userIds);
+
+            // 设置自动出题分类
+            ztree = $.fn.zTree.getZTreeObj('QuestionClassifies');
+            nodes = ztree.getNodes();
+            autoClassifies = JSON.parse(template.ETT_AutoClassifies);
+            setQuestionClassifiesNodeChecked(ztree, nodes, autoClassifies);
+
+            // 设置出题比例
+            setAutoRatio($('#RatioContainer'), JSON.parse(template.ETT_AutoRatio));
+
+            // 设置开始时间
+            setStartTime();
         });
     }
 
@@ -66,16 +90,16 @@ $(function() {
 
         $('#ET_StatisticType').on('change', function() {
 
-            var select, etTotalScore, etAutoNumber, tsContainer, anContainer;
+            var select, etTotalScore, etTotalNumber, tsContainer, anContainer;
             var type;
 
             select = $(this);
             type = parseInt(select.val());
 
             etTotalScore = $('#ET_TotalScore');
-            etAutoNumber = $('#ET_AutoNumber');
+            etTotalNumber = $('#ET_TotalNumber');
             tsContainer = etTotalScore.parentsUntil('form').last();
-            anContainer = etAutoNumber.parentsUntil('form').last();
+            anContainer = etTotalNumber.parentsUntil('form').last();
 
             switch (type) {
                 case 0:
@@ -256,7 +280,9 @@ $(function() {
 
         etAutoType.change();
 
-        $('#AutoOffsetDayContainer select.offset-day-num').val(etAutoOffsetDay.attr('data-origin-value'));
+        $('#AutoOffsetDayContainer select.offset-day-num')
+            .val(etAutoOffsetDay.attr('data-origin-value'))
+            .change();
     }
 
     function renderQuestionList() {
@@ -300,8 +326,10 @@ $(function() {
     function setDepartmentsAndUsersNodeChecked(ztree, nodes, departmentIds, userIds) {
 
         var checkedCount, checked;
+        var now;
 
         checkedCount = 0;
+        now = undefined == now ? (new Date()).format('yyyy-MM-dd hh:mm:ss.S') : now;
         for (var i = 0; i < nodes.length; i++) {
 
             for (var i1 = 0; i1 < userIds.length; i1++) {
@@ -311,7 +339,11 @@ $(function() {
                     if (departmentIds[i2] == nodes[i].departmentId && userIds[i1] == nodes[i].userId) {
 
                         ztree.checkNode(nodes[i], true, true);
+                        nodes[i].now = now;
                         checkedCount += 1;
+                    }else if(nodes[i].now != now){
+
+                        ztree.checkNode(nodes[i], false, true);
                     }
                 }
             }
@@ -389,24 +421,30 @@ $(function() {
         setQuestionClassifiesNodeChecked(qcZtree, nodes, autoClassifies);
     }
 
-    function setQuestionClassifiesNodeChecked(ztree, nodes, autoClassifies) {
+    function setQuestionClassifiesNodeChecked(ztree, nodes, autoClassifies, now) {
 
         var checkedCount, checked;
+        var now;
 
         checkedCount = 0;
+        now = undefined == now ? (new Date()).format('yyyy-MM-dd hh:mm:ss.S') : now;
         for (var i = 0; i < nodes.length; i++) {
             for (var i1 = 0; i1 < autoClassifies.length; i1++) {
 
                 if (nodes[i].name == autoClassifies[i1]) {
 
                     ztree.checkNode(nodes[i], true, true);
+                    nodes[i].now = now;
                     checkedCount += 1;
+                }else if(nodes[i].now != now){
+
+                    ztree.checkNode(nodes[i], false, true);
                 }
             }
 
             if (nodes[i].children != undefined) {
 
-                checked = setQuestionClassifiesNodeChecked(ztree, nodes[i].children, autoClassifies);
+                checked = setQuestionClassifiesNodeChecked(ztree, nodes[i].children, autoClassifies, now);
                 if (checked) {
                     ztree.checkNode(nodes[i], true, true);
                 }
@@ -449,7 +487,7 @@ $(function() {
 
     function renderAutoRatio() {
 
-        var rs, r, p;
+        var rs;
         var container;
 
         rs = $('#ET_AutoRatio').val();
@@ -457,17 +495,7 @@ $(function() {
 
         container = $('#RatioContainer');
 
-        for (var i = 0; i < rs.length; i++) {
-
-            r = rs[i];
-            p = r.percent * 100;
-
-            $('<span class="ratio-item">' +
-                '<span class="ratio-type">' + r.type + '</span>' +
-                '<input type="text" class="input-text ratio-percent" value="' + p + '" data-origin-val="' + p + '" />%' +
-                '</span>').appendTo(container);
-
-        }
+        setAutoRatio(container, rs);
 
         container.on('change', 'input.ratio-percent', function() {
 
@@ -486,6 +514,24 @@ $(function() {
             ratio = parseInt(ratio);
             input.val(ratio);
         });
+    }
+
+    function setAutoRatio(ratioContainer, rs) {
+
+        var r, p;
+
+        ratioContainer.html('');
+        for (var i = 0; i < rs.length; i++) {
+
+            r = rs[i];
+            p = r.percent * 100;
+
+            $('<span class="ratio-item">' +
+                '<span class="ratio-type">' + r.type + '</span>' +
+                '<input type="text" class="input-text ratio-percent" value="' + p + '" data-origin-val="' + p + '" />%' +
+                '</span>').appendTo(ratioContainer);
+
+        }
     }
 
     function getOriginRatios() {
@@ -561,6 +607,11 @@ $(function() {
             });
 
         // 设置时间
+        setStartTime();
+    }
+
+    function setStartTime() {
+
         $('body').everyTime('1s', 'SetHour', function() {
 
             var startTimeDiv, hourcombo, mincombo, seccombo;
@@ -568,18 +619,20 @@ $(function() {
 
             startTimeDiv = $('#StartTime');
             hourcombo = startTimeDiv.find('select.hourcombo');
+            mincombo = startTimeDiv.find('select.mincombo');
+            seccombo = startTimeDiv.find('select.seccombo');
+            hourcombo.addClass('select');
+            mincombo.addClass('select');
+            seccombo.addClass('select');
 
             if (hourcombo.length > 0) {
 
                 startTime = $('#ET_StartTime').val();
                 startTime = startTime.toDate();
 
-                mincombo = startTimeDiv.find('select.mincombo');
-                seccombo = startTimeDiv.find('select.seccombo');
-
-                hourcombo.addClass('select').val(startTime.getHours())
-                mincombo.addClass('select').val(startTime.getMinutes());
-                seccombo.addClass('select').val(startTime.getSeconds())
+                hourcombo.val(startTime.getHours())
+                mincombo.val(startTime.getMinutes());
+                seccombo.val(startTime.getSeconds())
 
                 $('body').stopTime('SetHour');
             }
@@ -627,10 +680,8 @@ $(function() {
 
     function validateData() {
 
-        'use strict';
-
-        var errorSpan, etAutoType, container, etAutoClassifies, etAutoRatio, 
-            etQuestions, sdiContainer, etStartTime, etTotalScore, etStatisticType, etAutoNumber;
+        var errorSpan, etAutoType, container, etAutoClassifies, etAutoRatio,
+            etQuestions, sdiContainer, etStartTime, etTotalScore, etStatisticType, etTotalNumber;
         var autoType, autoClassifies, autoRatio, questions, qAry, startTime, totalScore, ratioNumber, statisticType, totalNumber;
         var acRegex, arRegex, qsRegex, stRegex, stRegex1;
         var valid;
@@ -727,13 +778,17 @@ $(function() {
 
                 valid = false;
             }
-        } else { // 手动任务
+        }
+
+        // 手动任务
+        etQuestions = $('#ETT_Questions');
+        if (0 == autoType && etQuestions.length != 0) {
 
             // 试题选择数据验证
             // 数据格式：[1, 2, ...]
             qsRegex = /^\[((\d+)|("{1}\d+"{1}),?\s*)+\]$/g;
 
-            etQuestions = $('#ET_Questions');
+
             sdiContainer = $('.select-data-item');
             questions = etQuestions.val();
             qAry = JSON.parse(questions);
@@ -743,7 +798,7 @@ $(function() {
                 $('<div class="custom-validation-error">' +
                     '<div class="cl"></div>' +
                     '<span class="field-validation-error">' +
-                    '<span htmlfor="ET_Questions" generated="true" class="">请选择试题</span>' +
+                    '<span htmlfor="ETT_Questions" generated="true" class="">请选择试题</span>' +
                     '</span>' +
                     '<div>').appendTo(sdiContainer);
 
@@ -751,12 +806,12 @@ $(function() {
             } else {
 
                 // 检查“已选试题数量”与“出题数量”是否一致
-                if ($('#ET_StatisticType').val() == 2 && qAry.length != $('#ET_AutoNumber').val()) {
+                if ($('#ETT_StatisticType').val() == 2 && qAry.length != $('#ETT_TotalNumber').val()) {
 
                     $('<div class="custom-validation-error">' +
                         '<div class="cl"></div>' +
                         '<span class="field-validation-error">' +
-                        '<span htmlfor="ET_Questions" generated="true" class="">已选试题数量与出题数量不一致</span>' +
+                        '<span htmlfor="ETT_Questions" generated="true" class="">已选试题数量与出题数量不一致</span>' +
                         '</span>' +
                         '<div>').appendTo(sdiContainer);
 
@@ -770,7 +825,7 @@ $(function() {
                 $('<div class="custom-validation-error">' +
                     '<div class="cl"></div>' +
                     '<span class="field-validation-error">' +
-                    '<span htmlfor="ET_TotalScore" generated="true" class="">已选试题数量与出题分数不合理</span>' +
+                    '<span htmlfor="ETT_TotalScore" generated="true" class="">已选试题数量与出题分数不合理</span>' +
                     '</span>' +
                     '<div>').appendTo(sdiContainer);
 
@@ -780,10 +835,10 @@ $(function() {
 
         // 限制出题总分/出题总数为 10 的倍数
         etStatisticType = $('#ET_StatisticType');
-        etAutoNumber = $('#ET_AutoNumber');
+        etTotalNumber = $('#ET_TotalNumber');
 
         statisticType = etStatisticType.val();
-        totalNumber = parseInt(etAutoNumber.val());
+        totalNumber = parseInt(etTotalNumber.val());
 
         if (1 == statisticType && totalScore % 10 != 0) {
 
@@ -795,14 +850,14 @@ $(function() {
                 '<div>').appendTo(etTotalScore.parent());
 
             valid = false;
-        }else if(2 == statisticType && totalNumber % 10 != 0){
+        } else if (2 == statisticType && totalNumber % 10 != 0) {
 
             $('<div class="custom-validation-error">' +
                 '<div class="cl"></div>' +
                 '<span class="field-validation-error">' +
-                '<span htmlfor="ET_AutoNumber" generated="true" class="">出题总数必须为10的倍数</span>' +
+                '<span htmlfor="ET_TotalNumber" generated="true" class="">出题总数必须为10的倍数</span>' +
                 '</span>' +
-                '<div>').appendTo(etAutoNumber.parent());
+                '<div>').appendTo(etTotalNumber.parent());
 
             valid = false;
         }

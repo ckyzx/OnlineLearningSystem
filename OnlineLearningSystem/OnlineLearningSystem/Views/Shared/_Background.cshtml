@@ -46,7 +46,7 @@
 <!--<link href="css/H-ui.min.css" rel="stylesheet" type="text/css" />-->
 <link href="@Url.Content("~/Content/css/H-ui.css")" rel="stylesheet" type="text/css" />
 <link href="@Url.Content("~/Content/css/H-ui.admin.css")" rel="stylesheet" type="text/css" />
-<link href="@Url.Content("~/Content/skin/default/skin.css")" rel="stylesheet" type="text/css" id="skin" />
+<link href="@Url.Content("~/Content/skin/blue/skin.css")" rel="stylesheet" type="text/css" id="skin" />
 <link href="@Url.Content("~/Content/lib/Hui-iconfont/1.0.1/iconfont.css")" rel="stylesheet" type="text/css" />
 <link href="@Url.Content("~/Content/css/style.css")" rel="stylesheet" type="text/css" />
 <!--[if IE 6]>
@@ -59,8 +59,9 @@
 </head>
 <body>
 <header class="Hui-header cl">
-    <a class="Hui-logo l" title="在线学习系统" href="/">在线学习系统</a>
-    <span class="Hui-subtitle l">v0.4</span>
+    <a class="Hui-logo l" href="/"><img src="/Content/images/logo.png" alt="" />
+    <span class="Hui-subtitle">在线学习系统 V1.0</span>
+    </a>
 	<nav class="mainnav cl" id="Hui-nav">
 		<ul>
             <li class="dropDown dropDown_hover"><a _href="/Panel/Index" href="javascript:void(0);" class="dropDown_A desktop">我的桌面</a></li>
@@ -70,10 +71,10 @@
 		<li id="User" 
             user-name="@u.U_Name" 
             department-Names="@departmentNames" 
-            permissions="@permissions">@u.U_Name&nbsp;&nbsp;@departmentNames</li>
-		<li class="dropDown dropDown_hover"><a href="javascript:void(0);" class="dropDown_A">@u.U_LoginName<i class="Hui-iconfont">&#xe6d5;</i></a>
+            permissions="@permissions">@u.U_Name&nbsp;&nbsp;@departmentNames </li>
+		<li class="dropDown dropDown_hover"><a href="javascript:void(0);" class="dropDown_A">@u.U_LoginName <i class="Hui-iconfont">&#xe6d5;</i></a>
 			<ul class="dropDown-menu radius box-shadow">
-				<li><a href="javascript:void(0);" class="show-page" title="修改密码" url="/User/ModifyPassword" width="500" height="400">修改密码</a></li>
+				<li><a href="javascript:void(0);" class="show-page" title="修改密码" url="/User/ModifyPassword">修改密码</a></li>
 				<!--li><a href="javascript:void(0);">个人信息</a></li-->
 				<li><a href="javascript:void(0);" id="Logout">退出</a></li>
 			</ul>
@@ -81,7 +82,8 @@
 		<!--li id="Hui-msg">
             <a href="javascript:void(0);" title="消息"><span class="badge badge-danger">1</span><i class="Hui-iconfont" style="font-size:18px">&#xe68a;</i></a>
         </li-->
-		<li id="Hui-skin" class="dropDown right dropDown_hover"><a href="javascript:void(0);" title="换肤"><i class="Hui-iconfont" style="font-size:18px">&#xe62a;</i></a>
+		<!--li id="Hui-skin" class="dropDown right dropDown_hover">
+            <a href="javascript:void(0);" title="换肤"><i class="Hui-iconfont" style="font-size:18px">&#xe62a;</i></a>
 			<ul class="dropDown-menu radius box-shadow">
 				<li><a href="javascript:void(0);" data-val="default" title="默认（黑色）">默认（黑色）</a></li>
 				<li><a href="javascript:void(0);" data-val="blue" title="蓝色">蓝色</a></li>
@@ -90,7 +92,7 @@
 				<li><a href="javascript:void(0);" data-val="yellow" title="黄色">黄色</a></li>
 				<li><a href="javascript:void(0);" data-val="orange" title="绿色">橙色</a></li>
 			</ul>
-		</li>
+		</li-->
 	</ul>
 	<a aria-hidden="false" class="Hui-nav-toggle" href="javascript:void(0);"></a> </header>
     <aside class="Hui-aside">

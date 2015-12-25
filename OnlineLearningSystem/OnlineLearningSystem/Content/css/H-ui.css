@@ -2568,7 +2568,7 @@ H-ui采用Font Awesome 3.2.1的整套图标，因为是图标字体，所以可�
 .dropDown:focus,.dropDown-menu:focus {outline:0}
 .dropDown-menu li.arrow{ position:absolute;display:block; width:12px; height:8px; margin-top:-13px; margin-left:20%; line-height:0;background:url(../images/icon-jt.png) no-repeat 0 0}
 /*鼠标经过*/
-.dropDown.hover .dropDown_A,.dropDown.open .dropDown_A{text-decoration:none;background-color:rgba(255,255,255,0.2)}
+.dropDown.hover .dropDown_A,.dropDown.open .dropDown_A{text-decoration:none;/*background-color:rgba(255,255,255,0.2);*/background-color: rgb(29, 100, 206);background-color:rgba(45,109,204,1);border-radius: 5px 5px 0 0;}
 .dropDown.hover .dropDown_A i,.dropDown.open .dropDown_A i{transform: rotate(180deg);transition-duration:0.3s ;transition-property:all;_background-position:0 0}
 /*打开菜单*/
 .dropDown.open{position:relative;z-index:990}
@@ -2578,7 +2578,7 @@ H-ui采用Font Awesome 3.2.1的整套图标，因为是图标字体，所以可�
 /*右对齐*/
 .dropDown.open.right .dropDown-menu{right:-1px!important;left:auto!important}
 .dropDown.open .dropDown-menu li{float:none;display:inline}
-.dropDown-menu li a{display:block;clear: both;border-bottom:solid 1px #f2f2f2;margin-bottom:-1px;padding:0px 20px; height:30px; line-height:30px; font-size:12px;text-align:left;font-weight: normal;white-space:nowrap}
+.dropDown-menu li a{display:block;clear: both;border-bottom:solid 1px #f2f2f2;margin-bottom:-1px;padding: 0px 18px; height:30px; line-height:30px; font-size:12px;text-align:left;font-weight: normal;white-space:nowrap}
 .dropDown-menu li:last-child a{ border-bottom:none}
 .dropDown-menu li a:hover,.dropDown-menu li a:focus{background-color:#f0f1f2;text-decoration:none}
 /*禁用菜单*/

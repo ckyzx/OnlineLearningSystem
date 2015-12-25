@@ -37,7 +37,7 @@ namespace OnlineLearningSystem.Utilities
         {
 
             Int32 total, filter;
-            String sql;
+            String sql, countSql;
             DataTable dataTable;
             Object[] sqlConditions;
             List<VMExaminationTaskStatistic> ms;
@@ -51,8 +51,9 @@ namespace OnlineLearningSystem.Utilities
             dataTable = olsDBO.GetDataTableWithStart(sql, sps, dtRequest.Length, dtRequest.Start);
             ms = (List<VMExaminationTaskStatistic>)ModelConvert<VMExaminationTaskStatistic>.ConvertToModel(dataTable);
 
-            total = Convert.ToInt32(olsDBO.ExecuteSqlScalar(sql, sps));
-            filter = Convert.ToInt32(olsDBO.ExecuteSqlScalar(sql, sps));
+            countSql = sql.Replace("SELECT * FROM ", "SELECT COUNT(ETS_TaskId) FROM ");
+            total = Convert.ToInt32(olsDBO.ExecuteSqlScalar(countSql, sps));
+            filter = Convert.ToInt32(olsDBO.ExecuteSqlScalar(countSql, sps));
 
             return new Object[]{ms, total, filter};
         }
@@ -83,7 +84,7 @@ namespace OnlineLearningSystem.Utilities
         {
 
             Int32 total, filter;
-            String sql;
+            String sql, countSql;
             DataTable dataTable;
             Object[] sqlConditions;
             List<VMExaminationTaskUserStatistic> ms;
@@ -98,8 +99,9 @@ namespace OnlineLearningSystem.Utilities
             dataTable = olsDBO.GetDataTableWithStart(sql, sps, dtRequest.Length, dtRequest.Start);
             ms = (List<VMExaminationTaskUserStatistic>)ModelConvert<VMExaminationTaskUserStatistic>.ConvertToModel(dataTable);
 
-            total = Convert.ToInt32(olsDBO.ExecuteSqlScalar(sql, sps));
-            filter = Convert.ToInt32(olsDBO.ExecuteSqlScalar(sql, sps));
+            countSql = sql.Replace("SELECT * FROM ", "SELECT COUNT(ETUS_TaskId) FROM ");
+            total = Convert.ToInt32(olsDBO.ExecuteSqlScalar(countSql, sps));
+            filter = Convert.ToInt32(olsDBO.ExecuteSqlScalar(countSql, sps));
 
             return new Object[] { ms, total, filter };
         }

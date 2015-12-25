@@ -120,11 +120,17 @@ namespace OnlineLearningSystem.Utilities
                 ETT_Name = "",
                 ETT_ParticipatingDepartment = "[]",
                 ETT_Attendee = "[]",
+                ETT_StatisticType = (Byte)StatisticType.Unset,
+                ETT_TotalScore = 100,
+                ETT_TotalNumber = 10,
+                ETT_AutoType = (Byte)AutoType.Manual,
+                ETT_AutoClassifies = "[]",
+                ETT_AutoRatio = "[]",
                 ETT_StartTime = initDateTime,
-                ETT_EndTime = initDateTime.AddDays(7),
-                ETT_TimeSpan = 60,
+                ETT_EndTime = initDateTime,
+                ETT_TimeSpan = 30,
                 ETT_Remark = "",
-                ETT_AddTime = DateTime.Now,
+                ETT_AddTime = now,
                 ETT_Status = (Byte)Status.Available
             };
 
@@ -237,5 +243,26 @@ namespace OnlineLearningSystem.Utilities
             }
         }
 
+        public Boolean DuplicateName(Int32 ettId, String name)
+        {
+            try
+            {
+
+                Int32 count;
+
+                count = olsEni.ExaminationTaskTemplates.Where(m => m.ETT_Id != ettId && m.ETT_Name == name).Count();
+
+                if (count > 0)
+                {
+                    return true;
+                }
+
+                return false;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
     }
 }

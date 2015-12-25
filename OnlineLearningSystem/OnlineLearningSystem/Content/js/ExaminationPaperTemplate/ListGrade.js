@@ -199,6 +199,7 @@
                         types: paperData
                     };
 
+                    paperContainer.addClass('bg-f')
                     $('#PaperTmpl').tmpl(paperData).appendTo(paperContainer);
 
                     // 在本地保存考题数据
@@ -219,7 +220,9 @@
                     epIdInput.val(0);
                     uIdInput.val(0);
 
-                    paperContainer.html('<div class="prompt">' + data.message.replace(/。/g, '') + '</div>');
+                    paperContainer
+                        .removeClass('bg-f')
+                        .html('<div class="prompt">' + data.message.replace(/。/g, '') + '</div>');
                 }
             }, 'json')
             .error(function() {

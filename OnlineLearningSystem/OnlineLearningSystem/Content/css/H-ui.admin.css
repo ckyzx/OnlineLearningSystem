@@ -12,9 +12,9 @@ a{color:#333}a:hover,a:focus,.maincolor,.maincolor a{color:#06c}
 .bg-1{ background-color:#f5fafe}
 h4{line-height:30px}
 /*页面框架*/
-.Hui-header{position:absolute;top:0; right:0; left:0;height:44px;z-index:999;}
-.Hui-aside{position: absolute;top:44px;bottom:0;left:0;padding-top:10px;width:199px;z-index:99;overflow:auto; background-color:rgba(238,238,238,0.98);border-right: 1px solid #e5e5e5}
-.Hui-article-box{position: absolute;top:44px;right:0;bottom: 0;left:199px; overflow:hidden; z-index:1; background-color:#fff}
+.Hui-header{position:absolute;top:0; right:0; left:0;height: 84px;z-index:999;}
+.Hui-aside{position: absolute;top: 85px;bottom:0;left:0;padding-top:10px;width:199px;z-index:99;overflow:auto; background-color:rgba(238,238,238,0.98);border-right: 1px solid #e5e5e5}
+.Hui-article-box{position: absolute;top: 85px;right:0;bottom: 0;left:199px; overflow:hidden; z-index:1; background-color:#fff}
 	.Hui-article{position: absolute;top:35px;bottom:0;left:0; right:0;overflow:auto;z-index:1}
 .Hui-container{ padding:45px 0 0}
 .Hui-aside,.Hui-article-box,.dislpayArrow{-moz-transition: all 0.2s ease 0s;-webkit-transition: all 0.2s ease 0s;-ms-transition: all 0.2s ease 0s;-o-transition: all 0.2s ease 0s;transition: all 0.2s ease 0s}
@@ -23,23 +23,23 @@ h4{line-height:30px}
 
 /*组件*/
 	/*logo*/
-	.Hui-logo,.Hui-logo-m{height:44px; margin-left:20px;cursor:pointer;font-size:16px; font-weight:bold; line-height:44px}
+	.Hui-logo,.Hui-logo-m{height: 50px; margin-top: 20px;margin-left:20px;cursor:pointer;font-size: 24px; /* font-weight:bold; */ line-height: 1;letter-spacing: 3px;text-align: right;}
 	.Hui-logo{display:inline-block;padding-right:5px}
 	.Hui-logo:hover,.Hui-logo-m:hover{text-decoration:none; color:#0C0}
 	.Hui-logo-m{display:none;width:45px;margin-left:10px}
-	.Hui-subtitle{ font-size:12px; color:#eee; padding-top:15px}
+	.Hui-subtitle{ display: block;font-size: 12px; color:#eee; padding-right: 2px;letter-spacing: 1px;}
 	.viewhome{ line-height:44px; padding-right:15px}
 	.viewhome a{ color:#FFF; padding-left:20px; background:url(../images/icon_link.png) no-repeat 0 center}
 	
 	/*导航*/
-	#Hui-nav{ margin-left:200px; margin-right:300px; background-color:transparent}
+	#Hui-nav{ margin-top: 50px;margin-left:200px; margin-right:300px; background-color:transparent}
 	#Hui-nav > ul > li{ font-weight:normal}
 	#Hui-nav > ul > li > a{padding:0 20px}
-	#Hui-nav > ul > li,#Hui-nav > ul > li > a{height:44px; line-height:44px}
-	#Hui-nav > ul > li > a:hover,#Hui-nav > ul > li.current > a{ background-color:rgba(255,255,255,0.2)}
-	.Hui-userbar{ position:absolute; top:0px; right:20px}
-	.Hui-userbar > li{ float:left; display:inline-block; position:relative;line-height:44px}
-	.Hui-userbar > li > a{ display:inline-block; padding:0 10px;height:44px; line-height:44px}
+	#Hui-nav > ul > li,#Hui-nav > ul > li > a{height: 34px; line-height: 34px;background-color: rgb(45,109,204);background-color: rgba(45,109,204,0.7);border-radius: 5px 5px 0 0;}
+	#Hui-nav > ul > li > a:hover,#Hui-nav > ul > li.current > a{ /* background-color:rgba(255,255,255,0.2); */background-color:rgba(45,109,204,1);border-radius: 5px 5px 0 0;}
+	.Hui-userbar{ position:absolute; bottom: 0px; right:20px;padding-left: 10px;background-color: rgb(45,109,204);background-color: rgba(45,109,204,0.7);border-radius: 5px 5px 0 0;}
+	.Hui-userbar > li{ float:left; margin-left: 5px;display:inline-block; position:relative;line-height: 34px;}
+	.Hui-userbar > li > a{ display:inline-block; padding: 0 18px;height: 34px; line-height: 34px;}
 	.Hui-userbar > li > a:hover,Hui-userbar > li.current > a{ text-decoration:none;background-color:rgba(255,255,255,0.2)}
 	#Hui-msg .badge{ position:absolute; left:19px; top:4px; font-size:12px; font-weight:normal; padding:1px 5px}
 	#Hui-skin{}

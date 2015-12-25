@@ -108,19 +108,19 @@ namespace OnlineLearningSystem.Utilities
                 ET_Name = "",
                 ET_ParticipatingDepartment = "[]",
                 ET_Attendee = "[]",
-                ET_AutoType = 0,
-                ET_StatisticType = 0,
+                ET_AutoType = (Byte)AutoType.Manual,
+                ET_StatisticType = (Byte)StatisticType.Unset,
                 ET_TotalScore = 100,
+                ET_TotalNumber = 10,
                 ET_AutoClassifies = "[]",
-                ET_AutoNumber = 10,
                 ET_AutoRatio = "[]",
                 ET_StartTime = initDateTime,
-                ET_EndTime = initDateTime.AddDays(7),
+                ET_EndTime = initDateTime,
                 ET_TimeSpan = 0,
                 ET_PaperTemplates = "[]",
                 ET_Questions = "[]",
                 ET_Remark = "",
-                ET_AddTime = DateTime.Now,
+                ET_AddTime = now,
                 ET_Status = (Byte)Status.Available
             };
 
@@ -387,7 +387,7 @@ namespace OnlineLearningSystem.Utilities
                 {
                     return false;
                 }
-
+                olsEni.Entry(et).State = EntityState.Detached;
                 olsEni.Entry(model).State = EntityState.Modified;
                 olsEni.SaveChanges();
 

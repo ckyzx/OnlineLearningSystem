@@ -32,7 +32,7 @@
                 @Html.ValidationMessageFor(m => m.ET_Name)
             </div>
         </div>
-        <div class="row cl">
+        <div class="row cl" style="display:none;">
             <label class="form-label col-2">
                 @Html.LabelFor(m => m.ET_Template)
             </label>
@@ -90,11 +90,11 @@
         </div>
         <div class="row cl" style="display:none;">
             <label class="form-label col-2">
-                @Html.LabelFor(m => m.ET_AutoNumber)
+                @Html.LabelFor(m => m.ET_TotalNumber)
             </label>
             <div class="formControls col-2">
-                @Html.TextBoxFor(m => m.ET_AutoNumber, new { @class = "input-text" })
-                @Html.ValidationMessageFor(m => m.ET_AutoNumber)
+                @Html.TextBoxFor(m => m.ET_TotalNumber, new { @class = "input-text" })
+                @Html.ValidationMessageFor(m => m.ET_TotalNumber)
             </div>
         </div>
         <div class="row cl">
@@ -177,7 +177,7 @@
                 @Html.LabelFor(m => m.ET_TimeSpan)
             </label>
             <div class="formControls col-2">
-                @Html.TextBoxFor(m => m.ET_TimeSpan, new { @class = "input-text" })
+                @Html.TextBoxFor(m => m.ET_TimeSpan, new { @class = "input-text" }) <span>（单位：分钟）</span>
                 @Html.ValidationMessageFor(m => m.ET_TimeSpan)
             </div>
         </div>
@@ -233,18 +233,18 @@
         </div>
         <div class="row cl">
             <div class="col-10 col-offset-2">
-                <input class="btn btn-primary radius" type="submit" />
+                <input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;保存&nbsp;&nbsp;" />
                 <button onclick="layer_close();" class="btn btn-default radius" type="button">
                     &nbsp;&nbsp;取消&nbsp;&nbsp;</button>
             </div>
         </div>
     }
 </div>
+<script type="text/javascript" src="@Url.Content("~/Content/lib/js.datetime.js")"></script>
 <script type="text/javascript" src="@Url.Content("/Content/lib/jquery.timers-1.2.js")"></script>
 <link type="text/css" rel="Stylesheet" href="@Url.Content("/Content/lib/zTree_v3/css/metroStyle/metroStyle.css")" />
 <script type="text/javascript" src="@Url.Content("/Content/lib/zTree_v3/js/jquery.ztree.core-3.5.min.js")"></script>
 <script type="text/javascript" src="@Url.Content("/Content/lib/zTree_v3/js/jquery.ztree.excheck-3.5.min.js")"></script>
-<script type="text/javascript" src="@Url.Content("~/Content/lib/js.datetime.js")"></script>
 <script type="text/javascript" src="@Url.Content("~/Content/lib/datatables/1.10.9/jquery.dataTables.min.js")"></script>
 <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/lib/jtimepicker/css/ui/base/ui.core.css")" />
 <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/lib/jtimepicker/css/ui/base/ui.theme.css")" />

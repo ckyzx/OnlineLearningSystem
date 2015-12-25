@@ -52,10 +52,14 @@ namespace OnlineLearningSystem.Models
         [Range(100, 1000, ErrorMessage = "请输入大于100且小于1000的整数")]
         public Int32 ET_TotalScore { get; set; }
 
+        [DisplayName("出题难度")]
+        [Required(ErrorMessage = "请输入{0}")]
+        public Byte ET_DifficultyCoefficient { get; set; }
+
         [DisplayName("出题数量")]
         [Required(ErrorMessage = "请输入{0}")]
         [Range(10, 1000, ErrorMessage = "请输入大于10且小于1000的整数")]
-        public Int32 ET_AutoNumber { get; set; }
+        public Int32 ET_TotalNumber { get; set; }
 
         [DisplayName("出题方式")]
         [Required(ErrorMessage = "请选择{0}")]
@@ -68,10 +72,6 @@ namespace OnlineLearningSystem.Models
         [DisplayName("考试日期")]
         [Required(ErrorMessage = "请输入{0}")]
         public Byte ET_AutoOffsetDay { get; set; }
-
-        [DisplayName("出题难度")]
-        [Required(ErrorMessage = "请输入{0}")]
-        public Byte ET_DifficultyCoefficient { get; set; }
 
         [DisplayName("出题分类")]
         [Required(ErrorMessage = "请选择{0}")]
@@ -89,7 +89,7 @@ namespace OnlineLearningSystem.Models
         [DataType(DataType.DateTime)]
         public DateTime ET_EndTime { get; set; }
 
-        [DisplayName("时长")]
+        [DisplayName("考试时长")]
         [Required(ErrorMessage = "请输入{0}")]
         public Int32 ET_TimeSpan { get; set; }
 

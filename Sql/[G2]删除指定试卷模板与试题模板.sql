@@ -1,10 +1,10 @@
 USE OLS;
 
-DECLARE @eptId int, @epId INT;
+DECLARE @eptId INT, @epId INT;
 
-SET @eptId = 6;
-select @epId = EP_Id from ExaminationPapers where EPT_Id = @eptId;
-delete from ExaminationPaperQuestions where EP_Id = @epId;
-delete from ExaminationPapers where EPT_Id = @eptId;
+SET @eptId = 2;
+SELECT @epId = EP_Id FROM ExaminationPapers WHERE EPT_Id = @eptId;
+DELETE FROM ExaminationPaperQuestions WHERE EP_Id = @epId;
+DELETE FROM ExaminationPapers WHERE EPT_Id = @eptId;
 DELETE FROM ExaminationPaperTemplateQuestions WHERE EPT_Id = @eptId;
 DELETE FROM ExaminationPaperTemplates WHERE EPT_Id = @eptId;

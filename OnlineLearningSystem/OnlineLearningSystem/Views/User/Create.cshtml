@@ -30,7 +30,7 @@
                 @Html.ValidationMessageFor(m => m.U_Name)
             </div>
         </div>
-        <div class="row cl">
+        <div class="row cl hide">
             <label class="form-label col-2">
                 @Html.LabelFor(m => m.U_LoginName)
             </label>
@@ -175,7 +175,7 @@
         </div>
         <div class="row cl">
             <div class="col-10 col-offset-2">
-                <input class="btn btn-primary radius" type="submit" />
+                <input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;保存&nbsp;&nbsp;" />
                 <button onclick="layer_close();" class="btn btn-default radius" type="button">
                     &nbsp;&nbsp;取消&nbsp;&nbsp;</button>
             </div>

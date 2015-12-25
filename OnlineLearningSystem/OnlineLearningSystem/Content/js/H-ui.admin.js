@@ -39,7 +39,7 @@ function getskincookie() {
     $("#skin").attr("href", "/Content/skin/" + v + "/skin.css");
 }
 $(function() {
-    getskincookie();
+    //getskincookie();
     //layer.config({extend: 'extend/layer.ext.js'});
     Huiasidedisplay();
     var resizeID;
