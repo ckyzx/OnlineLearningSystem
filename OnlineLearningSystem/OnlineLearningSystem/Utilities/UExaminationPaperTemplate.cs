@@ -429,7 +429,7 @@ namespace OnlineLearningSystem.Utilities
                                 EP_TimeSpan = ept.EPT_TimeSpan,
                                 EP_UserId = userId,
                                 EP_UserName = "",
-                                EP_Score = 0,
+                                EP_Score = -1,
                                 EP_Remark = "",
                                 EP_AddTime = now,
                                 EP_Status = (Byte)Status.Available

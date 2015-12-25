@@ -326,7 +326,7 @@ namespace OnlineLearningSystem.Utilities
         private List<Question> SelectQuestionsWithScore(List<AutoRatio> ratios, Int32 totalScore, List<Question> qs)
         {
 
-            Int32 typeScore, tmpScore, overflowScore, maxValue, qId;
+            Int32 typeScore, tmpScore, overflowScore, maxValue, qId, totalTimeout, timeout;
             Random random;
             Question q;
             Int32[] qIds;
@@ -335,6 +335,7 @@ namespace OnlineLearningSystem.Utilities
             random = new Random((Int32)DateTime.Now.Ticks);
             readyQs = new List<Question>();
             overflowScore = 0;
+            totalTimeout = 100;
 
             foreach (var r in ratios)
             {
@@ -357,9 +358,9 @@ namespace OnlineLearningSystem.Utilities
                     throw new Exception("“" + r.type + "”没有备选试题。");
                 }
 
-                maxValue = qIds.Length;
-
                 //随机选取试题，直至分数大于题型总分
+                maxValue = qIds.Length;
+                timeout = 0;
                 while (tmpScore < typeScore)
                 {
 
@@ -369,8 +370,17 @@ namespace OnlineLearningSystem.Utilities
                     // 避免重复
                     if (tmpQs.Where(m => m.Q_Id == q.Q_Id).Count() == 0)
                     {
+                        olsEni.Entry(q).State = EntityState.Detached;
                         tmpQs.Add(q);
                         tmpScore += q.Q_Score;
+                    }
+                    else {
+                        timeout += 1;
+                    }
+
+                    if (totalTimeout == timeout)
+                    {
+                        throw new Exception("随机选取试题失败。");
                     }
                 }
 

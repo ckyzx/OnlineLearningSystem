@@ -739,19 +739,19 @@ $(function() {
                 valid = false;
             }
 
-            // 限制出题比例 <= 100%
+            // 限制出题比例 >= 50% 与 <= 100%
             ratioNumber = 0;
             autoRatio = JSON.parse(autoRatio);
             for (var i = 0; i < autoRatio.length; i++) {
                 ratioNumber += autoRatio[i].percent;
             }
 
-            if (ratioNumber > 1) {
+            if (ratioNumber < 0.5 ||ratioNumber > 1) {
 
                 $('<div class="custom-validation-error">' +
                     '<div class="cl"></div>' +
                     '<span class="field-validation-error">' +
-                    '<span htmlfor="ET_AutoRatio" generated="true" class="">出题比例必须小于100%</span>' +
+                    '<span htmlfor="ET_AutoRatio" generated="true" class="">出题比例必须大于50%、小于100%</span>' +
                     '</span>' +
                     '<div>').appendTo(container);
 

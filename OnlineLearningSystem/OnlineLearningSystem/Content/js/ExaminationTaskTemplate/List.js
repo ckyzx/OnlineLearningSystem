@@ -12,13 +12,7 @@ $(function() {
         "stateSave": false,
         "lengthChange": false,
         "pageLength": 15,
-        "sorting": [
-            [1, "asc"]
-        ],
-        "columnDefs": [{
-            "orderable": false,
-            "targets": [0, 4, 5]
-        }],
+        "ordering": false,
         "columns": [{
             "width": "10px",
             "className": "text-c",

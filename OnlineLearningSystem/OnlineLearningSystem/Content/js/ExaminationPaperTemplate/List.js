@@ -247,6 +247,10 @@ $(function() {
             });
     });
 
+    $('#GotoTaskListBtn').on('click', function() {
+        location.href = '/ExaminationTask/List';
+    });
+
     /*$('#CreateBtn').on('click', function() {
         ShowPage('添加试卷模板', '/ExaminationPaperTemplate/Create?etId=' + etId);
     });*/

@@ -70,10 +70,13 @@
             span = row.find('span.ETUS_Score');
             etusTaskStatisticType = data['ETUS_TaskStatisticType'];
             etusScore = data['ETUS_Score'];
-            if(1 == etusTaskStatisticType){
-                span.html('<span class="bold">' + etusScore + '</span> 分');
-            }else if(2 == etusTaskStatisticType){
-                span.html('<span class="bold">' + etusScore + '</span> %');
+            if(-1 != etusScore){
+
+                if(1 == etusTaskStatisticType){
+                    span.html('<span class="bold">' + etusScore + '</span> 分');
+                }else if(2 == etusTaskStatisticType){
+                    span.html('<span class="bold">' + etusScore + '</span> %');
+                }
             }
 
             // 呈现状态
@@ -88,6 +91,9 @@
                     break;
                 case 3:
                     span.text('未合格');
+                    break;
+                case 4:
+                    span.text('未打分');
                     break;
                 default:
                     span.text('[未设置]');
