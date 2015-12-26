@@ -218,7 +218,7 @@ $(function() {
 
         var tr, data, id;
 
-        if(!confirm('确定要终止考试吗？')){
+        if(!confirm('确定终止考试吗？')){
             return;
         }
 

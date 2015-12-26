@@ -15,6 +15,9 @@ namespace OnlineLearningSystem.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Int32 EP_AutoId { get; set; }
 
+        [DisplayName("任务")]
+        public Int32 ET_Id { get; set; }
+
         [DisplayName("试卷模板")]
         public Int32 EPT_Id { get; set; }
 

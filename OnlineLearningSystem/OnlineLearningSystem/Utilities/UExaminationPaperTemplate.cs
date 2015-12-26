@@ -423,6 +423,7 @@ namespace OnlineLearningSystem.Utilities
                             ep = new ExaminationPaper
                             {
                                 EP_Id = epId,
+                                ET_Id = ept.ET_Id,
                                 EPT_Id = ept.EPT_Id,
                                 EP_PaperStatus = (Byte)PaperStatus.Doing,
                                 EP_EndTime = ept.EPT_EndTime,
@@ -504,6 +505,7 @@ namespace OnlineLearningSystem.Utilities
                 foreach (var ep in eps)
                 {
                     ep.EP_PaperStatus = (Byte)PaperStatus.Done;
+                    GradePaper(ep);
                 }
 
                 if (0 == olsEni.SaveChanges())
@@ -753,6 +755,68 @@ namespace OnlineLearningSystem.Utilities
                 resJson.status = ResponseStatus.Error;
                 resJson.message = StaticHelper.GetExceptionMessage(ex);
                 return resJson;
+            }
+        }
+
+        public void GradePaper(ExaminationPaper ep)
+        {
+
+            Int32 score, number, eptqCount;
+            Double ratio;
+            ExaminationPaperTemplateQuestion eptq;
+            ExaminationTask et;
+            List<ExaminationPaperQuestion> epqs;
+
+            score = 0;
+            number = 0;
+
+            epqs = olsEni.ExaminationPaperQuestions.Where(m => m.EP_Id == ep.EP_Id).ToList();
+            foreach (var epq in epqs)
+            {
+
+                eptq = olsEni.ExaminationPaperTemplateQuestions.Single(m => m.EPTQ_Id == epq.EPTQ_Id);
+                switch (eptq.EPTQ_Type)
+                {
+                    case "单选题":
+                    case "多选题":
+                    case "判断题":
+
+                        if (eptq.EPTQ_ModelAnswer == epq.EPQ_Answer)
+                        {
+                            epq.EPQ_Exactness = (Byte)AnswerStatus.Exactness;
+                            score += eptq.EPTQ_Score;
+                            number += 1;
+                        }
+                        else
+                        {
+                            epq.EPQ_Exactness = (Byte)AnswerStatus.Wrong;
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            // 如果试题只有单选题、多选题、判断题，则自动设置分数
+            eptqCount =
+                olsEni
+                .ExaminationPaperTemplateQuestions
+                .Where(m =>
+                    m.EPT_Id == ep.EPT_Id
+                    && m.EPTQ_Type != "单选题"
+                    && m.EPTQ_Type != "多选题"
+                    && m.EPTQ_Type != "判断题")
+                .Count();
+            et = olsEni.ExaminationTasks.Single(m => m.ET_Id == ep.ET_Id);
+
+            if ((Byte)StatisticType.Score == et.ET_StatisticType && eptqCount == 0)
+            {
+                ep.EP_Score = score;
+            }
+            else if ((Byte)StatisticType.Number == et.ET_StatisticType && eptqCount == 0)
+            {
+                ratio = Math.Round((Double)number / (Double)et.ET_TotalNumber, 2, MidpointRounding.AwayFromZero);
+                ep.EP_Score = (Int32)(ratio * 100);
             }
         }
     }

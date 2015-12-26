@@ -495,7 +495,11 @@ namespace OnlineLearningSystem.Utilities
                 if ((Byte)AutoType.Manual == model.ET_AutoType)
                 {
 
-                    epts = olsEni.ExaminationPaperTemplates.Where(m => m.ET_Id == model.ET_Id).ToList();
+                    epts =
+                        olsEni
+                        .ExaminationPaperTemplates
+                        .Where(m => m.ET_Id == model.ET_Id)
+                        .ToList();
                     if (epts.Count != 1)
                     {
                         resJson.status = ResponseStatus.Error;
@@ -504,18 +508,40 @@ namespace OnlineLearningSystem.Utilities
                     }
 
                     epts[0].EPT_PaperTemplateStatus = (Byte)etStatus;
+                    // 开始任务及试卷模板
                     if (ExaminationTaskStatus.Enabled == etStatus)
                     {
                         epts[0].EPT_StartTime = now;
                         epts[0].EPT_StartDate = now.Date;
                         epts[0].EPT_EndTime = now.AddMinutes(epts[0].EPT_TimeSpan);
                     }
-                    else if (ExaminationTaskStatus.Disabled == etStatus 
+                    // 终止任务及试卷模板
+                    else if (ExaminationTaskStatus.Disabled == etStatus
                         && epts[0].EPT_TimeSpan == 0)
                     {
                         epts[0].EPT_EndTime = DateTime.Now;
                     }
                     olsEni.Entry(epts[0]).State = EntityState.Modified;
+                }
+                else
+                {
+
+                    // 终止自动任务时，同时终止进行中的试卷模板。
+                    if (ExaminationTaskStatus.Disabled == etStatus)
+                    {
+                        epts =
+                            olsEni
+                            .ExaminationPaperTemplates
+                            .Where(m =>
+                                m.ET_Id == etId
+                                && m.EPT_PaperTemplateStatus == (Byte)PaperTemplateStatus.Doing)
+                            .ToList();
+
+                        foreach (var ept in epts)
+                        {
+                            ept.EPT_PaperTemplateStatus = (Byte)PaperTemplateStatus.Done;
+                        }
+                    }
                 }
 
                 model.ET_Enabled = (Byte)etStatus;

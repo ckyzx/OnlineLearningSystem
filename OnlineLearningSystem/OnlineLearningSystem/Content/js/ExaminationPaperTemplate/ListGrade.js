@@ -85,7 +85,7 @@
     }
     /*--------------------------------------------------*/
 
-    function __gradeEvent() {
+    function __gradeEvent(callback) {
 
         var paperContainer, epIdInput, uIdInput, gradeJsonInput;
         var epId, uId, grades;
@@ -144,12 +144,16 @@
                         scoreSpan = h4.find('span.score');
                         if (scoreSpan.length == 0) {
                             h4.append('<span class="score">' + ep.EP_Score + '</span>');
-                        }else{
+                        } else {
                             scoreSpan.text(ep.EP_Score);
                         }
                     };
 
-                    layer.msg('评分提交成功', {offset: '100px'});
+                    layer.msg('评分提交成功', {
+                        offset: '100px'
+                    });
+
+                    callback();
                 } else if (0 == data.status) {
 
                     gradeJsonInput.val(grades);
@@ -292,5 +296,14 @@
         nextLi.find('h4').click();
     }
 
-    function _gradeFinish() {}
+    function _gradeFinish() {
+
+        if (confirm('确定结束评分吗？')) {
+
+            __gradeEvent(function() {
+                layer_close();
+            });
+
+        }
+    }
 });

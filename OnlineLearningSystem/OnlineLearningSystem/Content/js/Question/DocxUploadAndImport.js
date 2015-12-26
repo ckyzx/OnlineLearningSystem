@@ -121,41 +121,44 @@
         layerIndex = layer.load(0, {
             shade: [0.3, '#FFF']
         });
-        
+
         btn = $(this);
         btn.hide();
         filePath = btn.attr('file-path');
 
         jqXHR = $.post('/Question/Import', {
-            filePath: filePath
-        }, function(data, textStatus, jqXHR) {
-
-            if (1 == data.Status) {
-
-                message = '题库导入成功。';
-                if(data.Message != ''){
-
-                    message += '但含有以下问题：\r\n';
-                    message += '    ' + data.Message + '\r\n';
-                    message += '    请手工检查试题缓存列表。';
-                }
-                alert(message);
-
-                if (parent.name.toLowerCase().indexOf('list') != -1) {
-
-                    parent.location.href = '/Question/List?status=4';
-                } else {
-                    location.href = '/Question/List?status=4';
-                }
-            } else if (0 == data.Status) {
+                filePath: filePath
+            }, function(data, textStatus, jqXHR) {
 
                 layer.close(layerIndex);
-                alert(data.Message);
-            }
-        }, 'json');
 
-        jqXHR
+                if (1 == data.Status) {
+
+                    message = '题库导入成功。';
+                    if (data.Message != '') {
+
+                        message += '但含有以下问题：\r\n';
+                        message += '    ' + data.Message + '\r\n';
+                        message += '    请手工检查试题缓存列表。';
+                    }
+                    alert(message);
+
+                    if (parent.name.toLowerCase().indexOf('list') != -1) {
+
+                        parent.location.href = '/Question/List?status=4';
+                    } else {
+                        location.href = '/Question/List?status=4';
+                    }
+                } else if (0 == data.Status) {
+
+                    btn.show();
+                    alert(data.Message);
+                }
+            }, 'json')
             .error(function() {
+
+                layer.close(layerIndex);
+                btn.show();
                 alert("题库导入失败。");
             })
             //.success(function() { alert("second success"); })

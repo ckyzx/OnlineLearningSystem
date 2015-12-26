@@ -90,7 +90,7 @@ $(function() {
 
         $('#QuestionList').on('click', 'button.paper-hand-in', function() {
 
-            if (confirm('确定要结束考试吗？')) {
+            if (confirm('确定结束考试吗？')) {
 
                 saveLocalAnswers();
                 submitAnswers(function() {

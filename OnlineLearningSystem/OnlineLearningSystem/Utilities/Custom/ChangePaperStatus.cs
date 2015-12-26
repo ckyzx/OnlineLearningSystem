@@ -10,7 +10,7 @@ namespace OnlineLearningSystem.Utilities
     {
         public ResponseJson Change()
         {
-            
+
             ResponseJson resJson;
 
             resJson = new ResponseJson(ResponseStatus.Success);
@@ -23,11 +23,11 @@ namespace OnlineLearningSystem.Utilities
 
                 changed = false;
 
-                eps = 
+                eps =
                     olsEni
                     .ExaminationPapers
-                    .Where(m => 
-                        m.EP_PaperStatus == (Byte)PaperStatus.Doing 
+                    .Where(m =>
+                        m.EP_PaperStatus == (Byte)PaperStatus.Doing
                         && m.EP_Status == (Byte)Status.Available)
                     .ToList();
 
@@ -42,6 +42,7 @@ namespace OnlineLearningSystem.Utilities
                     if (now > ep.EP_EndTime)
                     {
                         ep.EP_PaperStatus = (Byte)PaperStatus.Done;
+                        new UExaminationPaperTemplate().GradePaper(ep);
                         changed = true;
                     }
                 }
@@ -64,5 +65,6 @@ namespace OnlineLearningSystem.Utilities
                 return resJson;
             }
         }
+
     }
 }

@@ -102,7 +102,11 @@ namespace OnlineLearningSystem.Utilities
                     break;
                 case (Byte)AutoType.Week:
 
-                    dayOfWeek = ((Int32)now.DayOfWeek) + 1;
+                    dayOfWeek = (Int32)now.DayOfWeek;
+                    if (0 == dayOfWeek)
+                    {
+                        dayOfWeek = 7;
+                    }
 
                     if (et.ET_AutoOffsetDay != dayOfWeek)
                     {
@@ -317,7 +321,7 @@ namespace OnlineLearningSystem.Utilities
             // 当调整后的百分比仍小于 1 时，将差值累加至最后一个元素
             if (tmpRatio < 1)
             {
-                ratios[ratios.Count - 1].percent += totalRatio - tmpRatio;
+                ratios[ratios.Count - 1].percent += 1 - tmpRatio;
             }
 
             return ratios;
@@ -502,6 +506,7 @@ namespace OnlineLearningSystem.Utilities
         {
             
             Int32 typeNumber, tmpNumber, maxValue, qId;
+            String type;
             Random random;
             Question q;
             Int32[] qIds;
@@ -546,6 +551,50 @@ namespace OnlineLearningSystem.Utilities
                 }
 
                 readyQs.AddRange(tmpQs);
+            }
+
+            // 选择的试题数量不足时，用最后一个类型补足
+            typeNumber = totalNumber - readyQs.Count;
+            if (typeNumber > 0)
+            {
+
+                tmpQs = new List<Question>();
+
+                tmpNumber = 0;
+
+                type = ratios[ratios.Count - 1].type;
+                qIds =
+                    qs
+                    .Where(m => m.Q_Type == type)
+                    .Select(m => m.Q_Id)
+                    .ToArray();
+
+                if (qIds.Length == 0)
+                {
+                    throw new Exception("“" + type + "”没有备选试题。");
+                }
+
+                maxValue = qIds.Length - 1;
+
+                while (tmpNumber < typeNumber)
+                {
+
+                    qId = qIds[random.Next(maxValue)];
+                    q = qs.Single(m => m.Q_Id == qId);
+
+                    // 避免重复
+                    if (tmpQs.Where(m => m.Q_Id == q.Q_Id).Count() == 0
+                        && readyQs.Where(m=>m.Q_Id == q.Q_Id).Count() == 0)
+                    {
+                        tmpQs.Add(q);
+                        tmpNumber += 1;
+                    }
+                }
+
+                readyQs.AddRange(tmpQs);
+            }else if(typeNumber < 0){
+
+                readyQs.RemoveRange(readyQs.Count + typeNumber, Math.Abs(typeNumber));
             }
 
             return readyQs;

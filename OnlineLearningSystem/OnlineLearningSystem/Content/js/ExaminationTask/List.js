@@ -255,6 +255,11 @@ $(function() {
         var tr;
         var data, id, autoType;
 
+        if(!confirm('确认开始考试任务吗？'))
+        {
+            return;
+        }
+
         tr = $(this).parents('tr');
         data = table.row(tr).data();
         id = data['ET_Id'];
@@ -297,6 +302,11 @@ $(function() {
 
         var tr;
         var data, id, autoType;
+
+        if(!confirm('确认关闭考试任务吗？'))
+        {
+            return;
+        }
 
         tr = $(this).parents('tr');
         data = table.row(tr).data();

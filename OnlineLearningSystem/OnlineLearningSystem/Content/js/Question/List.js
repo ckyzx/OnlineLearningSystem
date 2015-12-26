@@ -245,7 +245,15 @@ $(function() {
 
     $('#CacheClearBtn').on('click', function() {
 
+        var layerIndex;
+
+        layerIndex = layer.load(0, {
+            shade: [0.3, '#FFF']
+        });
+        
         $.post('/Question/CacheClear', {}, function(data) {
+
+                layer.close(layerIndex);
 
                 if (1 == data.status) {
 
@@ -258,20 +266,29 @@ $(function() {
             }, 'json')
             .error(function() {
 
+                layer.close(layerIndex);
                 alert('请求返回错误！');
             });
     });
 
     $('#CacheImportBtn').on('click', function() {
 
+        var layerIndex;
+
+        layerIndex = layer.load(0, {
+            shade: [0.3, '#FFF']
+        });
+        
         $.post('/Question/CacheImport', {}, function(data) {
 
                 var message, href;
 
+                layer.close(layerIndex);
+                
                 if (1 == data.status) {
 
                     message = '缓存导入成功。';
-                    href = '/Question/List?qcId' + qcId;
+                    href = '/Question/List?qcId=' + qcId;
 
                     if ('' != data.message) {
 
@@ -291,6 +308,7 @@ $(function() {
             }, 'json')
             .error(function() {
 
+                layer.close(layerIndex);
                 alert('请求返回错误！');
             });
     });
