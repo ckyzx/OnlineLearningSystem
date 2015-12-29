@@ -426,7 +426,9 @@ function setModelAnswer(eptq, exactness) {
     eptqId = eptq.EPTQ_Id;
     modelAnswer = eptq.EPTQ_ModelAnswer;
 
+    // 设置评分
     $('input[name="question_radios_' + eptqId + '_grade"][value="' + exactness + '"]').get(0).checked = true;
+    $('span[data-name="question_radios_' + eptqId + '_grade"][data-value="' + exactness + '"] i.Hui-iconfont').addClass('active');
 
     switch (qType) {
         case '单选题':

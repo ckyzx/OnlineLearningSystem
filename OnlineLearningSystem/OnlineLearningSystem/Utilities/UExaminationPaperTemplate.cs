@@ -128,7 +128,7 @@ namespace OnlineLearningSystem.Utilities
 
             ets = olsEni
                 .ExaminationTasks
-                .Where(m => 
+                .Where(m =>
                     m.ET_Status == (Byte)Status.Available)
                 .ToList();
             foreach (var et in ets)
@@ -379,7 +379,12 @@ namespace OnlineLearningSystem.Utilities
             }
         }
 
-        // 进入考试
+        /// <summary>
+        /// 进入考试
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
         public ResponseJson EnterExamination(Int32 id, Int32 userId)
         {
 
@@ -475,7 +480,11 @@ namespace OnlineLearningSystem.Utilities
             }
         }
 
-        // 终止考试
+        /// <summary>
+        /// 终止考试
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public ResponseJson Terminate(Int32 id)
         {
 
@@ -541,6 +550,7 @@ namespace OnlineLearningSystem.Utilities
                 ExaminationPaperTemplate ept;
                 ExaminationTask et;
                 User u;
+                ExaminationPaper ep;
                 List<User> userModels;
 
                 userModels = new List<User>();
@@ -554,12 +564,20 @@ namespace OnlineLearningSystem.Utilities
                 foreach (var uId in userAry)
                 {
                     u = olsEni.Users.SingleOrDefault(m => m.U_Id == uId);
-
                     if (null != u)
                     {
                         u.U_Password = "**********";
                         userModels.Add(u);
                     }
+
+                    ep = olsEni.ExaminationPapers.SingleOrDefault(m => m.EPT_Id == id && m.EP_UserId == u.U_Id);
+                    if (null == ep)
+                    {
+                        continue;
+                    }
+
+                    u.U_Score = GetScoreString(et.ET_StatisticType, ep.EP_Score);
+
                 }
 
                 if (userModels.Count == 0)
@@ -570,6 +588,7 @@ namespace OnlineLearningSystem.Utilities
                 }
 
                 resJson.data = JsonConvert.SerializeObject(userModels);
+                resJson.addition = et;
                 return resJson;
             }
             catch (Exception ex)
@@ -579,6 +598,33 @@ namespace OnlineLearningSystem.Utilities
                 resJson.message = StaticHelper.GetExceptionMessage(ex);
                 return resJson;
             }
+        }
+
+        private string GetScoreString(Byte statisticType, Int32 score)
+        {
+
+            String scoreString;
+
+            if (score == -1)
+            {
+                scoreString = "";
+                return scoreString;
+            }
+
+            if (statisticType == (Byte)StatisticType.Score)
+            {
+                scoreString = score + "分";
+            }
+            else if (statisticType == (Byte)StatisticType.Number)
+            {
+                scoreString = score + "%";
+            }
+            else
+            {
+                scoreString = "";
+            }
+
+            return scoreString;
         }
 
         public ResponseJson GetQuestions(Int32 id, Int32 uId)
@@ -758,6 +804,10 @@ namespace OnlineLearningSystem.Utilities
             }
         }
 
+        /// <summary>
+        /// 计算成绩
+        /// </summary>
+        /// <param name="ep"></param>
         public void GradePaper(ExaminationPaper ep)
         {
 
@@ -818,6 +868,11 @@ namespace OnlineLearningSystem.Utilities
                 ratio = Math.Round((Double)number / (Double)et.ET_TotalNumber, 2, MidpointRounding.AwayFromZero);
                 ep.EP_Score = (Int32)(ratio * 100);
             }
+        }
+
+        public void SaveChange()
+        {
+            olsEni.SaveChanges();
         }
     }
 }

@@ -1,7 +1,7 @@
 @charset "utf-8";
 
-body{ min-width:1280px; }
-body.prompt{ min-width: 800px; }
+body{ }
+body.prompt{ }
 
 /* 无下拉列表的菜单按钮 */
 .Hui-aside .menu_dropdown dt.menu-btn{ padding-left: 0; }
@@ -51,12 +51,21 @@ body.prompt{ min-width: 800px; }
 #ExaminationPaperGradeContainer #PaperContainer{ padding:20px; margin-left: 200px; min-height: 100%; background-color: #EEE; }
 #ExaminationPaperGradeContainer #PaperContainer .question-container{ margin-bottom: 30px; background-color:#FFF; }
 #ExaminationPaperGradeContainer #PaperContainer .question-container .type-name{ margin-bottom:5px; padding:0 10px; font-size:24px; color:#FFF; background-color: #DDD; }
-#ExaminationPaperGradeContainer #PaperContainer .question-container .question{ margin-bottom:10px; border-bottom: 1px dashed #CCC;}
+#ExaminationPaperGradeContainer #PaperContainer .question-container .question{ margin-bottom:10px; border-bottom: 1px dashed #CCC; }
 #ExaminationPaperGradeContainer #PaperContainer .question-container .question-item{ padding-bottom:5px; }
+#ExaminationPaperGradeContainer #PaperContainer .question-container .question-grade .Hui-iconfont{ color:#CCC; cursor:pointer;}
+#ExaminationPaperGradeContainer #PaperContainer .question-container .question-grade .active{font-weight: bold;}
+#ExaminationPaperGradeContainer #PaperContainer .question-container .question-grade a{ text-decoration: none; }
+#ExaminationPaperGradeContainer #PaperContainer .question-container .question-grade .unset a:hover .Hui-iconfont{ color:#3366FF; }
+#ExaminationPaperGradeContainer #PaperContainer .question-container .question-grade .unset .active{ color: #3366FF; }
+#ExaminationPaperGradeContainer #PaperContainer .question-container .question-grade .exactness a:hover .Hui-iconfont{ color:#336600; }
+#ExaminationPaperGradeContainer #PaperContainer .question-container .question-grade .exactness .active{ color:#336600; }
+#ExaminationPaperGradeContainer #PaperContainer .question-container .question-grade .wrong a:hover .Hui-iconfont{ color:#CC0000; }
+#ExaminationPaperGradeContainer #PaperContainer .question-container .question-grade .wrong .active{ color:#CC0000; }
 #ExaminationPaperGradeContainer #PaperContainer .prompt{ margin-top:20px; font-size:38px; text-align:center; color:#CCC; }
 
 .time-picker{ }
-.time-picker .clock{margin-top:3px;}
+.time-picker .clock{ margin-top:3px; }
 
 .question-container{ background-color: #EEE; }
 .question-classify-list-container{ position: absolute; width: 200px; height: 100%; background-color: #EEE; /* overflow: hidden; overflow-y: scroll; */ overflow-y: scroll; }
@@ -92,6 +101,11 @@ body.prompt{ min-width: 800px; }
 .fz-14{ font-size: 14px!important; }
 .fz-16{ font-size: 16px!important; }
 .fz-18{ font-size: 18px!important; }
+.fz-20{ font-size: 20px!important; }
+.fz-22{ font-size: 22px!important; }
+.fz-24{ font-size: 24px!important; }
+.fz-26{ font-size: 26px!important; }
+.fz-28{ font-size: 28px!important; }
 
 .bold{ font-weight: bold!important; }
 

@@ -11,7 +11,7 @@ RETURNS @table TABLE
     (
       ETUS_TaskId INT ,
       ETUS_TaskName VARCHAR(50) ,
-      ETUS_TaskType
+      ETUS_TaskType TINYINT,
       ETUS_TaskAutoType TINYINT ,
       ETUS_TaskStatisticType TINYINT ,
       ETUS_PaperTemplateId INT ,
@@ -33,6 +33,7 @@ AS
         INSERT  INTO @table
                 SELECT  et_ept.ET_Id AS ETUS_TaskId ,
                         et_ept.ET_Name AS ETUS_TaskName ,
+                        et_ept.ET_Type AS ETUS_TaskType,
                         et_ept.ET_AutoType AS ETUS_TaskAutoType ,
                         et_ept.ET_StatisticType AS ETUS_TaskStatisticType ,
                         et_ept.EPT_Id AS ETUS_PaperTemplateId ,

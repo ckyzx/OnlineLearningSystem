@@ -19,9 +19,12 @@ namespace OnlineLearningSystem.Utilities
             {
 
                 Boolean changed;
+                ExaminationPaperTemplate ept;
+                UExaminationPaperTemplate uept;
                 List<ExaminationPaper> eps;
 
                 changed = false;
+                uept = new UExaminationPaperTemplate();
 
                 eps =
                     olsEni
@@ -34,15 +37,25 @@ namespace OnlineLearningSystem.Utilities
                 foreach (var ep in eps)
                 {
 
+                    // 考试时长无限制、试卷模板已终止，则关闭试卷、计算成绩
                     if (ep.EP_TimeSpan == 0)
                     {
+                        ept = olsEni.ExaminationPaperTemplates.Single(m => m.EPT_Id == ep.EPT_Id);
+                        if ((Byte)PaperTemplateStatus.Done == ept.EPT_PaperTemplateStatus)
+                        {
+                            ep.EP_PaperStatus = (Byte)PaperStatus.Done;
+                            uept.GradePaper(ep);
+                            uept.SaveChange();
+                            changed = true;
+                        }
                         continue;
                     }
 
                     if (now > ep.EP_EndTime)
                     {
                         ep.EP_PaperStatus = (Byte)PaperStatus.Done;
-                        new UExaminationPaperTemplate().GradePaper(ep);
+                        uept.GradePaper(ep);
+                        uept.SaveChange();
                         changed = true;
                     }
                 }

@@ -63,5 +63,8 @@ namespace OnlineLearningSystem.Models
         [DisplayName("排序")]
         [Required(ErrorMessage = "请设置{0}")]
         public Double U_Sort { get; set; }
+
+        [NotMapped]
+        public String U_Score { get; set; }
     }
 }
