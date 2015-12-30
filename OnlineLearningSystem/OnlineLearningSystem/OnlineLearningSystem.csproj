@@ -106,6 +106,7 @@
     <Compile Include="Models\ExaminationTaskAttendee.cs" />
     <Compile Include="Utilities\Common\DbOperator.cs" />
     <Compile Include="Utilities\Common\ModelConvert.cs" />
+    <Compile Include="Utilities\Common\ModelDataTables.cs" />
     <Compile Include="ViewModels\VMExaminationTaskPersonalStatistic.cs" />
     <Compile Include="Utilities\UExaminationTaskStatistic.cs" />
     <Compile Include="ViewModels\VMExaminationTaskStatistic.cs" />
@@ -149,7 +150,7 @@
     <Compile Include="Utilities\UPermissionCategory.cs" />
     <Compile Include="Utilities\UQuestion.cs" />
     <Compile Include="Utilities\URole.cs" />
-    <Compile Include="Utilities\Utility.cs" />
+    <Compile Include="Utilities\Common\Utility.cs" />
     <Compile Include="Utilities\UUser.cs" />
     <Compile Include="Utilities\UExaminationTaskTemplate.cs" />
     <Compile Include="Utilities\UExaminationTask.cs" />

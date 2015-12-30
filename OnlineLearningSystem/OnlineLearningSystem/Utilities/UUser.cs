@@ -9,13 +9,14 @@ using Newtonsoft.Json;
 using System.Text;
 using System.Security.Cryptography;
 using OnlineLearningSystem.ViewModels;
+using System.Data.SqlClient;
 
 namespace OnlineLearningSystem.Utilities
 {
     public class UUser : Utility
     {
 
-        public DataTablesResponse ListDataTablesAjax(DataTablesRequest dtRequest)
+        /*public DataTablesResponse ListDataTablesAjax(DataTablesRequest dtRequest)
         {
 
             DataTablesResponse dtResponse;
@@ -66,9 +67,20 @@ namespace OnlineLearningSystem.Utilities
             dtResponse.data = ms;
 
             return dtResponse;
+        }*/
+        public DataTablesResponse ListDataTablesAjax(DataTablesRequest dtRequest)
+        {
+
+            DataTablesResponse dtResponse;
+            ModelDataTables<User> mdt;
+
+            mdt = new ModelDataTables<User>(dtRequest, "Users", "U_Id");
+            dtResponse = mdt.GetList("U_Status");
+
+            return dtResponse;
         }
 
-        private Object[] GetModels(DataTablesRequest dtRequest)
+        /*private Object[] GetModels(DataTablesRequest dtRequest)
         {
 
             Byte status, statusDelete;
@@ -122,7 +134,7 @@ namespace OnlineLearningSystem.Utilities
             }
 
             return new Object[] { count, us };
-        }
+        }*/
 
         public List<SelectListItem> GetDutyList(Int32? currentValue)
         {

@@ -3,7 +3,7 @@ USE OLS;
 GO
 
 -- 添加角色权限“个人考试统计”
-/*SET IDENTITY_INSERT [dbo].[Permissions] ON
+SET IDENTITY_INSERT [dbo].[Permissions] ON
 INSERT [dbo].[Permissions] ([P_Id], [P_AutoId], [PC_Id], [P_Name], [P_Controller], [P_Action], [P_Remark], [P_AddTime]) 
 VALUES (130, 130, 6, N'个人考试统计', N'ExaminationTaskStatistic', N'Personal', NULL, CAST(0x079DAEB04D8BAB3A0B AS DateTime2));
 SET IDENTITY_INSERT [dbo].[Permissions] OFF
@@ -46,7 +46,7 @@ SELECT R_Id, 131 FROM dbo.Roles WHERE R_Id <> 1;
 UPDATE Roles SET 
 R_Permissions = '[46,47,79,81,89,90,93,94,95,96,130,131]',
 R_PermissionCategories = '[6,11]'
-WHERE R_Id <> 1;*/
+WHERE R_Id <> 1;
 
 -- 添加角色权限“查看试卷”
 SET IDENTITY_INSERT [dbo].[Permissions] ON

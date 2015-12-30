@@ -98,7 +98,7 @@ body.prompt{ }
 .form-personal .row-personal{ line-height: 38px; border-top:1px solid #CCC; border-left:1px solid #CCC; }
 
 /* Global */
-.ml-200{ margin-left: 200px!important; }
+.ml-200{ margin-left: 200px; }
 
 .fz-9{ font-size:10px!important; transform: scale(0.9)!important; }
 .fz-10{ font-size: 10px!important; }

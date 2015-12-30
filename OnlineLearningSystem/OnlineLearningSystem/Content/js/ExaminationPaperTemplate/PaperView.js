@@ -46,7 +46,10 @@ $(function() {
                     initLocalQuestions('#PaperContainer', questions, answers);
 
                     // 清除未选评分项
-                    $('span.grade i[class!=active]').hide();
+                    $('span.grade i.active').each(function(){
+                        $(this).parentsUntil('div').last().attr('data-active', 1);
+                    });
+                    $('span.grade:not([data-active])').hide();
 
                 } else {
 
