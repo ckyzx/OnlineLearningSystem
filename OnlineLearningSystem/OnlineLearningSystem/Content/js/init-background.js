@@ -7,10 +7,10 @@
         var a, title, url;
 
         a = $(this);
-        title = a.attr('title');
-        url = a.attr('url');
-        width = a.attr('width');
-        height = a.attr('height');
+        title = a.attr('data-title');
+        url = a.attr('data-url');
+        width = a.attr('data-width');
+        height = a.attr('data-height');
 
         ShowPageWithSize(title, url, width, height);
     });

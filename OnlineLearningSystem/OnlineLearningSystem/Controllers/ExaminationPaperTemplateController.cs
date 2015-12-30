@@ -127,6 +127,22 @@ namespace OnlineLearningSystem.Controllers
         }
 
         //
+        // GET: /ExaminationPaperTemplate/GetQuestionsForUser
+
+        [Description("获取用户试题数据")]
+        public JsonResult GetQuestionsForUser(Int32 id)
+        {
+
+            Int32 uId;
+            User u;
+
+            u = (User)Session["User"];
+            uId = u.U_Id;
+
+            return Json(um.GetQuestions(id, uId), JsonRequestBehavior.AllowGet);
+        }
+
+        //
         // POST: /ExaminationPaperTemplate/Grade
 
         [Description("提交改卷数据")]
@@ -260,6 +276,15 @@ namespace OnlineLearningSystem.Controllers
             resJson = um.Terminate(id);
 
             return Json(resJson, JsonRequestBehavior.AllowGet);
+        }
+
+        //
+        // GET: /ExaminationPaperTemplate/PaperView
+
+        [Description("查看试卷")]
+        public ActionResult PaperView(Int32 id)
+        {
+            return View();
         }
 
     }

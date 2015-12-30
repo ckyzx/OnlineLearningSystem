@@ -203,6 +203,10 @@ function GetDataTablesAllCheckStatus1(tableSelector, checked) {
 }
 /*----------------------------------------------------------------------*/
 
+/**
+ ** 考试页面与改卷页面相关函数
+ **/
+
 function adjustQuestions(qs, as) {
 
     var ary;
@@ -437,15 +441,17 @@ function setModelAnswer(eptq, exactness) {
             tmpAnswer = JSON.parse(tmpAnswer);
             tmpAnswer = tmpAnswer.length == 1 ? tmpAnswer[0] : '';
 
-            tmpRadio = $('input[name="question_radios_' + eptqId + '_model_answer"][value="' + tmpAnswer + '"]');
+            /*tmpRadio = $('input[name="question_radios_' + eptqId + '_model_answer"][value="' + tmpAnswer + '"]');
             if (tmpRadio.length == 1) {
                 tmpRadio.get(0).checked = true;
-            }
+            }*/
+
+            $('span[data-id=ModelAnswerContainer_' + eptqId + ']').text(tmpAnswer);
 
             break;
         case '多选题':
 
-            tmpAnswer = modelAnswer;
+            /*tmpAnswer = modelAnswer;
             tmpAnswer = JSON.parse(tmpAnswer);
 
             for (var i = 0; i < tmpAnswer.length; i++) {
@@ -456,16 +462,19 @@ function setModelAnswer(eptq, exactness) {
                 if (tmpCheckbox.length == 1) {
                     tmpCheckbox.get(0).checked = true;
                 }
-            }
+            }*/
+
+            $('span[data-id=ModelAnswerContainer_' + eptqId + ']').text(modelAnswer.replace(/[\[\]",]*/g, ''));
 
             break;
-
         case '判断题':
 
-            tmpRadio = $('input[name="question_radios_' + eptqId + '_model_answer"][value="' + modelAnswer + '"]');
+            /*tmpRadio = $('input[name="question_radios_' + eptqId + '_model_answer"][value="' + modelAnswer + '"]');
             if (tmpRadio.length == 1) {
                 tmpRadio.get(0).checked = true;
-            }
+            }*/
+
+            $('span[data-id=ModelAnswerContainer_' + eptqId + ']').text(modelAnswer);
 
             break;
         default:
@@ -480,5 +489,4 @@ function setModelAnswer(eptq, exactness) {
             break;
     }
 }
-
 /*----------------------------------------------------------------------*/

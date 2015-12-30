@@ -106,6 +106,7 @@
     <Compile Include="Models\ExaminationTaskAttendee.cs" />
     <Compile Include="Utilities\Common\DbOperator.cs" />
     <Compile Include="Utilities\Common\ModelConvert.cs" />
+    <Compile Include="ViewModels\VMExaminationTaskPersonalStatistic.cs" />
     <Compile Include="Utilities\UExaminationTaskStatistic.cs" />
     <Compile Include="ViewModels\VMExaminationTaskStatistic.cs" />
     <Compile Include="Models\ExaminationTaskTemplate.cs" />
@@ -957,6 +958,8 @@
     <Content Include="Views\ExaminationTaskStatistic\List.cshtml" />
     <Content Include="Views\ExaminationTaskStatistic\ListUser.cshtml" />
     <Content Include="Views\Shared\_PagePrompt.cshtml" />
+    <Content Include="Views\ExaminationTaskStatistic\Personal.cshtml" />
+    <Content Include="Views\ExaminationPaperTemplate\PaperView.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

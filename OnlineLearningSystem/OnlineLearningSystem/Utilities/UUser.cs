@@ -183,7 +183,7 @@ namespace OnlineLearningSystem.Utilities
             Duty duty;
             String duName;
 
-            model = olsEni.Users.SingleOrDefault(m => m.U_Id == id);
+            model = olsEni.Users.SingleOrDefault(m => m.U_Id == id && m.U_Status == (Byte)Status.Available);
 
             if (null != model.Du_Id)
             {
@@ -333,7 +333,7 @@ namespace OnlineLearningSystem.Utilities
 
                 User model;
 
-                model = olsEni.Users.SingleOrDefault(m => m.U_Id == vmModel.U_Id);
+                model = olsEni.Users.SingleOrDefault(m => m.U_Id == vmModel.U_Id && m.U_Status == (Byte)Status.Available);
 
                 model.U_Id = vmModel.U_Id;
                 model.Du_Id = vmModel.Du_Id;
@@ -439,7 +439,8 @@ namespace OnlineLearningSystem.Utilities
                         (m.U_Name.ToLower() == userName
                         && m.U_Password == password)
                         || (m.U_LoginName.ToLower() == userName
-                        && m.U_Password == password));
+                        && m.U_Password == password) 
+                        && m.U_Status == (Byte)Status.Available);
 
                 if (null == u)
                 {
@@ -589,7 +590,7 @@ namespace OnlineLearningSystem.Utilities
 
                 User model;
 
-                model = olsEni.Users.SingleOrDefault(m => m.U_Id == uId);
+                model = olsEni.Users.SingleOrDefault(m => m.U_Id == uId && m.U_Status == (Byte)Status.Available);
 
                 if (null == model)
                 {
@@ -634,7 +635,7 @@ namespace OnlineLearningSystem.Utilities
 
                 User model;
 
-                model = olsEni.Users.SingleOrDefault(m => m.U_Id == uId);
+                model = olsEni.Users.SingleOrDefault(m => m.U_Id == uId && m.U_Status == (Byte)Status.Available);
 
                 if (null == model)
                 {

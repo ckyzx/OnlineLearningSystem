@@ -106,5 +106,34 @@ namespace OnlineLearningSystem.Utilities
             return new Object[] { ms, total, filter };
         }
 
+        public VMExaminationTaskPersonalStatistic GetPersonalStatistic(Int32 uId)
+        {
+            try
+            {
+
+                String sql;
+                SqlParameter sp;
+                DataTable dataTable;
+                List<VMExaminationTaskPersonalStatistic> etpss;
+
+                sql = "SELECT * FROM ExaminationTaskPersonalStatistic WHERE ETPS_UserId = @uId";
+                sp = new SqlParameter("@uId", uId);
+                dataTable = olsDBO.GetDataTable(sql, sp);
+
+                etpss = (List<VMExaminationTaskPersonalStatistic>)ModelConvert<VMExaminationTaskPersonalStatistic>.ConvertToModel(dataTable);
+
+                if (etpss.Count == 0)
+                {
+                    return null;
+                }
+
+                return etpss[0];
+            }
+            catch (Exception ex)
+            {
+                StaticHelper.GetExceptionMessage(ex);
+                return null;
+            }
+        }
     }
 }

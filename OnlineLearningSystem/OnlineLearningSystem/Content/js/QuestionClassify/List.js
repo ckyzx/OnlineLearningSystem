@@ -60,13 +60,12 @@ $(function() {
             status = data['QC_Status'];
             switch (status) {
                 case 1:
-                    row.find('a.recycle').show();
-                    row.find('a.edit').show();
-                    row.find('a.delete').show();
+                    row.find('a.recycle').removeClass('hide');
+                    row.find('a.edit').removeClass('hide');
                     break;
                 case 2:
-                    row.find('a.resume').show();
-                    row.find('a.delete').show();
+                    row.find('a.resume').removeClass('hide');
+                    row.find('a.delete').removeClass('hide');
                     break;
                 case 3:
                     break;

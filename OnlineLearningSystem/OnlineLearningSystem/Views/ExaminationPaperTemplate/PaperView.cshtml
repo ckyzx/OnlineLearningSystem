@@ -1,32 +1,21 @@
 ﻿@{
-    ViewBag.Title = "试卷评分";
+    ViewBag.Title = "查看试卷";
     Layout = "~/Views/Shared/_PageEdit.cshtml";
 }
 <div id="ExaminationPaperGradeContainer">
-    <div id="UserList">
-        <ul class="Huifold">
-        </ul>
-    </div>
-    <div id="PaperContainer" class="ml-200">
+    <div id="PaperContainer">
     </div>
 </div>
 <script type="text/javascript" src="@Url.Content("/Content/lib/jquery-tmpl/jquery.tmpl.min.js")"></script>
 <script type="text/javascript" src="@Url.Content("/Content/lib/jquery.timers-1.2.js")"></script>
 <script type="text/javascript" src="@Url.Content("/Content/lib/js.request.js")"></script>
-<script type="text/javascript" src="@Url.Content("/Content/js/ExaminationPaperTemplate/ListGrade.js")"></script>
-<script id="UserItemTmpl" type="text/x-jquery-tmpl">
-    <li id="Item_${U_Id}" class="item" data-user-id="${U_Id}">
-        <h4>${U_Name}<span class="score">${EP_Score}</span></h4>
-    </li>
-</script>
+<script type="text/javascript" src="@Url.Content("/Content/js/ExaminationPaperTemplate/PaperView.js")"></script>
 <script id="PaperTmpl" type="text/x-jquery-tmpl">
     <div id="Paper_${epId}" data-paper-id="${epId}" data-user-id="${uId}">
         {{tmpl(types) '#TypeTmpl'}}
         <div class="button-container">
-            <button id="PrevPaper" class="btn btn-primary radius prev-paper mr-10" type="button">上一张</button>
-            <button id="NextPaper" class="btn btn-primary radius next-paper mr-30" type="button">下一张</button>
-            <button id="Grade" class="btn btn-primary radius next-paper mr-30" type="button">提交评分</button>
-            <button id="GradeFinish" class="btn btn-primary radius f-r grade-finish mr-20" type="button">结束评分</button>
+            <button id="Close" class="btn btn-primary radius prev-paper f-r mr-10" type="button">关闭</button>
+            <div class="cl"></div>
         </div>
     </div>
 </script>

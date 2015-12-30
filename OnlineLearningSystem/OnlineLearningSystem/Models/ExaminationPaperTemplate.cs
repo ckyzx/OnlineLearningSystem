@@ -53,5 +53,8 @@ namespace OnlineLearningSystem.Models
         [DisplayName("状态")]
         [Required(ErrorMessage = "请选择{0}")]
         public Byte EPT_Status { get; set; }
+
+        [NotMapped]
+        public String EP_Score { get; set; }
     }
 }

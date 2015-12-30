@@ -152,7 +152,7 @@ namespace OnlineLearningSystem.Utilities
 
                 if (null == model.D_Level)
                 {
-                    
+
                     model.D_Level = String.Format("{0:D4}", model.D_Id);
                 }
 
@@ -301,15 +301,14 @@ namespace OnlineLearningSystem.Utilities
                     foreach (var ud in uds)
                     {
 
-                        zTreeJson.Append("{");
-
-                        u = olsEni.Users.SingleOrDefault(m => m.U_Id == ud.U_Id);
+                        u = olsEni.Users.SingleOrDefault(m => m.U_Id == ud.U_Id && m.U_Status == (Byte)Status.Available);
                         if (null != u)
                         {
+                            zTreeJson.Append("{");
                             zTreeJson.Append("\"userNode\": true, \"departmentId\":" + d.D_Id + ", \"userId\":" + u.U_Id + ", \"name\":\"" + u.U_Name + "\"");
+                            zTreeJson.Append("},");
                         }
 
-                        zTreeJson.Append("},");
                     }
 
                     zTreeJson.Remove(zTreeJson.Length - 1, 1);

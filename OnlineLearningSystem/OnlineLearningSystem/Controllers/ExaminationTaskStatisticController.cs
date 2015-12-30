@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.ComponentModel;
+using OnlineLearningSystem.Models;
 using OnlineLearningSystem.Utilities;
 
 namespace OnlineLearningSystem.Controllers
@@ -71,5 +72,19 @@ namespace OnlineLearningSystem.Controllers
             return Json(dtResponse, JsonRequestBehavior.DenyGet);
         }
 
+        //
+        // GET: /ExaminationTaskStatistic/Personal
+
+        public ActionResult Personal()
+        {
+
+            Int32 uId;
+            User u;
+
+            u = (User)Session["User"];
+            uId = u.U_Id;
+
+            return View(um.GetPersonalStatistic(uId));
+        }
     }
 }

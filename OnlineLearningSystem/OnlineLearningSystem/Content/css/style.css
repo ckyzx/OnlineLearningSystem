@@ -48,13 +48,13 @@ body.prompt{ }
 #ExaminationPaperGradeContainer #UserList .Huifold .item h4.active{ color:#FFF; background: #5a98de; }
 #ExaminationPaperGradeContainer #UserList .Huifold .item h4 span.score{ float:right; }
 #ExaminationPaperGradeContainer #UserList .button-container{ padding: 20px 0; height: 31px; }
-#ExaminationPaperGradeContainer #PaperContainer{ padding:20px; margin-left: 200px; min-height: 100%; background-color: #EEE; }
+#ExaminationPaperGradeContainer #PaperContainer{ padding:20px; min-height: 100%; background-color: #EEE; }
 #ExaminationPaperGradeContainer #PaperContainer .question-container{ margin-bottom: 30px; background-color:#FFF; }
 #ExaminationPaperGradeContainer #PaperContainer .question-container .type-name{ margin-bottom:5px; padding:0 10px; font-size:24px; color:#FFF; background-color: #DDD; }
 #ExaminationPaperGradeContainer #PaperContainer .question-container .question{ margin-bottom:10px; border-bottom: 1px dashed #CCC; }
 #ExaminationPaperGradeContainer #PaperContainer .question-container .question-item{ padding-bottom:5px; }
-#ExaminationPaperGradeContainer #PaperContainer .question-container .question-grade .Hui-iconfont{ color:#CCC; cursor:pointer;}
-#ExaminationPaperGradeContainer #PaperContainer .question-container .question-grade .active{font-weight: bold;}
+#ExaminationPaperGradeContainer #PaperContainer .question-container .question-grade .Hui-iconfont{ color:#CCC; cursor:pointer; }
+#ExaminationPaperGradeContainer #PaperContainer .question-container .question-grade .active{ font-weight: bold; }
 #ExaminationPaperGradeContainer #PaperContainer .question-container .question-grade a{ text-decoration: none; }
 #ExaminationPaperGradeContainer #PaperContainer .question-container .question-grade .unset a:hover .Hui-iconfont{ color:#3366FF; }
 #ExaminationPaperGradeContainer #PaperContainer .question-container .question-grade .unset .active{ color: #3366FF; }
@@ -94,7 +94,12 @@ body.prompt{ }
 
 .validation-summary-errors{ color:red; }
 
+.form-personal{ margin:20px; border-right:1px solid #CCC; border-bottom: 1px solid #CCC; }
+.form-personal .row-personal{ line-height: 38px; border-top:1px solid #CCC; border-left:1px solid #CCC; }
+
 /* Global */
+.ml-200{ margin-left: 200px!important; }
+
 .fz-9{ font-size:10px!important; transform: scale(0.9)!important; }
 .fz-10{ font-size: 10px!important; }
 .fz-12{ font-size: 12px!important; }
@@ -105,7 +110,7 @@ body.prompt{ }
 .fz-22{ font-size: 22px!important; }
 .fz-24{ font-size: 24px!important; }
 .fz-26{ font-size: 26px!important; }
-.fz-28{ font-size: 28px!important; }
+.fz-28{ font-size: 28px!important; line-height: 28px; }
 
 .bold{ font-weight: bold!important; }
 

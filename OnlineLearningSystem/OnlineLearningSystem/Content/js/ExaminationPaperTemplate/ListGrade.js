@@ -150,11 +150,11 @@
                         ep = eps[i];
 
                         // 定义成绩类型与数值
-                        if(1 == etStatisticType){
+                        if (1 == etStatisticType) {
                             score = ep.EP_Score + '分';
-                        }else if(2 == etStatisticType){
+                        } else if (2 == etStatisticType) {
                             score = ep.EP_Score + '%';
-                        }else{
+                        } else {
                             score = '';
                         }
 
@@ -171,7 +171,7 @@
                         offset: '100px'
                     });
 
-                    if(undefined != callback){
+                    if (undefined != callback) {
                         callback();
                     }
                 } else if (0 == data.status) {
@@ -327,14 +327,14 @@
         }
     }
 
-    function initEvent(){
+    function initEvent() {
 
         _gradeSelect();
     }
 
-    function _gradeSelect(){
+    function _gradeSelect() {
 
-        container.on('click', 'span.grade', function(){
+        container.on('click', 'span.grade', function() {
 
             var span, i;
             var dataId, dataName;
@@ -345,9 +345,10 @@
             dataId = span.attr('data-id');
             dataName = span.attr('data-name');
 
-            $('input[id='+dataId+']').get(0).checked = true;
-            $('span[data-name=' + dataName +'] i').removeClass('active');
+            $('input[id=' + dataId + ']').get(0).checked = true;
+            $('span[data-name=' + dataName + '] i').removeClass('active');
             i.addClass('active');
         });
     }
+    /*----------------------------------------------------------------------*/
 });

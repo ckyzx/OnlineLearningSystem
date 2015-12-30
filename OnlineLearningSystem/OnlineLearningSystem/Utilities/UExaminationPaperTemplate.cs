@@ -119,6 +119,8 @@ namespace OnlineLearningSystem.Utilities
         {
 
             Int32 count;
+            ExaminationTask et;
+            ExaminationPaper ep;
             Int32[] userIds;
             List<Int32> usableEtIds;
             List<ExaminationTask> ets;
@@ -131,13 +133,13 @@ namespace OnlineLearningSystem.Utilities
                 .Where(m =>
                     m.ET_Status == (Byte)Status.Available)
                 .ToList();
-            foreach (var et in ets)
+            foreach (var et1 in ets)
             {
 
-                userIds = JsonConvert.DeserializeObject<Int32[]>(et.ET_Attendee);
+                userIds = JsonConvert.DeserializeObject<Int32[]>(et1.ET_Attendee);
                 if (userIds.Contains(uId))
                 {
-                    usableEtIds.Add(et.ET_Id);
+                    usableEtIds.Add(et1.ET_Id);
                 }
             }
 
@@ -166,7 +168,32 @@ namespace OnlineLearningSystem.Utilities
 
             foreach (var m1 in ms)
             {
-                m1.ET_Name = olsEni.ExaminationTasks.Single(m => m.ET_Id == m1.ET_Id).ET_Name;
+
+                et = ets.Single(m => m.ET_Id == m1.ET_Id);
+                m1.ET_Name = et.ET_Name;
+                m1.ET_Type = et.ET_Type;
+
+                // 获取已考试、已评分的试卷成绩
+                ep = olsEni.ExaminationPapers.SingleOrDefault(m => m.EPT_Id == m1.EPT_Id && m.EP_UserId == uId);
+                if (null == ep)
+                {
+                    m1.EP_Score = "[未参与]";
+                    continue;
+                }
+                else if (-1 == ep.EP_Score)
+                {
+                    m1.EP_Score = "[未评分]";
+                    continue;
+                }
+
+                if ((Byte)StatisticType.Score == et.ET_StatisticType)
+                {
+                    m1.EP_Score = ep.EP_Score + "分";
+                }
+                else if((Byte)StatisticType.Number == et.ET_StatisticType)
+                {
+                    m1.EP_Score = ep.EP_Score + "%";
+                }
             }
 
             return new Object[] { count, ms };
@@ -563,7 +590,7 @@ namespace OnlineLearningSystem.Utilities
 
                 foreach (var uId in userAry)
                 {
-                    u = olsEni.Users.SingleOrDefault(m => m.U_Id == uId);
+                    u = olsEni.Users.SingleOrDefault(m => m.U_Id == uId && m.U_Status == (Byte)Status.Available);
                     if (null != u)
                     {
                         u.U_Password = "**********";
@@ -576,7 +603,7 @@ namespace OnlineLearningSystem.Utilities
                         continue;
                     }
 
-                    u.U_Score = GetScoreString(et.ET_StatisticType, ep.EP_Score);
+                    u.EP_Score = GetScoreString(et.ET_StatisticType, ep.EP_Score);
 
                 }
 

@@ -1,13 +1,13 @@
 $(function() {
 
-    var table, etId, type, ptStatus;
+    var table, params, etId, type, ptStatus;
 
     QueryString.Initial();
     etId = QueryString.GetValue('etId');
     type = QueryString.GetValue('type');
     ptStatus = QueryString.GetValue('ptStatus');
 
-    table = $('.table-sort').DataTable({
+    params = {
         "processing": true,
         "serverSide": true,
         "ajax": {
@@ -18,35 +18,6 @@ $(function() {
         "lengthChange": false,
         "pageLength": 15,
         "ordering": false,
-        "columns": [{
-            "width": "10px",
-            "className": "text-c",
-            "defaultContent": '<input type="checkbox" value="" name="">'
-        }, {
-            "width": "30px",
-            "name": "EPT_Id",
-            "data": "EPT_Id"
-        }, {
-            "name": "ET_Name",
-            "data": "ET_Name"
-        }, {
-            "name": "EPT_StartTime",
-            "defaultContent": '<span class="EPT_StartTime"></span>'
-        }, {
-            "name": "EPT_TimeSpan",
-            "defaultContent": '<span class="EPT_TimeSpan"></span>'
-        }, {
-            "name": "EPT_AddTime",
-            "defaultContent": '<span class="EPT_AddTime"></span>'
-        }, {
-            "width": "40%",
-            "name": "EPT_Remark",
-            "data": 'EPT_Remark'
-        }, {
-            "width": "100px",
-            "className": "text-c",
-            "defaultContent": '<a style="display:none;text-decoration: none;" class="btn btn-primary radius size-MINI enter-exam fz-9" href="javascript:void(0);" title="进入考试">进入考试</a>'
-        }],
         "createdRow": function(row, data, dataIndex) {
 
             var span, addTime, startTime, status, type;
@@ -80,13 +51,12 @@ $(function() {
             /*status = data['EPT_Status'];
             switch (status) {
                 case 1:
-                    row.find('a.recycle').show();
-                    row.find('a.edit').show();
-                    row.find('a.delete').show();
+                    row.find('a.recycle').removeClass('hide');
+                    row.find('a.edit').removeClass('hide');
                     break;
                 case 2:
-                    row.find('a.resume').show();
-                    row.find('a.delete').show();
+                    row.find('a.resume').removeClass('hide');
+                    row.find('a.delete').removeClass('hide');
                     break;
                 case 3:
                     break;
@@ -102,17 +72,73 @@ $(function() {
                 case 1:
 
                     a = row.find('a.enter-exam');
-                    if(1 == type){
+                    if (1 == type) {
                         a.text('进入练习').attr('title', '进入练习');
                     }
-                    a.show();
+                    a.removeClass('hide');
+
                     break;
                 case 2:
+
+                    a = row.find('a.view-exam');
+                    if (1 == type) {
+                        a.text('查看练习').attr('title', '查看练习');
+                    }
+                    a.removeClass('hide');
+
+                    break;
                 default:
                     break;
             }
         }
+    };
+
+    params.columns = [{
+        "width": "10px",
+        "className": "text-c",
+        "defaultContent": '<input type="checkbox" value="" name="">'
+    }, {
+        "width": "30px",
+        "name": "EPT_Id",
+        "data": "EPT_Id"
+    }, {
+        "name": "ET_Name",
+        "data": "ET_Name"
+    }, {
+        "name": "EPT_StartTime",
+        "defaultContent": '<span class="EPT_StartTime"></span>'
+    }, {
+        "name": "EPT_TimeSpan",
+        "defaultContent": '<span class="EPT_TimeSpan"></span>'
+    }, {
+        "name": "EPT_AddTime",
+        "defaultContent": '<span class="EPT_AddTime"></span>'
+    }, {
+        "width": "40%",
+        "name": "EPT_Remark",
+        "data": 'EPT_Remark'
+    }];
+
+    if (2 == ptStatus) {
+
+        params.columns.push({
+            "className": "text-r",
+            "name": "EP_Score",
+            "data": 'EP_Score'
+        });
+
+        $('.table-sort thead th.EPT_Remark').after('<th class="text-r">成绩</th>');
+    }
+
+    params.columns.push({
+        "width": "100px",
+        "className": "text-c",
+        "defaultContent": 
+            '<a class="btn btn-primary radius size-MINI enter-exam fz-9 hide" href="javascript:void(0);">进入考试</a>' +
+            '<a class="btn btn-primary radius size-MINI view-exam fz-9 hide" href="javascript:void(0);">查看试卷</a>'
     });
+
+    table = $('.table-sort').DataTable(params);
 
     /*$('.table-sort tbody').on('click', 'a.edit', function() {
 
@@ -248,6 +274,16 @@ $(function() {
         id = data['EPT_Id'];
 
         ShowPage('试卷', '/ExaminationPaperTemplate/Paper?id=' + id);
+    });
+
+    $('.table-sort tbody').on('click', 'a.view-exam', function() {
+
+        var data, id;
+
+        data = table.row($(this).parents('tr')).data();
+        id = data['EPT_Id'];
+
+        ShowPage('试卷', '/ExaminationPaperTemplate/PaperView?id=' + id);
     });
 
 });
