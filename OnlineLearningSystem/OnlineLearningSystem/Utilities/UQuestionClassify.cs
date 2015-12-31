@@ -15,83 +15,10 @@ namespace OnlineLearningSystem.Utilities
         {
 
             DataTablesResponse dtResponse;
-            Int32 recordsTotal, recordsFiltered;
-            String whereSql, orderColumn;
-            List<QuestionClassify> ms;
+            UModel<QuestionClassify> umodel;
 
-
-            dtResponse = new DataTablesResponse();
-
-            dtResponse.draw = dtRequest.Draw;
-
-            recordsTotal = olsEni.QuestionClassifies.Count();
-            dtResponse.recordsTotal = recordsTotal;
-
-
-            //TODO:指定筛选条件
-            whereSql = "";
-            foreach (var col in dtRequest.Columns)
-            {
-
-                if ("" != col.Name)
-                {
-
-                    whereSql += col.Name + "||";
-                }
-            }
-
-            //TODO:指定排序列
-            orderColumn = dtRequest.Columns[dtRequest.OrderColumn].Name;
-
-            var tmpMs =
-                olsEni
-                .QuestionClassifies
-                .OrderBy(model => model.QC_Id)
-                .Where(model =>
-                    model.QC_Name.Contains(dtRequest.SearchValue)
-                    && model.QC_Status != (Byte)Status.Delete)
-                .Select(model => new
-                {
-                    QC_Id = model.QC_Id,
-                    QC_Name = model.QC_Name,
-                    QC_Level = model.QC_Level,
-                    QC_Remark = model.QC_Remark,
-                    QC_AddTime = model.QC_AddTime,
-                    QC_Status = model.QC_Status
-                })
-                .ToList();
-
-            // 获取分类名称
-            ms = new List<QuestionClassify>();
-
-            foreach (var model in tmpMs)
-            {
-
-                ms.Add(new QuestionClassify()
-                {
-                    QC_Id = model.QC_Id,
-                    QC_Name = model.QC_Name,
-                    QC_Level = model.QC_Level,
-                    QC_Remark = model.QC_Remark,
-                    QC_AddTime = model.QC_AddTime,
-                    QC_Status = model.QC_Status
-                });
-            }
-
-            tmpMs = null;
-
-            recordsFiltered = ms.Count();
-            dtResponse.recordsFiltered = recordsFiltered;
-
-            if (-1 != dtRequest.Length)
-            {
-                ms =
-                    ms
-                    .Skip(dtRequest.Start).Take(dtRequest.Length)
-                    .ToList();
-            }
-
-            dtResponse.data = ms;
+            umodel = new UModel<QuestionClassify>(dtRequest, "QuestionClassifies", "QC_Id");
+            dtResponse = umodel.GetList("QC_Status");
 
             return dtResponse;
         }

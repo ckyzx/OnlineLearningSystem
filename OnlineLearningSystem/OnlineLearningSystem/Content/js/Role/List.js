@@ -12,13 +12,7 @@ $(function() {
         "stateSave": false,
         "lengthChange": false,
         "pageLength": 15,
-        "sorting": [
-            [1, "asc"]
-        ],
-        "columnDefs": [{
-            "orderable": false,
-            "targets": [0, 4, 5]
-        }],
+        "ordering": false,
         "columns": [{
             "width": "10px",
             "className": "text-c",
@@ -60,12 +54,12 @@ $(function() {
             status = data['R_Status'];
             switch (status) {
                 case 1:
-                    row.find('a.recycle').removeClass('hide');
+                    //row.find('a.recycle').removeClass('hide');
                     row.find('a.edit').removeClass('hide');
                     break;
                 case 2:
-                    row.find('a.resume').removeClass('hide');
-                    row.find('a.delete').removeClass('hide');
+                    //row.find('a.resume').removeClass('hide');
+                    //row.find('a.delete').removeClass('hide');
                     break;
                 case 3:
                     break;

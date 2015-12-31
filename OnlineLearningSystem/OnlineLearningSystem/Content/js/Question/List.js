@@ -2,8 +2,10 @@ $(function() {
 
     'use strict';
 
-    var table, jqTable;
     var status, qcId;
+    var params;
+    var recycleBin;
+    var jqTable, dataTables;
 
     QueryString.Initial();
     status = QueryString.GetValue('status');
@@ -11,33 +13,17 @@ $(function() {
     qcId = QueryString.GetValue('qcId');
     qcId = undefined == qcId || 'undefined' == qcId ? 0 : qcId;
 
-
-    // 显示“试题缓存导入面板”
-    if (4 == status) {
-
-        $('#QuestionImportPanel').removeClass('hide');
-    } else {
-
-        $('#FunctionPanel').removeClass('hide');
-    }
-
-    jqTable = $('.question-table');
-
-    table = $('.question-table').DataTable({
+    params = {
         "processing": true,
         "serverSide": true,
         "ajax": {
             "url": "/Question/ListDataTablesAjax",
-            "type": "POST",
-            "data": {
-                status: status,
-                qcId: qcId
-            }
+            "type": "POST"
         },
         "stateSave": false,
         "lengthChange": false,
         "pageLength": 15,
-        "ordering": false, 
+        "ordering": false,
         "columns": [{
             "width": "10px",
             "className": "text-c",
@@ -101,7 +87,7 @@ $(function() {
             th = jqTable.find('th.Q_Content');
             span = row.find('span.Q_Content');
             qContent = data['Q_Content'];
-            qContent = qContent.replace(/^(\\r\\n)+/g, '').replace(/(\\r\\n)+$/g, '').replace(/\\r\\n/g, '[换行]').replace(/\s+/g,'');
+            qContent = qContent.replace(/^(\\r\\n)+/g, '').replace(/(\\r\\n)+$/g, '').replace(/\\r\\n/g, '[换行]').replace(/\s+/g, '');
             span.addClass('ellipsis').width(th.width()).html(qContent).attr('title', qContent);
 
             status = data['Q_Status'];
@@ -133,107 +119,62 @@ $(function() {
             input.val(score);
 
         }
-    });
+    };
 
-    $('.table-sort tbody').on('click', 'a.edit', function() {
+    // 显示“试题缓存导入面板”
+    if (4 == status) {
 
-        var data, id;
+        $('#QuestionImportPanel').removeClass('hide');
 
-        data = table.row($(this).parents('tr')).data();
-        id = data['Q_Id'];
+        params.ajax.data = {
+            status: status,
+            qcId: qcId
+        };
+    } else {
 
-        ShowPage('编辑试题', '/Question/Edit?id=' + id);
-    });
+        $('#FunctionPanel').removeClass('hide');
 
-    $('.table-sort tbody').on('click', 'a.recycle', function() {
+        // 添加回收站
+        recycleBin = $('<a id="RecycleBin" class="btn btn-success radius r mr-5" style="line-height:1.6em;margin-top:3px" href="javascript:;">回收站</a>');
+        $('nav.breadcrumb').append(recycleBin);
+        recycleBin.attr('data-status', status);
+        recycleBin.on('click', function() {
 
-        var tr, data, id;
+            var status;
 
-        tr = $(this).parents('tr');
-        data = table.row(tr).data();
-        id = data['Q_Id'];
+            status = recycleBin.attr('data-status');
 
-        $.post('/Question/Recycle', {
-                id: id
-            }, function(data) {
+            if (1 == status) {
 
-                if (1 == data.status) {
+                status = 2;
+                recycleBin.text('返回列表');
+                recycleBin.removeClass('btn-success');
+                recycleBin.addClass('btn-primary');
+            } else if (2 == status) {
 
-                    tr.fadeOut(function() {
+                status = 1;
+                recycleBin.text('回收站');
+                recycleBin.removeClass('btn-primary');
+                recycleBin.addClass('btn-success');
+            }
 
-                        tr.remove();
-                        refreshRowBackgroundColor('.table-sort');
-                    });
-                } else if (0 == data.status) {
+            recycleBin.attr('data-status', status);
+            dataTables.ajax.reload(null, false);
+        });
 
-                    alert(data.message);
-                }
-            }, 'json')
-            .error(function() {
+        params.ajax.data = function(originData) {
 
-                alert('请求返回错误！');
+            return $.extend({}, originData, {
+                status: recycleBin.attr('data-status'),
+                qcId: qcId
             });
-    });
+        }
+    }
 
-    $('.table-sort tbody').on('click', 'a.resume', function() {
+    jqTable = $('.question-table');
+    dataTables = $('.question-table').DataTable(params);
 
-        var tr, data, id;
-
-        tr = $(this).parents('tr');
-        data = table.row(tr).data();
-        id = data['Q_Id'];
-
-        $.post('/Question/Resume', {
-                id: id
-            }, function(data) {
-
-                if (1 == data.status) {
-
-                    tr.fadeOut(function() {
-
-                        tr.remove();
-                        refreshRowBackgroundColor('.table-sort');
-                    });
-                } else if (0 == data.status) {
-
-                    alert(data.message);
-                }
-            }, 'json')
-            .error(function() {
-
-                alert('请求返回错误！');
-            });
-    });
-
-    $('.table-sort tbody').on('click', 'a.delete', function() {
-
-        var tr, data, id;
-
-        tr = $(this).parents('tr');
-        data = table.row(tr).data();
-        id = data['Q_Id'];
-
-        $.post('/Question/Delete', {
-                id: id
-            }, function(data) {
-
-                if (1 == data.status) {
-
-                    tr.fadeOut(function() {
-
-                        tr.remove();
-                        refreshRowBackgroundColor('.table-sort');
-                    });
-                } else if (0 == data.status) {
-
-                    alert(data.message);
-                }
-            }, 'json')
-            .error(function() {
-
-                alert('请求返回错误！');
-            });
-    });
+    _initListEvent(jqTable, dataTables, '试题', 'Question', 'Q_');
 
     $('#CreateBtn').on('click', function() {
         ShowPage('添加试题', '/Question/Create');
@@ -250,7 +191,7 @@ $(function() {
         layerIndex = layer.load(0, {
             shade: [0.3, '#FFF']
         });
-        
+
         $.post('/Question/CacheClear', {}, function(data) {
 
                 layer.close(layerIndex);
@@ -278,13 +219,13 @@ $(function() {
         layerIndex = layer.load(0, {
             shade: [0.3, '#FFF']
         });
-        
+
         $.post('/Question/CacheImport', {}, function(data) {
 
                 var message, href;
 
                 layer.close(layerIndex);
-                
+
                 if (1 == data.status) {
 
                     message = '缓存导入成功。';
@@ -313,6 +254,7 @@ $(function() {
             });
     });
 
+
     // 初始化难度系数设置框
     var options;
 
@@ -327,7 +269,7 @@ $(function() {
 
         select = $(this);
         tr = select.parents('tr');
-        data = table.row(tr).data();
+        data = dataTables.row(tr).data();
         id = data['Q_Id'];
 
         coefficient = select.val();
@@ -349,14 +291,14 @@ $(function() {
     });
 
     // 初始化分数设置框
-    $('.question-table tbody').on('change', 'input.score', function(){
+    $('.question-table tbody').on('change', 'input.score', function() {
 
         var input, tr;
         var data, id, score;
 
         input = $(this);
         tr = input.parents('tr');
-        data = table.row(tr).data();
+        data = dataTables.row(tr).data();
         id = data['Q_Id'];
 
         score = input.val();
@@ -376,6 +318,7 @@ $(function() {
                 alert('请求返回错误！');
             });
     });
+
 
     // 初始化分类列表
     var ul;
@@ -401,24 +344,24 @@ $(function() {
 
         n = nodes[i];
 
-        if(n.questionClassifyId == qcId){
+        if (n.questionClassifyId == qcId) {
 
             n.checked = true;
         }
 
-        n.click = 'location.href = \'/Question/List?status='+status+'&qcId='+n.questionClassifyId+'\';';
+        n.click = 'location.href = \'/Question/List?status=' + status + '&qcId=' + n.questionClassifyId + '\';';
     };
 
     // 添加根节点“全部”
     nodes = [{
-        name: '全部', 
-        questionClassifyId: 0, 
-        open: true, 
-        click: 'location.href = \'/Question/List?status='+status+'&qcId=0\';',
+        name: '全部',
+        questionClassifyId: 0,
+        open: true,
+        click: 'location.href = \'/Question/List?status=' + status + '&qcId=0\';',
         children: nodes
     }];
 
-    if(0 == qcId){
+    if (0 == qcId) {
 
         nodes[0].checked = true;
     }
@@ -426,18 +369,3 @@ $(function() {
     ztree = $.fn.zTree.init(ul, settings, nodes);
 
 });
-
-var difficultyCoefficient;
-
-difficultyCoefficient = {
-    0: 0,
-    1: 1,
-    2: 2,
-    3: 3,
-    4: 4,
-    5: 5,
-    6: 6,
-    7: 7,
-    8: 8,
-    9: 9
-};

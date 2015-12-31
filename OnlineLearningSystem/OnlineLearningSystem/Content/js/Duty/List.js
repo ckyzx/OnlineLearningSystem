@@ -1,8 +1,9 @@
 $(function() {
 
-    var table;
+    var dtParams;
+    var dataTables;
 
-    table = $('.table-sort').DataTable({
+    dtParams = {
         "processing": true,
         "serverSide": true,
         "ajax": {
@@ -44,7 +45,8 @@ $(function() {
         }],
         "createdRow": function(row, data, dataIndex) {
 
-            var span, strDate, date, status;
+            var span;
+            var strDate, date, status;
 
             row = $(row);
 
@@ -74,107 +76,9 @@ $(function() {
                     break;
             }
         }
-    });
+    };
 
-    $('.table-sort tbody').on('click', 'a.edit', function() {
-
-        var data, id;
-
-        data = table.row($(this).parents('tr')).data();
-        id = data['Du_Id'];
-
-        ShowPage('修改职务', '/Duty/Edit?id=' + id);
-    });
-
-    $('.table-sort tbody').on('click', 'a.recycle', function() {
-
-        var tr, data, id;
-
-        tr = $(this).parents('tr');
-        data = table.row(tr).data();
-        id = data['Du_Id'];
-
-        $.post('/Duty/Recycle', {
-                id: id
-            }, function(data) {
-
-                if (1 == data.status) {
-
-                    tr.fadeOut(function() {
-
-                        tr.remove();
-                        refreshRowBackgroundColor('.table-sort');
-                    });
-                } else if (0 == data.status) {
-
-                    alert(data.message);
-                }
-            }, 'json')
-            .error(function() {
-
-                alert('请求返回错误！');
-            });
-    });
-
-    $('.table-sort tbody').on('click', 'a.resume', function() {
-
-        var tr, data, id;
-
-        tr = $(this).parents('tr');
-        data = table.row(tr).data();
-        id = data['Du_Id'];
-
-        $.post('/Duty/Resume', {
-                id: id
-            }, function(data) {
-
-                if (1 == data.status) {
-
-                    tr.fadeOut(function() {
-
-                        tr.remove();
-                        refreshRowBackgroundColor('.table-sort');
-                    });
-                } else if (0 == data.status) {
-
-                    alert(data.message);
-                }
-            }, 'json')
-            .error(function() {
-
-                alert('请求返回错误！');
-            });
-    });
-
-    $('.table-sort tbody').on('click', 'a.delete', function() {
-
-        var tr, data, id;
-
-        tr = $(this).parents('tr');
-        data = table.row(tr).data();
-        id = data['Du_Id'];
-
-        $.post('/Duty/Delete', {
-                id: id
-            }, function(data) {
-
-                if (1 == data.status) {
-
-                    tr.fadeOut(function() {
-
-                        tr.remove();
-                        refreshRowBackgroundColor('.table-sort');
-                    });
-                } else if (0 == data.status) {
-
-                    alert(data.message);
-                }
-            }, 'json')
-            .error(function() {
-
-                alert('请求返回错误！');
-            });
-    });
+    dataTables = initList('.table-sort', dtParams, '职务', 'Duty', 'Du_');
 
     $('.table-sort tbody').on('click', 'a.sort-top', function() {
 
@@ -185,13 +89,13 @@ $(function() {
         layerIndex = layer.load(0, {
             shade: [0.3, '#FFF']
         });
-        
+
         originTr = $(this).parents('tr');
-        data = table.row(originTr).data();
+        data = dataTables.row(originTr).data();
         originId = data['Du_Id'];
 
         destTr = originTr.parent().find('tr').first();
-        data = table.row(destTr).data();
+        data = dataTables.row(destTr).data();
         destId = data['Du_Id'];
 
         $.post('/Duty/Sort', {
@@ -208,10 +112,9 @@ $(function() {
                     remoteDest = data.addition[1];
                     remoteDestId = remoteDest['Du_Id'];
 
-                    if(destId == remoteDestId){
+                    if (destId == remoteDestId) {
                         originTr.insertBefore(destTr);
-                    }
-                    else{
+                    } else {
                         originTr.remove();
                     }
 
@@ -238,9 +141,9 @@ $(function() {
         layerIndex = layer.load(0, {
             shade: [0.3, '#FFF']
         });
-        
+
         originTr = $(this).parents('tr');
-        data = table.row(originTr).data();
+        data = dataTables.row(originTr).data();
         originId = data['Du_Id'];
 
         destTr = originTr.prev();
@@ -254,10 +157,9 @@ $(function() {
 
                 if (1 == data.status) {
 
-                    if(destTr.length == 0){
+                    if (destTr.length == 0) {
                         originTr.remove();
-                    }
-                    else{
+                    } else {
                         originTr.insertBefore(destTr);
                     }
 
@@ -284,9 +186,9 @@ $(function() {
         layerIndex = layer.load(0, {
             shade: [0.3, '#FFF']
         });
-        
+
         originTr = $(this).parents('tr');
-        data = table.row(originTr).data();
+        data = dataTables.row(originTr).data();
         originId = data['Du_Id'];
 
         destTr = originTr.next();
@@ -297,13 +199,12 @@ $(function() {
             }, function(data) {
 
                 layer.close(layerIndex);
-                
+
                 if (1 == data.status) {
 
-                    if(destTr.length == 0){
+                    if (destTr.length == 0) {
                         originTr.remove();
-                    }
-                    else{
+                    } else {
                         originTr.insertAfter(destTr);
                     }
 
@@ -321,7 +222,4 @@ $(function() {
             });
     });
 
-    $('#CreateBtn').on('click', function() {
-        ShowPage('添加职务', '/Duty/Create');
-    });
 });

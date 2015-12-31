@@ -17,81 +17,10 @@ namespace OnlineLearningSystem.Utilities
         {
 
             DataTablesResponse dtResponse;
-            Int32 recordsTotal, recordsFiltered;
-            String whereSql, orderColumn;
-            List<PermissionCategory> ms;
+            UModel<PermissionCategory> umodel;
 
-
-            dtResponse = new DataTablesResponse();
-
-            dtResponse.draw = dtRequest.Draw;
-
-            recordsTotal = olsEni.PermissionCategories.Count();
-            dtResponse.recordsTotal = recordsTotal;
-
-
-            //TODO:指定筛选条件
-            whereSql = "";
-            foreach (var col in dtRequest.Columns)
-            {
-
-                if ("" != col.Name)
-                {
-
-                    whereSql += col.Name + "||";
-                }
-            }
-
-            //TODO:指定排序列
-            orderColumn = dtRequest.Columns[dtRequest.OrderColumn].Name;
-
-            var tmpMs =
-                olsEni
-                .PermissionCategories
-                .OrderBy(model => model.PC_Id)
-                .Where(model =>
-                    model.PC_Name.Contains(dtRequest.SearchValue)
-                    && model.PC_Status != (Byte)Status.Delete)
-                .Select(model => new
-                {
-                    PC_Id = model.PC_Id,
-                    PC_Name = model.PC_Name,
-                    PC_Remark = model.PC_Remark,
-                    PC_AddTime = model.PC_AddTime,
-                    PC_Status = model.PC_Status
-                })
-                .ToList();
-
-            // 获取分类名称
-            ms = new List<PermissionCategory>();
-
-            foreach (var model in tmpMs)
-            {
-
-                ms.Add(new PermissionCategory()
-                {
-                    PC_Id = model.PC_Id,
-                    PC_Name = model.PC_Name,
-                    PC_Remark = model.PC_Remark,
-                    PC_AddTime = model.PC_AddTime,
-                    PC_Status = model.PC_Status
-                });
-            }
-
-            tmpMs = null;
-
-            recordsFiltered = ms.Count();
-            dtResponse.recordsFiltered = recordsFiltered;
-
-            if (-1 != dtRequest.Length)
-            {
-                ms =
-                    ms
-                    .Skip(dtRequest.Start).Take(dtRequest.Length)
-                    .ToList();
-            }
-
-            dtResponse.data = ms;
+            umodel = new UModel<PermissionCategory>(dtRequest, "PermissionCategories", "PC_Id");
+            dtResponse = umodel.GetList("PC_Status");
 
             return dtResponse;
         }

@@ -9,6 +9,7 @@ using OnlineLearningSystem.Models;
 using System.Text.RegularExpressions;
 using Newtonsoft.Json;
 using System.Text;
+using System.Data.SqlClient;
 
 namespace OnlineLearningSystem.Utilities
 {
@@ -546,146 +547,39 @@ namespace OnlineLearningSystem.Utilities
 
         }
 
-        public DataTablesResponse ListDataTablesAjax(Byte status, Int32 qcId, DataTablesRequest dtRequest)
-        {
+        public DataTablesResponse ListDataTablesAjax(DataTablesRequest dtRequest, Int32 qcId) {
 
             DataTablesResponse dtResponse;
-            Int32 recordsTotal, recordsFiltered;
-            String classfyName;
-            Object[] modelDatas;
+            QuestionClassify qc;
+            UModel<Question> umodel;
+            List<SqlParameter> sps;
             List<Question> ms;
 
+            umodel = new UModel<Question>(dtRequest, "Questions", "Q_Id");
 
-            dtResponse = new DataTablesResponse();
-
-            dtResponse.draw = dtRequest.Draw;
-
-            recordsTotal = olsEni.Questions.Count();
-            dtResponse.recordsTotal = recordsTotal;
-
-            modelDatas = GetModels(dtRequest, qcId, status);
-            ms = (List<Question>)modelDatas[1];
-
-            foreach (var model in ms)
+            sps = new List<SqlParameter>();
+            if (0 != qcId)
             {
-
-                classfyName = olsEni.QuestionClassifies.SingleOrDefault(m1 => m1.QC_Id == model.QC_Id).QC_Name;
-                model.QC_Name = classfyName;
+                sps.Add(new SqlParameter("@QC_Id", qcId));
             }
 
-            recordsFiltered = (Int32)modelDatas[0];
-            dtResponse.recordsFiltered = recordsFiltered;
-            dtResponse.data = ms;
+            dtResponse = umodel.GetList(sps, "Q_Status");
+
+            ms = (List<Question>)dtResponse.data;
+            foreach (var m1 in ms)
+            {
+
+                qc = olsEni.QuestionClassifies.SingleOrDefault(m => m.QC_Id == m1.QC_Id);
+                if (null == qc)
+                {
+                    m1.QC_Name = "";
+                    continue;
+                }
+
+                m1.QC_Name = qc.QC_Name;
+            }
 
             return dtResponse;
-        }
-
-        private object[] GetModels(DataTablesRequest dtRequest, Int32 qcId, Byte status)
-        {
-
-            Int32 count;
-            List<Question> ms;
-
-            if (0 == qcId)
-            {
-                count = olsEni
-                    .Questions
-                    .OrderBy(m => m.Q_Id)
-                        .Where(model =>
-                            (model.Q_Type.Contains(dtRequest.SearchValue)
-                            || model.Q_Content.Contains(dtRequest.SearchValue)
-                            || model.Q_OptionalAnswer.Contains(dtRequest.SearchValue)
-                            || model.Q_ModelAnswer.Contains(dtRequest.SearchValue))
-                            && model.Q_Status == status)
-                    .Count();
-            }
-            else
-            {
-
-                count = olsEni
-                    .Questions
-                    .OrderBy(m => m.Q_Id)
-                        .Where(model =>
-                            (model.Q_Type.Contains(dtRequest.SearchValue)
-                            || model.Q_Content.Contains(dtRequest.SearchValue)
-                            || model.Q_OptionalAnswer.Contains(dtRequest.SearchValue)
-                            || model.Q_ModelAnswer.Contains(dtRequest.SearchValue))
-                            && model.QC_Id == qcId
-                            && model.Q_Status == status)
-                    .Count();
-            }
-
-            if (-1 == dtRequest.Length)
-            {
-
-                if (0 == qcId)
-                {
-                    ms =
-                        olsEni
-                        .Questions
-                        .OrderBy(m => m.Q_Id)
-                        .Where(model =>
-                            (model.Q_Type.Contains(dtRequest.SearchValue)
-                            || model.Q_Content.Contains(dtRequest.SearchValue)
-                            || model.Q_OptionalAnswer.Contains(dtRequest.SearchValue)
-                            || model.Q_ModelAnswer.Contains(dtRequest.SearchValue))
-                            && model.Q_Status == status)
-                        .ToList();
-                }
-                else
-                {
-
-                    ms =
-                        olsEni
-                        .Questions
-                        .OrderBy(m => m.Q_Id)
-                        .Where(model =>
-                            (model.Q_Type.Contains(dtRequest.SearchValue)
-                            || model.Q_Content.Contains(dtRequest.SearchValue)
-                            || model.Q_OptionalAnswer.Contains(dtRequest.SearchValue)
-                            || model.Q_ModelAnswer.Contains(dtRequest.SearchValue))
-                            && model.QC_Id == qcId
-                            && model.Q_Status == status)
-                        .ToList();
-                }
-            }
-            else
-            {
-
-                if (0 == qcId)
-                {
-                    ms =
-                        olsEni
-                        .Questions
-                        .OrderBy(m => m.Q_Id)
-                        .Where(model =>
-                            (model.Q_Type.Contains(dtRequest.SearchValue)
-                            || model.Q_Content.Contains(dtRequest.SearchValue)
-                            || model.Q_OptionalAnswer.Contains(dtRequest.SearchValue)
-                            || model.Q_ModelAnswer.Contains(dtRequest.SearchValue))
-                            && model.Q_Status == status)
-                        .Skip(dtRequest.Start).Take(dtRequest.Length)
-                        .ToList();
-                }
-                else
-                {
-                    ms =
-                        olsEni
-                        .Questions
-                        .OrderBy(m => m.Q_Id)
-                        .Where(model =>
-                            (model.Q_Type.Contains(dtRequest.SearchValue)
-                            || model.Q_Content.Contains(dtRequest.SearchValue)
-                            || model.Q_OptionalAnswer.Contains(dtRequest.SearchValue)
-                            || model.Q_ModelAnswer.Contains(dtRequest.SearchValue))
-                            && model.QC_Id == qcId
-                            && model.Q_Status == status)
-                        .Skip(dtRequest.Start).Take(dtRequest.Length)
-                        .ToList();
-                }
-            }
-
-            return new Object[] { count, ms };
         }
 
         public List<SelectListItem> GetTypeList(String currentValue)

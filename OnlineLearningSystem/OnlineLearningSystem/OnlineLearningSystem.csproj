@@ -82,7 +82,7 @@
     <Compile Include="Controllers\PanelController.cs" />
     <Compile Include="Controllers\DutyController.cs" />
     <Compile Include="Controllers\ExaminationTaskTemplateController.cs" />
-    <Compile Include="Controllers\OLSController.cs" />
+    <Compile Include="Controllers\Common\OLSController.cs" />
     <Compile Include="Controllers\QuestionController.cs" />
     <Compile Include="Controllers\RoleController.cs" />
     <Compile Include="Controllers\TestController.cs" />
@@ -104,14 +104,16 @@
     <Compile Include="Models\ExaminationPaperTemplateQuestion.cs" />
     <Compile Include="Models\ExaminationTask.cs" />
     <Compile Include="Models\ExaminationTaskAttendee.cs" />
+    <Compile Include="Models\SystemLog.cs" />
     <Compile Include="Utilities\Common\DbOperator.cs" />
     <Compile Include="Utilities\Common\ModelConvert.cs" />
-    <Compile Include="Utilities\Common\ModelDataTables.cs" />
+    <Compile Include="Utilities\Common\UModel.cs" />
+    <Compile Include="Utilities\Enums\SystemLogType.cs" />
     <Compile Include="ViewModels\VMExaminationTaskPersonalStatistic.cs" />
     <Compile Include="Utilities\UExaminationTaskStatistic.cs" />
     <Compile Include="ViewModels\VMExaminationTaskStatistic.cs" />
     <Compile Include="Models\ExaminationTaskTemplate.cs" />
-    <Compile Include="Models\OLSEntities.cs" />
+    <Compile Include="Models\Common\OLSEntities.cs" />
     <Compile Include="Models\Permission.cs" />
     <Compile Include="Models\PermissionCategory.cs" />
     <Compile Include="Models\Role_Permission.cs" />

@@ -21,81 +21,10 @@ namespace OnlineLearningSystem.Utilities
         {
 
             DataTablesResponse dtResponse;
-            Int32 recordsTotal, recordsFiltered;
-            String whereSql, orderColumn;
-            List<Role> ms;
+            UModel<Role> umodel;
 
-
-            dtResponse = new DataTablesResponse();
-
-            dtResponse.draw = dtRequest.Draw;
-
-            recordsTotal = olsEni.Roles.Count();
-            dtResponse.recordsTotal = recordsTotal;
-
-
-            //TODO:指定筛选条件
-            whereSql = "";
-            foreach (var col in dtRequest.Columns)
-            {
-
-                if ("" != col.Name)
-                {
-
-                    whereSql += col.Name + "||";
-                }
-            }
-
-            //TODO:指定排序列
-            orderColumn = dtRequest.Columns[dtRequest.OrderColumn].Name;
-
-            var tmpMs =
-                olsEni
-                .Roles
-                .OrderBy(model => model.R_Id)
-                .Where(model =>
-                    model.R_Name.Contains(dtRequest.SearchValue)
-                    && model.R_Status != (Byte)Status.Delete)
-                .Select(model => new
-                {
-                    R_Id = model.R_Id,
-                    R_Name = model.R_Name,
-                    R_Remark = model.R_Remark,
-                    R_AddTime = model.R_AddTime,
-                    R_Status = model.R_Status
-                })
-                .ToList();
-
-            // 获取分类名称
-            ms = new List<Role>();
-
-            foreach (var model in tmpMs)
-            {
-
-                ms.Add(new Role()
-                {
-                    R_Id = model.R_Id,
-                    R_Name = model.R_Name,
-                    R_Remark = model.R_Remark,
-                    R_AddTime = model.R_AddTime,
-                    R_Status = model.R_Status
-                });
-            }
-
-            tmpMs = null;
-
-            recordsFiltered = ms.Count();
-            dtResponse.recordsFiltered = recordsFiltered;
-
-            if (-1 != dtRequest.Length)
-            {
-                ms =
-                    ms
-                    .Skip(dtRequest.Start).Take(dtRequest.Length)
-                    .ToList();
-            }
-
-            dtResponse.data = ms;
+            umodel = new UModel<Role>(dtRequest, "Roles", "R_Id");
+            dtResponse = umodel.GetList("R_Status");
 
             return dtResponse;
         }

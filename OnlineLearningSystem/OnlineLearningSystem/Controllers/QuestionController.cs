@@ -45,7 +45,7 @@ namespace OnlineLearningSystem.Controllers
             DataTablesResponse dtResponse;
 
             dtRequest = GetDataTablesRequest();
-            dtResponse = um.ListDataTablesAjax(status, qcId, dtRequest);
+            dtResponse = um.ListDataTablesAjax(dtRequest, qcId);
 
             return Json(dtResponse, JsonRequestBehavior.DenyGet);
         }

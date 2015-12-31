@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using System.Reflection;
 using OnlineLearningSystem.Controllers;
 using OnlineLearningSystem.Models;
+using System.Data;
 
 namespace OnlineLearningSystem.Utilities
 {
@@ -157,7 +158,51 @@ namespace OnlineLearningSystem.Utilities
                 message += "\\r\\n" + GetExceptionMessage(ex.InnerException);
             }
 
+            RecordSystemLog(SystemLogType.Exception, ex.Message, message);
+
             return message;
+        }
+
+        public static void RecordSystemLog(SystemLogType type, String name, String content)
+        {
+            RecordSystemLog(type, name, content, "");
+        }
+
+        public static void RecordSystemLog(SystemLogType type, String name, String content, String remark)
+        {
+            try
+            {
+
+                SystemLog sl;
+                OLSEntities olsEni;
+
+                sl = new SystemLog
+                {
+                    SL_Name = name,
+                    SL_Type = (Byte)type,
+                    SL_Content = content,
+                    SL_Remark = remark,
+                    SL_Status = (Byte)Status.Available,
+                    SL_AddTime = DateTime.Now
+                };
+
+                olsEni = new OLSEntities();
+                olsEni.Entry(sl).State = EntityState.Added;
+                if (0 == olsEni.SaveChanges())
+                {
+                    throw new Exception(ResponseMessage.SaveChangesError);
+                }
+            }
+            catch (Exception ex)
+            {
+                RecordInnerLog(ex);
+            }
+        }
+
+        private static void RecordInnerLog(Exception ex)
+        {
+            //TODO: 添加系统内部文本日志
+            throw new NotImplementedException();
         }
 
         public static List<ActionPermission> GetActionPermission()

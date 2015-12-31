@@ -5,8 +5,11 @@ using System.Web;
 
 namespace OnlineLearningSystem.Utilities
 {
-    public static class ResponseMessage
+    public enum SystemLogType
     {
-        public static String SaveChangesError = "数据未修改";
+        Unset = 0,
+        Application = 1,
+        Notice = 2,
+        Exception =3
     }
 }

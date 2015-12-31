@@ -8,7 +8,7 @@ namespace OnlineLearningSystem.Utilities
     public class ResponseJson
     {
         public ResponseStatus status { get; set; }
-        public String data { get; set; }
+        public Object data { get; set; }
         public String message { get; set; }
         public Object addition { get; set; }
         public DateTime time { get; set; }

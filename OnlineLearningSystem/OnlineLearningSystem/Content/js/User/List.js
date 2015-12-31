@@ -1,25 +1,14 @@
 ﻿$(function() {
 
-    var table, recycleBin;
+    var dtParams;
+    var dataTables;
 
-    QueryString.Initial();
-    status = QueryString.GetValue('status');
-    status = undefined == status || 'undefined' == status ? 1 : status;
-
-    recycleBin = $('#RecycleBin');
-    recycleBin.attr('data-status', status);
-
-    table = $('.table-sort').DataTable({
+    dtParams = {
         "processing": true,
         "serverSide": true,
         "ajax": {
             "url": "/User/ListDataTablesAjax",
-            "type": "POST",
-            "data": function(originData) {
-                return $.extend({}, originData, {
-                    "status": recycleBin.attr('data-status')
-                });
-            }
+            "type": "POST"
         },
         "stateSave": false,
         "lengthChange": false,
@@ -92,107 +81,9 @@
                     break;
             }
         }
-    });
+    };
 
-    $('.table-sort tbody').on('click', 'a.edit', function() {
-
-        var data, id;
-
-        data = table.row($(this).parents('tr')).data();
-        id = data['U_Id'];
-
-        ShowPage('编辑用户', '/User/Edit?id=' + id);
-    });
-
-    $('.table-sort tbody').on('click', 'a.recycle', function() {
-
-        var tr, data, id;
-
-        tr = $(this).parents('tr');
-        data = table.row(tr).data();
-        id = data['U_Id'];
-
-        $.post('/User/Recycle', {
-                id: id
-            }, function(data) {
-
-                if (1 == data.status) {
-
-                    tr.fadeOut(function() {
-
-                        tr.remove();
-                        refreshRowBackgroundColor('.table-sort');
-                    });
-                } else if (0 == data.status) {
-
-                    alert(data.message);
-                }
-            }, 'json')
-            .error(function() {
-
-                alert('请求返回错误！');
-            });
-    });
-
-    $('.table-sort tbody').on('click', 'a.resume', function() {
-
-        var tr, data, id;
-
-        tr = $(this).parents('tr');
-        data = table.row(tr).data();
-        id = data['U_Id'];
-
-        $.post('/User/Resume', {
-                id: id
-            }, function(data) {
-
-                if (1 == data.status) {
-
-                    tr.fadeOut(function() {
-
-                        tr.remove();
-                        refreshRowBackgroundColor('.table-sort');
-                    });
-                } else if (0 == data.status) {
-
-                    alert(data.message);
-                }
-            }, 'json')
-            .error(function() {
-
-                alert('请求返回错误！');
-            });
-    });
-
-    $('.table-sort tbody').on('click', 'a.delete', function() {
-
-        var tr, data, id;
-
-        tr = $(this).parents('tr');
-        data = table.row(tr).data();
-        id = data['U_Id'];
-
-        $.post('/User/Delete', {
-                id: id
-            }, function(data) {
-
-                if (1 == data.status) {
-
-                    tr.fadeOut(function() {
-
-                        tr.remove();
-                        refreshRowBackgroundColor('.table-sort');
-                    });
-                } else if (0 == data.status) {
-
-                    alert(data.message);
-                }
-            }, 'json')
-            .error(function() {
-
-                alert('请求返回错误！');
-            });
-    });
+    dataTables = initList('.table-sort', dtParams, '用户', 'User', 'U_');
 
     $('.table-sort tbody').on('click', 'a.sort-top', function() {
 
@@ -205,11 +96,11 @@
         });
 
         originTr = $(this).parents('tr');
-        data = table.row(originTr).data();
+        data = dataTables.row(originTr).data();
         originId = data['U_Id'];
 
         destTr = originTr.parent().find('tr').first();
-        data = table.row(destTr).data();
+        data = dataTables.row(destTr).data();
         destId = data['U_Id'];
 
         $.post('/User/Sort', {
@@ -257,7 +148,7 @@
         });
 
         originTr = $(this).parents('tr');
-        data = table.row(originTr).data();
+        data = dataTables.row(originTr).data();
         originId = data['U_Id'];
 
         destTr = originTr.prev();
@@ -302,7 +193,7 @@
         });
 
         originTr = $(this).parents('tr');
-        data = table.row(originTr).data();
+        data = dataTables.row(originTr).data();
         originId = data['U_Id'];
 
         destTr = originTr.next();
@@ -334,34 +225,6 @@
                 layer.close(layerIndex);
                 alert('请求返回错误！');
             });
-    });
-
-    $('#CreateBtn').on('click', function() {
-        ShowPage('添加用户', '/User/Create');
-    });
-
-    recycleBin.on('click', function() {
-
-        var status;
-
-        status = recycleBin.attr('data-status');
-
-        if (1 == status) {
-
-            status = 2;
-            recycleBin.text('返回列表');
-            recycleBin.removeClass('btn-default');
-            recycleBin.addClass('btn-primary');
-        } else if (2 == status) {
-
-            status = 1;
-            recycleBin.text('回收站');
-            recycleBin.removeClass('btn-primary');
-            recycleBin.addClass('btn-default');
-        }
-
-        recycleBin.attr('data-status', status);
-        table.ajax.reload(null, false);
     });
 
 });

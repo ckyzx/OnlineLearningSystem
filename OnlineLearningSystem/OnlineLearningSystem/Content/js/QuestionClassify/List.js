@@ -1,8 +1,9 @@
 $(function() {
 
-    var table;
+    var dtParams;
+    var dataTables;
 
-    table = $('.table-sort').DataTable({
+    dtParams = {
         "processing": true,
         "serverSide": true,
         "ajax": {
@@ -12,13 +13,7 @@ $(function() {
         "stateSave": false,
         "lengthChange": false,
         "pageLength": 15,
-        "sorting": [
-            [1, "asc"]
-        ],
-        "columnDefs": [{
-            "orderable": false,
-            "targets": [0, 4, 5]
-        }],
+        "ordering": false,
         "columns": [{
             "width": "10px",
             "className": "text-c",
@@ -73,136 +68,8 @@ $(function() {
                     break;
             }
         }
-    });
+    };
 
-    $('.table-sort tbody').on('click', 'a.edit', function() {
-
-        var data, id;
-
-        data = table.row($(this).parents('tr')).data();
-        id = data['QC_Id'];
-
-        ShowPage('修改试题分类', '/QuestionClassify/Edit?id=' + id);
-    });
-
-    $('.table-sort tbody').on('click', 'a.recycle', function() {
-
-        var tr, data, id;
-
-        tr = $(this).parents('tr');
-        data = table.row(tr).data();
-        id = data['QC_Id'];
-
-        $.post('/QuestionClassify/Recycle', {
-                id: id
-            }, function(data) {
-
-                if (1 == data.status) {
-
-                    tr.fadeOut(function() {
-
-                        tr.remove();
-                    });
-                } else if (0 == data.status) {
-
-                    alert(data.message);
-                }
-            }, 'json')
-            .error(function() {
-
-                alert('请求返回错误！');
-            });
-    });
-
-    $('.table-sort tbody').on('click', 'a.resume', function() {
-
-        var tr, data, id;
-
-        tr = $(this).parents('tr');
-        data = table.row(tr).data();
-        id = data['QC_Id'];
-
-        $.post('/QuestionClassify/Resume', {
-                id: id
-            }, function(data) {
-
-                if (1 == data.status) {
-
-                    tr.fadeOut(function() {
-
-                        tr.remove();
-                    });
-                } else if (0 == data.status) {
-
-                    alert(data.message);
-                }
-            }, 'json')
-            .error(function() {
-
-                alert('请求返回错误！');
-            });
-    });
-
-    $('.table-sort tbody').on('click', 'a.resume', function() {
-
-        var tr, data, id;
-
-        tr = $(this).parents('tr');
-        data = table.row(tr).data();
-        id = data['QC_Id'];
-
-        $.post('/QuestionClassify/Resume', {
-                id: id
-            }, function(data) {
-
-                if (1 == data.status) {
-
-                    tr.fadeOut(function() {
-
-                        tr.remove();
-                    });
-                } else if (0 == data.status) {
-
-                    alert(data.message);
-                }
-            }, 'json')
-            .error(function() {
-
-                alert('请求返回错误！');
-            });
-    });
-
-    $('.table-sort tbody').on('click', 'a.delete', function() {
-
-        var tr, data, id;
-
-        tr = $(this).parents('tr');
-        data = table.row(tr).data();
-        id = data['QC_Id'];
-
-        $.post('/QuestionClassify/Delete', {
-                id: id
-            }, function(data) {
-
-                if (1 == data.status) {
-
-                    tr.fadeOut(function() {
-
-                        tr.remove();
-                    });
-                } else if (0 == data.status) {
-
-                    alert(data.message);
-                }
-            }, 'json')
-            .error(function() {
-
-                alert('请求返回错误！');
-            });
-    });
-
-    $('#CreateBtn').on('click', function() {
-        ShowPage('添加试题分类', '/QuestionClassify/Create');
-    });
+    dataTables = initList('.table-sort', dtParams, '试题分类', 'QuestionClassify', 'QC_');
 
 });

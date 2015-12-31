@@ -16,125 +16,30 @@ namespace OnlineLearningSystem.Utilities
     public class UUser : Utility
     {
 
-        /*public DataTablesResponse ListDataTablesAjax(DataTablesRequest dtRequest)
+        public DataTablesResponse ListDataTablesAjax(DataTablesRequest dtRequest)
         {
-
+            
+            String dutyName;
             DataTablesResponse dtResponse;
-            Int32 recordsTotal, recordsFiltered;
             Duty d;
-            String whereSql, orderColumn, dutyName;
-            Object[] modelData;
+            UModel<User> umodel;
             List<User> ms;
 
+            umodel = new UModel<User>(dtRequest, "Users", "U_Id");
+            dtResponse = umodel.GetList("U_Status", "U_Sort");
 
-            dtResponse = new DataTablesResponse();
-
-            dtResponse.draw = dtRequest.Draw;
-
-            recordsTotal = olsEni.Users.Count();
-            dtResponse.recordsTotal = recordsTotal;
-
-
-            //TODO:指定筛选条件
-            whereSql = "";
-            foreach (var col in dtRequest.Columns)
+            ms = (List<User>)dtResponse.data;
+            foreach (var m1 in ms)
             {
-
-                if ("" != col.Name)
-                {
-
-                    whereSql += col.Name + "||";
-                }
-            }
-
-            //TODO:指定排序列
-            orderColumn = dtRequest.Columns[dtRequest.OrderColumn].Name;
-
-            modelData = GetModels(dtRequest);
-            ms = (List<User>)modelData[1];
-
-            foreach (var m in ms)
-            {
-
-                d = olsEni.Duties.SingleOrDefault(m1 => m1.Du_Id == m.Du_Id);
+                d = olsEni.Duties.SingleOrDefault(m => m.Du_Id == m1.Du_Id);
                 dutyName = null == d ? "" : d.Du_Name;
-                m.Du_Name = dutyName;
-                m.U_Password = "**********";
+                m1.Du_Name = dutyName;
+                m1.U_Password = "**********";
             }
-
-            recordsFiltered = (Int32)modelData[0];
-            dtResponse.recordsFiltered = recordsFiltered;
             dtResponse.data = ms;
 
             return dtResponse;
-        }*/
-        public DataTablesResponse ListDataTablesAjax(DataTablesRequest dtRequest)
-        {
-
-            DataTablesResponse dtResponse;
-            ModelDataTables<User> mdt;
-
-            mdt = new ModelDataTables<User>(dtRequest, "Users", "U_Id");
-            dtResponse = mdt.GetList("U_Status");
-
-            return dtResponse;
         }
-
-        /*private Object[] GetModels(DataTablesRequest dtRequest)
-        {
-
-            Byte status, statusDelete;
-            Int32 count;
-            String searchValue;
-            List<User> us;
-
-            status = dtRequest.Status;
-            statusDelete = (Byte)Status.Delete;
-            searchValue = dtRequest.SearchValue;
-
-            count = olsEni
-                .Users
-                .OrderBy(m => m.U_Sort)
-                .Where(m =>
-                    (m.U_Name.Contains(searchValue)
-                    || m.U_LoginName.Contains(searchValue))
-                    && m.U_Status == status
-                    && m.U_Status != statusDelete)
-                .Count();
-
-            if (-1 == dtRequest.Length)
-            {
-
-                us =
-                    olsEni
-                    .Users
-                    .OrderBy(m => m.U_Sort)
-                    .Where(m =>
-                        (m.U_Name.Contains(searchValue)
-                        || m.U_LoginName.Contains(searchValue))
-                        && m.U_Status == status
-                        && m.U_Status != statusDelete)
-                    .ToList();
-
-            }
-            else
-            {
-
-                us =
-                    olsEni
-                    .Users
-                    .Where(m =>
-                        (m.U_Name.Contains(searchValue)
-                        || m.U_LoginName.Contains(searchValue))
-                        && m.U_Status == status
-                        && m.U_Status != statusDelete)
-                    .OrderBy(m => m.U_Sort)
-                    .Skip(dtRequest.Start).Take(dtRequest.Length)
-                    .ToList();
-            }
-
-            return new Object[] { count, us };
-        }*/
 
         public List<SelectListItem> GetDutyList(Int32? currentValue)
         {
@@ -816,7 +721,7 @@ namespace OnlineLearningSystem.Utilities
                 if (0 == olsEni.SaveChanges())
                 {
                     resJson.status = ResponseStatus.Error;
-                    resJson.message = ResponseMessage.SaveChangeError;
+                    resJson.message = ResponseMessage.SaveChangesError;
                     return resJson;
                 }
 

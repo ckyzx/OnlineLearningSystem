@@ -15,55 +15,10 @@ namespace OnlineLearningSystem.Utilities
         {
 
             DataTablesResponse dtResponse;
-            Int32 recordsTotal, recordsFiltered;
-            String whereSql, orderColumn;
-            List<ExaminationTask> ms;
+            UModel<ExaminationTask> umodel;
 
-
-            dtResponse = new DataTablesResponse();
-
-            dtResponse.draw = dtRequest.Draw;
-
-            recordsTotal = olsEni.ExaminationTasks.Count();
-            dtResponse.recordsTotal = recordsTotal;
-
-
-            //TODO:指定筛选条件
-            whereSql = "";
-            foreach (var col in dtRequest.Columns)
-            {
-
-                if ("" != col.Name)
-                {
-
-                    whereSql += col.Name + "||";
-                }
-            }
-
-            //TODO:指定排序列
-            orderColumn = dtRequest.Columns[dtRequest.OrderColumn].Name;
-
-            ms =
-                olsEni
-                .ExaminationTasks
-                .OrderBy(model => model.ET_Id)
-                .Where(model =>
-                    model.ET_Name.Contains(dtRequest.SearchValue)
-                    && model.ET_Status != (Byte)Status.Delete)
-                .ToList();
-
-            recordsFiltered = ms.Count();
-            dtResponse.recordsFiltered = recordsFiltered;
-
-            if (-1 != dtRequest.Length)
-            {
-                ms =
-                    ms
-                    .Skip(dtRequest.Start).Take(dtRequest.Length)
-                    .ToList();
-            }
-
-            dtResponse.data = ms;
+            umodel = new UModel<ExaminationTask>(dtRequest, "ExaminationTasks", "ET_Id");
+            dtResponse = umodel.GetList("ET_Status");
 
             return dtResponse;
         }
@@ -251,7 +206,7 @@ namespace OnlineLearningSystem.Utilities
 
             if (0 == olsEni.SaveChanges())
             {
-                throw new Exception(ResponseMessage.SaveChangeError);
+                throw new Exception(ResponseMessage.SaveChangesError);
             }
 
             foreach (var eptq1 in eptqs)
@@ -261,7 +216,7 @@ namespace OnlineLearningSystem.Utilities
 
             if (0 == olsEni.SaveChanges())
             {
-                throw new Exception(ResponseMessage.SaveChangeError);
+                throw new Exception(ResponseMessage.SaveChangesError);
             }
 
         }
@@ -548,7 +503,7 @@ namespace OnlineLearningSystem.Utilities
                 if (0 == olsEni.SaveChanges())
                 {
                     resJson.status = ResponseStatus.Error;
-                    resJson.message = ResponseMessage.SaveChangeError;
+                    resJson.message = ResponseMessage.SaveChangesError;
                     return resJson;
                 }
 

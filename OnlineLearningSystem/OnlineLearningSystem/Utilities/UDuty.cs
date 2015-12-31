@@ -14,87 +14,12 @@ namespace OnlineLearningSystem.Utilities
         {
 
             DataTablesResponse dtResponse;
-            Int32 recordsTotal, recordsFiltered;
-            String whereSql, orderColumn;
-            Object[] modelData;
-            List<Duty> ms;
+            UModel<Duty> umodel;
 
-
-            dtResponse = new DataTablesResponse();
-
-            dtResponse.draw = dtRequest.Draw;
-
-            recordsTotal = olsEni.Duties.Count();
-            dtResponse.recordsTotal = recordsTotal;
-
-
-            //TODO:指定筛选条件
-            whereSql = "";
-            foreach (var col in dtRequest.Columns)
-            {
-
-                if ("" != col.Name)
-                {
-
-                    whereSql += col.Name + "||";
-                }
-            }
-
-            //TODO:指定排序列
-            orderColumn = dtRequest.Columns[dtRequest.OrderColumn].Name;
-
-            modelData = GetModels(dtRequest);
-            ms = (List<Duty>)modelData[1];
-
-            recordsFiltered = (Int32)modelData[0];
-            dtResponse.recordsFiltered = recordsFiltered;
-            dtResponse.data = ms;
+            umodel = new UModel<Duty>(dtRequest, "Duties", "Du_Id");
+            dtResponse = umodel.GetList("Du_Status", "Du_Sort");
 
             return dtResponse;
-        }
-
-        private object[] GetModels(DataTablesRequest dtRequest)
-        {
-
-            Int32 count;
-            List<Duty> ms;
-
-            count = olsEni
-                .Duties
-                .OrderBy(m => m.Du_Sort)
-                .Where(m =>
-                    m.Du_Name.Contains(dtRequest.SearchValue)
-                    && m.Du_Status != (Byte)Status.Delete)
-                .Count();
-
-            if (-1 == dtRequest.Length)
-            {
-
-                ms =
-                    olsEni
-                    .Duties
-                    .OrderBy(m => m.Du_Sort)
-                    .Where(m =>
-                        m.Du_Name.Contains(dtRequest.SearchValue)
-                        && m.Du_Status != (Byte)Status.Delete)
-                    .ToList();
-
-            }
-            else
-            {
-
-                ms =
-                    olsEni
-                    .Duties
-                    .Where(m =>
-                        m.Du_Name.Contains(dtRequest.SearchValue)
-                        && m.Du_Status != (Byte)Status.Delete)
-                    .OrderBy(m => m.Du_Sort)
-                    .Skip(dtRequest.Start).Take(dtRequest.Length)
-                    .ToList();
-            }
-
-            return new Object[] { count, ms };
         }
 
         public Duty GetNew()
@@ -347,7 +272,7 @@ namespace OnlineLearningSystem.Utilities
                 if (0 == olsEni.SaveChanges())
                 {
                     resJson.status = ResponseStatus.Error;
-                    resJson.message = ResponseMessage.SaveChangeError;
+                    resJson.message = ResponseMessage.SaveChangesError;
                     return resJson;
                 }
 

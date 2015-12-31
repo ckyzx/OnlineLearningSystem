@@ -316,7 +316,7 @@ namespace OnlineLearningSystem.Utilities
                 {
 
                     resJson.status = ResponseStatus.Error;
-                    resJson.message = ResponseMessage.SaveChangeError;
+                    resJson.message = ResponseMessage.SaveChangesError;
                     return resJson;
                 }
 

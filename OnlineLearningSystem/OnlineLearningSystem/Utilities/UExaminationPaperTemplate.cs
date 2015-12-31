@@ -547,7 +547,7 @@ namespace OnlineLearningSystem.Utilities
                 if (0 == olsEni.SaveChanges())
                 {
                     resJson.status = ResponseStatus.Error;
-                    resJson.message = ResponseMessage.SaveChangeError;
+                    resJson.message = ResponseMessage.SaveChangesError;
                     return resJson;
                 }
 
@@ -815,7 +815,7 @@ namespace OnlineLearningSystem.Utilities
                 {
 
                     resJson.status = ResponseStatus.Error;
-                    resJson.message = ResponseMessage.SaveChangeError;
+                    resJson.message = ResponseMessage.SaveChangesError;
                     return resJson;
                 }
 

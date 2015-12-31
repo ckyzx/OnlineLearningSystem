@@ -15,93 +15,10 @@ namespace OnlineLearningSystem.Utilities
         {
 
             DataTablesResponse dtResponse;
-            Int32 recordsTotal, recordsFiltered;
-            String whereSql, orderColumn;
-            List<ExaminationTaskTemplate> ms;
+            UModel<ExaminationTaskTemplate> umodel;
 
-
-            dtResponse = new DataTablesResponse();
-
-            dtResponse.draw = dtRequest.Draw;
-
-            recordsTotal = olsEni.ExaminationTaskTemplates.Count();
-            dtResponse.recordsTotal = recordsTotal;
-
-
-            //TODO:指定筛选条件
-            whereSql = "";
-            foreach (var col in dtRequest.Columns)
-            {
-
-                if ("" != col.Name)
-                {
-
-                    whereSql += col.Name + "||";
-                }
-            }
-
-            //TODO:指定排序列
-            orderColumn = dtRequest.Columns[dtRequest.OrderColumn].Name;
-
-            var tmpMs =
-                olsEni
-                .ExaminationTaskTemplates
-                .OrderBy(model => model.ETT_Id)
-                .Where(model =>
-                    model.ETT_Name.Contains(dtRequest.SearchValue)
-                    && model.ETT_Status != (Byte)Status.Delete)
-                .Select(model => new
-                {
-                    ETT_Id = model.ETT_Id,
-                    ETT_Name = model.ETT_Name,
-                    ETT_ParticipatingDepartment = model.ETT_ParticipatingDepartment,
-                    ETT_Attendee = model.ETT_Attendee,
-                    ETT_AutoType = model.ETT_AutoType,
-                    ETT_StartTime = model.ETT_StartTime,
-                    ETT_EndTime = model.ETT_EndTime,
-                    ETT_TimeSpan = model.ETT_TimeSpan,
-                    ETT_Remark = model.ETT_Remark,
-                    ETT_AddTime = model.ETT_AddTime,
-                    ETT_Status = model.ETT_Status
-                })
-                .ToList();
-
-            // 获取分类名称
-            ms = new List<ExaminationTaskTemplate>();
-
-            foreach (var model in tmpMs)
-            {
-
-                ms.Add(new ExaminationTaskTemplate()
-                {
-                    ETT_Id = model.ETT_Id,
-                    ETT_Name = model.ETT_Name,
-                    ETT_ParticipatingDepartment = model.ETT_ParticipatingDepartment,
-                    ETT_Attendee = model.ETT_Attendee,
-                    ETT_AutoType = model.ETT_AutoType,
-                    ETT_StartTime = model.ETT_StartTime,
-                    ETT_EndTime = model.ETT_EndTime,
-                    ETT_TimeSpan = model.ETT_TimeSpan,
-                    ETT_Remark = model.ETT_Remark,
-                    ETT_AddTime = model.ETT_AddTime,
-                    ETT_Status = model.ETT_Status
-                });
-            }
-
-            tmpMs = null;
-
-            recordsFiltered = ms.Count();
-            dtResponse.recordsFiltered = recordsFiltered;
-
-            if (-1 != dtRequest.Length)
-            {
-                ms =
-                    ms
-                    .Skip(dtRequest.Start).Take(dtRequest.Length)
-                    .ToList();
-            }
-
-            dtResponse.data = ms;
+            umodel = new UModel<ExaminationTaskTemplate>(dtRequest, "ExaminationTaskTemplates", "ETT_Id");
+            dtResponse = umodel.GetList("ETT_Status");
 
             return dtResponse;
         }

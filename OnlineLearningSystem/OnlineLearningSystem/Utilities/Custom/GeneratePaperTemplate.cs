@@ -60,7 +60,7 @@ namespace OnlineLearningSystem.Utilities
                         if (0 == olsEni.SaveChanges())
                         {
                             resJson.status = ResponseStatus.Error;
-                            resJson.message += ResponseMessage.SaveChangeError + "\r\n";
+                            resJson.message += ResponseMessage.SaveChangesError + "\r\n";
                         }
                     }
 
@@ -638,7 +638,7 @@ namespace OnlineLearningSystem.Utilities
 
             if (0 == olsEni.SaveChanges())
             {
-                throw new Exception(ResponseMessage.SaveChangeError);
+                throw new Exception(ResponseMessage.SaveChangesError);
             }
 
             eptqId = olsEni.ExaminationPaperTemplateQuestions.Count();
@@ -668,7 +668,7 @@ namespace OnlineLearningSystem.Utilities
 
             if (0 == olsEni.SaveChanges())
             {
-                throw new Exception(ResponseMessage.SaveChangeError);
+                throw new Exception(ResponseMessage.SaveChangesError);
             }
         }
 

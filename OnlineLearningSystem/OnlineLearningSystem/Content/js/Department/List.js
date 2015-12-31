@@ -1,8 +1,9 @@
 $(function() {
 
-    var table;
+    var dtParams;
+    var dataTables;
 
-    table = $('.table-sort').DataTable({
+    dtParams = {
         "processing": true,
         "serverSide": true,
         "ajax": {
@@ -74,107 +75,9 @@ $(function() {
                     break;
             }
         }
-    });
+    };
 
-    $('.table-sort tbody').on('click', 'a.edit', function() {
-
-        var data, id;
-
-        data = table.row($(this).parents('tr')).data();
-        id = data['D_Id'];
-
-        ShowPage('修改部门', '/Department/Edit?id=' + id);
-    });
-
-    $('.table-sort tbody').on('click', 'a.recycle', function() {
-
-        var tr, data, id;
-
-        tr = $(this).parents('tr');
-        data = table.row(tr).data();
-        id = data['D_Id'];
-
-        $.post('/Department/Recycle', {
-                id: id
-            }, function(data) {
-
-                if (1 == data.status) {
-
-                    tr.fadeOut(function() {
-
-                        tr.remove();
-                        refreshRowBackgroundColor('.table-sort');
-                    });
-                } else if (0 == data.status) {
-
-                    alert(data.message);
-                }
-            }, 'json')
-            .error(function() {
-
-                alert('请求返回错误！');
-            });
-    });
-
-    $('.table-sort tbody').on('click', 'a.resume', function() {
-
-        var tr, data, id;
-
-        tr = $(this).parents('tr');
-        data = table.row(tr).data();
-        id = data['D_Id'];
-
-        $.post('/Department/Resume', {
-                id: id
-            }, function(data) {
-
-                if (1 == data.status) {
-
-                    tr.fadeOut(function() {
-
-                        tr.remove();
-                        refreshRowBackgroundColor('.table-sort');
-                    });
-                } else if (0 == data.status) {
-
-                    alert(data.message);
-                }
-            }, 'json')
-            .error(function() {
-
-                alert('请求返回错误！');
-            });
-    });
-
-    $('.table-sort tbody').on('click', 'a.delete', function() {
-
-        var tr, data, id;
-
-        tr = $(this).parents('tr');
-        data = table.row(tr).data();
-        id = data['D_Id'];
-
-        $.post('/Department/Delete', {
-                id: id
-            }, function(data) {
-
-                if (1 == data.status) {
-
-                    tr.fadeOut(function() {
-
-                        tr.remove();
-                        refreshRowBackgroundColor('.table-sort');
-                    });
-                } else if (0 == data.status) {
-
-                    alert(data.message);
-                }
-            }, 'json')
-            .error(function() {
-
-                alert('请求返回错误！');
-            });
-    });
+    dataTables = initList('.table-sort', dtParams, '部门', 'Department', 'D_');
 
     $('.table-sort tbody').on('click', 'a.sort-top', function() {
 
@@ -187,11 +90,11 @@ $(function() {
         });
         
         originTr = $(this).parents('tr');
-        data = table.row(originTr).data();
+        data = dataTables.row(originTr).data();
         originId = data['D_Id'];
 
         destTr = originTr.parent().find('tr').first();
-        data = table.row(destTr).data();
+        data = dataTables.row(destTr).data();
         destId = data['D_Id'];
 
         $.post('/Department/Sort', {
@@ -240,7 +143,7 @@ $(function() {
         });
         
         originTr = $(this).parents('tr');
-        data = table.row(originTr).data();
+        data = dataTables.row(originTr).data();
         originId = data['D_Id'];
 
         destTr = originTr.prev();
@@ -286,7 +189,7 @@ $(function() {
         });
         
         originTr = $(this).parents('tr');
-        data = table.row(originTr).data();
+        data = dataTables.row(originTr).data();
         originId = data['D_Id'];
 
         destTr = originTr.next();
@@ -319,10 +222,6 @@ $(function() {
                 layer.close(layerIndex);
                 alert('请求返回错误！');
             });
-    });
-
-    $('#CreateBtn').on('click', function() {
-        ShowPage('添加部门', '/Department/Create');
     });
 
 });

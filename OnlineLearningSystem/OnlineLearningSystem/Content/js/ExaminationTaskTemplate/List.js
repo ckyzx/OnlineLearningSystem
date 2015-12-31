@@ -1,8 +1,9 @@
 $(function() {
 
-    var table;
+    var dtParams;
+    var dataTables;
 
-    table = $('.table-sort').DataTable({
+    dtParams = {
         "processing": true,
         "serverSide": true,
         "ajax": {
@@ -81,136 +82,8 @@ $(function() {
                     break;
             }
         }
-    });
+    };
 
-    $('.table-sort tbody').on('click', 'a.edit', function() {
-
-        var data, id;
-
-        data = table.row($(this).parents('tr')).data();
-        id = data['ETT_Id'];
-
-        ShowPage('修改任务模板', '/ExaminationTaskTemplate/Edit?id=' + id);
-    });
-
-    $('.table-sort tbody').on('click', 'a.recycle', function() {
-
-        var tr, data, id;
-
-        tr = $(this).parents('tr');
-        data = table.row(tr).data();
-        id = data['ETT_Id'];
-
-        $.post('/ExaminationTaskTemplate/Recycle', {
-                id: id
-            }, function(data) {
-
-                if (1 == data.status) {
-
-                    tr.fadeOut(function() {
-
-                        tr.remove();
-                    });
-                } else if (0 == data.status) {
-
-                    alert(data.message);
-                }
-            }, 'json')
-            .error(function() {
-
-                alert('请求返回错误！');
-            });
-    });
-
-    $('.table-sort tbody').on('click', 'a.resume', function() {
-
-        var tr, data, id;
-
-        tr = $(this).parents('tr');
-        data = table.row(tr).data();
-        id = data['ETT_Id'];
-
-        $.post('/ExaminationTaskTemplate/Resume', {
-                id: id
-            }, function(data) {
-
-                if (1 == data.status) {
-
-                    tr.fadeOut(function() {
-
-                        tr.remove();
-                    });
-                } else if (0 == data.status) {
-
-                    alert(data.message);
-                }
-            }, 'json')
-            .error(function() {
-
-                alert('请求返回错误！');
-            });
-    });
-
-    $('.table-sort tbody').on('click', 'a.resume', function() {
-
-        var tr, data, id;
-
-        tr = $(this).parents('tr');
-        data = table.row(tr).data();
-        id = data['ETT_Id'];
-
-        $.post('/ExaminationTaskTemplate/Resume', {
-                id: id
-            }, function(data) {
-
-                if (1 == data.status) {
-
-                    tr.fadeOut(function() {
-
-                        tr.remove();
-                    });
-                } else if (0 == data.status) {
-
-                    alert(data.message);
-                }
-            }, 'json')
-            .error(function() {
-
-                alert('请求返回错误！');
-            });
-    });
-
-    $('.table-sort tbody').on('click', 'a.delete', function() {
-
-        var tr, data, id;
-
-        tr = $(this).parents('tr');
-        data = table.row(tr).data();
-        id = data['ETT_Id'];
-
-        $.post('/ExaminationTaskTemplate/Delete', {
-                id: id
-            }, function(data) {
-
-                if (1 == data.status) {
-
-                    tr.fadeOut(function() {
-
-                        tr.remove();
-                    });
-                } else if (0 == data.status) {
-
-                    alert(data.message);
-                }
-            }, 'json')
-            .error(function() {
-
-                alert('请求返回错误！');
-            });
-    });
-
-    $('#CreateBtn').on('click', function() {
-        ShowPage('添加任务模板', '/ExaminationTaskTemplate/Create');
-    });
+    dataTables = initList('.table-sort', dtParams, '考试任务模板', 'ExaminationTaskTemplate', 'ETT_');
 
 });

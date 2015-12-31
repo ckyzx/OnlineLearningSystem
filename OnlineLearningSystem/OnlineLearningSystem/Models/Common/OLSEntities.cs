@@ -31,5 +31,7 @@ namespace OnlineLearningSystem
         public DbSet<User_Role> User_Role { get; set; }
         public DbSet<Role_Permission> Role_Permission { get; set; }
         public DbSet<Department_Role> Department_Role { get; set; }
+
+        public DbSet<SystemLog> SystemLogs { get; set; }
     }
 }

@@ -1,8 +1,9 @@
 $(function() {
 
-    var table;
+    var dtParams;
+    var dataTables;
 
-    table = $('.table-sort').DataTable({
+    dtParams = {
         "processing": true,
         "serverSide": true,
         "ajax": {
@@ -137,114 +138,16 @@ $(function() {
                 }
             }
         }
-    });
+    };
 
-    $('.table-sort tbody').on('click', 'a.edit', function() {
-
-        var data, id;
-
-        data = table.row($(this).parents('tr')).data();
-        id = data['ET_Id'];
-
-        ShowPage('修改任务', '/ExaminationTask/Edit?id=' + id);
-    });
-
-    $('.table-sort tbody').on('click', 'a.recycle', function() {
-
-        var tr, data, id;
-
-        tr = $(this).parents('tr');
-        data = table.row(tr).data();
-        id = data['ET_Id'];
-
-        $.post('/ExaminationTask/Recycle', {
-                id: id
-            }, function(data) {
-
-                if (1 == data.status) {
-
-                    tr.fadeOut(function() {
-
-                        tr.remove();
-                        refreshRowBackgroundColor('.table-sort');
-                    });
-                } else if (0 == data.status) {
-
-                    alert(data.message);
-                }
-            }, 'json')
-            .error(function() {
-
-                alert('请求返回错误！');
-            });
-    });
-
-    $('.table-sort tbody').on('click', 'a.resume', function() {
-
-        var tr, data, id;
-
-        tr = $(this).parents('tr');
-        data = table.row(tr).data();
-        id = data['ET_Id'];
-
-        $.post('/ExaminationTask/Resume', {
-                id: id
-            }, function(data) {
-
-                if (1 == data.status) {
-
-                    tr.fadeOut(function() {
-
-                        tr.remove();
-                        refreshRowBackgroundColor('.table-sort');
-                    });
-                } else if (0 == data.status) {
-
-                    alert(data.message);
-                }
-            }, 'json')
-            .error(function() {
-
-                alert('请求返回错误！');
-            });
-    });
-
-    $('.table-sort tbody').on('click', 'a.delete', function() {
-
-        var tr, data, id;
-
-        tr = $(this).parents('tr');
-        data = table.row(tr).data();
-        id = data['ET_Id'];
-
-        $.post('/ExaminationTask/Delete', {
-                id: id
-            }, function(data) {
-
-                if (1 == data.status) {
-
-                    tr.fadeOut(function() {
-
-                        tr.remove();
-                        refreshRowBackgroundColor('.table-sort');
-                    });
-                } else if (0 == data.status) {
-
-                    alert(data.message);
-                }
-            }, 'json')
-            .error(function() {
-
-                alert('请求返回错误！');
-            });
-    });
+    dataTables = initList('.table-sort', dtParams, '考试任务', 'ExaminationTask', 'ET_');
 
     $('.table-sort tbody').on('click', 'a.paper-template', function() {
 
         var tr, data, id;
 
         tr = $(this).parents('tr');
-        data = table.row(tr).data();
+        data = dataTables.row(tr).data();
         id = data['ET_Id'];
 
         location.href = '/ExaminationPaperTemplate/List?etId=' + id;
@@ -261,7 +164,7 @@ $(function() {
         }
 
         tr = $(this).parents('tr');
-        data = table.row(tr).data();
+        data = dataTables.row(tr).data();
         id = data['ET_Id'];
         autoType = data['ET_AutoType'];
 
@@ -309,7 +212,7 @@ $(function() {
         }
 
         tr = $(this).parents('tr');
-        data = table.row(tr).data();
+        data = dataTables.row(tr).data();
         id = data['ET_Id'];
         autoType = data['ET_AutoType'];
 
@@ -344,10 +247,6 @@ $(function() {
 
                 alert('请求返回错误！');
             });
-    });
-
-    $('#CreateBtn').on('click', function() {
-        ShowPage('添加任务', '/ExaminationTask/Create');
     });
 
 });
