@@ -201,9 +201,13 @@ namespace OnlineLearningSystem.Utilities
         public String GetDepartmentsAndUsersZTreeJson()
         {
 
+            return GetDepartmentsZTreeJson(true);
+        }
+
+        public String GetDepartmentsZTreeJson(Boolean hasUser = false)
+        {
+
             List<Department> ds;
-            List<User_Department> uds;
-            User u;
             StringBuilder zTreeJson;
 
             ds = olsEni.Departments.Where(m => m.D_Status == (Byte)Status.Available).ToList();
@@ -217,27 +221,9 @@ namespace OnlineLearningSystem.Utilities
                 zTreeJson.Append("{");
                 zTreeJson.Append("\"departmentId\":" + d.D_Id + ", \"name\":\"" + d.D_Name + "\"");
 
-                uds = olsEni.User_Department.Where(m => m.D_Id == d.D_Id).ToList();
-                if (uds.Count > 0)
+                if (hasUser)
                 {
-
-                    zTreeJson.Append(", \"children\":[");
-
-                    foreach (var ud in uds)
-                    {
-
-                        u = olsEni.Users.SingleOrDefault(m => m.U_Id == ud.U_Id && m.U_Status == (Byte)Status.Available);
-                        if (null != u)
-                        {
-                            zTreeJson.Append("{");
-                            zTreeJson.Append("\"userNode\": true, \"departmentId\":" + d.D_Id + ", \"userId\":" + u.U_Id + ", \"name\":\"" + u.U_Name + "\"");
-                            zTreeJson.Append("},");
-                        }
-
-                    }
-
-                    zTreeJson.Remove(zTreeJson.Length - 1, 1);
-                    zTreeJson.Append("]");
+                    zTreeJson.Append(GetUsersZTreeJson(d.D_Id));
                 }
 
                 zTreeJson.Append("},");
@@ -245,6 +231,41 @@ namespace OnlineLearningSystem.Utilities
 
             zTreeJson.Remove(zTreeJson.Length - 1, 1);
             zTreeJson.Append("]");
+
+            return zTreeJson.ToString();
+        }
+
+        private String GetUsersZTreeJson(Int32 dId)
+        {
+
+            StringBuilder zTreeJson;
+            User u;
+            List<User_Department> uds;
+
+            zTreeJson = new StringBuilder();
+
+            uds = olsEni.User_Department.Where(m => m.D_Id == dId).ToList();
+            if (uds.Count > 0)
+            {
+
+                zTreeJson.Append(", \"children\":[");
+
+                foreach (var ud in uds)
+                {
+
+                    u = olsEni.Users.SingleOrDefault(m => m.U_Id == ud.U_Id && m.U_Status == (Byte)Status.Available);
+                    if (null != u)
+                    {
+                        zTreeJson.Append("{");
+                        zTreeJson.Append("\"userNode\": true, \"departmentId\":" + dId + ", \"userId\":" + u.U_Id + ", \"name\":\"" + u.U_Name + "\"");
+                        zTreeJson.Append("},");
+                    }
+
+                }
+
+                zTreeJson.Remove(zTreeJson.Length - 1, 1);
+                zTreeJson.Append("]");
+            }
 
             return zTreeJson.ToString();
         }

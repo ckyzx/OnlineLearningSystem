@@ -7,7 +7,7 @@ using System.Configuration;
 
 namespace OnlineLearningSystem.Utilities
 {
-    public class DbOperator
+    public class DatabaseOperator
     {
 
         private SqlConnection sqlConnection = null;
@@ -26,14 +26,14 @@ namespace OnlineLearningSystem.Utilities
             sqlConnection.Open();
         }*/
 
-        public DbOperator(string name)
+        public DatabaseOperator(string name)
         {
 
             connectionString = ConfigurationManager.ConnectionStrings[name].ConnectionString;
             sqlConnection = new SqlConnection(connectionString);
         }
 
-        ~DbOperator()
+        ~DatabaseOperator()
         {
             /*sqlConnection.Close();
             sqlCommand.Dispose();

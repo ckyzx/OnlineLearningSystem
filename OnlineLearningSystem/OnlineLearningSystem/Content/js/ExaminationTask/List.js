@@ -140,7 +140,14 @@ $(function() {
         }
     };
 
-    dataTables = initList('.table-sort', dtParams, '考试任务', 'ExaminationTask', 'ET_');
+    list = Kyzx.List.init({
+        dtSelector: '.table-sort',
+        dtParams: dtParams,
+        modelCnName: '考试任务',
+        modelEnName: 'ExaminationTask',
+        modelPrefix: 'ET_'
+    });
+    dataTables = list.initList();
 
     $('.table-sort tbody').on('click', 'a.paper-template', function() {
 

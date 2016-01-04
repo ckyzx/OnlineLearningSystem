@@ -135,7 +135,7 @@ $(function() {
         $('#FunctionPanel').removeClass('hide');
 
         // 添加回收站
-        recycleBin = $('<a id="RecycleBin" class="btn btn-success radius r mr-5" style="line-height:1.6em;margin-top:3px" href="javascript:;">回收站</a>');
+        recycleBin = $('<a id="RecycleBin" class="btn btn-success radius r mr-5" style="line-height:1.6em;margin-top:3px" href="javascript:void(0);">回收站</a>');
         $('nav.breadcrumb').append(recycleBin);
         recycleBin.attr('data-status', status);
         recycleBin.on('click', function() {

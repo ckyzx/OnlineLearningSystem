@@ -1,3 +1,7 @@
+
+var Kyzx = {};
+var OLS = {};
+
 /* 在模态框中显示页面 */
 function ShowPage(title, url) {
     var index = layer.open({
@@ -22,7 +26,7 @@ function ShowPageWithSize(title, url, w, h) {
     });
 }
 
-function renderMenu(authorize) {
+OLS.renderMenu = function(authorize) {
 
     var permissions;
 
@@ -60,4 +64,16 @@ function renderMenu(authorize) {
     });
 
     $('.menu_dropdown').fadeIn();
-}
+};
+
+Kyzx.Common = {
+    getElemHeight: function(elem) {
+
+        var h;
+
+        elem = $(elem);
+        h = elem.height() + parseInt(elem.css('margin-top')) + parseInt(elem.css('margin-bottom')) + parseInt(elem.css('padding-top')) + parseInt(elem.css('padding-bottom'));
+
+        return h;
+    }
+};

@@ -41,6 +41,40 @@ namespace OnlineLearningSystem.Utilities
             return dtResponse;
         }
 
+        public DataTablesResponse ListDataTablesAjax(DataTablesRequest dtRequest, Int32 departmentId)
+        {
+
+            String dutyName, sql;
+            DataTablesResponse dtResponse;
+            Duty d;
+            List<SqlParameter> sps;
+            UModel<User> umodel;
+            List<User> ms;
+
+            umodel = new UModel<User>(dtRequest, "Users", "U_Id");
+
+            sps = new List<SqlParameter>();
+            if (0 != departmentId)
+            {
+                sps.Add(new SqlParameter("@D_Id", departmentId));
+            }
+
+            sql = "SELECT * FROM (SELECT u.*, d.D_Id FROM Users u LEFT JOIN User_Department ud ON u.U_Id = ud.U_Id LEFT JOIN Departments d ON ud.D_Id = d.D_Id) t ";
+            dtResponse = umodel.GetList(sql, sps, "U_Status", "U_Sort");
+
+            ms = (List<User>)dtResponse.data;
+            foreach (var m1 in ms)
+            {
+                d = olsEni.Duties.SingleOrDefault(m => m.Du_Id == m1.Du_Id);
+                dutyName = null == d ? "" : d.Du_Name;
+                m1.Du_Name = dutyName;
+                m1.U_Password = "**********";
+            }
+            dtResponse.data = ms;
+
+            return dtResponse;
+        }
+
         public List<SelectListItem> GetDutyList(Int32? currentValue)
         {
 
@@ -742,5 +776,6 @@ namespace OnlineLearningSystem.Utilities
                 return resJson;
             }
         }
+
     }
 }

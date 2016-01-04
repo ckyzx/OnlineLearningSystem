@@ -105,7 +105,7 @@
     <Compile Include="Models\ExaminationTask.cs" />
     <Compile Include="Models\ExaminationTaskAttendee.cs" />
     <Compile Include="Models\SystemLog.cs" />
-    <Compile Include="Utilities\Common\DbOperator.cs" />
+    <Compile Include="Utilities\Common\DatabaseOperator.cs" />
     <Compile Include="Utilities\Common\ModelConvert.cs" />
     <Compile Include="Utilities\Common\UModel.cs" />
     <Compile Include="Utilities\Enums\SystemLogType.cs" />

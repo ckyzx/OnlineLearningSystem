@@ -1,7 +1,6 @@
 $(function() {
 
-    var dtParams;
-    var dataTables;
+    var dtParams, list, dataTables;
 
     dtParams = {
         "processing": true,
@@ -77,7 +76,14 @@ $(function() {
         }
     };
 
-    dataTables = initList('.table-sort', dtParams, '部门', 'Department', 'D_');
+    list = Kyzx.List.init({
+        dtSelector: '.table-sort',
+        dtParams: dtParams,
+        modelCnName: '部门',
+        modelEnName: 'Department',
+        modelPrefix: 'D_'
+    });
+    dataTables = list.initList();
 
     $('.table-sort tbody').on('click', 'a.sort-top', function() {
 

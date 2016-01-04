@@ -62,6 +62,8 @@ namespace OnlineLearningSystem.Utilities
                             resJson.status = ResponseStatus.Error;
                             resJson.message += ResponseMessage.SaveChangesError + "\r\n";
                         }
+
+                        StaticHelper.RecordSystemLog(SystemLogType.Exception, ex.Message, resJson.message);
                     }
 
                 }

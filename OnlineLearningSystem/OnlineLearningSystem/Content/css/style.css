@@ -68,11 +68,16 @@ body.prompt{ }
 .time-picker .clock{ margin-top:3px; }
 
 .question-container{ background-color: #EEE; }
-.question-classify-list-container{ position: absolute; width: 200px; height: 100%; background-color: #EEE; /* overflow: hidden; overflow-y: scroll; */ overflow-y: scroll; }
+.question-classify-list-container{ position: absolute; width: 200px; height: 100%; background-color: #EEE; overflow-y: scroll; }
 .question-classify-list-container ul.ztree{ padding: 20px 0 44px 0; overflow: hidden; }
 .question-classify-list-container ul.ztree li{ width: 200px; }
-.question-list-container{ margin-left:200px; padding:20px; /* height: 100%; overflow: hidden; overflow-y: scroll; */ background-color:#FFF; }
+.question-list-container{ margin-left:200px; padding:20px; background-color:#FFF; }
 .question-table input.score{ height: 23px; font-size: 12px; text-align: right; }
+
+.tree-list-container{ background-color:#EEE; }
+.tree-list-container div.tree-container{ position: absolute; width: 200px; height:100%; overflow-y: scroll; }
+.tree-list-container div.tree-container ul.ztree{ padding: 20px 0 44px 0; overflow: hidden; }
+.tree-list-container div.list-container{ margin-left:200px; background-color: #FFF; }
 
 .dataTable tr.even td{ background-color: #EEE; }
 .dataTable tr td.nowrap{ white-space:nowrap; }

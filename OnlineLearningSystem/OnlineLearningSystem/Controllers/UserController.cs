@@ -29,21 +29,24 @@ namespace OnlineLearningSystem.Controllers
         [Description("用户列表")]
         public ActionResult List()
         {
+
+            ViewBag.DepartmentsZTreeJson = new UDepartment().GetDepartmentsZTreeJson();
+
             return View();
         }
 
         //
-        // GET: /User/List
+        // GET: /User/ListDataTablesAjax
 
         [Description("查询用户")]
-        public JsonResult ListDataTablesAjax()
+        public JsonResult ListDataTablesAjax(Int32 departmentId = 0)
         {
 
             DataTablesRequest dtRequest;
             DataTablesResponse dtResponse;
 
             dtRequest = GetDataTablesRequest();
-            dtResponse = um.ListDataTablesAjax(dtRequest);
+            dtResponse = um.ListDataTablesAjax(dtRequest, departmentId);
 
             return Json(dtResponse, JsonRequestBehavior.DenyGet);
         }

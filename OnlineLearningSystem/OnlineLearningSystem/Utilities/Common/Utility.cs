@@ -9,7 +9,7 @@ namespace OnlineLearningSystem.Utilities
     public class Utility
     {
         public OLSEntities olsEni = new OLSEntities();
-        protected DbOperator olsDBO = new DbOperator("OLSDBO");
+        protected DatabaseOperator olsDBO = new DatabaseOperator("OLSDBO");
         public DateTime now = DateTime.Now;
 
         protected Object[] GetSqlCondition(String sql, DataTablesRequest dtRequest)

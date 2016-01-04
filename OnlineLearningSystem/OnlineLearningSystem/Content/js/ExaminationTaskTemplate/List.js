@@ -1,7 +1,6 @@
 $(function() {
 
-    var dtParams;
-    var dataTables;
+    var dtParams, list, dataTables;
 
     dtParams = {
         "processing": true,
@@ -84,6 +83,13 @@ $(function() {
         }
     };
 
-    dataTables = initList('.table-sort', dtParams, '考试任务模板', 'ExaminationTaskTemplate', 'ETT_');
+    list = Kyzx.List.init({
+        dtSelector: '.table-sort',
+        dtParams: dtParams,
+        modelCnName: '考试任务模板',
+        modelEnName: 'ExaminationTaskTemplate',
+        modelPrefix: 'ETT_'
+    });
+    dataTables = list.initList();
 
 });

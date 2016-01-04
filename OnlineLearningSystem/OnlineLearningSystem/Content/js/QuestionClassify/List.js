@@ -1,7 +1,6 @@
 $(function() {
 
-    var dtParams;
-    var dataTables;
+    var dtParams, list, dataTables;
 
     dtParams = {
         "processing": true,
@@ -70,6 +69,13 @@ $(function() {
         }
     };
 
-    dataTables = initList('.table-sort', dtParams, '试题分类', 'QuestionClassify', 'QC_');
+    list = Kyzx.List.init({
+        dtSelector: '.table-sort',
+        dtParams: dtParams,
+        modelCnName: '试题分类',
+        modelEnName: 'QuestionClassify',
+        modelPrefix: 'QC_'
+    });
+    dataTables = list.initList();
 
 });
