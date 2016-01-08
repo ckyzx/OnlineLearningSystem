@@ -6,6 +6,7 @@ $(function() {
     var params;
     var recycleBin;
     var jqTable, dataTables;
+    var list;
 
     QueryString.Initial();
     status = QueryString.GetValue('status');
@@ -174,7 +175,14 @@ $(function() {
     jqTable = $('.question-table');
     dataTables = $('.question-table').DataTable(params);
 
-    _initListEvent(jqTable, dataTables, '试题', 'Question', 'Q_');
+    list = Kyzx.List.init({
+        modelCnName: '试题',
+        modelEnName: 'Question',
+        modelPrefix: 'Q_'
+    });
+    list.jqTable = jqTable;
+    list.dataTables = dataTables;
+    list._initListEvent();
 
     $('#CreateBtn').on('click', function() {
         ShowPage('添加试题', '/Question/Create');

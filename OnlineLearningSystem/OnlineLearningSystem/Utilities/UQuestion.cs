@@ -563,7 +563,7 @@ namespace OnlineLearningSystem.Utilities
                 sps.Add(new SqlParameter("@QC_Id", qcId));
             }
 
-            dtResponse = umodel.GetList(sps, "Q_Status");
+            dtResponse = umodel.GetList(sps, "Q_Status", new String[]{ "QC_Name" });
 
             ms = (List<Question>)dtResponse.data;
             foreach (var m1 in ms)

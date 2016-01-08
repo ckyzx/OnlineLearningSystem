@@ -204,7 +204,7 @@ $(function() {
             default:
 
                 $('#Q_Content').val($('[name="Content"]').val());
-                $('#Q_OptionalAnswer').val('');//[IECompatible]
+                $('#Q_OptionalAnswer').val(''); //[IECompatible]
                 $('#Q_ModelAnswer').val($('[name="Answer"]').val());
 
                 break;
@@ -464,7 +464,11 @@ $(function() {
                 if (ueContent) {
                     ueContent.destroy();
                 }
-                ueContent = UE.getEditor('UEditorContent');
+                ueContent = UE.getEditor('UEditorContent', {
+                    toolbars: [
+                        ['fullscreen', 'source', 'undo', 'redo', 'bold', 'italic', 'underline', 'fontborder', 'strikethrough', 'superscript', 'subscript', 'removeformat', 'formatmatch', 'autotypeset', 'blockquote', 'pasteplain', '|', 'forecolor', 'backcolor', 'insertorderedlist', 'insertunorderedlist', 'selectall', 'cleardoc']
+                    ]
+                });
                 //ueAnswer = UE.getEditor('UEditorAnswer');
 
                 break;

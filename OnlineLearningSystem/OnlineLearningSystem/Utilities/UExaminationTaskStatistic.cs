@@ -48,12 +48,12 @@ namespace OnlineLearningSystem.Utilities
             sql = (String)sqlConditions[0];
             sps = (List<SqlParameter>)sqlConditions[1];
 
-            dataTable = olsDBO.GetDataTableWithStart(sql, sps, dtRequest.Length, dtRequest.Start);
+            dataTable = olsDbo.GetDataTableWithStart(sql, sps, dtRequest.Length, dtRequest.Start);
             ms = (List<VMExaminationTaskStatistic>)ModelConvert<VMExaminationTaskStatistic>.ConvertToModel(dataTable);
 
             countSql = sql.Replace("SELECT * FROM ", "SELECT COUNT(ETS_TaskId) FROM ");
-            total = Convert.ToInt32(olsDBO.ExecuteSqlScalar(countSql, sps));
-            filter = Convert.ToInt32(olsDBO.ExecuteSqlScalar(countSql, sps));
+            total = Convert.ToInt32(olsDbo.ExecuteSqlScalar(countSql, sps));
+            filter = Convert.ToInt32(olsDbo.ExecuteSqlScalar(countSql, sps));
 
             return new Object[]{ms, total, filter};
         }
@@ -96,12 +96,12 @@ namespace OnlineLearningSystem.Utilities
             sps = (List<SqlParameter>)sqlConditions[1];
             sps.Add(new SqlParameter("@eptid", eptId));
 
-            dataTable = olsDBO.GetDataTableWithStart(sql, sps, dtRequest.Length, dtRequest.Start);
+            dataTable = olsDbo.GetDataTableWithStart(sql, sps, dtRequest.Length, dtRequest.Start);
             ms = (List<VMExaminationTaskUserStatistic>)ModelConvert<VMExaminationTaskUserStatistic>.ConvertToModel(dataTable);
 
             countSql = sql.Replace("SELECT * FROM ", "SELECT COUNT(ETUS_TaskId) FROM ");
-            total = Convert.ToInt32(olsDBO.ExecuteSqlScalar(countSql, sps));
-            filter = Convert.ToInt32(olsDBO.ExecuteSqlScalar(countSql, sps));
+            total = Convert.ToInt32(olsDbo.ExecuteSqlScalar(countSql, sps));
+            filter = Convert.ToInt32(olsDbo.ExecuteSqlScalar(countSql, sps));
 
             return new Object[] { ms, total, filter };
         }
@@ -118,7 +118,7 @@ namespace OnlineLearningSystem.Utilities
 
                 sql = "SELECT * FROM ExaminationTaskPersonalStatistic WHERE ETPS_UserId = @uId";
                 sp = new SqlParameter("@uId", uId);
-                dataTable = olsDBO.GetDataTable(sql, sp);
+                dataTable = olsDbo.GetDataTable(sql, sp);
 
                 etpss = (List<VMExaminationTaskPersonalStatistic>)ModelConvert<VMExaminationTaskPersonalStatistic>.ConvertToModel(dataTable);
 

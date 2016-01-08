@@ -26,7 +26,7 @@ namespace OnlineLearningSystem.Utilities
             List<User> ms;
 
             umodel = new UModel<User>(dtRequest, "Users", "U_Id");
-            dtResponse = umodel.GetList("U_Status", "U_Sort");
+            dtResponse = umodel.GetList("U_Status", "U_Sort", new String[]{ "Du_Name" });
 
             ms = (List<User>)dtResponse.data;
             foreach (var m1 in ms)
@@ -60,7 +60,7 @@ namespace OnlineLearningSystem.Utilities
             }
 
             sql = "SELECT * FROM (SELECT u.*, d.D_Id FROM Users u LEFT JOIN User_Department ud ON u.U_Id = ud.U_Id LEFT JOIN Departments d ON ud.D_Id = d.D_Id) t ";
-            dtResponse = umodel.GetList(sql, sps, "U_Status", "U_Sort");
+            dtResponse = umodel.GetList(sql, sps, "U_Status", "U_Sort", new String[] { "Du_Name" });
 
             ms = (List<User>)dtResponse.data;
             foreach (var m1 in ms)

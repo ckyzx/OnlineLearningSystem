@@ -108,6 +108,8 @@
     <Compile Include="Utilities\Common\DatabaseOperator.cs" />
     <Compile Include="Utilities\Common\ModelConvert.cs" />
     <Compile Include="Utilities\Common\UModel.cs" />
+    <Compile Include="Utilities\Enums\ExaminationTaskMode.cs" />
+    <Compile Include="Utilities\Enums\ExaminationTaskType.cs" />
     <Compile Include="Utilities\Enums\SystemLogType.cs" />
     <Compile Include="ViewModels\VMExaminationTaskPersonalStatistic.cs" />
     <Compile Include="Utilities\UExaminationTaskStatistic.cs" />
@@ -165,6 +167,7 @@
     <Compile Include="ViewModels\VMUserModifyPassword.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Aspxs\Default.aspx" />
     <Content Include="Content\brower\360极速浏览器.exe" />
     <Content Include="Content\brower\Internet Explorer 8.exe" />
     <Content Include="Content\css\H-ui.admin.css" />

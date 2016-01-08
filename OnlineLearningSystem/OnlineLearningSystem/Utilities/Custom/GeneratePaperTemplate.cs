@@ -11,8 +11,6 @@ namespace OnlineLearningSystem.Utilities
     public class GeneratePaperTemplate : Utility
     {
 
-        private DateTime nowDate;
-
         public ResponseJson Generate()
         {
 
@@ -23,7 +21,11 @@ namespace OnlineLearningSystem.Utilities
             try
             {
 
+                Int32 success;
                 List<ExaminationTask> ets;
+                List<Question> readyQs;
+
+                success = 0;
 
                 ets =
                     olsEni
@@ -33,8 +35,6 @@ namespace OnlineLearningSystem.Utilities
                         && m.ET_Enabled == (Byte)ExaminationTaskStatus.Enabled
                         && m.ET_Status == (Byte)Status.Available)
                     .ToList();
-
-                nowDate = now.Date;
 
                 foreach (var et in ets)
                 {
@@ -48,18 +48,22 @@ namespace OnlineLearningSystem.Utilities
                     try
                     {
 
-                        Generate(et);
-
+                        readyQs = Generate(et);
+                        if (CreatePaperTemplate(et, readyQs))
+                        {
+                            success += 1;
+                        }
                     }
                     catch (Exception ex)
                     {
                         // 生成试卷模板的过程中发生异常，将考试任务状态设为“关闭”
                         et.ET_Enabled = (Byte)ExaminationTaskStatus.Disabled;
+
+                        resJson.status = ResponseStatus.Error;
                         resJson.message += et.ET_Name + "：" + ex.Message + "\r\n";
 
                         if (0 == olsEni.SaveChanges())
                         {
-                            resJson.status = ResponseStatus.Error;
                             resJson.message += ResponseMessage.SaveChangesError + "\r\n";
                         }
 
@@ -68,6 +72,7 @@ namespace OnlineLearningSystem.Utilities
 
                 }
 
+                resJson.addition = "成功处理 " + success + "个考试任务。";
                 return resJson;
             }
             catch (Exception ex)
@@ -78,7 +83,11 @@ namespace OnlineLearningSystem.Utilities
             }
         }
 
-        // 判断是否需要生成试卷模板
+        /// <summary>
+        /// 判断是否需要生成试卷模板
+        /// </summary>
+        /// <param name="et"></param>
+        /// <returns></returns>
         private Boolean WhetherGenerate(ExaminationTask et)
         {
 
@@ -151,24 +160,33 @@ namespace OnlineLearningSystem.Utilities
             return whether;
         }
 
-        public void Generate(ExaminationTask et)
+        private List<Question> Generate(ExaminationTask et)
         {
 
             Byte statisticType;
-            
+            List<Question> readyQs;
+
             statisticType = et.ET_StatisticType;
 
             if ((Byte)StatisticType.Score == statisticType)
             {
-                GenerateWithScore(et);
+                readyQs = GenerateWithScore(et);
             }
             else if ((Byte)StatisticType.Number == statisticType)
             {
-                GenerateWithNumber(et);
+                readyQs = GenerateWithNumber(et);
             }
+            else
+            {
+                var e = new Exception("未设置成绩计算方式。");
+                e.Data.Add("Info", "任务Id：" + et.ET_Id);
+                throw e;
+            }
+
+            return readyQs;
         }
 
-        private void GenerateWithScore(ExaminationTask et)
+        private List<Question> GenerateWithScore(ExaminationTask et)
         {
 
             Int32 diffCoef, optionTotalScore, totalScore;
@@ -184,8 +202,8 @@ namespace OnlineLearningSystem.Utilities
 
             totalScore = et.ET_TotalScore;
 
-            // “备选试题总分”必须大于“出题总分”，才能保证有足够试题可供选择
-            if (optionTotalScore > totalScore)
+            // “备选试题总分”必须大于等于“出题总分”，才能保证有足够试题可供选择
+            if (optionTotalScore >= totalScore)
             {
 
                 // 选题
@@ -193,27 +211,17 @@ namespace OnlineLearningSystem.Utilities
                 ratios = AdjustRatios(ratios);
                 readyQs = SelectQuestionsWithScore(ratios, totalScore, qs);
             }
-            else if (optionTotalScore == totalScore)
-            {
-
-                // 取所有试题
-                readyQs = qs.ToList();
-            }
-            else if (optionTotalScore < totalScore)
+            else// if (optionTotalScore < totalScore)
             {
 
                 // 退出
                 throw new Exception("备选试题总分小于出题总分。");
             }
-            else
-            {
-                return;
-            }
 
-            SaveQuestions(et, readyQs);
+            return readyQs;
         }
 
-        private List<Question> GetQuestions(string[] classifies, int diffCoef, Boolean hasScore)
+        private List<Question> GetQuestions(String[] classifies, Int32 diffCoef, Boolean hasScore)
         {
 
             Int32 qcId;
@@ -233,6 +241,7 @@ namespace OnlineLearningSystem.Utilities
 
                 qcId = qc.QC_Id;
 
+                // 不限制“难度系数”、限制“分数”
                 if (0 == diffCoef && hasScore)
                 {
                     tmpQs =
@@ -243,7 +252,17 @@ namespace OnlineLearningSystem.Utilities
                             && m.Q_Score > 0
                             && m.Q_Status == (Byte)Status.Available)
                         .ToList();
-                }
+                } // 未限制“难度系数”、未限制“分数”
+                else if (0 == diffCoef && !hasScore)
+                {
+                    tmpQs =
+                        olsEni
+                        .Questions
+                        .Where(m =>
+                            m.QC_Id == qcId
+                            && m.Q_Status == (Byte)Status.Available)
+                        .ToList();
+                } // 限制“难度系数”、限制“分数”
                 else if (0 != diffCoef && hasScore)
                 {
                     tmpQs =
@@ -255,17 +274,7 @@ namespace OnlineLearningSystem.Utilities
                             && m.Q_DifficultyCoefficient == diffCoef
                             && m.Q_Status == (Byte)Status.Available)
                         .ToList();
-                }
-                else if (0 == diffCoef && !hasScore)
-                {
-                    tmpQs =
-                        olsEni
-                        .Questions
-                        .Where(m =>
-                            m.QC_Id == qcId
-                            && m.Q_Status == (Byte)Status.Available)
-                        .ToList();
-                }
+                } // 未限制“难度系数”、未限制“分数”
                 else// if (0 != diffCoef && !hasScore)
                 {
                     tmpQs =
@@ -289,7 +298,11 @@ namespace OnlineLearningSystem.Utilities
             return qs.Select(m => m.Q_Score).Sum();
         }
 
-        // 去除比例值为 0 的元素，并重新调整比例
+        /// <summary>
+        /// 去除比例值为 0 的元素，并重新调整比例
+        /// </summary>
+        /// <param name="ratios"></param>
+        /// <returns></returns>
         private List<AutoRatio> AdjustRatios(List<AutoRatio> ratios)
         {
 
@@ -312,14 +325,24 @@ namespace OnlineLearningSystem.Utilities
             {
                 throw new Exception("未设置出题比例。");
             }
+            else if ((Double)totalRatio < 0.5)
+            {
+                throw new Exception("出题比例小于 50% 。");
+            }
+            else if (totalRatio > 1)
+            {
+                throw new Exception("出题比例大于 100% 。");
+            }
 
             tmpRatio = 0;
             ratios = tmpRatios;
             foreach (var r in ratios)
             {
-                r.percent = Math.Round(r.percent / totalRatio, 2, MidpointRounding.AwayFromZero); // 取较小的数
+                // 重新计算比例，且舍为较小的数
+                r.percent = StaticHelper.MathRound((Double)r.percent / (Double)totalRatio, 2);
                 tmpRatio += r.percent;
             }
+
             // 当调整后的百分比仍小于 1 时，将差值累加至最后一个元素
             if (tmpRatio < 1)
             {
@@ -332,7 +355,7 @@ namespace OnlineLearningSystem.Utilities
         private List<Question> SelectQuestionsWithScore(List<AutoRatio> ratios, Int32 totalScore, List<Question> qs)
         {
 
-            Int32 typeScore, tmpScore, overflowScore, maxValue, qId, totalTimeout, timeout;
+            Int32 typeScore, tmpScore, overflowScore, maxValue, qId, totalTimeout, timeout, readyTotalScore;
             Random random;
             Question q;
             Int32[] qIds;
@@ -341,7 +364,7 @@ namespace OnlineLearningSystem.Utilities
             random = new Random((Int32)DateTime.Now.Ticks);
             readyQs = new List<Question>();
             overflowScore = 0;
-            totalTimeout = 100;
+            totalTimeout = totalScore; // 选题时，超过重复次数，则选题失败
 
             foreach (var r in ratios)
             {
@@ -354,7 +377,7 @@ namespace OnlineLearningSystem.Utilities
                 qIds =
                     qs
                     .Where(m =>
-                        m.Q_Type == r.type 
+                        m.Q_Type == r.type
                         && m.Q_Status == (Byte)Status.Available)
                     .Select(m => m.Q_Id)
                     .ToArray();
@@ -380,7 +403,8 @@ namespace OnlineLearningSystem.Utilities
                         tmpQs.Add(q);
                         tmpScore += q.Q_Score;
                     }
-                    else {
+                    else
+                    {
                         timeout += 1;
                     }
 
@@ -390,49 +414,18 @@ namespace OnlineLearningSystem.Utilities
                     }
                 }
 
-                /*if (tmpScore - typeScore > typeScore)
-                {
-                    throw new Exception("“" + r.type + "”溢出分数大于题型总分。");
-                }
-
-                // 去除“溢出分数”
-                if (tmpScore > typeScore)
-                {
-
-                    tmpScore = tmpScore - typeScore;
-
-                    // 必须保证减去“溢出分数”后的单个“备选试题”的分数大于 1
-                    // “备选试题总分”减去“溢出分数”后大于等于“备选试题总数”，属异常情况
-                    if (tmpScore - tmpQs.Select(m => m.Q_Score).Sum() >= tmpQs.Count)
-                    {
-                        throw new Exception("“" + r.type + "”无法减去溢出分数。");
-                    }
-
-                    while (0 != tmpScore)
-                    {
-                        foreach (var q1 in tmpQs)
-                        {
-                            if (q1.Q_Score > 1)
-                            {
-                                q1.Q_Score = q1.Q_Score - 1;
-                                tmpScore -= 1;
-                            }
-                            if (0 == tmpScore)
-                            {
-                                break;
-                            }
-                        }
-                    }
-                }*/
-
                 overflowScore += tmpScore - typeScore;
 
                 readyQs.AddRange(tmpQs);
             }
 
-            if (overflowScore - readyQs.Select(m => m.Q_Score).Sum() >= readyQs.Count)
+            // 确保每条试题分数大于等于 1分
+            readyTotalScore = readyQs.Select(m => m.Q_Score).Sum();
+            if (readyTotalScore - overflowScore < readyQs.Count)
             {
-                throw new Exception("无法减去溢出分数。");
+                var e = new Exception("无法减去溢出分数。");
+                e.Data.Add("Info", "已选题总分：" + readyTotalScore + "；溢出分数：" + overflowScore + "；已选题总数：" + readyQs.Count + "。");
+                throw e;
             }
 
             while (0 != overflowScore)
@@ -454,7 +447,7 @@ namespace OnlineLearningSystem.Utilities
             return readyQs;
         }
 
-        private void GenerateWithNumber(ExaminationTask et)
+        private List<Question> GenerateWithNumber(ExaminationTask et)
         {
 
             Int32 diffCoef, optionTotalNumber, totalNumber;
@@ -470,8 +463,8 @@ namespace OnlineLearningSystem.Utilities
 
             totalNumber = et.ET_TotalNumber;
 
-            // “备选试题总数”必须大于“出题总数”，才能保证有足够试题可供选择
-            if (optionTotalNumber > totalNumber)
+            // “备选试题总数”必须大于等于“出题总数”，才能保证有足够试题可供选择
+            if (optionTotalNumber >= totalNumber)
             {
 
                 // 选题
@@ -479,24 +472,14 @@ namespace OnlineLearningSystem.Utilities
                 ratios = AdjustRatios(ratios);
                 readyQs = SelectQuestionsWithNumber(ratios, totalNumber, qs);
             }
-            else if (optionTotalNumber == totalNumber)
-            {
-
-                // 取所有试题
-                readyQs = qs.ToList();
-            }
-            else if (optionTotalNumber < totalNumber)
+            else// if (optionTotalNumber < totalNumber)
             {
 
                 // 退出
                 throw new Exception("备选试题总数小于出题总数。");
             }
-            else
-            {
-                return;
-            }
 
-            SaveQuestions(et, readyQs);
+            return readyQs;
         }
 
         private int GetTotalNumber(List<Question> qs)
@@ -506,12 +489,10 @@ namespace OnlineLearningSystem.Utilities
 
         private List<Question> SelectQuestionsWithNumber(List<AutoRatio> ratios, int totalNumber, List<Question> qs)
         {
-            
-            Int32 typeNumber, tmpNumber, maxValue, qId;
+
+            Int32 typeNumber, absence;
             String type;
             Random random;
-            Question q;
-            Int32[] qIds;
             List<Question> readyQs, tmpQs;
 
             random = new Random((Int32)DateTime.Now.Ticks);
@@ -520,89 +501,90 @@ namespace OnlineLearningSystem.Utilities
             foreach (var r in ratios)
             {
 
-                tmpQs = new List<Question>();
-
-                typeNumber = (Int32)(totalNumber * r.percent);
-                tmpNumber = 0;
-
-                qIds =
-                    qs
-                    .Where(m => m.Q_Type == r.type)
-                    .Select(m => m.Q_Id)
-                    .ToArray();
-
-                if (qIds.Length == 0)
-                {
-                    throw new Exception("“" + r.type + "”没有备选试题。");
-                }
-
-                maxValue = qIds.Length - 1;
-
-                while (tmpNumber < typeNumber)
-                {
-
-                    qId = qIds[random.Next(maxValue)];
-                    q = qs.Single(m => m.Q_Id == qId);
-
-                    // 避免重复
-                    if (tmpQs.Where(m => m.Q_Id == q.Q_Id).Count() == 0)
-                    {
-                        tmpQs.Add(q);
-                        tmpNumber += 1;
-                    }
-                }
-
+                typeNumber = (Int32)(totalNumber * r.percent); // 取较小的整数
+                tmpQs = SelectQuestionsWithNumber(qs, r.type, typeNumber, totalNumber);
                 readyQs.AddRange(tmpQs);
             }
 
             // 选择的试题数量不足时，用最后一个类型补足
-            typeNumber = totalNumber - readyQs.Count;
-            if (typeNumber > 0)
+            absence = totalNumber - readyQs.Count;
+            if (absence > 0)
+            {
+                type = ratios[ratios.Count - 1].type;
+                tmpQs = SelectQuestionsWithNumber(qs, type, absence, totalNumber);
+                readyQs.AddRange(tmpQs);
+            } // 试题数量溢出时，从后边减去
+            /*else if (absence < 0)
             {
 
-                tmpQs = new List<Question>();
-
-                tmpNumber = 0;
-
-                type = ratios[ratios.Count - 1].type;
-                qIds =
-                    qs
-                    .Where(m => m.Q_Type == type)
-                    .Select(m => m.Q_Id)
-                    .ToArray();
-
-                if (qIds.Length == 0)
-                {
-                    throw new Exception("“" + type + "”没有备选试题。");
-                }
-
-                maxValue = qIds.Length - 1;
-
-                while (tmpNumber < typeNumber)
-                {
-
-                    qId = qIds[random.Next(maxValue)];
-                    q = qs.Single(m => m.Q_Id == qId);
-
-                    // 避免重复
-                    if (tmpQs.Where(m => m.Q_Id == q.Q_Id).Count() == 0
-                        && readyQs.Where(m=>m.Q_Id == q.Q_Id).Count() == 0)
-                    {
-                        tmpQs.Add(q);
-                        tmpNumber += 1;
-                    }
-                }
-
-                readyQs.AddRange(tmpQs);
-            }else if(typeNumber < 0){
-
-                readyQs.RemoveRange(readyQs.Count + typeNumber, Math.Abs(typeNumber));
-            }
+                readyQs.RemoveRange(readyQs.Count + absence, Math.Abs(absence));
+            }*/
 
             return readyQs;
         }
 
-        private void SaveQuestions(ExaminationTask et, List<Question> readyQs)
+        private List<Question> SelectQuestionsWithNumber(List<Question> qs, String type, Int32 typeNumber, Int32 totalTimeout)
+        {
+
+            Int32 maxValue, timeout, increment, qId;
+            Random random;
+            Question q;
+            Int32[] qIds;
+            List<Question> tmpQs;
+
+            qIds =
+                qs
+                .Where(m => m.Q_Type == type)
+                .Select(m => m.Q_Id)
+                .ToArray();
+
+            if (qIds.Length == 0)
+            {
+                throw new Exception("“" + type + "”没有备选试题。");
+            }
+            else if (qIds.Length < typeNumber)
+            {
+                var e = new Exception("备选试题数量不足。");
+                e.Data.Add("Info", "试题类型：" + type + "；现有数量：" + qIds.Count() + "；需要数量：" + typeNumber + "。");
+                throw e;
+            }
+
+            maxValue = qIds.Length - 1;
+            timeout = 0;
+            increment = 0;
+            random = new Random((Int32)DateTime.Now.Ticks);
+            tmpQs = new List<Question>();
+
+            while (increment < typeNumber)
+            {
+
+                qId = qIds[random.Next(maxValue)];
+                q = qs.Single(m => m.Q_Id == qId);
+
+                // 避免重复
+                if (tmpQs.Where(m => m.Q_Id == q.Q_Id).Count() == 0)
+                {
+                    olsEni.Entry(q).State = EntityState.Detached;
+                    tmpQs.Add(q);
+                    increment += 1;
+                }
+                else
+                {
+                    timeout += 1;
+                }
+
+                if (totalTimeout == timeout)
+                {
+                    var e = new Exception("随机选取试题失败。");
+                    e.Data.Add("Info", "试题类型：" + type + "；现有数量：" + qIds.Count() + "；需要数量：" + typeNumber + "；重复次数：" + totalTimeout + "。");
+                    throw e;
+                }
+            }
+
+            return tmpQs;
+        }
+
+        private Boolean CreatePaperTemplate(ExaminationTask et, List<Question> readyQs)
         {
 
             Int32 eptId, eptqId;
@@ -672,33 +654,8 @@ namespace OnlineLearningSystem.Utilities
             {
                 throw new Exception(ResponseMessage.SaveChangesError);
             }
-        }
 
-        private String GenerateResult(Int32 result)
-        {
-
-            String prompt;
-
-            switch (result)
-            {
-                case 1:
-                    prompt = "正常。";
-                    break;
-                case 0:
-                    prompt = "未设置的异常。";
-                    break;
-                case -1:
-                    prompt = "数据保存错误。";
-                    break;
-                case -2:
-                    prompt = "备选试题总分小于出题总分。";
-                    break;
-                default:
-                    prompt = "未定义的错误。";
-                    break;
-            }
-
-            return prompt;
+            return true;
         }
     }
 }

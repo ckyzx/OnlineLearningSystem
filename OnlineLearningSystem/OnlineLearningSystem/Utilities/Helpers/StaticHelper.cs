@@ -12,7 +12,8 @@ namespace OnlineLearningSystem.Utilities
 {
     public static class StaticHelper
     {
-        public static List<SelectListItem> GetStatusList(String currentValue){
+        public static List<SelectListItem> GetStatusList(String currentValue)
+        {
 
             List<SelectListItem> items;
 
@@ -153,6 +154,11 @@ namespace OnlineLearningSystem.Utilities
             message += "Source: " + ex.Source + "\\r\\n";
             message += "StackTrace: \\r\\n" + ex.StackTrace + "\\r\\n";
 
+            if (null != ex.Data && null !=ex.Data["Info"])
+            {
+                message += "DataInfo: " + ex.Data["Info"] + "\\r\\n";
+            }
+
             if (null != ex.InnerException)
             {
                 message += "\\r\\n" + GetExceptionMessage(ex.InnerException);
@@ -209,7 +215,7 @@ namespace OnlineLearningSystem.Utilities
         {
 
             List<ActionPermission> aps;
-            Type[] types ;
+            Type[] types;
 
             aps = new List<ActionPermission>();
             types = Assembly.Load("OnlineLearningSystem").GetTypes();
@@ -221,7 +227,7 @@ namespace OnlineLearningSystem.Utilities
                     var members = type.GetMethods();
                     foreach (var member in members)
                     {
-                        if (member.ReturnType.Name == "ActionResult" 
+                        if (member.ReturnType.Name == "ActionResult"
                             || member.ReturnType.Name == "JsonResult")//如果是Action
                         {
 
@@ -242,6 +248,25 @@ namespace OnlineLearningSystem.Utilities
                 }
             }
             return aps;
+        }
+
+        public static Decimal MathRound(Double num, Int32 decimals)
+        {
+
+            Int32 dotPos;
+            String numString;
+
+            numString = num.ToString();
+
+            dotPos = numString.IndexOf(".");
+            decimals += dotPos + 1;
+
+            if (numString.Length < decimals)
+            {
+                return (Decimal)num;
+            }
+
+            return Convert.ToDecimal(num.ToString().Substring(0, decimals));
         }
     }
 }

@@ -3,7 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OnlineLearningSystem", "OnlineLearningSystem\OnlineLearningSystem.csproj", "{44AB40C3-A199-4488-A42D-953B73E019E6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimeTaskTestProject", "TimeTaskTestProject\TimeTaskTestProject.csproj", "{EA2F11C9-DEFC-449A-B461-8EDAFBBAC320}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{5BFFA568-0BB2-4520-A108-4CD81FBDB1E9}"
+	ProjectSection(SolutionItems) = preProject
+		Local.testsettings = Local.testsettings
+		OnlineLearningSystem.vsmdi = OnlineLearningSystem.vsmdi
+		TraceAndTestImpact.testsettings = TraceAndTestImpact.testsettings
+	EndProjectSection
+EndProject
 Global
+	GlobalSection(TestCaseManagementSettings) = postSolution
+		CategoryFile = OnlineLearningSystem.vsmdi
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
@@ -13,6 +25,10 @@ Global
 		{44AB40C3-A199-4488-A42D-953B73E019E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{44AB40C3-A199-4488-A42D-953B73E019E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{44AB40C3-A199-4488-A42D-953B73E019E6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EA2F11C9-DEFC-449A-B461-8EDAFBBAC320}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EA2F11C9-DEFC-449A-B461-8EDAFBBAC320}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EA2F11C9-DEFC-449A-B461-8EDAFBBAC320}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EA2F11C9-DEFC-449A-B461-8EDAFBBAC320}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

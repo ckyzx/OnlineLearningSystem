@@ -61,12 +61,17 @@ namespace OnlineLearningSystem.Utilities
             {
                 ET_Id = 0,
                 ET_Name = "",
+                ET_Enabled = (Byte)ExaminationTaskStatus.Disabled,
+                ET_Type = (Byte)ExaminationTaskType.Examination,
                 ET_ParticipatingDepartment = "[]",
                 ET_Attendee = "[]",
-                ET_AutoType = (Byte)AutoType.Manual,
                 ET_StatisticType = (Byte)StatisticType.Unset,
                 ET_TotalScore = 100,
                 ET_TotalNumber = 10,
+                ET_Mode = (Byte)ExaminationTaskMode.Manual,
+                ET_AutoType = (Byte)AutoType.Manual,
+                ET_AutoOffsetDay = 0,
+                ET_DifficultyCoefficient = 0, 
                 ET_AutoClassifies = "[]",
                 ET_AutoRatio = "[]",
                 ET_StartTime = initDateTime,
@@ -108,8 +113,7 @@ namespace OnlineLearningSystem.Utilities
 
                 Int32 id;
 
-                id = olsEni.ExaminationTasks.Count();
-                id = 0 == id ? 1 : olsEni.ExaminationTasks.Max(m => m.ET_AutoId) + 1;
+                id = GetId();
 
                 model.ET_Id = id;
                 olsEni.ExaminationTasks.Add(model);
@@ -131,6 +135,39 @@ namespace OnlineLearningSystem.Utilities
             }
         }
 
+        public Int32 GetId()
+        {
+
+            Int32 id;
+
+            id = olsEni.ExaminationTasks.Count();
+            id = 0 == id ? 1 : olsEni.ExaminationTasks.Max(m => m.ET_AutoId) + 1;
+
+            return id;
+        }
+
+        public Int32 GetEPTId()
+        {
+
+            Int32 id;
+
+            id = olsEni.ExaminationPaperTemplates.Count();
+            id = 0 == id ? 1 : olsEni.ExaminationPaperTemplates.Max(m => m.EPT_AutoId) + 1;
+
+            return id;
+        }
+
+        private Int32 GetEPTQId()
+        {
+
+            Int32 id;
+
+            id = olsEni.ExaminationPaperTemplateQuestions.Count();
+            id = 0 == id ? 1 : olsEni.ExaminationPaperTemplateQuestions.Max(m => m.EPTQ_AutoId) + 1;
+
+            return id;
+        }
+
         private void AddPaperTemplateAndQuestionTemplate(ExaminationTask model)
         {
 
@@ -146,8 +183,7 @@ namespace OnlineLearningSystem.Utilities
                 return;
             }
 
-            id = olsEni.ExaminationPaperTemplates.Count();
-            id = 0 == id ? 1 : olsEni.ExaminationPaperTemplates.Max(m => m.EPT_AutoId) + 1;
+            id = GetEPTId();
 
             ept = new ExaminationPaperTemplate
             {
@@ -168,8 +204,7 @@ namespace OnlineLearningSystem.Utilities
             eptqs = new List<ExaminationPaperTemplateQuestion>();
 
             // 获取试题模板Id
-            id = olsEni.ExaminationPaperTemplateQuestions.Count();
-            id = 0 == id ? 1 : olsEni.ExaminationPaperTemplateQuestions.Max(m => m.EPTQ_AutoId) + 1;
+            id = GetEPTQId();
 
             for (var i = 0; i < qs.Length; i++)
             {

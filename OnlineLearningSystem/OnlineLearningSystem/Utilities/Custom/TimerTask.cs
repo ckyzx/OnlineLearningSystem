@@ -28,7 +28,6 @@ namespace OnlineLearningSystem.Utilities
             gpt = new GeneratePaperTemplate();
             resJson = gpt.Generate();
 
-            //TODO: 记录错误日志
         }
 
         public static void ChangePaperStatus(object source, ElapsedEventArgs e)
@@ -40,7 +39,6 @@ namespace OnlineLearningSystem.Utilities
             cps = new ChangePaperStatus();
             resJson = cps.Change();
 
-            //TODO: 记录错误日志
         }
 
         public static void ChangePaperTemplateStatus(object source, ElapsedEventArgs e)
@@ -52,7 +50,6 @@ namespace OnlineLearningSystem.Utilities
             cpts = new ChangePaperTemplateStatus();
             resJson = cpts.Change();
 
-            //TODO: 记录错误日志
         }
     }
 }

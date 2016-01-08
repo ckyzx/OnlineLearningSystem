@@ -13,39 +13,19 @@ $(function() {
     dTable.find(':checkbox[value=""]').attr('disabled', 'disabled');
     rTable.find(':checkbox[value=""]').attr('disabled', 'disabled');
 
-    clickEvent = function(elem) {
-
-        var checkbox;
-
-        checkbox = $(elem);
-        checkbox.parentsUntil('div').last().find(':checkbox').removeAttr('checked');
-        checkbox.attr('data-checked', 1).blur().focus();
-    };
-    changeEvent = function(elem) {
-
-        var checkbox;
-
-        checkbox = $(elem);
-        if (1 == checkbox.attr('data-checked')) {
-
-            checkbox.removeAttr('data-checked');
-            checkbox.get(0).checked = true;
-        }
-    };
-
     dTable
         .on('click', ':checkbox', function() {
-            clickEvent(this);
+            Kyzx.List.checkboxClickEvent(this);
         })
         .on('change', ':checkbox', function() {
-            changeEvent(this);
+            Kyzx.List.checkboxChangeEvent(this);
         });
     rTable
         .on('click', ':checkbox', function() {
-            clickEvent(this);
+            Kyzx.List.checkboxClickEvent(this);
         })
         .on('change', ':checkbox', function() {
-            changeEvent(this);
+            Kyzx.List.checkboxChangeEvent(this);
         });
 
     $('form').submit(function(e) {

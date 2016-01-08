@@ -245,6 +245,27 @@ namespace OnlineLearningSystem.Utilities
             return returnValue == null ? null : returnValue.ToString();
         }
 
+        public Int32 ExecuteProcedure(string sql)
+        {
+
+
+            Int32 result;
+
+
+            sqlConnection.Open();
+
+            sqlCommand = new SqlCommand(sql, sqlConnection);
+            sqlCommand.CommandType = CommandType.StoredProcedure;
+            sqlCommand.Parameters.Clear();
+
+            result = sqlCommand.ExecuteNonQuery();
+
+            sqlConnection.Close();
+
+
+            return result;
+        }
+
         public Int32 ExecuteProcedure(string sql, SqlParameter[] sqlParameters)
         {
 
@@ -257,9 +278,9 @@ namespace OnlineLearningSystem.Utilities
             sqlCommand = new SqlCommand(sql, sqlConnection);
             sqlCommand.CommandType = CommandType.StoredProcedure;
             sqlCommand.Parameters.AddRange(sqlParameters);
-            sqlCommand.Parameters.Clear();
 
             result = sqlCommand.ExecuteNonQuery();
+            sqlCommand.Parameters.Clear();
 
             sqlConnection.Close();
 
