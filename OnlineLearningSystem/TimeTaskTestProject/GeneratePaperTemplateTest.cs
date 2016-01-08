@@ -2,31 +2,27 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
+using System.Diagnostics;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting.Web;
-using OnlineLearningSystem;
 using OnlineLearningSystem.Models;
-using System.Data;
-using System.Data.SqlClient;
-using System.Diagnostics;
 
 namespace TimeTaskTestProject
 {
-
 
     /// <summary>
     ///这是 GeneratePaperTemplateTest 的测试类，旨在
     ///包含所有 GeneratePaperTemplateTest 单元测试
     ///</summary>
     [TestClass()]
-    public class GeneratePaperTemplateTest
+    public class GeneratePaperTemplateTest : Test
     {
 
         private TestContext testContextInstance;
-        private OLSEntities olsEni = new OLSEntities();
-        private DatabaseOperator olsDbo = new DatabaseOperator("OLSDBO");
 
         /// <summary>
         ///获取或设置测试上下文，上下文提供
@@ -61,8 +57,15 @@ namespace TimeTaskTestProject
         //}
         //
         // 使用 TestInitialize 在运行每个测试前先运行代码
-        [TestInitialize()]
-        public void MyTestInitialize()
+        //[TestInitialize()]
+        //public void MyTestInitialize()
+        //{
+
+        //}
+
+        // 使用 TestCleanup 在运行完每个测试后运行代码
+        [TestCleanup()]
+        public void MyTestCleanup()
         {
 
             Int32 result;
@@ -70,13 +73,6 @@ namespace TimeTaskTestProject
             result = olsDbo.ExecuteProcedure("dbo.UnitTesting_DeleteExaminationTask", new SqlParameter[] { new SqlParameter("@etName", "单元测试") });
 
             Debug.WriteLine("“清除考试任务”操作返回 " + result + " 。");
-        }
-
-        // 使用 TestCleanup 在运行完每个测试后运行代码
-        [TestCleanup()]
-        public void MyTestCleanup()
-        {
-
         }
 
         #endregion
