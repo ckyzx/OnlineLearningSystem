@@ -82,7 +82,7 @@ namespace TimeTaskTestProject
             ex.Data.Add("Info", "附加数据信息。");
 
             expected = "Message: 测试抛出错误。\\r\\nSource: \\r\\nStackTrace: \\r\\n\\r\\nDataInfo: 附加数据信息。\\r\\n";
-            actual = StaticHelper.GetExceptionMessage(ex);
+            actual = StaticHelper.GetExceptionMessageAndRecord(ex);
 
             Assert.AreEqual(expected, actual);
             Debug.WriteLine(actual);

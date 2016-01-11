@@ -7,6 +7,7 @@ using System.Reflection;
 using OnlineLearningSystem.Controllers;
 using OnlineLearningSystem.Models;
 using System.Data;
+using System.IO;
 
 namespace OnlineLearningSystem.Utilities
 {
@@ -145,8 +146,19 @@ namespace OnlineLearningSystem.Utilities
             return items;
         }
 
-        public static String GetExceptionMessage(Exception ex)
+        public static String GetExceptionMessageAndRecord(Exception ex)
         {
+
+            String message;
+
+            message = GetExceptionMessage(ex);
+
+            RecordSystemLog(SystemLogType.Exception, ex.Message, message);
+
+            return message;
+        }
+
+        public static String GetExceptionMessage(Exception ex) {
 
             String message;
 
@@ -154,7 +166,7 @@ namespace OnlineLearningSystem.Utilities
             message += "Source: " + ex.Source + "\\r\\n";
             message += "StackTrace: \\r\\n" + ex.StackTrace + "\\r\\n";
 
-            if (null != ex.Data && null !=ex.Data["Info"])
+            if (null != ex.Data && null != ex.Data["Info"])
             {
                 message += "DataInfo: " + ex.Data["Info"] + "\\r\\n";
             }
@@ -163,8 +175,6 @@ namespace OnlineLearningSystem.Utilities
             {
                 message += "\\r\\n" + GetExceptionMessage(ex.InnerException);
             }
-
-            RecordSystemLog(SystemLogType.Exception, ex.Message, message);
 
             return message;
         }
@@ -207,8 +217,23 @@ namespace OnlineLearningSystem.Utilities
 
         private static void RecordInnerLog(Exception ex)
         {
-            //TODO: 添加系统内部文本日志
-            throw new NotImplementedException();
+
+            String txtFile;
+            FileStream fs;
+            StreamWriter sw;
+
+            txtFile = AppDomain.CurrentDomain.BaseDirectory + "ErrorLogs\\";
+            if (!Directory.Exists(txtFile))
+            {
+                Directory.CreateDirectory(txtFile);
+            }
+            txtFile += DateTime.Now.Ticks + ".txt";
+            
+            fs = new FileStream(txtFile, FileMode.OpenOrCreate);
+            sw = new StreamWriter(fs);
+
+            sw.WriteLine(GetExceptionMessage(ex));
+            sw.Close();
         }
 
         public static List<ActionPermission> GetActionPermission()

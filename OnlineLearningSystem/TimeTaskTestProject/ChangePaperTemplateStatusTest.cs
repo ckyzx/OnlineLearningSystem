@@ -58,14 +58,8 @@ namespace TimeTaskTestProject
         //}
         //
         //使用 TestInitialize 在运行每个测试前先运行代码
-        //[TestInitialize()]
-        //public void MyTestInitialize()
-        //{
-        //}
-        //
-        //使用 TestCleanup 在运行完每个测试后运行代码
-        [TestCleanup()]
-        public void MyTestCleanup()
+        [TestInitialize()]
+        public void MyTestInitialize()
         {
 
             Int32 result;
@@ -73,6 +67,15 @@ namespace TimeTaskTestProject
             result = olsDbo.ExecuteProcedure("dbo.UnitTesting_DeleteExaminationTask", new SqlParameter[] { new SqlParameter("@etName", "单元测试") });
 
             Debug.WriteLine("“清除考试任务”操作返回 " + result + " 。");
+
+            Thread.Sleep(10 * 1000);
+        }
+        
+        //使用 TestCleanup 在运行完每个测试后运行代码
+        [TestCleanup()]
+        public void MyTestCleanup()
+        {
+
         }
         
         #endregion
@@ -93,6 +96,7 @@ namespace TimeTaskTestProject
             UExaminationTask uet;
             GeneratePaperTemplate_Accessor gpt = new GeneratePaperTemplate_Accessor();
             ChangePaperTemplateStatus target;
+            ResponseJson resJson;
             Object expected, actual;
 
             // 获取状态为“未做”、“进行中”的试卷模板
@@ -167,11 +171,21 @@ namespace TimeTaskTestProject
             }
 
             // 生成试卷模板数据
-            gpt.Generate();
+            uet = new UExaminationTask();
+            resJson = gpt.Generate();
+            if (ResponseStatus.Error == resJson.status || resJson.message != "")
+            {
+                Assert.Fail("部署测试数据失败3。" + resJson.message);
+            }
 
             Thread.Sleep(10 * 1000);
 
-            ept = olsEni.ExaminationPaperTemplates.Single(m => m.ET_Id == id);
+            ept = olsEni.ExaminationPaperTemplates.SingleOrDefault(m => m.ET_Id == id);
+            if (null == ept)
+            {
+                Assert.Fail("部署测试数据失败4。");
+            }
+
             ept.EPT_PaperTemplateStatus = (Byte)PaperTemplateStatus.Doing;
 
             if (0 == olsEni.SaveChanges())
@@ -205,6 +219,7 @@ namespace TimeTaskTestProject
             UExaminationTask uet;
             GeneratePaperTemplate_Accessor gpt = new GeneratePaperTemplate_Accessor();
             ChangePaperTemplateStatus target;
+            ResponseJson resJson;
             Object expected1, expected2, expected3, actual;
 
             // 处理“未做”
@@ -249,7 +264,12 @@ namespace TimeTaskTestProject
             }
 
             // 生成试卷模板数据
-            gpt.Generate();
+            uet = new UExaminationTask();
+            resJson = gpt.Generate();
+            if (ResponseStatus.Error == resJson.status || resJson.message != "")
+            {
+                Assert.Fail("部署测试数据失败3。" + resJson.message);
+            }
 
             Thread.Sleep(10 * 1000);
 
@@ -283,6 +303,7 @@ namespace TimeTaskTestProject
             UExaminationTask uet;
             GeneratePaperTemplate_Accessor gpt = new GeneratePaperTemplate_Accessor();
             ChangePaperTemplateStatus target;
+            ResponseJson resJson;
             Object expected1, expected2, expected3, actual;
 
             // 处理“进行中”
@@ -327,14 +348,19 @@ namespace TimeTaskTestProject
             }
 
             // 生成试卷模板数据
-            gpt.Generate();
-
+            uet = new UExaminationTask();
+            resJson = gpt.Generate();
+            if (ResponseStatus.Error == resJson.status || resJson.message != "")
+            {
+                Assert.Fail("部署测试数据失败3。" + resJson.message);
+            }
+            
             Thread.Sleep(10 * 1000);
 
             target = new ChangePaperTemplateStatus();
             actual = target.Change();
 
-            Thread.Sleep(60 * 1000);
+            Thread.Sleep(65 * 1000);
 
             #endregion
 

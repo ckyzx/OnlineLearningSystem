@@ -18,13 +18,14 @@ namespace OnlineLearningSystem.Utilities
             try
             {
 
-                Int32 success;
+                Int32 success, operate;
                 Boolean changed;
                 ExaminationTask et;
                 Dictionary<String, String> data;
                 List<ExaminationPaperTemplate> epts;
 
                 success = 0;
+                operate = 0;
                 changed = false;
                 data = new Dictionary<string, string>();
 
@@ -45,15 +46,14 @@ namespace OnlineLearningSystem.Utilities
                 {
 
                     et = olsEni.ExaminationTasks.Single(m => m.ET_Id == ept.ET_Id);
-                    if ((Byte)ExaminationTaskStatus.Enabled != et.ET_Enabled 
+                    if ((Byte)ExaminationTaskStatus.Enabled != et.ET_Enabled
                         && ept.EPT_PaperTemplateStatus == (Byte)PaperTemplateStatus.Doing)
                     {
                         ept.EPT_PaperTemplateStatus = (Byte)PaperTemplateStatus.Done;
                         changed = true;
-                        continue;
-                    }
-
-                    if (ept.EPT_PaperTemplateStatus == (Byte)PaperTemplateStatus.Undone
+                        success += 1;
+                        operate += 1;
+                    }else if (ept.EPT_PaperTemplateStatus == (Byte)PaperTemplateStatus.Undone
                         && now > ept.EPT_StartTime)
                     {
                         ept.EPT_PaperTemplateStatus = (Byte)PaperTemplateStatus.Doing;
@@ -86,6 +86,7 @@ namespace OnlineLearningSystem.Utilities
                     }
                 }
 
+                data.Add("OperateInfo", "终止已关闭考试任务的试卷模板 " + operate + "条。");
                 data.Add("SuccessInfo", "成功处理 " + success + "条记录。");
                 resJson.data = data;
                 return resJson;
@@ -93,7 +94,7 @@ namespace OnlineLearningSystem.Utilities
             catch (Exception ex)
             {
                 resJson.status = ResponseStatus.Error;
-                resJson.message = StaticHelper.GetExceptionMessage(ex);
+                resJson.message = StaticHelper.GetExceptionMessageAndRecord(ex);
                 return resJson;
             }
         }

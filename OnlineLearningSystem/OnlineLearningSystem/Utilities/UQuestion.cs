@@ -447,7 +447,7 @@ namespace OnlineLearningSystem.Utilities
             catch (Exception ex)
             {
 
-                dic["Message"] = StaticHelper.GetExceptionMessage(ex);
+                dic["Message"] = StaticHelper.GetExceptionMessageAndRecord(ex);
 
                 return dic;
             }
@@ -460,7 +460,8 @@ namespace OnlineLearningSystem.Utilities
                 return score;
             }
 
-            switch (qType)
+            // 暂时禁用，使用数据库触发器设置，防止后期变更频繁
+            /*switch (qType)
             {
                 case "单选题":
                     score = 5;
@@ -486,7 +487,7 @@ namespace OnlineLearningSystem.Utilities
                 default:
                     score = 0;
                     break;
-            }
+            }*/
 
             return score;
         }
@@ -757,7 +758,7 @@ namespace OnlineLearningSystem.Utilities
             catch (Exception ex)
             {
                 resJson.status = ResponseStatus.Error;
-                resJson.message = StaticHelper.GetExceptionMessage(ex);
+                resJson.message = StaticHelper.GetExceptionMessageAndRecord(ex);
                 return resJson;
             }
         }
@@ -791,7 +792,7 @@ namespace OnlineLearningSystem.Utilities
             catch (Exception ex)
             {
                 resJson.status = ResponseStatus.Error;
-                resJson.message = StaticHelper.GetExceptionMessage(ex);
+                resJson.message = StaticHelper.GetExceptionMessageAndRecord(ex);
                 return resJson;
             }
         }
@@ -825,7 +826,7 @@ namespace OnlineLearningSystem.Utilities
             catch (Exception ex)
             {
                 resJson.status = ResponseStatus.Error;
-                resJson.message = StaticHelper.GetExceptionMessage(ex);
+                resJson.message = StaticHelper.GetExceptionMessageAndRecord(ex);
                 return resJson;
             }
         }
@@ -898,7 +899,7 @@ namespace OnlineLearningSystem.Utilities
             catch (Exception ex)
             {
                 resJson.status = ResponseStatus.Error;
-                resJson.message = StaticHelper.GetExceptionMessage(ex);
+                resJson.message = StaticHelper.GetExceptionMessageAndRecord(ex);
                 return resJson;
             }
         }
@@ -935,7 +936,7 @@ namespace OnlineLearningSystem.Utilities
             catch (Exception ex)
             {
                 resJson.status = ResponseStatus.Error;
-                resJson.message = StaticHelper.GetExceptionMessage(ex);
+                resJson.message = StaticHelper.GetExceptionMessageAndRecord(ex);
                 return resJson;
             }
         }

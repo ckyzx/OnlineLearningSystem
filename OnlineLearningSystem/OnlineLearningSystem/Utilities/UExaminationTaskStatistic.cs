@@ -131,7 +131,7 @@ namespace OnlineLearningSystem.Utilities
             }
             catch (Exception ex)
             {
-                StaticHelper.GetExceptionMessage(ex);
+                StaticHelper.GetExceptionMessageAndRecord(ex);
                 return null;
             }
         }

@@ -42,6 +42,7 @@ namespace OnlineLearningSystem.Utilities
 
                     if (!WhetherGenerate(et))
                     {
+                        resJson.message += et.ET_Name + "：未执行。\r\n";
                         continue;
                     }
 
@@ -78,7 +79,7 @@ namespace OnlineLearningSystem.Utilities
             catch (Exception ex)
             {
                 resJson.status = ResponseStatus.Error;
-                resJson.message = StaticHelper.GetExceptionMessage(ex);
+                resJson.message = StaticHelper.GetExceptionMessageAndRecord(ex);
                 return resJson;
             }
         }

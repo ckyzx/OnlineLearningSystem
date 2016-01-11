@@ -329,11 +329,13 @@ Kyzx.List = {
 
     _adjustElem: function() {
 
-        var h;
+        var bodyH, h;
 
         if (self.settings.hasTree) {
 
+            bodyH = Kyzx.Common.getElemHeight('body');
             h = Kyzx.Common.getElemHeight('.list-container');
+            h = bodyH > h ? bodyH : h;
             $('.tree-container').height(h);
         }
     },
