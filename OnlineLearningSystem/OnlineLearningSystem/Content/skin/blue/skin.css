@@ -5,7 +5,7 @@ a{color:#333}a:hover,a:focus,.maincolor,.maincolor a{color:#06c}
 	.Hui-logo,.Hui-logo-m,.Hui-subtitle,.Hui-userbox{color:#fff}/*logo 及 用户信息文字颜色*/
 	.Hui-logo:hover,.Hui-logo-m:hover{color:#fff;text-decoration: none}
 	
-.Hui-header{background-color:#2d6dcc;border-bottom: 1px solid #7BAAEF;background-image: url('/Content/images/top_bg.png');}/*顶部导航*/
+.Hui-header{background-color:#2d6dcc;border-bottom: 1px solid #7BAAEF;}/*顶部导航*/
 #Hui-nav > ul > li > a{ color:#fff}/*顶部导航文字颜色*/
 #Hui-nav > ul > li > a:hover,#Hui-nav > ul > li.current > a{ color:#fff}/*导航高亮状态*/
 .Hui-userbar > li > a{ color:#fff}

@@ -3,6 +3,11 @@
 body{ }
 body.prompt{ }
 
+.Hui-header{ background: url('/Content/images/top_bg.png') repeat-x; }
+.Hui-header .top-img{ position: absolute; z-index:-1; }
+.Hui-header .top-img-l{/*left:0; top:0; width:864px; height:84px; background: url('/Content/images/top_img_l.png') no-repeat;*/}
+.Hui-header .top-img-r{ right:0; top:0; width:864px; height:84px; background: url('/Content/images/top_img_r.png') no-repeat; }
+
 /* 无下拉列表的菜单按钮 */
 .Hui-aside .menu_dropdown dt.menu-btn{ padding-left: 0; }
 .Hui-aside .menu_dropdown dt.menu-btn a{ display: block; padding-left: 15px; text-decoration: none; }
@@ -88,7 +93,7 @@ body.prompt{ }
 .table-bordered tr td span.ellipsis{ display:block; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; }
 
 #RatioContainer{ height:28px; }
-#RatioContainer .ratio-item{ margin-right: 10px; padding: 2px 5px 5px 5px; border: 1px solid #CCC; }
+#RatioContainer .ratio-item{ float:left; margin: 0 10px 5px 0; padding: 2px 5px 5px 5px; border: 1px solid #CCC; }
 #RatioContainer .ratio-item .ratio-type{ margin: 0 5px; }
 #RatioContainer .ratio-item .ratio-percent{ margin-right:3px; padding: 0 1px; width: 40px; height: 20px; text-align: center; line-height: 20px; }
 

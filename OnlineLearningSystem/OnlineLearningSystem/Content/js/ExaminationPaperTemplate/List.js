@@ -41,7 +41,6 @@ $(function() {
             "name": "EPT_Remark",
             "data": 'EPT_Remark'
         }, {
-            "width": "50px",
             "className": "text-c nowrap",
             "defaultContent": 
                 '<a class="btn btn-primary radius size-MINI terminate mr-5 fz-9 hide" href="javascript:void(0);">终止</a>' +
@@ -107,103 +106,6 @@ $(function() {
         }
     });
 
-    /*$('.table-sort tbody').on('click', 'a.edit', function() {
-
-        var data, id;
-
-        data = table.row($(this).parents('tr')).data();
-        id = data['EPT_Id'];
-
-        ShowPage('修改试卷模板', '/ExaminationPaperTemplate/Edit?id=' + id);
-    });
-
-    $('.table-sort tbody').on('click', 'a.recycle', function() {
-
-        var tr, data, id;
-
-        tr = $(this).parents('tr');
-        data = table.row(tr).data();
-        id = data['EPT_Id'];
-
-        $.post('/ExaminationPaperTemplate/Recycle', {
-                id: id
-            }, function(data) {
-
-                if (1 == data.status) {
-
-                    tr.fadeOut(function() {
-
-                        tr.remove();
-                    });
-                } else if (0 == data.status) {
-
-                    alert(data.message);
-                }
-            }, 'json')
-            .error(function() {
-
-                alert('请求返回错误！');
-            });
-    });
-
-    $('.table-sort tbody').on('click', 'a.resume', function() {
-
-        var tr, data, id;
-
-        tr = $(this).parents('tr');
-        data = table.row(tr).data();
-        id = data['EPT_Id'];
-
-        $.post('/ExaminationPaperTemplate/Resume', {
-                id: id
-            }, function(data) {
-
-                if (1 == data.status) {
-
-                    tr.fadeOut(function() {
-
-                        tr.remove();
-                    });
-                } else if (0 == data.status) {
-
-                    alert(data.message);
-                }
-            }, 'json')
-            .error(function() {
-
-                alert('请求返回错误！');
-            });
-    });
-
-    $('.table-sort tbody').on('click', 'a.delete', function() {
-
-        var tr, data, id;
-
-        tr = $(this).parents('tr');
-        data = table.row(tr).data();
-        id = data['EPT_Id'];
-
-        $.post('/ExaminationPaperTemplate/Delete', {
-                id: id
-            }, function(data) {
-
-                if (1 == data.status) {
-
-                    tr.fadeOut(function() {
-
-                        tr.remove();
-                    });
-                } else if (0 == data.status) {
-
-                    alert(data.message);
-                }
-            }, 'json')
-            .error(function() {
-
-                alert('请求返回错误！');
-            });
-    });*/
-
     $('.table-sort tbody').on('click', 'a.list-grade', function() {
 
         var data, id;
@@ -250,9 +152,5 @@ $(function() {
     $('#GotoTaskListBtn').on('click', function() {
         location.href = '/ExaminationTask/List';
     });
-
-    /*$('#CreateBtn').on('click', function() {
-        ShowPage('添加试卷模板', '/ExaminationPaperTemplate/Create?etId=' + etId);
-    });*/
 
 });

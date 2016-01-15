@@ -6827,20 +6827,25 @@ var fillCharReg = new RegExp(domUtils.fillChar, 'g');
             var me = this;
             me.fireEvent('destroy');
             var container = me.container.parentNode;
-            var textarea = me.textarea;
-            if (!textarea) {
-                textarea = document.createElement('textarea');
-                container.parentNode.insertBefore(textarea, container);
-            } else {
-                textarea.style.display = ''
+
+            if(undefined != container){
+
+                var textarea = me.textarea;
+                if (!textarea) {
+                    textarea = document.createElement('textarea');
+                    container.parentNode.insertBefore(textarea, container);
+                } else {
+                    textarea.style.display = ''
+                }
+
+                textarea.style.width = me.iframe.offsetWidth + 'px';
+                textarea.style.height = me.iframe.offsetHeight + 'px';
+                textarea.value = me.getContent();
+                textarea.id = me.key;
+                container.innerHTML = '';
+                domUtils.remove(container);
             }
 
-            textarea.style.width = me.iframe.offsetWidth + 'px';
-            textarea.style.height = me.iframe.offsetHeight + 'px';
-            textarea.value = me.getContent();
-            textarea.id = me.key;
-            container.innerHTML = '';
-            domUtils.remove(container);
             var key = me.key;
             //trace:2004
             for (var p in me) {

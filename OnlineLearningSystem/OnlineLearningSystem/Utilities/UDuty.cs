@@ -42,12 +42,7 @@ namespace OnlineLearningSystem.Utilities
         {
             Duty model;
 
-            model = olsEni.Duties.SingleOrDefault(m => m.Du_Id == id);
-
-            if (null == model)
-            {
-                throw new NotImplementedException();
-            }
+            model = olsEni.Duties.Single(m => m.Du_Id == id && m.Du_Status == (Byte)Status.Available);
 
             return model;
         }
@@ -59,7 +54,7 @@ namespace OnlineLearningSystem.Utilities
 
                 Int32 id;
 
-                id= olsEni.Duties.Count();
+                id = olsEni.Duties.Count();
                 id = 0 == id ? 1 : olsEni.Duties.Max(m => m.Du_AutoId) + 1;
 
                 model.Du_Id = id;
@@ -209,12 +204,9 @@ namespace OnlineLearningSystem.Utilities
                 else if (2 == sortFlag)
                 {
 
-                    us =
-                        olsEni
-                        .Duties
+                    us = olsEni.Duties
                         .Where(m => m.Du_Sort < originSort)
-                        .OrderByDescending(m => m.Du_Sort)
-                        .Take(2).ToList();
+                        .OrderByDescending(m => m.Du_Sort).Take(2).ToList();
 
                     if (us.Count == 0)
                     {
@@ -242,12 +234,9 @@ namespace OnlineLearningSystem.Utilities
                 else// if (3 == sortFlag)
                 {
 
-                    us =
-                        olsEni
-                        .Duties
+                    us = olsEni.Duties
                         .Where(m => m.Du_Sort > originSort)
-                        .OrderBy(m => m.Du_Sort)
-                        .Take(1).ToList();
+                        .OrderBy(m => m.Du_Sort).Take(1).ToList();
 
                     if (us.Count == 0)
                     {

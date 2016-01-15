@@ -52,12 +52,7 @@ namespace OnlineLearningSystem.Utilities
         {
             Department model;
 
-            model = olsEni.Departments.SingleOrDefault(m => m.D_Id == id);
-
-            if (null == model)
-            {
-                throw new NotImplementedException();
-            }
+            model = olsEni.Departments.Single(m => m.D_Id == id && m.D_Status == (Byte)Status.Available);
 
             return model;
         }
@@ -253,7 +248,9 @@ namespace OnlineLearningSystem.Utilities
                 foreach (var ud in uds)
                 {
 
-                    u = olsEni.Users.SingleOrDefault(m => m.U_Id == ud.U_Id && m.U_Status == (Byte)Status.Available);
+                    u = olsEni.Users.SingleOrDefault(m => 
+                        m.U_Id == ud.U_Id 
+                        && m.U_Status == (Byte)Status.Available);
                     if (null != u)
                     {
                         zTreeJson.Append("{");
@@ -335,12 +332,9 @@ namespace OnlineLearningSystem.Utilities
                 else if (2 == sortFlag)
                 {
 
-                    us =
-                        olsEni
-                        .Departments
+                    us = olsEni.Departments
                         .Where(m => m.D_Sort < originSort)
-                        .OrderByDescending(m => m.D_Sort)
-                        .Take(2).ToList();
+                        .OrderByDescending(m => m.D_Sort).Take(2).ToList();
 
                     if (us.Count == 0)
                     {
@@ -368,12 +362,9 @@ namespace OnlineLearningSystem.Utilities
                 else// if (3 == sortFlag)
                 {
 
-                    us =
-                        olsEni
-                        .Departments
+                    us = olsEni.Departments
                         .Where(m => m.D_Sort > originSort)
-                        .OrderBy(m => m.D_Sort)
-                        .Take(1).ToList();
+                        .OrderBy(m => m.D_Sort).Take(1).ToList();
 
                     if (us.Count == 0)
                     {

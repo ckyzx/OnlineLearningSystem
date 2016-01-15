@@ -1,9 +1,0 @@
-操作系统：Windows Server 2008 R2
-数 据 库：SQL Server 2008 R2
-组    件：DotNetFx 4.0
-          ASP.NET MVC 3
-          Office 2010 Professional/Home and Student
-设    置：启用 ASP.NET State Server 服务
-          设置应用程序池 .NET Framework版本为 v4.0
-备    注：管理员账号密码为 admin|kyzx201510
-          账号默认密码为 xnsw201510

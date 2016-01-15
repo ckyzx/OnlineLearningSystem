@@ -526,10 +526,10 @@ $(function() {
             r = rs[i];
             p = r.percent * 100;
 
-            $('<span class="ratio-item">' +
+            $('<div class="ratio-item">' +
                 '<span class="ratio-type">' + r.type + '</span>' +
                 '<input type="text" class="input-text ratio-percent" value="' + p + '" data-origin-val="' + p + '" />%' +
-                '</span>').appendTo(ratioContainer);
+                '</div>').appendTo(ratioContainer);
 
         }
     }
@@ -612,7 +612,7 @@ $(function() {
 
     function setStartTime() {
 
-        $('body').everyTime('1s', 'SetHour', function() {
+        $('body').everyTime('3s', 'SetHour', function() {
 
             var startTimeDiv, hourcombo, mincombo, seccombo;
             var startTime;

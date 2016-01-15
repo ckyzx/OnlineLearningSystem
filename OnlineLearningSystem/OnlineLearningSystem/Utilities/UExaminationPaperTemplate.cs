@@ -590,7 +590,9 @@ namespace OnlineLearningSystem.Utilities
 
                 foreach (var uId in userAry)
                 {
-                    u = olsEni.Users.SingleOrDefault(m => m.U_Id == uId && m.U_Status == (Byte)Status.Available);
+                    u = olsEni.Users.SingleOrDefault(m => 
+                        m.U_Id == uId 
+                        && m.U_Status == (Byte)Status.Available);
                     if (null != u)
                     {
                         u.U_Password = "**********";

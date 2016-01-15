@@ -8,11 +8,9 @@ $(function() {
     var jqTable, dataTables;
     var list;
 
-    QueryString.Initial();
-    status = QueryString.GetValue('status');
-    status = undefined == status || 'undefined' == status ? 1 : status;
-    qcId = QueryString.GetValue('qcId');
-    qcId = undefined == qcId || 'undefined' == qcId ? 0 : qcId;
+    Request.init();
+    status = Request.getValue('status', 1);
+    qcId = Request.getValue('qcId', 0);
 
     params = {
         "processing": true,
@@ -56,7 +54,6 @@ $(function() {
             "name": "Q_Score",
             "defaultContent": '<span class="size-MINI"><input type="text" class="score input-text" /></span>'
         }, {
-            "width": "50px",
             "className": "text-c nowrap",
             "defaultContent": '<a class="recycle mr-5 fz-18 hide" href="javascript:void(0);" title="回收"><i class="Hui-iconfont">&#xe631;</i></a>' +
                 '<a class="resume mr-5 fz-18 hide" href="javascript:void(0);" title="恢复"><i class="Hui-iconfont">&#xe615;</i></a>' +

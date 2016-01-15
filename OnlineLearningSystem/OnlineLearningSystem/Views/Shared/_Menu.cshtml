@@ -3,21 +3,21 @@
         <dt class="menu-btn"><a _href="course-list.html" href="javascript:void(0);"><i class="Hui-iconfont">
             &#xe643;</i> 学习中心</a></dt>
     </dl>
-    <dl id="menu-exercise-center">
-        <dt><i class="Hui-iconfont">&#xe60c;</i> 练习中心<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
-        <dd>
-            <ul>
-                <li><a _href="/ExaminationPaperTemplate/ListStudent?type=1&ptStatus=1" href="javascript:void(0);">未完成</a></li>
-                <li><a _href="/ExaminationPaperTemplate/ListStudent?type=1&ptStatus=2" href="javascript:void(0);">已完成</a></li>
-            </ul>
-        </dd>
-    </dl>
     <dl id="menu-examination-center">
         <dt><i class="Hui-iconfont">&#xe647;</i> 考试中心<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
         <dd>
             <ul>
                 <li><a _href="/ExaminationPaperTemplate/ListStudent?type=0&ptStatus=1" href="javascript:void(0);">未考完</a></li>
                 <li><a _href="/ExaminationPaperTemplate/ListStudent?type=0&ptStatus=2" href="javascript:void(0);">已考完</a></li>
+            </ul>
+        </dd>
+    </dl>
+    <dl id="menu-exercise-center">
+        <dt><i class="Hui-iconfont">&#xe60c;</i> 练习中心<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+        <dd>
+            <ul>
+                <li><a _href="/ExaminationPaperTemplate/ListStudent?type=1&ptStatus=1" href="javascript:void(0);">未完成</a></li>
+                <li><a _href="/ExaminationPaperTemplate/ListStudent?type=1&ptStatus=2" href="javascript:void(0);">已完成</a></li>
             </ul>
         </dd>
     </dl>
@@ -77,12 +77,11 @@
             </ul>
         </dd>
     </dl>
-    <dl id="menu-system">
-        <dt><i class="Hui-iconfont">&#xe602;</i> 个人中心<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+    <dl id="menu-statistic">
+        <dt><i class="Hui-iconfont">&#xe635;</i> 数据统计<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
         <dd>
             <ul>
-                <li><a href="javascript:void(0);" class="show-page" data-title="修改密码" data-url="/User/ModifyPassword" data-width="500" data-height="400">修改密码</a></li>
-                <li><a href="javascript:void(0);" class="show-page" data-title="个人统计" data-url="/ExaminationTaskStatistic/Personal" data-width="800" data-height="400">个人统计</a></li>
+                <li><a _href="/ExaminationTaskStatistic/List" href="javascript:void(0);">考试统计</a></li>
             </ul>
         </dd>
     </dl>
@@ -93,6 +92,15 @@
                 <li><a _href="notice-list.html" href="javascript:void(0)">通知管理</a></li>
                 <li><a _href="system-base.html" href="javascript:void(0)">系统设置</a></li>
                 <li><a _href="system-log.html" href="javascript:void(0)">系统日志</a></li>
+            </ul>
+        </dd>
+    </dl>
+    <dl id="menu-system">
+        <dt><i class="Hui-iconfont">&#xe602;</i> 个人中心<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+        <dd>
+            <ul>
+                <li><a href="javascript:void(0);" class="show-page" data-title="修改密码" data-url="/User/ModifyPassword" data-width="500" data-height="400">修改密码</a></li>
+                <li><a href="javascript:void(0);" class="show-page" data-title="个人统计" data-url="/ExaminationTaskStatistic/Personal" data-width="800" data-height="400">个人统计</a></li>
             </ul>
         </dd>
     </dl>

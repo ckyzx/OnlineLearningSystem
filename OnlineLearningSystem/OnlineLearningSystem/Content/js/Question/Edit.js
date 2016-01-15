@@ -330,9 +330,6 @@ $(function() {
 
         // 重新初始化控件前，清除原控件
         container.html('');
-        // 清除 UEditor 残余的控件
-        $('[name="Content"]').remove();
-        //$('[name="Answer"]').remove();
 
         switch (qType) {
             case '单选题':
@@ -470,6 +467,10 @@ $(function() {
                     ]
                 });
                 //ueAnswer = UE.getEditor('UEditorAnswer');
+
+                // 清除 UEditor 残余的控件
+                //$('[name="Content"]').remove();
+                //$('[name="Answer"]').remove();
 
                 break;
             default:

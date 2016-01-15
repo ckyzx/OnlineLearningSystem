@@ -80,10 +80,8 @@ namespace OnlineLearningSystem.Utilities
 
             List<SelectListItem> list;
 
-            var items =
-                olsEni.
-                Duties.
-                Where(m => m.Du_Status == (Byte)Status.Available)
+            var items = olsEni.Duties
+                .Where(m => m.Du_Status == (Byte)Status.Available)
                 .Select(m => new { m.Du_Name, m.Du_Id });
 
             list = new List<SelectListItem>();
@@ -134,7 +132,9 @@ namespace OnlineLearningSystem.Utilities
             Duty duty;
             String duName;
 
-            model = olsEni.Users.SingleOrDefault(m => m.U_Id == id && m.U_Status == (Byte)Status.Available);
+            model = olsEni.Users.Single(m => 
+                m.U_Id == id 
+                && m.U_Status == (Byte)Status.Available);
 
             if (null != model.Du_Id)
             {
@@ -284,7 +284,9 @@ namespace OnlineLearningSystem.Utilities
 
                 User model;
 
-                model = olsEni.Users.SingleOrDefault(m => m.U_Id == vmModel.U_Id && m.U_Status == (Byte)Status.Available);
+                model = olsEni.Users.Single(m => 
+                    m.U_Id == vmModel.U_Id 
+                    && m.U_Status == (Byte)Status.Available);
 
                 model.U_Id = vmModel.U_Id;
                 model.Du_Id = vmModel.Du_Id;
@@ -383,14 +385,11 @@ namespace OnlineLearningSystem.Utilities
                 userName = userName.ToLower();
                 password = EncryptPassword(password);
 
-                u =
-                    olsEni
-                    .Users
-                    .SingleOrDefault(m =>
-                        (m.U_Name.ToLower() == userName
-                        && m.U_Password == password)
+                u = olsEni.Users.SingleOrDefault(m =>
+                        ((m.U_Name.ToLower() == userName
+                            && m.U_Password == password)
                         || (m.U_LoginName.ToLower() == userName
-                        && m.U_Password == password) 
+                            && m.U_Password == password)) 
                         && m.U_Status == (Byte)Status.Available);
 
                 if (null == u)
@@ -541,7 +540,9 @@ namespace OnlineLearningSystem.Utilities
 
                 User model;
 
-                model = olsEni.Users.SingleOrDefault(m => m.U_Id == uId && m.U_Status == (Byte)Status.Available);
+                model = olsEni.Users.SingleOrDefault(m => 
+                    m.U_Id == uId 
+                    && m.U_Status == (Byte)Status.Available);
 
                 if (null == model)
                 {
@@ -586,7 +587,9 @@ namespace OnlineLearningSystem.Utilities
 
                 User model;
 
-                model = olsEni.Users.SingleOrDefault(m => m.U_Id == uId && m.U_Status == (Byte)Status.Available);
+                model = olsEni.Users.SingleOrDefault(m => 
+                    m.U_Id == uId 
+                    && m.U_Status == (Byte)Status.Available);
 
                 if (null == model)
                 {
@@ -615,7 +618,9 @@ namespace OnlineLearningSystem.Utilities
 
                 Int32 count;
 
-                count = olsEni.Users.Where(m => m.U_Id != uId && m.U_Name == name).Count();
+                count = olsEni.Users.Where(m => 
+                    m.U_Id != uId 
+                    && m.U_Name == name).Count();
 
                 if (count > 0)
                 {
@@ -637,7 +642,9 @@ namespace OnlineLearningSystem.Utilities
 
                 Int32 count;
 
-                count = olsEni.Users.Where(m => m.U_Id != uId && m.U_LoginName == loginName).Count();
+                count = olsEni.Users.Where(m => 
+                    m.U_Id != uId 
+                    && m.U_LoginName == loginName).Count();
 
                 if (count > 0)
                 {
@@ -692,12 +699,9 @@ namespace OnlineLearningSystem.Utilities
                 else if (2 == sortFlag)
                 {
 
-                    us =
-                        olsEni
-                        .Users
-                        .Where(m => m.U_Sort < originSort)
-                        .OrderByDescending(m => m.U_Sort)
-                        .Take(2).ToList();
+                    us = olsEni.Users.Where(m => 
+                        m.U_Sort < originSort)
+                        .OrderByDescending(m => m.U_Sort).Take(2).ToList();
 
                     if (us.Count == 0)
                     {
@@ -725,10 +729,8 @@ namespace OnlineLearningSystem.Utilities
                 else// if (3 == sortFlag)
                 {
 
-                    us =
-                        olsEni
-                        .Users
-                        .Where(m => m.U_Sort > originSort)
+                    us = olsEni.Users.Where(m => 
+                        m.U_Sort > originSort)
                         .OrderBy(m => m.U_Sort)
                         .Take(1).ToList();
 

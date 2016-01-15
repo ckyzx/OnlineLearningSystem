@@ -52,12 +52,7 @@ namespace OnlineLearningSystem.Utilities
         {
             Role model;
 
-            model = olsEni.Roles.SingleOrDefault(m => m.R_Id == id);
-
-            if (null == model)
-            {
-                throw new NotImplementedException();
-            }
+            model = olsEni.Roles.Single(m => m.R_Id == id && m.R_Status == (Byte)Status.Available);
 
             return model;
         }

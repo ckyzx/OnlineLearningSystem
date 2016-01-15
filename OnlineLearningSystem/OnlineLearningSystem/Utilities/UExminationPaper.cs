@@ -74,7 +74,9 @@ namespace OnlineLearningSystem.Utilities
             ExaminationPaper model;
             User u;
 
-            u = olsEni.Users.SingleOrDefault(m => m.U_Id == userId && m.U_Status == (Byte)Status.Available);
+            u = olsEni.Users.Single(m => 
+                m.U_Id == userId 
+                && m.U_Status == (Byte)Status.Available);
 
             model = new ExaminationPaper()
             {

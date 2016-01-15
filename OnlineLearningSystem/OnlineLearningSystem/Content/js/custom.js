@@ -58,7 +58,10 @@ Kyzx.List = {
 
     init: function(settings) {
 
+        var self;
+
         self = this;
+        this.self = self;
 
         $.extend(self.settings, settings);
 
@@ -71,13 +74,19 @@ Kyzx.List = {
 
         if (undefined == self.settings.dtParams.initComplete) {
 
-            self.settings.dtParams.initComplete = self._adjustElem;
+            self.settings.dtParams.initComplete = function(){
+                self._adjustElem(self.settings.hasTree);
+            };
         }
 
         return self;
     },
 
     initList: function() {
+
+        var self;
+        
+        self = this.self;
 
         self._addCreateBtn();
         self._addRecycleBtn();
@@ -94,6 +103,9 @@ Kyzx.List = {
     _addCreateBtn: function() {
 
         var funcBtnContainer, createBtn;
+        var self;
+        
+        self = this.self;
 
         if (self.settings.hasCreateBtn) {
 
@@ -111,6 +123,9 @@ Kyzx.List = {
     _addRecycleBtn: function() {
 
         var recycleBin, status;
+        var self;
+        
+        self = this.self;
 
         if (self.settings.hasRecycleBin) {
 
@@ -160,6 +175,9 @@ Kyzx.List = {
         var ul;
         var settings, nodes, n;
         var ztree;
+        var self;
+        
+        self = this.self;
 
         if (self.settings.hasTree) {
 
@@ -213,6 +231,10 @@ Kyzx.List = {
     },
 
     _initListEvent: function() {
+
+        var self;
+        
+        self = this.self;
 
         self.jqTable.on('click', 'tbody a.edit', function() {
 
@@ -318,6 +340,9 @@ Kyzx.List = {
     __refreshRowBackgroundColor: function() {
 
         var trs;
+        var self;
+
+        self = this.self;
 
         trs = self.jqTable.find('tbody tr');
 
@@ -327,11 +352,11 @@ Kyzx.List = {
         self.jqTable.find('tbody tr:even').addClass('odd');
     },
 
-    _adjustElem: function() {
+    _adjustElem: function(hasTree) {
 
         var bodyH, h;
 
-        if (self.settings.hasTree) {
+        if (hasTree) {
 
             bodyH = Kyzx.Common.getElemHeight('body');
             h = Kyzx.Common.getElemHeight('.list-container');

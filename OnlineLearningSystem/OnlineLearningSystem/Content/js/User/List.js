@@ -34,7 +34,6 @@
             "name": "Du_Name",
             "data": "Du_Name"
         }, {
-            "width": "50px",
             "className": "text-c nowrap",
             "defaultContent": 
                 '<a class="recycle mr-5 fz-18 hide" href="javascript:void(0);" title="回收"><i class="Hui-iconfont">&#xe631;</i></a>' +

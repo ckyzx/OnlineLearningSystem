@@ -39,8 +39,7 @@ $(function() {
             "name": "ET_Remark",
             "data": 'ET_Remark'
         }, {
-            "width": "50px",
-            "className": "text-l nowrap",
+            "className": "text-c nowrap",
             "defaultContent": '<a class="btn btn-primary radius size-MINI mr-5 start-task fz-9 hide" href="javascript:void(0);">开始</a>' +
                 '<a class="btn btn-primary radius size-MINI mr-5 stop-task fz-9 hide" href="javascript:void(0);">结束</a>' +
                 '<a class="btn btn-primary radius size-MINI mr-5 paper-template fz-9 hide" href="javascript:void(0);" title="试题">试题</a>' +

@@ -32,7 +32,6 @@ $(function() {
             "name": "D_Remark",
             "data": 'D_Remark'
         }, {
-            "width": "50px",
             "className": "text-c nowrap",
             "defaultContent": '<a class="recycle mr-5 fz-18 hide" href="javascript:void(0);" title="回收"><i class="Hui-iconfont">&#xe631;</i></a>' +
                 '<a class="resume mr-5 fz-18 hide" href="javascript:void(0);" title="恢复"><i class="Hui-iconfont">&#xe615;</i></a>' +
