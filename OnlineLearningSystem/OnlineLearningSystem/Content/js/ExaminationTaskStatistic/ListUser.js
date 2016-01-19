@@ -25,16 +25,6 @@
             "className": "text-c",
             "defaultContent": '<input type="checkbox" value="" name="">'
         }, {
-            "width": "30px",
-            "name": "ETUS_TaskId",
-            "data": "ETUS_TaskId"
-        }, {
-            "name": "ETUS_TaskName",
-            "data": "ETUS_TaskName"
-        }, {
-            "name": "ETUS_PaperTemplateDate",
-            "defaultContent": '<span class="ETUS_PaperTemplateDate"></span>'
-        }, {
             "name": "ETUS_DepartmentName",
             "data": 'ETUS_DepartmentName'
         }, {
@@ -59,12 +49,6 @@
             var etusDate, etusTaskStatisticType, etusScore, etusState;
 
             row = $(row);
-
-            // 呈现考试日期
-            span = row.find('span.ETUS_PaperTemplateDate');
-            etusDate = data['ETUS_PaperTemplateDate'];
-            etusDate = etusDate.jsonDateToDate();
-            span.text(etusDate.format('yyyy年MM月dd日'));
 
             // 呈现成绩
             span = row.find('span.ETUS_Score');
