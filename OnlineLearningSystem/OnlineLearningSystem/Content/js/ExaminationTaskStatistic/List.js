@@ -19,8 +19,8 @@
             "defaultContent": '<input type="checkbox" value="" name="">'
         }, {
             "width": "30px",
-            "name": "ETS_TaskId",
-            "data": "ETS_TaskId"
+            "name": "ETS_PaperTemplateId",
+            "data": "ETS_PaperTemplateId"
         }, {
             "name": "ETS_TaskName",
             "data": "ETS_TaskName"
