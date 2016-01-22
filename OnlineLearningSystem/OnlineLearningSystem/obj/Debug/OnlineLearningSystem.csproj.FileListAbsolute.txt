@@ -7,4 +7,3 @@ D:\Cheng\Workspace\OnlineLearningSystem\OnlineLearningSystem\OnlineLearningSyste
 D:\Cheng\Workspace\OnlineLearningSystem\OnlineLearningSystem\OnlineLearningSystem\bin\Newtonsoft.Json.xml
 D:\Cheng\Workspace\OnlineLearningSystem\OnlineLearningSystem\OnlineLearningSystem\obj\Debug\OnlineLearningSystem.dll
 D:\Cheng\Workspace\OnlineLearningSystem\OnlineLearningSystem\OnlineLearningSystem\obj\Debug\OnlineLearningSystem.pdb
-D:\Cheng\Workspace\OnlineLearningSystem\OnlineLearningSystem\OnlineLearningSystem\obj\Debug\OnlineLearningSystem.csprojResolveAssemblyReference.cache
