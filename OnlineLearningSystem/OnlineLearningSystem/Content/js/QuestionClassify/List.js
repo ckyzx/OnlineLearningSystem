@@ -1,6 +1,6 @@
 $(function() {
 
-    var dtParams, list, dataTables;
+    var dtParams, list;
 
     dtParams = {
         "processing": true,
@@ -75,6 +75,6 @@ $(function() {
         modelEnName: 'QuestionClassify',
         modelPrefix: 'QC_'
     });
-    dataTables = list.initList();
+    list.initList();
 
 });

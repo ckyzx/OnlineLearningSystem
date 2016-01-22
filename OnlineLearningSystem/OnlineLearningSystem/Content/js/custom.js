@@ -97,6 +97,12 @@ Kyzx.List = {
 
         self._initListEvent();
 
+        $(window).resize(function(){
+            
+            self.dataTables.destroy();
+            self.dataTables = self.jqTable.DataTable(self.settings.dtParams);
+        });
+
         return self.dataTables;
     },
 

@@ -1,7 +1,6 @@
 $(function() {
 
     var dtParams;
-    var dataTables;
 
     dtParams = {
         "processing": true,
@@ -146,14 +145,14 @@ $(function() {
         modelEnName: 'ExaminationTask',
         modelPrefix: 'ET_'
     });
-    dataTables = list.initList();
+    list.initList();
 
     $('.table-sort tbody').on('click', 'a.paper-template', function() {
 
         var tr, data, id;
 
         tr = $(this).parents('tr');
-        data = dataTables.row(tr).data();
+        data = list.dataTables.row(tr).data();
         id = data['ET_Id'];
 
         location.href = '/ExaminationPaperTemplate/List?etId=' + id;
@@ -170,7 +169,7 @@ $(function() {
         }
 
         tr = $(this).parents('tr');
-        data = dataTables.row(tr).data();
+        data = list.dataTables.row(tr).data();
         id = data['ET_Id'];
         autoType = data['ET_AutoType'];
 
@@ -218,7 +217,7 @@ $(function() {
         }
 
         tr = $(this).parents('tr');
-        data = dataTables.row(tr).data();
+        data = list.dataTables.row(tr).data();
         id = data['ET_Id'];
         autoType = data['ET_AutoType'];
 

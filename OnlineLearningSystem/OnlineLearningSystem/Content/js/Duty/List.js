@@ -1,6 +1,6 @@
 $(function() {
 
-    var dtParams, list, dataTables;
+    var dtParams, list;
 
     dtParams = {
         "processing": true,
@@ -83,7 +83,7 @@ $(function() {
         modelEnName: 'Duty',
         modelPrefix: 'Du_'
     });
-    dataTables = list.initList();
+    list.initList();
 
     $('.table-sort tbody').on('click', 'a.sort-top', function() {
 
@@ -96,11 +96,11 @@ $(function() {
         });
 
         originTr = $(this).parents('tr');
-        data = dataTables.row(originTr).data();
+        data = list.dataTables.row(originTr).data();
         originId = data['Du_Id'];
 
         destTr = originTr.parent().find('tr').first();
-        data = dataTables.row(destTr).data();
+        data = list.dataTables.row(destTr).data();
         destId = data['Du_Id'];
 
         $.post('/Duty/Sort', {
@@ -148,7 +148,7 @@ $(function() {
         });
 
         originTr = $(this).parents('tr');
-        data = dataTables.row(originTr).data();
+        data = list.dataTables.row(originTr).data();
         originId = data['Du_Id'];
 
         destTr = originTr.prev();
@@ -193,7 +193,7 @@ $(function() {
         });
 
         originTr = $(this).parents('tr');
-        data = dataTables.row(originTr).data();
+        data = list.dataTables.row(originTr).data();
         originId = data['Du_Id'];
 
         destTr = originTr.next();

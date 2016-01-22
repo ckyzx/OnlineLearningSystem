@@ -10,3 +10,14 @@ function refreshRowBackgroundColor(tableSelector) {
     table.find('tbody tr:odd').addClass('even');
     table.find('tbody tr:even').addClass('odd');
 }
+
+function rowResponse() {
+
+    $('.table-sort')
+        .on('mouseenter', 'tbody tr', function() {
+            $(this).addClass('hover');
+        })
+        .on('mouseleave', 'tbody tr', function() {
+            $(this).removeClass('hover');
+        });
+}

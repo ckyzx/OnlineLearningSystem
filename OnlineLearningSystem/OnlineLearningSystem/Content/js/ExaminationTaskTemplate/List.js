@@ -1,6 +1,6 @@
 $(function() {
 
-    var dtParams, list, dataTables;
+    var dtParams, list;
 
     dtParams = {
         "processing": true,
@@ -89,6 +89,6 @@ $(function() {
         modelEnName: 'ExaminationTaskTemplate',
         modelPrefix: 'ETT_'
     });
-    dataTables = list.initList();
+    list.initList();
 
 });
