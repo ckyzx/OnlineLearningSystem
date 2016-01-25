@@ -18,12 +18,12 @@ namespace OnlineLearningSystem.Utilities
             try
             {
 
-                Boolean changed;
+                Boolean unsaved;
                 ExaminationPaperTemplate ept;
                 UExaminationPaperTemplate uept;
                 List<ExaminationPaper> eps;
 
-                changed = false;
+                unsaved = false;
                 uept = new UExaminationPaperTemplate();
 
                 eps =
@@ -44,29 +44,30 @@ namespace OnlineLearningSystem.Utilities
                         if ((Byte)PaperTemplateStatus.Done == ept.EPT_PaperTemplateStatus)
                         {
                             ep.EP_PaperStatus = (Byte)PaperStatus.Done;
+                            if (1 != olsEni.SaveChanges())
+                            {
+                                unsaved = true;
+                            }
                             uept.GradePaper(ep);
                             uept.SaveChange();
-                            changed = true;
                         }
-                        continue;
                     }
-
-                    if (now > ep.EP_EndTime)
+                    else if (now > ep.EP_EndTime)
                     {
                         ep.EP_PaperStatus = (Byte)PaperStatus.Done;
+                        if (1 != olsEni.SaveChanges())
+                        {
+                            unsaved = true;
+                        }
                         uept.GradePaper(ep);
                         uept.SaveChange();
-                        changed = true;
                     }
                 }
 
-                if (changed)
+                if (unsaved)
                 {
-                    if (0 == olsEni.SaveChanges())
-                    {
-                        resJson.status = ResponseStatus.Error;
-                        resJson.message = ResponseMessage.SaveChangesError;
-                    }
+                    resJson.status = ResponseStatus.Error;
+                    resJson.message = ResponseMessage.SaveChangesError;
                 }
 
                 return resJson;

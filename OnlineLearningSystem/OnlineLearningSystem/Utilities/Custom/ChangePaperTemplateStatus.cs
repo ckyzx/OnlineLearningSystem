@@ -47,7 +47,7 @@ namespace OnlineLearningSystem.Utilities
 
                     et = olsEni.ExaminationTasks.Single(m => m.ET_Id == ept.ET_Id);
                     if ((Byte)ExaminationTaskStatus.Enabled != et.ET_Enabled
-                        && ept.EPT_PaperTemplateStatus == (Byte)PaperTemplateStatus.Doing)
+                        /*&& ept.EPT_PaperTemplateStatus == (Byte)PaperTemplateStatus.Doing*/)
                     {
                         ept.EPT_PaperTemplateStatus = (Byte)PaperTemplateStatus.Done;
                         changed = true;

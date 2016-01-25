@@ -67,8 +67,6 @@ namespace TimeTaskTestProject
             result = olsDbo.ExecuteProcedure("dbo.UnitTesting_DeleteExaminationTask", new SqlParameter[] { new SqlParameter("@etName", "单元测试") });
 
             Debug.WriteLine("“清除考试任务”操作返回 " + result + " 。");
-
-            Thread.Sleep(10 * 1000);
         }
         
         //使用 TestCleanup 在运行完每个测试后运行代码
@@ -76,6 +74,11 @@ namespace TimeTaskTestProject
         public void MyTestCleanup()
         {
 
+            Int32 result;
+
+            result = olsDbo.ExecuteProcedure("dbo.UnitTesting_DeleteExaminationTask", new SqlParameter[] { new SqlParameter("@etName", "单元测试") });
+
+            Debug.WriteLine("“清除考试任务”操作返回 " + result + " 。");
         }
         
         #endregion

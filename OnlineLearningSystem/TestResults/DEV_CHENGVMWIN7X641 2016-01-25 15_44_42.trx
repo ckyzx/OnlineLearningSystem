@@ -1,0 +1,82 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<TestRun id="37ffb7e5-17f7-41df-af96-4c9d6285f1ea" name="DEV@CHENGVMWIN7X641 2016-01-25 15:44:42" runUser="CHENGVMWIN7X641\DEV" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <TestSettings name="本地" id="fb35cadf-f513-4997-8927-662f65f1d0dd">
+    <Description>这些设置为本地测试运行的默认测试设置。</Description>
+    <Deployment enabled="false" runDeploymentRoot="DEV_CHENGVMWIN7X641 2016-01-25 15_44_42">
+      <DeploymentItem filename="D:\Cheng\Workspace\OnlineLearningSystem\OnlineLearningSystem\OnlineLearningSystem\Content\lib\ueditor\1.4.3\net\Bin\Newtonsoft.Json.dll" />
+      <DeploymentItem filename="D:\Cheng\Workspace\OnlineLearningSystem\OnlineLearningSystem\packages\EntityFramework.4.1.10331.0\lib\EntityFramework.dll" />
+      <DeploymentItem filename="D:\Cheng\Workspace\OnlineLearningSystem\OnlineLearningSystem\OnlineLearningSystem\bin\OnlineLearningSystem.dll" />
+    </Deployment>
+    <Execution>
+      <TestTypeSpecific />
+      <AgentRule name="Execution Agents">
+      </AgentRule>
+    </Execution>
+  </TestSettings>
+  <Times creation="2016-01-25T15:44:42.0058429+08:00" queuing="2016-01-25T15:44:42.0378447+08:00" start="2016-01-25T15:44:42.0528456+08:00" finish="2016-01-25T15:46:19.6844298+08:00" />
+  <ResultSummary outcome="Completed">
+    <Counters total="3" executed="3" passed="3" error="0" failed="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+  </ResultSummary>
+  <TestDefinitions>
+    <UnitTest name="ChangeTest1" storage="d:\cheng\workspace\onlinelearningsystem\onlinelearningsystem\timetasktestproject\bin\debug\timetasktestproject.dll" id="79ae84fc-9118-70c4-a07c-5f731bce7e4f">
+      <Execution id="75b0bd2b-6a56-433d-9184-1ce305ec8193" />
+      <TestMethod codeBase="D:/Cheng/Workspace/OnlineLearningSystem/OnlineLearningSystem/TimeTaskTestProject/bin/Debug/TimeTaskTestProject.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="TimeTaskTestProject.ChangePaperTemplateStatusTest, TimeTaskTestProject, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="ChangeTest1" />
+      <AspNet webSiteUrl="http://localhost:7128/Aspxs/Default.aspx">
+        <Host pathToWebApp="D:\Cheng\Workspace\OnlineLearningSystem\OnlineLearningSystem\OnlineLearningSystem" webAppRoot="/" />
+      </AspNet>
+    </UnitTest>
+    <UnitTest name="ChangeTest3" storage="d:\cheng\workspace\onlinelearningsystem\onlinelearningsystem\timetasktestproject\bin\debug\timetasktestproject.dll" id="fb1c8d72-d9d7-a91b-18f5-964be260cc82">
+      <Execution id="c1de65c8-3374-4ac2-a8ad-a2c56848cf05" />
+      <TestMethod codeBase="D:/Cheng/Workspace/OnlineLearningSystem/OnlineLearningSystem/TimeTaskTestProject/bin/Debug/TimeTaskTestProject.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="TimeTaskTestProject.ChangePaperTemplateStatusTest, TimeTaskTestProject, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="ChangeTest3" />
+      <AspNet webSiteUrl="http://localhost:7128/Aspxs/Default.aspx">
+        <Host pathToWebApp="D:\Cheng\Workspace\OnlineLearningSystem\OnlineLearningSystem\OnlineLearningSystem" webAppRoot="/" />
+      </AspNet>
+    </UnitTest>
+    <UnitTest name="ChangeTest2" storage="d:\cheng\workspace\onlinelearningsystem\onlinelearningsystem\timetasktestproject\bin\debug\timetasktestproject.dll" id="12a5b5ca-5fad-a7a1-d175-a54fd204cf1d">
+      <Execution id="d4d02219-42c1-43a8-b029-6a38ce1bdf17" />
+      <TestMethod codeBase="D:/Cheng/Workspace/OnlineLearningSystem/OnlineLearningSystem/TimeTaskTestProject/bin/Debug/TimeTaskTestProject.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="TimeTaskTestProject.ChangePaperTemplateStatusTest, TimeTaskTestProject, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="ChangeTest2" />
+      <AspNet webSiteUrl="http://localhost:7128/Aspxs/Default.aspx">
+        <Host pathToWebApp="D:\Cheng\Workspace\OnlineLearningSystem\OnlineLearningSystem\OnlineLearningSystem" webAppRoot="/" />
+      </AspNet>
+    </UnitTest>
+  </TestDefinitions>
+  <TestLists>
+    <TestList name="所有已加载的结果" id="19431567-8539-422a-85d7-44ee4e166bda" />
+    <TestList name="结果列表" id="8c43106b-9dc1-4907-a29f-aa66a61bf5b6" />
+    <TestList name="ChangePaperTemplateStatusTest" id="d0bec498-8504-4422-a04a-3f5b53165dba" parentListId="8c43106b-9dc1-4907-a29f-aa66a61bf5b6">
+      <TestLinks>
+        <TestLink id="12a5b5ca-5fad-a7a1-d175-a54fd204cf1d" name="ChangeTest2" storage="d:\cheng\workspace\onlinelearningsystem\onlinelearningsystem\timetasktestproject\bin\debug\timetasktestproject.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+        <TestLink id="fb1c8d72-d9d7-a91b-18f5-964be260cc82" name="ChangeTest3" storage="d:\cheng\workspace\onlinelearningsystem\onlinelearningsystem\timetasktestproject\bin\debug\timetasktestproject.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+        <TestLink id="79ae84fc-9118-70c4-a07c-5f731bce7e4f" name="ChangeTest1" storage="d:\cheng\workspace\onlinelearningsystem\onlinelearningsystem\timetasktestproject\bin\debug\timetasktestproject.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+      </TestLinks>
+    </TestList>
+  </TestLists>
+  <TestEntries>
+    <TestEntry testId="12a5b5ca-5fad-a7a1-d175-a54fd204cf1d" executionId="d4d02219-42c1-43a8-b029-6a38ce1bdf17" testListId="d0bec498-8504-4422-a04a-3f5b53165dba" />
+    <TestEntry testId="fb1c8d72-d9d7-a91b-18f5-964be260cc82" executionId="c1de65c8-3374-4ac2-a8ad-a2c56848cf05" testListId="d0bec498-8504-4422-a04a-3f5b53165dba" />
+    <TestEntry testId="79ae84fc-9118-70c4-a07c-5f731bce7e4f" executionId="75b0bd2b-6a56-433d-9184-1ce305ec8193" testListId="d0bec498-8504-4422-a04a-3f5b53165dba" />
+  </TestEntries>
+  <Results>
+    <UnitTestResult executionId="d4d02219-42c1-43a8-b029-6a38ce1bdf17" testId="12a5b5ca-5fad-a7a1-d175-a54fd204cf1d" testName="ChangeTest2" computerName="CHENGVMWIN7X641" duration="00:00:11.1600187" startTime="2016-01-25T15:44:42.0658463+08:00" endTime="2016-01-25T15:44:53.7515147+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="d0bec498-8504-4422-a04a-3f5b53165dba" relativeResultsDirectory="d4d02219-42c1-43a8-b029-6a38ce1bdf17">
+      <Output>
+        <DebugTrace>“清除考试任务”操作返回 0 。
+“清除考试任务”操作返回 17 。
+</DebugTrace>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="c1de65c8-3374-4ac2-a8ad-a2c56848cf05" testId="fb1c8d72-d9d7-a91b-18f5-964be260cc82" testName="ChangeTest3" computerName="CHENGVMWIN7X641" duration="00:01:15.2998530" startTime="2016-01-25T15:44:53.7555149+08:00" endTime="2016-01-25T15:46:09.1228257+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="d0bec498-8504-4422-a04a-3f5b53165dba" relativeResultsDirectory="c1de65c8-3374-4ac2-a8ad-a2c56848cf05">
+      <Output>
+        <DebugTrace>“清除考试任务”操作返回 0 。
+“清除考试任务”操作返回 17 。
+</DebugTrace>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="75b0bd2b-6a56-433d-9184-1ce305ec8193" testId="79ae84fc-9118-70c4-a07c-5f731bce7e4f" testName="ChangeTest1" computerName="CHENGVMWIN7X641" duration="00:00:10.4981754" startTime="2016-01-25T15:46:09.1258259+08:00" endTime="2016-01-25T15:46:19.6704290+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="d0bec498-8504-4422-a04a-3f5b53165dba" relativeResultsDirectory="75b0bd2b-6a56-433d-9184-1ce305ec8193">
+      <Output>
+        <DebugTrace>“清除考试任务”操作返回 0 。
+“清除考试任务”操作返回 34 。
+</DebugTrace>
+      </Output>
+    </UnitTestResult>
+  </Results>
+</TestRun>

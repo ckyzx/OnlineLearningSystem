@@ -55,13 +55,18 @@ namespace TimeTaskTestProject
         //public static void MyClassCleanup()
         //{
         //}
-        //
+        
         // 使用 TestInitialize 在运行每个测试前先运行代码
-        //[TestInitialize()]
-        //public void MyTestInitialize()
-        //{
+        [TestInitialize()]
+        public void MyTestInitialize()
+        {
 
-        //}
+            Int32 result;
+
+            result = olsDbo.ExecuteProcedure("dbo.UnitTesting_DeleteExaminationTask", new SqlParameter[] { new SqlParameter("@etName", "单元测试") });
+
+            Debug.WriteLine("“清除考试任务”操作返回 " + result + " 。");
+        }
 
         // 使用 TestCleanup 在运行完每个测试后运行代码
         [TestCleanup()]

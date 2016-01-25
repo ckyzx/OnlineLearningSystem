@@ -275,8 +275,7 @@ namespace OnlineLearningSystem.Utilities
 
                 epqs = JsonConvert.DeserializeObject<List<ExaminationPaperQuestion>>(answersJson);
 
-                epqId = olsEni.ExaminationPaperQuestions.Count();
-                epqId = 0 == epqId ? 1 : olsEni.ExaminationPaperQuestions.Max(m => m.EPQ_AutoId) + 1;
+                epqId = GetEPQId();
 
                 foreach (var epq in epqs)
                 {

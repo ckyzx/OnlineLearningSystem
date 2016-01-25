@@ -1,0 +1,76 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<TestRun id="67455b29-8b7b-468c-8e47-2ddd778db14e" name="DEV@CHENGVMWIN7X641 2016-01-25 17:11:41" runUser="CHENGVMWIN7X641\DEV" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <TestSettings name="本地" id="fb35cadf-f513-4997-8927-662f65f1d0dd">
+    <Description>这些设置为本地测试运行的默认测试设置。</Description>
+    <Deployment enabled="false" runDeploymentRoot="DEV_CHENGVMWIN7X641 2016-01-25 17_11_41">
+      <DeploymentItem filename="D:\Cheng\Workspace\OnlineLearningSystem\OnlineLearningSystem\OnlineLearningSystem\Content\lib\ueditor\1.4.3\net\Bin\Newtonsoft.Json.dll" />
+      <DeploymentItem filename="D:\Cheng\Workspace\OnlineLearningSystem\OnlineLearningSystem\packages\EntityFramework.4.1.10331.0\lib\EntityFramework.dll" />
+      <DeploymentItem filename="D:\Cheng\Workspace\OnlineLearningSystem\OnlineLearningSystem\OnlineLearningSystem\bin\OnlineLearningSystem.dll" />
+    </Deployment>
+    <Execution>
+      <TestTypeSpecific />
+      <AgentRule name="Execution Agents">
+      </AgentRule>
+    </Execution>
+  </TestSettings>
+  <Times creation="2016-01-25T17:11:41.0993579+08:00" queuing="2016-01-25T17:11:41.1543611+08:00" start="2016-01-25T17:11:41.1843628+08:00" finish="2016-01-25T17:12:16.4873820+08:00" />
+  <ResultSummary outcome="Failed">
+    <Counters total="1" executed="1" error="0" failed="1" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" passed="0" completed="0" inProgress="0" pending="0" />
+  </ResultSummary>
+  <TestDefinitions>
+    <UnitTest name="ChangeTest" storage="d:\cheng\workspace\onlinelearningsystem\onlinelearningsystem\timetasktestproject\bin\debug\timetasktestproject.dll" id="20adc531-bff2-51ab-a3b6-cc5e6444840d">
+      <Execution id="ed451151-033d-48f9-8101-00168fce2a68" />
+      <TestMethod codeBase="D:/Cheng/Workspace/OnlineLearningSystem/OnlineLearningSystem/TimeTaskTestProject/bin/Debug/TimeTaskTestProject.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="TimeTaskTestProject.ChangePaperStatusTest, TimeTaskTestProject, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="ChangeTest" />
+      <AspNet webSiteUrl="http://localhost:7128/Aspxs/Default.aspx">
+        <Host pathToWebApp="D:\Cheng\Workspace\OnlineLearningSystem\OnlineLearningSystem\OnlineLearningSystem" webAppRoot="/" />
+      </AspNet>
+    </UnitTest>
+  </TestDefinitions>
+  <TestLists>
+    <TestList name="列表中未列出的结果" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="所有已加载的结果" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <TestEntries>
+    <TestEntry testId="20adc531-bff2-51ab-a3b6-cc5e6444840d" executionId="ed451151-033d-48f9-8101-00168fce2a68" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <Results>
+    <UnitTestResult executionId="ed451151-033d-48f9-8101-00168fce2a68" testId="20adc531-bff2-51ab-a3b6-cc5e6444840d" testName="ChangeTest" computerName="CHENGVMWIN7X641" duration="00:00:32.8836589" startTime="2016-01-25T17:11:41.1943634+08:00" endTime="2016-01-25T17:12:16.4613805+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="ed451151-033d-48f9-8101-00168fce2a68">
+      <Output>
+        <DebugTrace>“清除考试任务”操作返回 0 。
+“清除考试任务”操作返回 22 。
+</DebugTrace>
+        <ErrorInfo>
+          <Message>测试方法 TimeTaskTestProject.ChangePaperStatusTest.ChangeTest 引发了异常: 
+System.Data.Entity.Infrastructure.DbUpdateException: 更新条目时出错。有关详细信息，请参见内部异常。 ---&gt; System.Data.UpdateException: 更新条目时出错。有关详细信息，请参见内部异常。 ---&gt; System.Data.SqlClient.SqlException: 违反了 PRIMARY KEY 约束 'PK_EXAMINATIONPAPERTEMPLATEQUE'。不能在对象 'dbo.ExaminationPaperTemplateQuestions' 中插入重复键。重复的键值为 (161)。
+语句已终止。</Message>
+          <StackTrace>    在 System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   在 System.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   在 System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   在 System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean&amp; dataReady)
+   在 System.Data.SqlClient.SqlDataReader.TryConsumeMetaData()
+   在 System.Data.SqlClient.SqlDataReader.get_MetaData()
+   在 System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString)
+   在 System.Data.SqlClient.SqlCommand.RunExecuteReaderTds(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, Boolean async, Int32 timeout, Task&amp; task, Boolean asyncWrite, SqlDataReader ds)
+   在 System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method, TaskCompletionSource`1 completion, Int32 timeout, Task&amp; task, Boolean asyncWrite)
+   在 System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method)
+   在 System.Data.SqlClient.SqlCommand.ExecuteReader(CommandBehavior behavior, String method)
+   在 System.Data.SqlClient.SqlCommand.ExecuteDbDataReader(CommandBehavior behavior)
+   在 System.Data.Common.DbCommand.ExecuteReader(CommandBehavior behavior)
+   在 System.Data.Mapping.Update.Internal.DynamicUpdateCommand.Execute(UpdateTranslator translator, EntityConnection connection, Dictionary`2 identifierValues, List`1 generatedValues)
+   在 System.Data.Mapping.Update.Internal.UpdateTranslator.Update(IEntityStateManager stateManager, IEntityAdapter adapter)
+ --- 内部异常堆栈跟踪的末尾 ---
+    在 System.Data.Mapping.Update.Internal.UpdateTranslator.Update(IEntityStateManager stateManager, IEntityAdapter adapter)
+   在 System.Data.EntityClient.EntityAdapter.Update(IEntityStateManager entityCache)
+   在 System.Data.Objects.ObjectContext.SaveChanges(SaveOptions options)
+   在 System.Data.Entity.Internal.InternalContext.SaveChanges()
+ --- 内部异常堆栈跟踪的末尾 ---
+    在 System.Data.Entity.Internal.InternalContext.SaveChanges()
+   在 System.Data.Entity.Internal.LazyInternalContext.SaveChanges()
+   在 System.Data.Entity.DbContext.SaveChanges()
+   在 TimeTaskTestProject.ChangePaperStatusTest.ChangeTest() 位置 D:\Cheng\Workspace\OnlineLearningSystem\OnlineLearningSystem\TimeTaskTestProject\ChangePaperStatusTest.cs:行号 214
+</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+  </Results>
+</TestRun>

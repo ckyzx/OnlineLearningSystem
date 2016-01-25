@@ -73,6 +73,7 @@
     </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ChangePaperStatusTest.cs" />
     <Compile Include="ChangePaperTemplateStatusTest.cs" />
     <Compile Include="GeneratePaperTemplateTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

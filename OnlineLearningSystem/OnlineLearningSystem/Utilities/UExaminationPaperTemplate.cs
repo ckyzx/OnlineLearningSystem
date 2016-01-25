@@ -448,9 +448,8 @@ namespace OnlineLearningSystem.Utilities
                         if (null == ep)
                         {
 
-                            //TODO: 添加试卷
-                            epId = olsEni.ExaminationPapers.Count();
-                            epId = 0 == epId ? 1 : olsEni.ExaminationPapers.Max(m => m.EP_AutoId) + 1;
+                            // 添加试卷
+                            epId = GetEPId();
 
                             ep = new ExaminationPaper
                             {
@@ -891,17 +890,25 @@ namespace OnlineLearningSystem.Utilities
             if ((Byte)StatisticType.Score == et.ET_StatisticType && eptqCount == 0)
             {
                 ep.EP_Score = score;
+                olsEni.Entry(ep).State = EntityState.Modified;
             }
             else if ((Byte)StatisticType.Number == et.ET_StatisticType && eptqCount == 0)
             {
                 ratio = Math.Round((Double)number / (Double)et.ET_TotalNumber, 2, MidpointRounding.AwayFromZero);
                 ep.EP_Score = (Int32)(ratio * 100);
+                olsEni.Entry(ep).State = EntityState.Modified;
             }
         }
 
-        public void SaveChange()
+        public Boolean SaveChange()
         {
-            olsEni.SaveChanges();
+
+            if (0 == olsEni.SaveChanges())
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }

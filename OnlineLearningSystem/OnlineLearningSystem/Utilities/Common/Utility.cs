@@ -58,5 +58,24 @@ namespace OnlineLearningSystem.Utilities
             return new Object[] { sql, sps };
         }
 
+        public Int32 GetEPId()
+        {
+            Int32 epId;
+
+            epId = olsEni.ExaminationPapers.Count();
+            epId = 0 == epId ? 1 : olsEni.ExaminationPapers.Max(m => m.EP_AutoId) + 1;
+
+            return epId;
+        }
+
+        public Int32 GetEPQId()
+        {
+            Int32 epqId;
+
+            epqId = olsEni.ExaminationPaperQuestions.Count();
+            epqId = 0 == epqId ? 1 : olsEni.ExaminationPaperQuestions.Max(m => m.EPQ_AutoId) + 1;
+
+            return epqId;
+        }
     }
 }
