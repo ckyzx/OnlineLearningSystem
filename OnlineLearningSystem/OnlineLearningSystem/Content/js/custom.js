@@ -1,4 +1,3 @@
-
 var Kyzx = {};
 var OLS = {};
 
@@ -74,7 +73,7 @@ Kyzx.List = {
 
         if (undefined == self.settings.dtParams.initComplete) {
 
-            self.settings.dtParams.initComplete = function(){
+            self.settings.dtParams.initComplete = function() {
                 self._adjustElem(self.settings.hasTree);
             };
         }
@@ -85,7 +84,7 @@ Kyzx.List = {
     initList: function() {
 
         var self;
-        
+
         self = this.self;
 
         self._addCreateBtn();
@@ -97,8 +96,8 @@ Kyzx.List = {
 
         self._initListEvent();
 
-        $(window).resize(function(){
-            
+        $(window).resize(function() {
+
             self.dataTables.destroy();
             self.dataTables = self.jqTable.DataTable(self.settings.dtParams);
         });
@@ -110,7 +109,7 @@ Kyzx.List = {
 
         var funcBtnContainer, createBtn;
         var self;
-        
+
         self = this.self;
 
         if (self.settings.hasCreateBtn) {
@@ -130,7 +129,7 @@ Kyzx.List = {
 
         var recycleBin, status;
         var self;
-        
+
         self = this.self;
 
         if (self.settings.hasRecycleBin) {
@@ -182,7 +181,7 @@ Kyzx.List = {
         var settings, nodes, n;
         var ztree;
         var self;
-        
+
         self = this.self;
 
         if (self.settings.hasTree) {
@@ -239,7 +238,7 @@ Kyzx.List = {
     _initListEvent: function() {
 
         var self;
-        
+
         self = this.self;
 
         self.jqTable.on('click', 'tbody a.edit', function() {
@@ -376,7 +375,8 @@ Kyzx.List = {
         var checkbox;
 
         checkbox = $(elem);
-        checkbox.parentsUntil('div').last().find(':checkbox').removeAttr('checked');
+        //checkbox.parentsUntil('div').last().find(':checkbox').removeAttr('checked');
+        this.clearChecked(checkbox.parents('table'));
         checkbox.attr('data-checked', 1).blur().focus();
     },
 
@@ -390,7 +390,134 @@ Kyzx.List = {
             checkbox.removeAttr('data-checked');
             checkbox.get(0).checked = true;
         }
+    },
+
+    setChecked: function(tableSelector, valueSelector) {
+
+        var container, table, tableId, settings, dtData, ms, cells, checkbox, id;
+        var countSpan, rows, allCheckbox;
+        var checked;
+
+        table = $(tableSelector);
+        container = table.parent();
+        tableId = table.attr('id');
+        settings = table.DataTable.settings;
+
+        for (var i = 0; i < settings.length; i++) {
+
+            if (settings[i].sTableId == tableId) {
+
+                dtData = settings[i].aoData;
+                break;
+            }
+        }
+
+        ms = $(valueSelector).val();
+        ms = $.parseJSON(ms);
+
+        for (var i = 0; i < dtData.length; i++) {
+
+            cells = dtData[i].anCells;
+            checkbox = $(cells[0]).find(':checkbox');
+            id = checkbox.val();
+
+            for (var i1 = 0; i1 < ms.length; i1++) {
+
+                if (id == ms[i1]) {
+
+                    $(cells[0]).find(':checkbox').get(0).checked = true;
+                }
+            }
+        }
+
+        // 显示已选数据数量
+        container.find('.select-data-item').remove();
+        countSpan = $('<div class="select-data-item mb-10">已选 <span class="select-data-count">' + ms.length + '</span> 条</div>');
+        countSpan.prependTo(container);
+
+        // 判断是否复选“全选”框
+        rows = table.find('tbody tr');
+        allCheckbox = $(':checkbox[value=all]');
+        checked = rows.length == rows.find(':checked').length;
+        if (checked) {
+            allCheckbox.attr('checked', 'checked');
+        } else {
+            allCheckbox.removeAttr('checked');
+        }
+    },
+
+    getChecked: function(tableSelector, valueSelector, increment) {
+
+        var table, tableId, dtData, ms;
+
+        table = $(tableSelector);
+        tableId = table.attr('id');
+        settings = table.DataTable.settings;
+
+        for (var i = 0; i < settings.length; i++) {
+
+            if (settings[i].sTableId == tableId) {
+
+                dtData = settings[i].aoData;
+                break;
+            }
+        }
+
+        if (increment) {
+
+            ms = $(valueSelector).val();
+            ms = $.parseJSON(ms);
+        } else {
+            ms = [];
+        }
+
+        for (var i = 0; i < dtData.length; i++) {
+
+            cells = dtData[i].anCells;
+            if ($(cells[0]).find(':checkbox').get(0).checked) {
+
+                id = $(cells[0]).find(':checkbox').val();
+                id = parseInt(id);
+                ms.push(id);
+            }
+        }
+
+        $(valueSelector).val(JSON.stringify(ms));
+    },
+
+    clearChecked: function(tableSelector){
+
+        'use strict';
+
+        var table, checkbox;
+        var tableId, settings, dtData, cells;
+
+        table = $(tableSelector);
+        tableId = table.attr('id');
+        settings = table.DataTable.settings;
+
+        for (var i = 0; i < settings.length; i++) {
+
+            if (settings[i].sTableId == tableId) {
+
+                dtData = settings[i].aoData;
+                break;
+            }
+        }
+
+        for (var i = 0; i < dtData.length; i++) {
+
+            cells = dtData[i].anCells;
+            checkbox = $(cells[0]).find(':checkbox').get(0);
+
+            if (checkbox.checked) {
+
+                checkbox.checked = false;
+            }
+        }
+
     }
+
 };
 
 OLS.renderMenu = function(authorize) {

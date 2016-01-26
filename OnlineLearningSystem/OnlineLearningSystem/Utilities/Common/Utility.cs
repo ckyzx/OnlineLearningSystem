@@ -77,5 +77,23 @@ namespace OnlineLearningSystem.Utilities
 
             return epqId;
         }
+
+        public Int32 GetId(String tableName, String autoIdFieldName)
+        {
+
+            Int32 id;
+            String sql;
+
+            sql = "SELECT COUNT(" + autoIdFieldName + ") FROM " + tableName;
+            id = Convert.ToInt32(olsDbo.ExecuteSqlScalar(sql));
+
+            if (0 != id)
+            {
+                sql = "SELECT TOP 1 " + autoIdFieldName + " FROM " + tableName + " ORDER BY " + autoIdFieldName + " DESC";
+                id = Convert.ToInt32(olsDbo.ExecuteSqlScalar(sql));
+            }
+
+            return id;
+        }
     }
 }

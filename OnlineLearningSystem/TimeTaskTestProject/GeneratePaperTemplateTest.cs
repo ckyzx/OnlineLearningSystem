@@ -908,7 +908,7 @@ namespace TimeTaskTestProject
             Assert.AreEqual(expected, ((Exception)actual).Message);
             actual = null;
 
-            #region 无法减去溢出分数
+            #region 注释：无法减去溢出分数
             /*ratios = new List<AutoRatio>();
             ratios.Add(new AutoRatio("单选题", 0.2));
             ratios.Add(new AutoRatio("多选题", 0.2));

@@ -253,5 +253,8 @@ $(function() {
                 alert('请求返回错误！');
             });
     });
+    
+    // 任务类型选项卡
+    $.Huitab("#ExaminationTaskTab .tabBar span","#ExaminationTaskTab .tabCon","current","click","0");
 
 });

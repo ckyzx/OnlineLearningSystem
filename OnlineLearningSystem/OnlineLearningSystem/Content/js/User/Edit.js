@@ -1,14 +1,19 @@
 $(function() {
 
-    SetDataTablesChecked('.department-table', '#U_Departments');
-    SetDataTablesChecked('.role-table', '#U_Roles');
+    var dTableSel, rTableSel;
+
+    dTableSel = '.department-table';
+    rTableSel = '.role-table';
+
+    Kyzx.List.setChecked(dTableSel, '#U_Departments');
+    Kyzx.List.setChecked(rTableSel, '#U_Roles');
 
     // 限制复选框只能单选
     var dTable, rTable;
     var clickEvent, changeEvent;
 
-    dTable = $('.department-table');
-    rTable = $('.role-table');
+    dTable = $(dTableSel);
+    rTable = $(rTableSel);
 
     dTable.find(':checkbox[value=""]').attr('disabled', 'disabled');
     rTable.find(':checkbox[value=""]').attr('disabled', 'disabled');
@@ -39,8 +44,8 @@ $(function() {
             return;
         }
 
-        GetDataTablesChecked('.department-table', '#U_Departments');
-        GetDataTablesChecked('.role-table', '#U_Roles');
+        Kyzx.List.getChecked(dTableSel, '#U_Departments');
+        Kyzx.List.getChecked(rTableSel, '#U_Roles');
 
         psInput = $('#U_Password');
         ps = psInput.val();

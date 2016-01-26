@@ -1,6 +1,6 @@
 $(function() {
 
-    SetDataTablesChecked('.role-table', '#D_Roles');
+    Kyzx.List.setChecked('.role-table', '#D_Roles');
 
     // 限制复选框只能单选
     var rTable;
@@ -27,6 +27,6 @@ $(function() {
             return;
         }
 
-        GetDataTablesChecked('.role-table', '#D_Roles');
+        Kyzx.List.getChecked('.role-table', '#D_Roles');
     });
 });

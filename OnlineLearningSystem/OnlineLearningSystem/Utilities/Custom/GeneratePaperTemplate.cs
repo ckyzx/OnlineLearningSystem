@@ -373,6 +373,14 @@ namespace OnlineLearningSystem.Utilities
                 tmpQs = new List<Question>();
 
                 typeScore = (Int32)(totalScore * r.percent);
+
+                // 判断试题总分是否足够选题
+                tmpScore = qs.Where(m => m.Q_Type == r.type && m.Q_Status == (Byte)Status.Available).Sum(m => m.Q_Score);
+                if (tmpScore < typeScore)
+                {
+                    throw new Exception("“" + r.type + "”备选试题总分小于类型总分。");
+                }
+
                 tmpScore = 0;
 
                 qIds =
@@ -491,7 +499,7 @@ namespace OnlineLearningSystem.Utilities
         private List<Question> SelectQuestionsWithNumber(List<AutoRatio> ratios, int totalNumber, List<Question> qs)
         {
 
-            Int32 typeNumber, absence;
+            Int32 typeNumber, tmpNumber, absence;
             String type;
             Random random;
             List<Question> readyQs, tmpQs;
@@ -503,6 +511,14 @@ namespace OnlineLearningSystem.Utilities
             {
 
                 typeNumber = (Int32)(totalNumber * r.percent); // 取较小的整数
+
+                // 判断试题总数是否足够选题
+                tmpNumber = qs.Where(m => m.Q_Type == r.type && m.Q_Status == (Byte)Status.Available).Count();
+                if (tmpNumber < typeNumber)
+                {
+                    throw new Exception("“" + r.type + "”备选试题总数小于类型总数。");
+                }
+
                 tmpQs = SelectQuestionsWithNumber(qs, r.type, typeNumber, totalNumber);
                 readyQs.AddRange(tmpQs);
             }

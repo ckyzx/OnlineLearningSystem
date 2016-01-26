@@ -2,7 +2,13 @@ $(function () {
 
     var table;
 
-    table = $('.department-table').DataTable({
+    table = $('.department-table');
+
+    if(undefined == table.attr('id')){
+        table.attr('id', 'DepartmentTable');
+    }
+
+    table = table.DataTable({
         "sorting": [
             [1, "asc"]
         ],
