@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.Mvc;
 using OnlineLearningSystem.Models;
 using Newtonsoft.Json;
+using System.Data.SqlClient;
 
 namespace OnlineLearningSystem.Utilities
 {
@@ -19,6 +20,21 @@ namespace OnlineLearningSystem.Utilities
 
             umodel = new UModel<ExaminationTask>(dtRequest, "ExaminationTasks", "ET_Id");
             dtResponse = umodel.GetList("ET_Status");
+
+            return dtResponse;
+        }
+
+        public DataTablesResponse ListDataTablesAjax(DataTablesRequest dtRequest, Byte mode)
+        {
+
+            DataTablesResponse dtResponse;
+            List<SqlParameter> sps;
+            UModel<ExaminationTask> umodel;
+
+            sps = new List<SqlParameter>();
+            sps.Add(new SqlParameter("@ET_Mode", mode));
+            umodel = new UModel<ExaminationTask>(dtRequest, "ExaminationTasks", "ET_Id");
+            dtResponse = umodel.GetList(sps, "ET_Status");
 
             return dtResponse;
         }
@@ -71,7 +87,7 @@ namespace OnlineLearningSystem.Utilities
                 ET_Mode = (Byte)ExaminationTaskMode.Manual,
                 ET_AutoType = (Byte)AutoType.Manual,
                 ET_AutoOffsetDay = 0,
-                ET_DifficultyCoefficient = 0, 
+                ET_DifficultyCoefficient = 0,
                 ET_AutoClassifies = "[]",
                 ET_AutoRatio = "[]",
                 ET_StartTime = initDateTime,

@@ -48,6 +48,22 @@ namespace OnlineLearningSystem.Controllers
         }
 
         //
+        // POST: /ExaminationTask/ListDataTablesAjaxByMode
+
+        [Description("查询考试任务")]
+        public JsonResult ListDataTablesAjaxByMode(Byte mode)
+        {
+
+            DataTablesRequest dtRequest;
+            DataTablesResponse dtResponse;
+
+            dtRequest = GetDataTablesRequest();
+            dtResponse = um.ListDataTablesAjax(dtRequest, mode);
+
+            return Json(dtResponse, JsonRequestBehavior.DenyGet);
+        }
+
+        //
         // GET: /ExaminationTask/Create
 
         [Description("新建考试任务")]

@@ -7,9 +7,9 @@ AutoType = {
     3: '每月'
 };
 
-var difficultyCoefficient;
+var DifficultyCoefficient;
 
-difficultyCoefficient = {
+DifficultyCoefficient = {
     0: 0,
     1: 1,
     2: 2,
@@ -20,4 +20,14 @@ difficultyCoefficient = {
     7: 7,
     8: 8,
     9: 9
+};
+
+var SystemLogType;
+
+SystemLogType = {
+    0: '[未设置]',
+    1: '应用',
+    2: '通知',
+    3: '异常',
+    4: '错误'
 };

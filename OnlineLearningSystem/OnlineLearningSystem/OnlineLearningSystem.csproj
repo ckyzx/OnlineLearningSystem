@@ -85,6 +85,7 @@
     <Compile Include="Controllers\Common\OLSController.cs" />
     <Compile Include="Controllers\QuestionController.cs" />
     <Compile Include="Controllers\RoleController.cs" />
+    <Compile Include="Controllers\SystemLogController.cs" />
     <Compile Include="Controllers\TestController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\DepartmentController.cs" />
@@ -111,6 +112,7 @@
     <Compile Include="Utilities\Enums\ExaminationTaskMode.cs" />
     <Compile Include="Utilities\Enums\ExaminationTaskType.cs" />
     <Compile Include="Utilities\Enums\SystemLogType.cs" />
+    <Compile Include="Utilities\USystemLog.cs" />
     <Compile Include="ViewModels\VMExaminationTaskPersonalStatistic.cs" />
     <Compile Include="Utilities\UExaminationTaskStatistic.cs" />
     <Compile Include="ViewModels\VMExaminationTaskStatistic.cs" />
@@ -242,6 +244,7 @@
     <Content Include="Content\js\Role\Edit.js" />
     <Content Include="Content\js\Role\List.js" />
     <Content Include="Content\js\Role\ListLocal.js" />
+    <Content Include="Content\js\SystemLog\List.js" />
     <Content Include="Content\js\User\Edit.js" />
     <Content Include="Content\js\User\List.js" />
     <Content Include="Content\js\Department\List.js" />
@@ -966,6 +969,7 @@
     <Content Include="Views\Shared\_PagePrompt.cshtml" />
     <Content Include="Views\ExaminationTaskStatistic\Personal.cshtml" />
     <Content Include="Views\ExaminationPaperTemplate\PaperView.cshtml" />
+    <Content Include="Views\SystemLog\List.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

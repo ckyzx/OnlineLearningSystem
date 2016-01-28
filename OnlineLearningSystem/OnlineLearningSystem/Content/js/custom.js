@@ -49,7 +49,8 @@ Kyzx.List = {
         modelEnName: null,
         modelPrefix: null,
         treeIdName: null,
-        treeIdDefaultValue: null
+        treeIdDefaultValue: null,
+        additionRequestParams: null
     },
     request: null,
     jqTable: null,
@@ -129,6 +130,23 @@ Kyzx.List = {
 
         var recycleBin, status;
         var self;
+        var params;
+        var setParams;
+
+        params = {};
+
+        setParams = function(params) {
+
+            var additionParams;
+
+            additionParams = self.settings.additionRequestParams;
+            if (null != additionParams) {
+
+                for (var i = 0; i < additionParams.length; i++) {
+                    params[additionParams[i]['name']] = $(additionParams[i]['input']).val();
+                }
+            }
+        }
 
         self = this.self;
 
@@ -143,9 +161,10 @@ Kyzx.List = {
 
             self.settings.dtParams.ajax.data = function(originData) {
 
-                return $.extend({}, originData, {
-                    "status": recycleBin.attr('data-status')
-                });
+                params['status'] = recycleBin.attr('data-status');
+                setParams(params);
+
+                return $.extend({}, originData, params);
             };
 
             recycleBin.on('click', function() {
@@ -171,6 +190,14 @@ Kyzx.List = {
                 recycleBin.attr('data-status', status);
                 self.dataTables.ajax.reload(null, false);
             });
+        }else{
+
+            self.settings.dtParams.ajax.data = function(originData) {
+
+                setParams(params);
+                return $.extend({}, originData, params);
+            };
+
         }
     },
 
@@ -485,7 +512,7 @@ Kyzx.List = {
         $(valueSelector).val(JSON.stringify(ms));
     },
 
-    clearChecked: function(tableSelector){
+    clearChecked: function(tableSelector) {
 
         'use strict';
 
@@ -517,11 +544,20 @@ Kyzx.List = {
         }
     },
 
-    renderSelectCount: function(container, num){
+    renderSelectCount: function(container, num) {
 
         container.find('.select-data-item').remove();
         countSpan = $('<div class="select-data-item mb-10">已选 <span class="select-data-count">' + num + '</span> 条</div>');
         countSpan.prependTo(container);
+    },
+
+    columnContentEllipsis: function(jqTable, row, className, content) {
+
+        var th, span;
+
+        th = jqTable.find('th' + className);
+        span = row.find('span' + className);
+        span.addClass('ellipsis').width(th.width()).text(content);
     }
 
 };

@@ -77,10 +77,8 @@ $(function() {
                 row.addClass('question-has-error');
             }
 
-            th = jqTable.find('th.QC_Name');
-            span = row.find('span.QC_Name');
             qcName = data['QC_Name'];
-            span.addClass('ellipsis').width(th.width()).text(qcName);
+            Kyzx.List.columnContentEllipsis(jqTable, row, '.QC_Name', qcName);
 
             th = jqTable.find('th.Q_Content');
             span = row.find('span.Q_Content');
@@ -264,8 +262,8 @@ $(function() {
     var options;
 
     options = '';
-    for (var p in difficultyCoefficient) {
-        options += '<option value="' + p + '">' + difficultyCoefficient[p] + '</option>';
+    for (var p in DifficultyCoefficient) {
+        options += '<option value="' + p + '">' + DifficultyCoefficient[p] + '</option>';
     }
 
     $('.question-table tbody').on('change', 'select.dif-coe', function() {

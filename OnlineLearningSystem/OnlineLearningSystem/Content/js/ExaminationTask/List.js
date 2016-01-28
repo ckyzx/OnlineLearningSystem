@@ -2,6 +2,8 @@ $(function() {
 
     var dtParams;
 
+    $('body').append('<input type="hidden" id="ET_Mode" value="2" />')
+
     dtParams = {
         "processing": true,
         "serverSide": true,
@@ -85,27 +87,27 @@ $(function() {
 
             status = data['ET_Status'];
 
-            if(1 == status){
+            if (1 == status) {
 
                 // 呈现任务控制按钮
                 switch (autoType) {
                     case 0:
 
                         // 手动任务呈现按钮“开始/结束”
-                        if(0 == enabled){
+                        if (0 == enabled) {
                             startTask.text('开始').removeClass('hide');
-                        }else if(1 == enabled){
+                        } else if (1 == enabled) {
                             stopTask.text('结束').removeClass('hide');
-                        }else if(2 == enabled){
+                        } else if (2 == enabled) {
                             // 不呈现按钮
                         }
                         break;
                     default:
 
                         // 自动任务呈现按钮“开启/关闭”
-                        if(1 == enabled){
+                        if (1 == enabled) {
                             stopTask.text('关闭').removeClass('hide');
-                        }else{
+                        } else {
                             startTask.text('开启').removeClass('hide');
                         }
 
@@ -117,7 +119,7 @@ $(function() {
             }
 
             // “未开始/未结束”的任务才显示常规按钮
-            if(0 == enabled || (2 == enabled && autoType != 0)){
+            if (0 == enabled || (2 == enabled && autoType != 0)) {
 
                 // 呈现常规按钮
                 switch (status) {
@@ -143,7 +145,8 @@ $(function() {
         dtParams: dtParams,
         modelCnName: '考试任务',
         modelEnName: 'ExaminationTask',
-        modelPrefix: 'ET_'
+        modelPrefix: 'ET_',
+        additionRequestParams: [{name: 'mode', input:'#ET_Mode'}]
     });
     list.initList();
 
@@ -163,8 +166,7 @@ $(function() {
         var tr;
         var data, id, autoType;
 
-        if(!confirm('确认开始考试任务吗？'))
-        {
+        if (!confirm('确认开始考试任务吗？')) {
             return;
         }
 
@@ -184,9 +186,9 @@ $(function() {
                     tr.find('a.start-task').addClass('hide');
                     stopTask = tr.find('a.stop-task');
 
-                    if(0 == autoType){
+                    if (0 == autoType) {
                         stopTask.text('结束');
-                    }else{
+                    } else {
                         stopTask.text('关闭');
                     }
                     stopTask.removeClass('hide');
@@ -194,7 +196,9 @@ $(function() {
                     // 隐藏常规控制按钮
                     tr.find('a.edit, a.recycle, a.resume, a.delete').addClass('hide');
 
-                    layer.msg('操作成功', {offset: '100px'});
+                    layer.msg('操作成功', {
+                        offset: '100px'
+                    });
                 } else if (0 == data.status) {
 
                     alert(data.message);
@@ -211,8 +215,7 @@ $(function() {
         var tr;
         var data, id, autoType;
 
-        if(!confirm('确认关闭考试任务吗？'))
-        {
+        if (!confirm('确认关闭考试任务吗？')) {
             return;
         }
 
@@ -233,7 +236,7 @@ $(function() {
 
 
                     // 自动任务切换按钮
-                    if(0 != autoType){
+                    if (0 != autoType) {
 
                         startTask = tr.find('a.start-task');
                         startTask.text('开启');
@@ -242,7 +245,9 @@ $(function() {
                         tr.find('a.edit, a.recycle').removeClass('hide');
                     }
 
-                    layer.msg('操作成功', {offset: '100px'});
+                    layer.msg('操作成功', {
+                        offset: '100px'
+                    });
                 } else if (0 == data.status) {
 
                     alert(data.message);
@@ -253,8 +258,36 @@ $(function() {
                 alert('请求返回错误！');
             });
     });
-    
-    // 任务类型选项卡
-    $.Huitab("#ExaminationTaskTab .tabBar span","#ExaminationTaskTab .tabCon","current","click","0");
 
+    // 任务类型选项卡
+    $.Huitab("#ExaminationTaskTab .tabBar span", "#ExaminationTaskTab .tabCon", "current", "click", "0");
+
+    $('#ExaminationTaskTab .tab-btn').click(function() {
+
+        var btn, etModeInput;
+        var mode, etMode, btnIndex;
+
+        btn = $(this);
+        mode = btn.attr('data-value');
+
+        etModeInput = $('#ET_Mode');
+        etMode = etModeInput.val();
+
+        if (mode == etMode) {
+            return;
+        }
+
+        if (0 == mode || 1 == mode) {
+
+            etModeInput.val(mode);
+            list.dataTables.ajax.url('/ExaminationTask/ListDataTablesAjaxByMode');
+        } else {
+            list.dataTables.ajax.url('/ExaminationTask/ListDataTablesAjax');
+        }
+
+        btnIndex = btn.index();
+        $('.table-sort').parent().appendTo($('#ExaminationTaskTab .tabCon').eq(btnIndex));
+
+        list.dataTables.ajax.reload(null, false);
+    });
 });
