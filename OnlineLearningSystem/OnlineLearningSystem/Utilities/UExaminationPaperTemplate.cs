@@ -245,13 +245,11 @@ namespace OnlineLearningSystem.Utilities
             try
             {
 
-                Int32 rowCount;
                 Int32 id;
 
-                rowCount = olsEni.ExaminationPaperTemplates.Count();
-                id = 0 == rowCount ? 0 : olsEni.ExaminationPaperTemplates.Max(m => m.EPT_AutoId);
+                id = GetEPTId();
 
-                model.EPT_Id = id + 1;
+                model.EPT_Id = id;
                 olsEni.ExaminationPaperTemplates.Add(model);
                 olsEni.SaveChanges();
 
@@ -270,7 +268,6 @@ namespace OnlineLearningSystem.Utilities
         {
 
             DateTime now;
-            Int32 rowCount;
             Int32 id, tmp;
             Int32[] qs;
             Question q;
@@ -290,8 +287,7 @@ namespace OnlineLearningSystem.Utilities
             qs = JsonConvert.DeserializeObject<Int32[]>(model.EPT_Questions);
 
             // 获取试题模板Id
-            rowCount = olsEni.ExaminationPaperTemplateQuestions.Count();
-            id = 0 == rowCount ? 0 : olsEni.ExaminationPaperTemplateQuestions.Max(m => m.EPTQ_AutoId);
+            id = GetEPTQId();
 
             for (var i = 0; i < qs.Length; i++)
             {
@@ -301,8 +297,6 @@ namespace OnlineLearningSystem.Utilities
 
                 if (null != q)
                 {
-
-                    id += 1;
 
                     olsEni.ExaminationPaperTemplateQuestions.Add(new ExaminationPaperTemplateQuestion
                     {
@@ -318,6 +312,8 @@ namespace OnlineLearningSystem.Utilities
                         EPTQ_AddTime = now,
                         EPTQ_Status = q.Q_Status
                     });
+
+                    id += 1;
                 }
             }
             olsEni.SaveChanges();

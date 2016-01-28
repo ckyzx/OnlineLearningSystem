@@ -370,19 +370,6 @@ namespace OnlineLearningSystem.Utilities
             foreach (var r in ratios)
             {
 
-                tmpQs = new List<Question>();
-
-                typeScore = (Int32)(totalScore * r.percent);
-
-                // 判断试题总分是否足够选题
-                tmpScore = qs.Where(m => m.Q_Type == r.type && m.Q_Status == (Byte)Status.Available).Sum(m => m.Q_Score);
-                if (tmpScore < typeScore)
-                {
-                    throw new Exception("“" + r.type + "”备选试题总分小于类型总分。");
-                }
-
-                tmpScore = 0;
-
                 qIds =
                     qs
                     .Where(m =>
@@ -395,6 +382,18 @@ namespace OnlineLearningSystem.Utilities
                 {
                     throw new Exception("“" + r.type + "”没有备选试题。");
                 }
+
+                tmpQs = new List<Question>();
+                typeScore = (Int32)(totalScore * r.percent);
+
+                // 判断试题总分是否足够选题
+                tmpScore = qs.Where(m => m.Q_Type == r.type && m.Q_Status == (Byte)Status.Available).Sum(m => m.Q_Score);
+                if (tmpScore < typeScore)
+                {
+                    throw new Exception("“" + r.type + "”备选试题总分小于类型总分。");
+                }
+
+                tmpScore = 0;
 
                 //随机选取试题，直至分数大于题型总分
                 maxValue = qIds.Length;
@@ -499,7 +498,7 @@ namespace OnlineLearningSystem.Utilities
         private List<Question> SelectQuestionsWithNumber(List<AutoRatio> ratios, int totalNumber, List<Question> qs)
         {
 
-            Int32 typeNumber, tmpNumber, absence;
+            Int32 typeNumber, absence;
             String type;
             Random random;
             List<Question> readyQs, tmpQs;
@@ -511,14 +510,6 @@ namespace OnlineLearningSystem.Utilities
             {
 
                 typeNumber = (Int32)(totalNumber * r.percent); // 取较小的整数
-
-                // 判断试题总数是否足够选题
-                tmpNumber = qs.Where(m => m.Q_Type == r.type && m.Q_Status == (Byte)Status.Available).Count();
-                if (tmpNumber < typeNumber)
-                {
-                    throw new Exception("“" + r.type + "”备选试题总数小于类型总数。");
-                }
-
                 tmpQs = SelectQuestionsWithNumber(qs, r.type, typeNumber, totalNumber);
                 readyQs.AddRange(tmpQs);
             }
@@ -561,7 +552,7 @@ namespace OnlineLearningSystem.Utilities
             }
             else if (qIds.Length < typeNumber)
             {
-                var e = new Exception("备选试题数量不足。");
+                var e = new Exception("“" + type + "”备选试题总数小于类型总数。");
                 e.Data.Add("Info", "试题类型：" + type + "；现有数量：" + qIds.Count() + "；需要数量：" + typeNumber + "。");
                 throw e;
             }
@@ -611,8 +602,7 @@ namespace OnlineLearningSystem.Utilities
             ExaminationPaperTemplate ept;
             ExaminationPaperTemplateQuestion eptq;
 
-            eptId = olsEni.ExaminationPaperTemplates.Count();
-            eptId = 0 == eptId ? 1 : olsEni.ExaminationPaperTemplates.Max(m => m.EPT_AutoId) + 1;
+            eptId = GetEPTId();
 
             eptQsAry = readyQs.Select(m => m.Q_Id).ToArray();
             eptQs = JsonConvert.SerializeObject(eptQsAry);
@@ -642,8 +632,7 @@ namespace OnlineLearningSystem.Utilities
                 throw new Exception(ResponseMessage.SaveChangesError);
             }
 
-            eptqId = olsEni.ExaminationPaperTemplateQuestions.Count();
-            eptqId = 0 == eptqId ? 1 : olsEni.ExaminationPaperTemplateQuestions.Max(m => m.EPTQ_AutoId) + 1;
+            eptqId = GetEPTQId();
 
             foreach (var q in readyQs)
             {

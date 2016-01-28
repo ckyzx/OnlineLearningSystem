@@ -73,13 +73,11 @@ namespace OnlineLearningSystem.Utilities
             try
             {
 
-                Int32 rowCount;
                 Int32 id;
 
-                rowCount = olsEni.ExaminationTaskTemplates.Count();
-                id = 0 == rowCount ? 0 : olsEni.ExaminationTaskTemplates.Max(m => m.ETT_AutoId);
+                id = GetETTId();
 
-                model.ETT_Id = id + 1;
+                model.ETT_Id = id;
                 olsEni.ExaminationTaskTemplates.Add(model);
                 olsEni.SaveChanges();
 

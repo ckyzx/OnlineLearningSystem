@@ -110,13 +110,11 @@ namespace OnlineLearningSystem.Utilities
             try
             {
 
-                Int32 rowCount;
                 Int32 id;
 
-                rowCount = olsEni.ExaminationPapers.Count();
-                id = 0 == rowCount ? 0 : olsEni.ExaminationPapers.Max(m => m.EP_AutoId);
+                id = GetEPId();
 
-                model.EP_Id = id + 1;
+                model.EP_Id = id;
                 olsEni.ExaminationPapers.Add(model);
                 olsEni.SaveChanges();
 

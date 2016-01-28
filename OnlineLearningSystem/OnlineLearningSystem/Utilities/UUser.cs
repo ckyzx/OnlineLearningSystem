@@ -171,12 +171,10 @@ namespace OnlineLearningSystem.Utilities
             try
             {
 
-                Int32 rowCount;
                 Int32 uId;
                 User model;
 
-                rowCount = olsEni.Users.Count();
-                uId = 0 == rowCount ? 1 : olsEni.Users.Max(m => m.U_AutoId) + 1;
+                uId = GetUId();
 
                 model = new User
                 {

@@ -62,9 +62,7 @@ $(function() {
         }
 
         // 显示已选数据数量
-        $('.select-data-item').remove();
-        countSpan = $('<div class="select-data-item mb-10">已选 <span class="select-data-count">' + JSON.parse(questions).length + '</span> 条</div>');
-        countSpan.prependTo($(tableSelector).parent());
+        Kyzx.List.renderSelectCount($(tableSelector).parent(), JSON.parse(questions).length);
 
         hidden.val(questions);
     });

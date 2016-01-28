@@ -35,7 +35,7 @@ namespace OnlineLearningSystem.Utilities
                 Regex typeRegex, contentRegex1, contentRegex2, optionalAnswerRegex, modelAnswerRegex,
                     difficultyCoefficientRegex, scoreRegex, digitRegex;
                 String text, qType, qClassify, qContent, qOptionalAnswer, qModelAnswer;
-                Int32 i1, i2, len, rowCount, id, id1, score;
+                Int32 i1, i2, len, qId, qcId, score;
                 Byte difficultyCoefficient;
                 Boolean isContent;
                 List<Question> qs;
@@ -71,10 +71,8 @@ namespace OnlineLearningSystem.Utilities
                 qcs = new List<QuestionClassify>();
 
                 // 获取数据编号
-                rowCount = olsEni.Questions.Count();
-                id = 0 == rowCount ? 0 : olsEni.Questions.Max(model => model.Q_AutoId);
-                rowCount = olsEni.QuestionClassifies.Count();
-                id1 = 0 == rowCount ? 0 : olsEni.QuestionClassifies.Max(model => model.QC_AutoId);
+                qId = GetQId();
+                qcId = GetQCId();
 
                 difficultyCoefficient = 0;
                 score = 0;
@@ -107,13 +105,13 @@ namespace OnlineLearningSystem.Utilities
 
                                 }
 
-                                id += 1;
+                                qId += 1;
 
                                 qs.Add(new Question()
                                 {
-                                    Q_Id = id,
+                                    Q_Id = qId,
                                     Q_Type = qType,
-                                    QC_Id = id1,
+                                    QC_Id = qcId,
                                     Q_DifficultyCoefficient = difficultyCoefficient,
                                     Q_Score = SetDefaultScore(qType, score),
                                     Q_Content = qContent,
@@ -127,7 +125,7 @@ namespace OnlineLearningSystem.Utilities
                                 if (qOptionalAnswer == "{}" || qModelAnswer == "[]")
                                 {
                                     formatFlag = true;
-                                    errorIds.Append(id + ", ");
+                                    errorIds.Append(qId + ", ");
                                 }
 
                                 difficultyCoefficient = 0;
@@ -146,13 +144,13 @@ namespace OnlineLearningSystem.Utilities
                                 && qModelAnswer != "")
                             {
 
-                                id += 1;
+                                qId += 1;
 
                                 qs.Add(new Question()
                                 {
-                                    Q_Id = id,
+                                    Q_Id = qId,
                                     Q_Type = qType,
-                                    QC_Id = id1,
+                                    QC_Id = qcId,
                                     Q_DifficultyCoefficient = difficultyCoefficient,
                                     Q_Score = SetDefaultScore(qType, score),
                                     Q_Content = qContent,
@@ -192,20 +190,20 @@ namespace OnlineLearningSystem.Utilities
                         if (null == classify)
                         {
 
-                            id1 += 1;
+                            qcId += 1;
 
                             qcs.Add(new QuestionClassify()
                             {
-                                QC_Id = id1,
+                                QC_Id = qcId,
                                 QC_Name = qClassify,
-                                QC_Level = "000" + id1.ToString(),
+                                QC_Level = "000" + qcId.ToString(),
                                 QC_AddTime = now,
                                 QC_Status = 4
                             });
                         }
                         else
                         {
-                            id1 = classify.QC_Id;
+                            qcId = classify.QC_Id;
                         }
 
                         continue;
@@ -389,13 +387,13 @@ namespace OnlineLearningSystem.Utilities
 
                     }
 
-                    id += 1;
+                    qId += 1;
 
                     qs.Add(new Question()
                     {
-                        Q_Id = id,
+                        Q_Id = qId,
                         Q_Type = qType,
-                        QC_Id = id1,
+                        QC_Id = qcId,
                         Q_DifficultyCoefficient = difficultyCoefficient,
                         Q_Score = SetDefaultScore(qType, score),
                         Q_Content = qContent,
@@ -409,7 +407,7 @@ namespace OnlineLearningSystem.Utilities
                     if (qOptionalAnswer == "{}" || qModelAnswer == "[]")
                     {
                         formatFlag = true;
-                        errorIds.Append(id + ", ");
+                        errorIds.Append(qId + ", ");
                     }
 
                     difficultyCoefficient = 0;
@@ -676,13 +674,11 @@ namespace OnlineLearningSystem.Utilities
             try
             {
 
-                Int32 rowCount;
                 Int32 id;
 
-                rowCount = olsEni.Questions.Count();
-                id = 0 == rowCount ? 0 : olsEni.Questions.Max(m => m.Q_AutoId);
+                id = GetQId();
 
-                model.Q_Id = id + 1;
+                model.Q_Id = id;
                 olsEni.Questions.Add(model);
                 olsEni.SaveChanges();
 

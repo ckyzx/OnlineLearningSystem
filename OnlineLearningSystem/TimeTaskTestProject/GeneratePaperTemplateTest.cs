@@ -110,7 +110,7 @@ namespace TimeTaskTestProject
             startTime = new DateTime(1970, 1, 1, now.AddHours(1).Hour, now.Minute, 0);
 
             uet = new UExaminationTask();
-            id = uet.GetId();
+            id = new Utility().GetETId();
             et = new ExaminationTask
             {
                 ET_Id = id,
@@ -186,7 +186,7 @@ namespace TimeTaskTestProject
             startTime = new DateTime(1970, 1, 1, now.AddHours(-1).Hour, now.Minute, 0);
 
             uet = new UExaminationTask();
-            id = uet.GetId();
+            id = new Utility().GetETId();
             et = new ExaminationTask
             {
                 ET_Id = id,
@@ -263,7 +263,7 @@ namespace TimeTaskTestProject
             startTime = new DateTime(1970, 1, 1, now.AddHours(1).Hour, now.Minute, 0);
 
             uet = new UExaminationTask();
-            etId = uet.GetId();
+            etId = new Utility().GetETId();
             et = new ExaminationTask
             {
                 ET_Id = etId,
@@ -370,7 +370,7 @@ namespace TimeTaskTestProject
             dayOfWeek = 0 == dayOfWeek ? 7 : dayOfWeek;
 
             uet = new UExaminationTask();
-            id = uet.GetId();
+            id = new Utility().GetETId();
             et = new ExaminationTask
             {
                 ET_Id = id,
@@ -447,7 +447,7 @@ namespace TimeTaskTestProject
             startTime = new DateTime(1970, 1, 1, now.AddHours(1).Hour, now.Minute, 0);
 
             uet = new UExaminationTask();
-            id = uet.GetId();
+            id = new Utility().GetETId();
             et = new ExaminationTask
             {
                 ET_Id = id,
@@ -523,7 +523,7 @@ namespace TimeTaskTestProject
             startTime = new DateTime(1970, 1, 1, now.AddHours(1).Hour, now.Minute, 0);
 
             uet = new UExaminationTask();
-            id = uet.GetId();
+            id = new Utility().GetETId();
             et = new ExaminationTask
             {
                 ET_Id = id,
@@ -600,7 +600,7 @@ namespace TimeTaskTestProject
             startTime = new DateTime(1970, 1, 1, now.AddHours(1).Hour, now.Minute, 0);
 
             uet = new UExaminationTask();
-            id = uet.GetId();
+            id = new Utility().GetETId();
             et = new ExaminationTask
             {
                 ET_Id = id,
@@ -854,7 +854,7 @@ namespace TimeTaskTestProject
 
             actual = null;
 
-            // 无备选试题
+            #region 无备选试题
             ratios = new List<AutoRatio>();
             ratios.Add(new AutoRatio("单选题", 0.2));
             ratios.Add(new AutoRatio("多选题", 0.2));
@@ -880,9 +880,38 @@ namespace TimeTaskTestProject
 
             Assert.AreEqual(expected, ((Exception)actual).Message);
             actual = null;
+            #endregion
 
-            // 超过指定重复次数
+            #region 备选试题总分小于类型总分
             ratios = new List<AutoRatio>();
+            ratios.Add(new AutoRatio("单选题", 0.2));
+            ratios.Add(new AutoRatio("多选题", 0.2));
+            ratios.Add(new AutoRatio("判断题", 0.2));
+            ratios.Add(new AutoRatio("公文改错题", 0.1));
+            ratios.Add(new AutoRatio("计算题", 0.1));
+            ratios.Add(new AutoRatio("案例分析题", 0.1));
+            ratios.Add(new AutoRatio("问答题", 0.1));
+
+            totalScore = 100;
+
+            qs = olsEni.Questions.Where(m => m.Q_Type == "单选题" && m.Q_Status == (Byte)Status.Available).Take(1).ToList();
+
+            expected = "“单选题”备选试题总分小于类型总分。";
+            try
+            {
+                target.SelectQuestionsWithScore(ratios, totalScore, qs);
+            }
+            catch (Exception ex)
+            {
+                actual = ex;
+            }
+
+            Assert.AreEqual(expected, ((Exception)actual).Message);
+            actual = null;
+            #endregion
+
+            #region [已注释]超过指定重复次数
+            /*ratios = new List<AutoRatio>();
             ratios.Add(new AutoRatio("单选题", 0.2));
             ratios.Add(new AutoRatio("多选题", 0.2));
             ratios.Add(new AutoRatio("判断题", 0.2));
@@ -906,9 +935,10 @@ namespace TimeTaskTestProject
             }
 
             Assert.AreEqual(expected, ((Exception)actual).Message);
-            actual = null;
+            actual = null;*/
+            #endregion
 
-            #region 注释：无法减去溢出分数
+            #region [已注释]无法减去溢出分数
             /*ratios = new List<AutoRatio>();
             ratios.Add(new AutoRatio("单选题", 0.2));
             ratios.Add(new AutoRatio("多选题", 0.2));
@@ -937,7 +967,7 @@ namespace TimeTaskTestProject
             actual = null;*/
             #endregion
 
-            // 正常减去溢出分数
+            #region 正常减去溢出分数
             ratios = new List<AutoRatio>();
             ratios.Add(new AutoRatio("单选题", 0.2));
             ratios.Add(new AutoRatio("多选题", 0.2));
@@ -962,8 +992,9 @@ namespace TimeTaskTestProject
                 Debug.WriteLine("    " + q.Q_Score);
             }
             actual = null;
+            #endregion
 
-            // 是否能避免重复
+            #region 是否能避免重复
             ratios = new List<AutoRatio>();
             ratios.Add(new AutoRatio("单选题", 0.2));
             ratios.Add(new AutoRatio("多选题", 0.2));
@@ -992,6 +1023,7 @@ namespace TimeTaskTestProject
             Assert.AreEqual(expected, ((List<Question>)actual).Sum(m => m.Q_Score));
 
             actual = null;
+            #endregion
         }
 
         /// <summary>
@@ -1012,7 +1044,7 @@ namespace TimeTaskTestProject
 
             actual = null;
 
-            // 无备选试题
+            #region 无备选试题
             ratios = new List<AutoRatio>();
             ratios.Add(new AutoRatio("单选题", 0.2));
             ratios.Add(new AutoRatio("多选题", 0.2));
@@ -1037,8 +1069,9 @@ namespace TimeTaskTestProject
 
             Assert.AreEqual(expected, ((Exception)actual).Message);
             actual = null;
+            #endregion
 
-            // 备选试题数量不足
+            #region 备选试题数量不足
             ratios = new List<AutoRatio>();
             ratios.Add(new AutoRatio("单选题", 0.2));
             ratios.Add(new AutoRatio("多选题", 0.2));
@@ -1051,7 +1084,7 @@ namespace TimeTaskTestProject
             totalNumber = 100;
             qs = olsEni.Questions.Where(m => m.Q_Type == "单选题" && m.Q_Status == (Byte)Status.Available).Take(1).ToList();
 
-            expected = "备选试题数量不足。";
+            expected = "“单选题”备选试题总数小于类型总数。";
             try
             {
                 target.SelectQuestionsWithNumber(ratios, totalNumber, qs);
@@ -1065,8 +1098,9 @@ namespace TimeTaskTestProject
             Debug.WriteLine(((Exception)actual).Data["Info"]);
             Debug.WriteLine("------------------------------");
             actual = null;
+            #endregion
 
-            #region 超过指定重复次数
+            #region [已注释]超过指定重复次数
             /*ratios = new List<AutoRatio>();
             ratios.Add(new AutoRatio("单选题", 0.2));
             ratios.Add(new AutoRatio("多选题", 0.2));
@@ -1095,7 +1129,7 @@ namespace TimeTaskTestProject
             actual = null;*/
             #endregion
 
-            // 数量不足时，补足
+            #region 数量不足时，补足
             ratios = new List<AutoRatio>();
             ratios.Add(new AutoRatio("单选题", 0.2));
             ratios.Add(new AutoRatio("多选题", 0.2));
@@ -1120,6 +1154,7 @@ namespace TimeTaskTestProject
             }
             Debug.WriteLine("------------------------------");
             actual = null;
+            #endregion
 
         }
 
@@ -1150,7 +1185,7 @@ namespace TimeTaskTestProject
             startTime = new DateTime(1970, 1, 1, now.AddHours(1).Hour, now.Minute, 0);
 
             uet = new UExaminationTask();
-            id = uet.GetId();
+            id = new Utility().GetETId();
             et = new ExaminationTask
             {
                 ET_Id = id,
@@ -1231,7 +1266,7 @@ namespace TimeTaskTestProject
             startTime = new DateTime(1970, 1, 1, now.AddHours(1).Hour, now.Minute, 0);
 
             uet = new UExaminationTask();
-            id = uet.GetId();
+            id = new Utility().GetETId();
             et = new ExaminationTask
             {
                 ET_Id = id,
@@ -1299,7 +1334,7 @@ namespace TimeTaskTestProject
             startTime = new DateTime(1970, 1, 1, now.AddHours(1).Hour, now.Minute, 0);
 
             uet = new UExaminationTask();
-            id = uet.GetId();
+            id = new Utility().GetETId();
             et = new ExaminationTask
             {
                 ET_Id = id,
@@ -1380,7 +1415,7 @@ namespace TimeTaskTestProject
             startTime = new DateTime(1970, 1, 1, now.AddHours(1).Hour, now.Minute, 0);
 
             uet = new UExaminationTask();
-            id = uet.GetId();
+            id = new Utility().GetETId();
             et = new ExaminationTask
             {
                 ET_Id = id,
@@ -1448,7 +1483,7 @@ namespace TimeTaskTestProject
             startTime = new DateTime(1970, 1, 1, now.AddHours(1).Hour, now.Minute, 0);
 
             uet = new UExaminationTask();
-            id = uet.GetId();
+            id = new Utility().GetETId();
             et = new ExaminationTask
             {
                 ET_Id = id,
@@ -1490,7 +1525,7 @@ namespace TimeTaskTestProject
             startTime = new DateTime(1970, 1, 1, now.AddHours(1).Hour, now.Minute, 0);
 
             uet = new UExaminationTask();
-            id = uet.GetId();
+            id = new Utility().GetETId();
             et = new ExaminationTask
             {
                 ET_Id = id,
@@ -1532,7 +1567,7 @@ namespace TimeTaskTestProject
             startTime = new DateTime(1970, 1, 1, now.AddHours(1).Hour, now.Minute, 0);
 
             uet = new UExaminationTask();
-            id = uet.GetId();
+            id = new Utility().GetETId();
             et = new ExaminationTask
             {
                 ET_Id = id,
@@ -1601,7 +1636,7 @@ namespace TimeTaskTestProject
             startTime = new DateTime(1970, 1, 1, now.AddHours(1).Hour, now.Minute, 0);
 
             uet = new UExaminationTask();
-            id = uet.GetId();
+            id = new Utility().GetETId();
             et = new ExaminationTask
             {
                 ET_Id = id,
@@ -1661,7 +1696,7 @@ namespace TimeTaskTestProject
             startTime = new DateTime(1970, 1, 1, now.AddHours(1).Hour, now.Minute, 0);
 
             uet = new UExaminationTask();
-            id = uet.GetId();
+            id = new Utility().GetETId();
             et = new ExaminationTask
             {
                 ET_Id = id,

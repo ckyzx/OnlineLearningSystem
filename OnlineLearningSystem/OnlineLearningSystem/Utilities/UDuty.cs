@@ -54,8 +54,7 @@ namespace OnlineLearningSystem.Utilities
 
                 Int32 id;
 
-                id = olsEni.Duties.Count();
-                id = 0 == id ? 1 : olsEni.Duties.Max(m => m.Du_AutoId) + 1;
+                id = GetDuId();
 
                 model.Du_Id = id;
                 model.Du_Sort = id;

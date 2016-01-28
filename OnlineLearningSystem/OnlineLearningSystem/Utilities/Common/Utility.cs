@@ -60,38 +60,104 @@ namespace OnlineLearningSystem.Utilities
 
         public Int32 GetEPId()
         {
-            Int32 epId;
-
-            epId = olsEni.ExaminationPapers.Count();
-            epId = 0 == epId ? 1 : olsEni.ExaminationPapers.Max(m => m.EP_AutoId) + 1;
-
-            return epId;
+            return GetNewId("ExaminationPapers", "EP_");
         }
 
         public Int32 GetEPQId()
         {
-            Int32 epqId;
-
-            epqId = olsEni.ExaminationPaperQuestions.Count();
-            epqId = 0 == epqId ? 1 : olsEni.ExaminationPaperQuestions.Max(m => m.EPQ_AutoId) + 1;
-
-            return epqId;
+            return GetNewId("ExaminationPaperQuestions", "EPQ_");
         }
 
-        public Int32 GetId(String tableName, String autoIdFieldName)
+        public Int32 GetEPTId()
+        {
+            return GetNewId("ExaminationPaperTemplates", "EPT_");
+        }
+
+        public Int32 GetEPTQId()
+        {
+            return GetNewId("ExaminationPaperTemplateQuestions", "EPTQ_");
+        }
+
+        public Int32 GetDId()
+        {
+            return GetNewId("Departments", "D_");
+        }
+
+        public Int32 GetDuId()
+        {
+            return GetNewId("Duties", "Du_");
+        }
+
+        public Int32 GetETId()
+        {
+            return GetNewId("ExaminationTasks", "ET_");
+        }
+
+        public Int32 GetPCId()
+        {
+            return GetNewId("PermissionCategories", "PC_");
+        }
+
+        public Int32 GetPId()
+        {
+            return GetNewId("Permissions", "P_");
+        }
+
+        public Int32 GetQId()
+        {
+            return GetNewId("Questions", "Q_");
+        }
+
+        public Int32 GetQCId()
+        {
+            return GetNewId("QuestionClassifies", "QC_");
+        }
+
+        public Int32 GetUId()
+        {
+            return GetNewId("Users", "U_");
+        }
+
+        public Int32 GetETTId()
+        {
+            return GetNewId("ExaminationTaskTemplates", "ETT_");
+        }
+
+        public Int32 GetRId()
+        {
+            return GetNewId("Roles", "R_");
+        }
+
+        public Int32 GetNewId(String tableName, String prefix)
         {
 
-            Int32 id;
+            Int32 id, timeout;
             String sql;
 
-            sql = "SELECT COUNT(" + autoIdFieldName + ") FROM " + tableName;
+            sql = "SELECT COUNT(" + prefix + "AutoId) FROM " + tableName;
             id = Convert.ToInt32(olsDbo.ExecuteSqlScalar(sql));
 
             if (0 != id)
             {
-                sql = "SELECT TOP 1 " + autoIdFieldName + " FROM " + tableName + " ORDER BY " + autoIdFieldName + " DESC";
+                sql = "SELECT TOP 1 " + prefix + "AutoId FROM " + tableName + " ORDER BY " + prefix + "AutoId DESC";
                 id = Convert.ToInt32(olsDbo.ExecuteSqlScalar(sql));
+
             }
+
+            // 避免 Id重复
+            timeout = 0;
+            do
+            {
+                id += 1;
+                sql = "SELECT " + prefix + "Id FROM " + tableName + " WHERE " + prefix + "Id = " + id;
+                
+                timeout += 1;
+                if (timeout == 100)
+                {
+                    StaticHelper.RecordSystemLog(SystemLogType.Error, "获取编号时超出循环限制次数", sql);
+                    throw new Exception("获取编号时超出循环限制次数");
+                }
+            } while (null != olsDbo.ExecuteSqlScalar(sql));
 
             return id;
         }

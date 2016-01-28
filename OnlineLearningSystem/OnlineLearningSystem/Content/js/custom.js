@@ -515,7 +515,13 @@ Kyzx.List = {
                 checkbox.checked = false;
             }
         }
+    },
 
+    renderSelectCount: function(container, num){
+
+        container.find('.select-data-item').remove();
+        countSpan = $('<div class="select-data-item mb-10">已选 <span class="select-data-count">' + num + '</span> 条</div>');
+        countSpan.prependTo(container);
     }
 
 };

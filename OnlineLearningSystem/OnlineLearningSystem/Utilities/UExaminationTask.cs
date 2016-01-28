@@ -113,7 +113,7 @@ namespace OnlineLearningSystem.Utilities
 
                 Int32 id;
 
-                id = GetId();
+                id = GetETId();
 
                 model.ET_Id = id;
                 olsEni.ExaminationTasks.Add(model);
@@ -133,39 +133,6 @@ namespace OnlineLearningSystem.Utilities
                 resJson.message = StaticHelper.GetExceptionMessageAndRecord(ex);
                 return resJson;
             }
-        }
-
-        public Int32 GetId()
-        {
-
-            Int32 id;
-
-            id = olsEni.ExaminationTasks.Count();
-            id = 0 == id ? 1 : olsEni.ExaminationTasks.Max(m => m.ET_AutoId) + 1;
-
-            return id;
-        }
-
-        public Int32 GetEPTId()
-        {
-
-            Int32 id;
-
-            id = olsEni.ExaminationPaperTemplates.Count();
-            id = 0 == id ? 1 : olsEni.ExaminationPaperTemplates.Max(m => m.EPT_AutoId) + 1;
-
-            return id;
-        }
-
-        private Int32 GetEPTQId()
-        {
-
-            Int32 id;
-
-            id = olsEni.ExaminationPaperTemplateQuestions.Count();
-            id = 0 == id ? 1 : olsEni.ExaminationPaperTemplateQuestions.Max(m => m.EPTQ_AutoId) + 1;
-
-            return id;
         }
 
         private void AddPaperTemplateAndQuestionTemplate(ExaminationTask model)

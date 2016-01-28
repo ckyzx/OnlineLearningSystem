@@ -62,13 +62,11 @@ namespace OnlineLearningSystem.Utilities
             try
             {
 
-                Int32 rowCount;
                 Int32 id;
 
-                rowCount = olsEni.Roles.Count();
-                id = 0 == rowCount ? 0 : olsEni.Roles.Max(m => m.R_AutoId);
+                id = GetRId();
 
-                model.R_Id = id + 1;
+                model.R_Id = id;
                 olsEni.Roles.Add(model);
                 olsEni.SaveChanges();
 

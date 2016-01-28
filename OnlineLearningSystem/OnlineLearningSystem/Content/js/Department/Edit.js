@@ -1,6 +1,10 @@
 $(function() {
 
-    Kyzx.List.setChecked('.role-table', '#D_Roles');
+    var dRoleSel;
+
+    dRoleSel = '#D_Roles';
+
+    Kyzx.List.setChecked('.role-table', dRoleSel);
 
     // 限制复选框只能单选
     var rTable;
@@ -15,7 +19,14 @@ $(function() {
             Kyzx.List.checkboxClickEvent(this);
         })
         .on('change', ':checkbox', function() {
+
+            var roles;
+
             Kyzx.List.checkboxChangeEvent(this);
+            Kyzx.List.getChecked('.role-table', dRoleSel);
+
+            roles = $(dRoleSel).val();
+            Kyzx.List.renderSelectCount(rTable.parent(), JSON.parse(roles).length);
         });
 	/*----------------------------------------------------------------------*/
 
@@ -26,7 +37,5 @@ $(function() {
             e.preventDefault();
             return;
         }
-
-        Kyzx.List.getChecked('.role-table', '#D_Roles');
     });
 });

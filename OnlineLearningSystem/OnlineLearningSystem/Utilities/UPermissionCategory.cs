@@ -78,13 +78,11 @@ namespace OnlineLearningSystem.Utilities
             {
 
                 DateTime now;
-                Int32 rowCount;
                 Int32 id;
 
                 now = DateTime.Now;
 
-                rowCount = olsEni.PermissionCategories.Count();
-                id = 0 == rowCount ? 1 : olsEni.PermissionCategories.Max(m => m.PC_AutoId) + 1;
+                id = GetPCId();
 
                 model.PC_Id = id;
 
@@ -138,15 +136,13 @@ namespace OnlineLearningSystem.Utilities
         private void UpdatePermission(PermissionCategory model)
         {
 
-            Int32 rowCount;
             Int32 id;
             List<ActionPermission> aps;
             Permission p;
 
             aps = (List<ActionPermission>)JsonConvert.DeserializeObject<List<ActionPermission>>(model.PC_Permissions);
 
-            rowCount = olsEni.Permissions.Count();
-            id = 0 == rowCount ? 1 : olsEni.Permissions.Max(m => m.P_AutoId) + 1;
+            id = GetPId();
 
             foreach (var ap in aps)
             {

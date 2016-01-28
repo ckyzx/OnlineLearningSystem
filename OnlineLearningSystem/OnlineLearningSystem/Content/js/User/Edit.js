@@ -1,12 +1,15 @@
 $(function() {
 
-    var dTableSel, rTableSel;
+    var dTableSel, rTableSel, uDepartmentsSel, uRolesSel;
 
     dTableSel = '.department-table';
     rTableSel = '.role-table';
 
-    Kyzx.List.setChecked(dTableSel, '#U_Departments');
-    Kyzx.List.setChecked(rTableSel, '#U_Roles');
+    uDepartmentsSel = '#U_Departments';
+    uRolesSel = '#U_Roles';
+
+    Kyzx.List.setChecked(dTableSel, uDepartmentsSel);
+    Kyzx.List.setChecked(rTableSel, uRolesSel);
 
     // 限制复选框只能单选
     var dTable, rTable;
@@ -23,14 +26,28 @@ $(function() {
             Kyzx.List.checkboxClickEvent(this);
         })
         .on('change', ':checkbox', function() {
+
+            var deps;
+
             Kyzx.List.checkboxChangeEvent(this);
+            Kyzx.List.getChecked(dTableSel, uDepartmentsSel);
+
+            deps = $(uDepartmentsSel).val();
+            Kyzx.List.renderSelectCount(dTable.parent(), JSON.parse(deps).length);
         });
     rTable
         .on('click', ':checkbox', function() {
             Kyzx.List.checkboxClickEvent(this);
         })
         .on('change', ':checkbox', function() {
+
+            var roles;
+
             Kyzx.List.checkboxChangeEvent(this);
+            Kyzx.List.getChecked(rTableSel, uRolesSel);
+
+            roles = $(uRolesSel).val();
+            Kyzx.List.renderSelectCount(rTable.parent(), JSON.parse(roles).length);
         });
 
     $('form').submit(function(e) {
@@ -44,8 +61,6 @@ $(function() {
             return;
         }
 
-        Kyzx.List.getChecked(dTableSel, '#U_Departments');
-        Kyzx.List.getChecked(rTableSel, '#U_Roles');
 
         psInput = $('#U_Password');
         ps = psInput.val();

@@ -10,6 +10,7 @@ namespace OnlineLearningSystem.Utilities
         Unset = 0,
         Application = 1,
         Notice = 2,
-        Exception =3
+        Exception =3,
+        Error = 4
     }
 }

@@ -60,11 +60,9 @@ namespace OnlineLearningSystem.Utilities
             try
             {
 
-                Int32 rowCount;
                 Int32 id;
 
-                rowCount = olsEni.QuestionClassifies.Count();
-                id = 0 == rowCount ? 1 : olsEni.QuestionClassifies.Max(m => m.QC_AutoId) + 1;
+                id = GetQCId();
 
                 model.QC_Id = id;
                 model.QC_Level = String.Format("{0:D4}", id);

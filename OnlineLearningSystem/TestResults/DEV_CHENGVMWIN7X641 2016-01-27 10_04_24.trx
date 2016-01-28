@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<TestRun id="4392a1c2-fb39-457a-a211-657c9f11bf26" name="DEV@CHENGVMWIN7X641 2016-01-25 15:22:13" runUser="CHENGVMWIN7X641\DEV" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+<TestRun id="0d1c0f28-ab00-4bef-adee-fae091ed549c" name="DEV@CHENGVMWIN7X641 2016-01-27 10:04:24" runUser="CHENGVMWIN7X641\DEV" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
   <TestSettings name="本地" id="fb35cadf-f513-4997-8927-662f65f1d0dd">
     <Description>这些设置为本地测试运行的默认测试设置。</Description>
-    <Deployment enabled="false" runDeploymentRoot="DEV_CHENGVMWIN7X641 2016-01-25 15_22_13">
+    <Deployment enabled="false" runDeploymentRoot="DEV_CHENGVMWIN7X641 2016-01-27 10_04_24">
       <DeploymentItem filename="D:\Cheng\Workspace\OnlineLearningSystem\OnlineLearningSystem\OnlineLearningSystem\Content\lib\ueditor\1.4.3\net\Bin\Newtonsoft.Json.dll" />
       <DeploymentItem filename="D:\Cheng\Workspace\OnlineLearningSystem\OnlineLearningSystem\packages\EntityFramework.4.1.10331.0\lib\EntityFramework.dll" />
       <DeploymentItem filename="D:\Cheng\Workspace\OnlineLearningSystem\OnlineLearningSystem\OnlineLearningSystem\bin\OnlineLearningSystem.dll" />
@@ -13,28 +13,35 @@
       </AgentRule>
     </Execution>
   </TestSettings>
-  <Times creation="2016-01-25T15:22:13.3677052+08:00" queuing="2016-01-25T15:22:13.4227083+08:00" start="2016-01-25T15:22:13.4307088+08:00" finish="2016-01-25T15:23:51.0492923+08:00" />
+  <Times creation="2016-01-27T10:04:24.2567246+08:00" queuing="2016-01-27T10:04:24.3177281+08:00" start="2016-01-27T10:04:24.3257285+08:00" finish="2016-01-27T10:06:23.5385471+08:00" />
   <ResultSummary outcome="Completed">
-    <Counters total="3" executed="3" passed="3" error="0" failed="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
+    <Counters total="4" executed="4" passed="4" error="0" failed="0" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" completed="0" inProgress="0" pending="0" />
   </ResultSummary>
   <TestDefinitions>
     <UnitTest name="ChangeTest1" storage="d:\cheng\workspace\onlinelearningsystem\onlinelearningsystem\timetasktestproject\bin\debug\timetasktestproject.dll" id="79ae84fc-9118-70c4-a07c-5f731bce7e4f">
-      <Execution id="4b4dd674-71ce-4aa0-bb80-dc08a01434cd" />
+      <Execution id="e0326a92-0cb9-42ee-9040-73e4aa51068e" />
       <TestMethod codeBase="D:/Cheng/Workspace/OnlineLearningSystem/OnlineLearningSystem/TimeTaskTestProject/bin/Debug/TimeTaskTestProject.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="TimeTaskTestProject.ChangePaperTemplateStatusTest, TimeTaskTestProject, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="ChangeTest1" />
       <AspNet webSiteUrl="http://localhost:7128/Aspxs/Default.aspx">
         <Host pathToWebApp="D:\Cheng\Workspace\OnlineLearningSystem\OnlineLearningSystem\OnlineLearningSystem" webAppRoot="/" />
       </AspNet>
     </UnitTest>
     <UnitTest name="ChangeTest3" storage="d:\cheng\workspace\onlinelearningsystem\onlinelearningsystem\timetasktestproject\bin\debug\timetasktestproject.dll" id="fb1c8d72-d9d7-a91b-18f5-964be260cc82">
-      <Execution id="8d0eed09-c4f5-446b-a946-ea1fdc583a26" />
+      <Execution id="46310a50-cc10-434e-be40-6b2f1cf8bcba" />
       <TestMethod codeBase="D:/Cheng/Workspace/OnlineLearningSystem/OnlineLearningSystem/TimeTaskTestProject/bin/Debug/TimeTaskTestProject.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="TimeTaskTestProject.ChangePaperTemplateStatusTest, TimeTaskTestProject, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="ChangeTest3" />
       <AspNet webSiteUrl="http://localhost:7128/Aspxs/Default.aspx">
         <Host pathToWebApp="D:\Cheng\Workspace\OnlineLearningSystem\OnlineLearningSystem\OnlineLearningSystem" webAppRoot="/" />
       </AspNet>
     </UnitTest>
     <UnitTest name="ChangeTest2" storage="d:\cheng\workspace\onlinelearningsystem\onlinelearningsystem\timetasktestproject\bin\debug\timetasktestproject.dll" id="12a5b5ca-5fad-a7a1-d175-a54fd204cf1d">
-      <Execution id="d36419fb-852a-4249-a391-106c0a52247a" />
+      <Execution id="9916386e-847f-45d5-bfdc-876ae140c063" />
       <TestMethod codeBase="D:/Cheng/Workspace/OnlineLearningSystem/OnlineLearningSystem/TimeTaskTestProject/bin/Debug/TimeTaskTestProject.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="TimeTaskTestProject.ChangePaperTemplateStatusTest, TimeTaskTestProject, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="ChangeTest2" />
+      <AspNet webSiteUrl="http://localhost:7128/Aspxs/Default.aspx">
+        <Host pathToWebApp="D:\Cheng\Workspace\OnlineLearningSystem\OnlineLearningSystem\OnlineLearningSystem" webAppRoot="/" />
+      </AspNet>
+    </UnitTest>
+    <UnitTest name="ChangeTest" storage="d:\cheng\workspace\onlinelearningsystem\onlinelearningsystem\timetasktestproject\bin\debug\timetasktestproject.dll" id="20adc531-bff2-51ab-a3b6-cc5e6444840d">
+      <Execution id="08ce556b-eed6-43b7-90e2-9ab4f21273e1" />
+      <TestMethod codeBase="D:/Cheng/Workspace/OnlineLearningSystem/OnlineLearningSystem/TimeTaskTestProject/bin/Debug/TimeTaskTestProject.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="TimeTaskTestProject.ChangePaperStatusTest, TimeTaskTestProject, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="ChangeTest" />
       <AspNet webSiteUrl="http://localhost:7128/Aspxs/Default.aspx">
         <Host pathToWebApp="D:\Cheng\Workspace\OnlineLearningSystem\OnlineLearningSystem\OnlineLearningSystem" webAppRoot="/" />
       </AspNet>
@@ -50,31 +57,44 @@
         <TestLink id="79ae84fc-9118-70c4-a07c-5f731bce7e4f" name="ChangeTest1" storage="d:\cheng\workspace\onlinelearningsystem\onlinelearningsystem\timetasktestproject\bin\debug\timetasktestproject.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
       </TestLinks>
     </TestList>
+    <TestList name="ChangePaperStatusTest" id="40a6b4e8-faa4-48ff-b4a7-5a05fc8022e0" parentListId="8c43106b-9dc1-4907-a29f-aa66a61bf5b6">
+      <TestLinks>
+        <TestLink id="20adc531-bff2-51ab-a3b6-cc5e6444840d" name="ChangeTest" storage="d:\cheng\workspace\onlinelearningsystem\onlinelearningsystem\timetasktestproject\bin\debug\timetasktestproject.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+      </TestLinks>
+    </TestList>
   </TestLists>
   <TestEntries>
-    <TestEntry testId="12a5b5ca-5fad-a7a1-d175-a54fd204cf1d" executionId="d36419fb-852a-4249-a391-106c0a52247a" testListId="d0bec498-8504-4422-a04a-3f5b53165dba" />
-    <TestEntry testId="fb1c8d72-d9d7-a91b-18f5-964be260cc82" executionId="8d0eed09-c4f5-446b-a946-ea1fdc583a26" testListId="d0bec498-8504-4422-a04a-3f5b53165dba" />
-    <TestEntry testId="79ae84fc-9118-70c4-a07c-5f731bce7e4f" executionId="4b4dd674-71ce-4aa0-bb80-dc08a01434cd" testListId="d0bec498-8504-4422-a04a-3f5b53165dba" />
+    <TestEntry testId="12a5b5ca-5fad-a7a1-d175-a54fd204cf1d" executionId="9916386e-847f-45d5-bfdc-876ae140c063" testListId="d0bec498-8504-4422-a04a-3f5b53165dba" />
+    <TestEntry testId="fb1c8d72-d9d7-a91b-18f5-964be260cc82" executionId="46310a50-cc10-434e-be40-6b2f1cf8bcba" testListId="d0bec498-8504-4422-a04a-3f5b53165dba" />
+    <TestEntry testId="79ae84fc-9118-70c4-a07c-5f731bce7e4f" executionId="e0326a92-0cb9-42ee-9040-73e4aa51068e" testListId="d0bec498-8504-4422-a04a-3f5b53165dba" />
+    <TestEntry testId="20adc531-bff2-51ab-a3b6-cc5e6444840d" executionId="08ce556b-eed6-43b7-90e2-9ab4f21273e1" testListId="40a6b4e8-faa4-48ff-b4a7-5a05fc8022e0" />
   </TestEntries>
   <Results>
-    <UnitTestResult executionId="d36419fb-852a-4249-a391-106c0a52247a" testId="12a5b5ca-5fad-a7a1-d175-a54fd204cf1d" testName="ChangeTest2" computerName="CHENGVMWIN7X641" duration="00:00:11.1872820" startTime="2016-01-25T15:22:13.4347090+08:00" endTime="2016-01-25T15:22:25.1863812+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="d0bec498-8504-4422-a04a-3f5b53165dba" relativeResultsDirectory="d36419fb-852a-4249-a391-106c0a52247a">
+    <UnitTestResult executionId="9916386e-847f-45d5-bfdc-876ae140c063" testId="12a5b5ca-5fad-a7a1-d175-a54fd204cf1d" testName="ChangeTest2" computerName="CHENGVMWIN7X641" duration="00:00:12.8660263" startTime="2016-01-27T10:04:24.3377292+08:00" endTime="2016-01-27T10:04:39.5055968+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="d0bec498-8504-4422-a04a-3f5b53165dba" relativeResultsDirectory="9916386e-847f-45d5-bfdc-876ae140c063">
       <Output>
         <DebugTrace>“清除考试任务”操作返回 0 。
 “清除考试任务”操作返回 17 。
 </DebugTrace>
       </Output>
     </UnitTestResult>
-    <UnitTestResult executionId="8d0eed09-c4f5-446b-a946-ea1fdc583a26" testId="fb1c8d72-d9d7-a91b-18f5-964be260cc82" testName="ChangeTest3" computerName="CHENGVMWIN7X641" duration="00:01:15.2572215" startTime="2016-01-25T15:22:25.1873812+08:00" endTime="2016-01-25T15:23:40.4806878+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="d0bec498-8504-4422-a04a-3f5b53165dba" relativeResultsDirectory="8d0eed09-c4f5-446b-a946-ea1fdc583a26">
+    <UnitTestResult executionId="46310a50-cc10-434e-be40-6b2f1cf8bcba" testId="fb1c8d72-d9d7-a91b-18f5-964be260cc82" testName="ChangeTest3" computerName="CHENGVMWIN7X641" duration="00:01:18.4945007" startTime="2016-01-27T10:04:39.5075969+08:00" endTime="2016-01-27T10:06:00.3042182+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="d0bec498-8504-4422-a04a-3f5b53165dba" relativeResultsDirectory="46310a50-cc10-434e-be40-6b2f1cf8bcba">
       <Output>
         <DebugTrace>“清除考试任务”操作返回 0 。
 “清除考试任务”操作返回 17 。
 </DebugTrace>
       </Output>
     </UnitTestResult>
-    <UnitTestResult executionId="4b4dd674-71ce-4aa0-bb80-dc08a01434cd" testId="79ae84fc-9118-70c4-a07c-5f731bce7e4f" testName="ChangeTest1" computerName="CHENGVMWIN7X641" duration="00:00:10.4662077" startTime="2016-01-25T15:23:40.4926884+08:00" endTime="2016-01-25T15:23:51.0192905+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="d0bec498-8504-4422-a04a-3f5b53165dba" relativeResultsDirectory="4b4dd674-71ce-4aa0-bb80-dc08a01434cd">
+    <UnitTestResult executionId="e0326a92-0cb9-42ee-9040-73e4aa51068e" testId="79ae84fc-9118-70c4-a07c-5f731bce7e4f" testName="ChangeTest1" computerName="CHENGVMWIN7X641" duration="00:00:11.5296289" startTime="2016-01-27T10:06:00.3172189+08:00" endTime="2016-01-27T10:06:11.9808860+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="d0bec498-8504-4422-a04a-3f5b53165dba" relativeResultsDirectory="e0326a92-0cb9-42ee-9040-73e4aa51068e">
       <Output>
         <DebugTrace>“清除考试任务”操作返回 0 。
 “清除考试任务”操作返回 34 。
+</DebugTrace>
+      </Output>
+    </UnitTestResult>
+    <UnitTestResult executionId="08ce556b-eed6-43b7-90e2-9ab4f21273e1" testId="20adc531-bff2-51ab-a3b6-cc5e6444840d" testName="ChangeTest" computerName="CHENGVMWIN7X641" duration="00:00:11.4654445" startTime="2016-01-27T10:06:11.9828862+08:00" endTime="2016-01-27T10:06:23.5255464+08:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Passed" testListId="40a6b4e8-faa4-48ff-b4a7-5a05fc8022e0" relativeResultsDirectory="08ce556b-eed6-43b7-90e2-9ab4f21273e1">
+      <Output>
+        <DebugTrace>“清除考试任务”操作返回 0 。
+“清除考试任务”操作返回 41 。
 </DebugTrace>
       </Output>
     </UnitTestResult>

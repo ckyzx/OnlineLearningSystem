@@ -1,13 +1,23 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <TestLists xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <TestList name="ChangePaperStatusTest" id="40a6b4e8-faa4-48ff-b4a7-5a05fc8022e0" parentListId="8c43106b-9dc1-4907-a29f-aa66a61bf5b6">
+    <TestLinks>
+      <TestLink id="20adc531-bff2-51ab-a3b6-cc5e6444840d" name="ChangeTest" storage="timetasktestproject\bin\debug\timetasktestproject.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    </TestLinks>
+  </TestList>
   <TestList name="测试列表" id="8c43106b-9dc1-4907-a29f-aa66a61bf5b6">
     <RunConfiguration id="fb35cadf-f513-4997-8927-662f65f1d0dd" name="本地" storage="local.testsettings" type="Microsoft.VisualStudio.TestTools.Common.TestRunConfiguration, Microsoft.VisualStudio.QualityTools.Common, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   </TestList>
+  <TestList name="StaticHelperTest" id="c99f4df9-b38b-4b4c-b0b6-807319378754" parentListId="8c43106b-9dc1-4907-a29f-aa66a61bf5b6">
+    <TestLinks>
+      <TestLink id="0ee2da42-0c4f-06ee-3740-45387acc80af" name="GetExceptionMessageTest" storage="timetasktestproject\bin\debug\timetasktestproject.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    </TestLinks>
+  </TestList>
   <TestList name="ChangePaperTemplateStatusTest" id="d0bec498-8504-4422-a04a-3f5b53165dba" parentListId="8c43106b-9dc1-4907-a29f-aa66a61bf5b6">
     <TestLinks>
-      <TestLink id="12a5b5ca-5fad-a7a1-d175-a54fd204cf1d" name="ChangeTest2" storage="timetasktestproject\bin\debug\timetasktestproject.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-      <TestLink id="fb1c8d72-d9d7-a91b-18f5-964be260cc82" name="ChangeTest3" storage="timetasktestproject\bin\debug\timetasktestproject.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
       <TestLink id="79ae84fc-9118-70c4-a07c-5f731bce7e4f" name="ChangeTest1" storage="timetasktestproject\bin\debug\timetasktestproject.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+      <TestLink id="fb1c8d72-d9d7-a91b-18f5-964be260cc82" name="ChangeTest3" storage="timetasktestproject\bin\debug\timetasktestproject.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+      <TestLink id="12a5b5ca-5fad-a7a1-d175-a54fd204cf1d" name="ChangeTest2" storage="timetasktestproject\bin\debug\timetasktestproject.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     </TestLinks>
   </TestList>
   <TestList name="GeneratePaperTemplateTest" id="d706afe2-eed9-40f5-bc01-6b93866f5223" parentListId="8c43106b-9dc1-4907-a29f-aa66a61bf5b6">

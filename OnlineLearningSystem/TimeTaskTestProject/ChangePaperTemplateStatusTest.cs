@@ -109,7 +109,7 @@ namespace TimeTaskTestProject
             uet = new UExaminationTask();
 
             startTime = new DateTime(1970, 1, 1, now.AddHours(1).Hour, now.Minute, 0);
-            id = uet.GetId();
+            id = new Utility().GetETId();
             et = new ExaminationTask
             {
                 ET_Id = id,
@@ -232,7 +232,7 @@ namespace TimeTaskTestProject
             uet = new UExaminationTask();
 
             startTime = new DateTime(1970, 1, 1, now.Hour, now.Minute, now.AddSeconds(5).Second);
-            id = uet.GetId();
+            id = new Utility().GetETId();
             et = new ExaminationTask
             {
                 ET_Id = id,
@@ -316,7 +316,7 @@ namespace TimeTaskTestProject
             uet = new UExaminationTask();
 
             startTime = new DateTime(1970, 1, 1, now.Hour, now.Minute, now.AddSeconds(5).Second);
-            id = uet.GetId();
+            id = new Utility().GetETId();
             et = new ExaminationTask
             {
                 ET_Id = id,

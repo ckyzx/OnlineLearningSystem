@@ -64,10 +64,9 @@ namespace OnlineLearningSystem.Utilities
 
                 Int32 id;
 
-                id = olsEni.Departments.Count();
-                id = 1 == id ? 1 : olsEni.Departments.Max(m => m.D_AutoId) + 1;
+                id = GetDId();
 
-                model.D_Id = id + 1;
+                model.D_Id = id;
                 model.D_Sort = id;
 
                 if (null == model.D_Level)
