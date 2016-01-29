@@ -33,5 +33,8 @@ namespace OnlineLearningSystem
         public DbSet<Department_Role> Department_Role { get; set; }
 
         public DbSet<SystemLog> SystemLogs { get; set; }
+
+        public DbSet<LearningDataCategory> LearningDataCategories { get; set; }
+        public DbSet<LearningData> LearningDatas { get; set; }
     }
 }

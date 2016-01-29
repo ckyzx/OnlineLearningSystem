@@ -1,6 +1,6 @@
 /*==============================================================*/
 /* DBMS name:      Microsoft SQL Server 2008                    */
-/* Created on:     2016/1/27 11:49:39                           */
+/* Created on:     2016/1/29 15:58:20                           */
 /*==============================================================*/
 
 
@@ -220,9 +220,9 @@ go
 
 if exists (select 1
             from  sysobjects
-           where  id = object_id('LearningDataClassify')
+           where  id = object_id('LearningDataCategories')
             and   type = 'U')
-   drop table LearningDataClassify
+   drop table LearningDataCategories
 go
 
 if exists (select 1
@@ -856,15 +856,17 @@ ET_Name ASC
 go
 
 /*==============================================================*/
-/* Table: LearningDataClassify                                  */
+/* Table: LearningDataCategories                                */
 /*==============================================================*/
-create table LearningDataClassify (
-   LDC_Id               int                  identity,
-   LDC_AutoId           int                  not null,
+create table LearningDataCategories (
+   LDC_Id               int                  not null,
+   LDC_AutoId           int                  identity,
    LDC_Name             varchar(200)         not null,
    LDC_Remark           varchar(200)         null,
    LDC_AddTime          datetime2            not null,
-   constraint PK_LEARNINGDATACLASSIFY primary key (LDC_Id)
+   LDC_Status           tinyint              not null,
+   LDC_Sort             float                not null,
+   constraint PK_LEARNINGDATACATEGORIES primary key (LDC_Id)
 )
 go
 
@@ -879,6 +881,8 @@ create table LearningDatas (
    LD_Content           text                 not null,
    LD_Remark            varchar(200)         null,
    LD_AddTime           datetime2            not null,
+   LD_Status            tinyint              not null,
+   LD_Sort              float                not null,
    constraint PK_LEARNINGDATAS primary key (LD_Id)
 )
 go
@@ -1194,7 +1198,7 @@ go
 
 alter table LearningDatas
    add constraint FK_LD_LDC foreign key (LDC_Id)
-      references LearningDataClassify (LDC_Id)
+      references LearningDataCategories (LDC_Id)
 go
 
 alter table Permissions

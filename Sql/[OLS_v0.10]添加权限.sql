@@ -3,7 +3,6 @@ USE OLS;
 GO
 
 /* 添加“系统日志”角色权限 */
-
 /*-- 添加权限目录
 SET IDENTITY_INSERT dbo.PermissionCategories ON
 
@@ -85,43 +84,580 @@ INSERT  [dbo].[Role_Permission]
 GO*/
 
 /* 添加“查询考试任务”权限 */
---SET IDENTITY_INSERT [dbo].[Permissions] ON
+/*-- 添加权限值
+SET IDENTITY_INSERT [dbo].[Permissions] ON
 
---INSERT  [dbo].[Permissions]
---        ( P_Id ,
---          P_AutoId ,
---          PC_Id ,
---          P_Name ,
---          P_Controller ,
---          P_Action ,
---          P_Remark ,
---          P_AddTime
---        )
---VALUES  ( 135 ,
---          135 ,
---          9 ,
---          N'查询考试任务' ,
---          N'ExaminationTask' ,
---          N'ListDataTablesAjaxByMode' ,
---          NULL ,
---          CAST(0x079DAEB04D8BAB3A0B AS DATETIME2)
---        )
+INSERT  [dbo].[Permissions]
+        ( P_Id ,
+          P_AutoId ,
+          PC_Id ,
+          P_Name ,
+          P_Controller ,
+          P_Action ,
+          P_Remark ,
+          P_AddTime
+        )
+VALUES  ( 135 ,
+          135 ,
+          9 ,
+          N'查询考试任务' ,
+          N'ExaminationTask' ,
+          N'ListDataTablesAjaxByMode' ,
+          NULL ,
+          CAST(0x079DAEB04D8BAB3A0B AS DATETIME2)
+        )
                 
---SET IDENTITY_INSERT [dbo].[Permissions] OFF
+SET IDENTITY_INSERT [dbo].[Permissions] OFF
 
---GO
+GO
 
 -- 添加关联记录
 INSERT  [dbo].[Role_Permission]
         SELECT  1 ,
                 135
 
+GO*/
+
+/* 添加“资料目录”权限 */
+-- 添加权限目录
+SET IDENTITY_INSERT dbo.PermissionCategories ON
+
+INSERT  INTO PermissionCategories
+        ( PC_Id ,
+          PC_AutoId ,
+          PC_Name ,
+          PC_Level ,
+          PC_Remark ,
+          PC_AddTime ,
+          PC_Status
+        )
+VALUES  ( 13 ,
+          13 ,
+          '资料库管理' ,
+          '0013' ,
+          NULL ,
+          CAST(0x079DAEB04D8BAB3A0B AS DATETIME2) ,
+          1
+        )
+
+SET IDENTITY_INSERT dbo.PermissionCategories OFF
+
+-- 添加权限值
+SET IDENTITY_INSERT [dbo].[Permissions] ON
+
+INSERT  INTO [dbo].[Permissions]
+        ( P_Id ,
+          P_AutoId ,
+          PC_Id ,
+          P_Name ,
+          P_Controller ,
+          P_Action ,
+          P_Remark ,
+          P_AddTime
+        )
+VALUES  ( 136 ,
+          136 ,
+          13 ,
+          N'资料目录列表' ,
+          N'LearningDataCategory' ,
+          N'List' ,
+          NULL ,
+          CAST(0x079DAEB04D8BAB3A0B AS DATETIME2)
+        )
+
+INSERT  INTO [dbo].[Permissions]
+        ( P_Id ,
+          P_AutoId ,
+          PC_Id ,
+          P_Name ,
+          P_Controller ,
+          P_Action ,
+          P_Remark ,
+          P_AddTime
+        )
+VALUES  ( 137 ,
+          137 ,
+          13 ,
+          N'查询资料目录' ,
+          N'LearningDataCategory' ,
+          N'ListDataTablesAjax' ,
+          NULL ,
+          CAST(0x079DAEB04D8BAB3A0B AS DATETIME2)
+        )
+
+INSERT  INTO [dbo].[Permissions]
+        ( P_Id ,
+          P_AutoId ,
+          PC_Id ,
+          P_Name ,
+          P_Controller ,
+          P_Action ,
+          P_Remark ,
+          P_AddTime
+        )
+VALUES  ( 138 ,
+          138 ,
+          13 ,
+          '新建资料目录' ,
+          'LearningDataCategory' ,
+          'Create' ,
+          NULL ,
+          CAST(0x079DAEB04D8BAB3A0B AS DATETIME2)
+        )
+INSERT  INTO [dbo].[Permissions]
+        ( P_Id ,
+          P_AutoId ,
+          PC_Id ,
+          P_Name ,
+          P_Controller ,
+          P_Action ,
+          P_Remark ,
+          P_AddTime
+        )
+VALUES  ( 139 ,
+          139 ,
+          13 ,
+          '添加资料目录' ,
+          'LearningDataCategory' ,
+          'Create' ,
+          NULL ,
+          CAST(0x079DAEB04D8BAB3A0B AS DATETIME2)
+        )
+INSERT  INTO [dbo].[Permissions]
+        ( P_Id ,
+          P_AutoId ,
+          PC_Id ,
+          P_Name ,
+          P_Controller ,
+          P_Action ,
+          P_Remark ,
+          P_AddTime
+        )
+VALUES  ( 140 ,
+          140 ,
+          13 ,
+          '查看资料目录' ,
+          'LearningDataCategory' ,
+          'Edit' ,
+          NULL ,
+          CAST(0x079DAEB04D8BAB3A0B AS DATETIME2)
+        )
+INSERT  INTO [dbo].[Permissions]
+        ( P_Id ,
+          P_AutoId ,
+          PC_Id ,
+          P_Name ,
+          P_Controller ,
+          P_Action ,
+          P_Remark ,
+          P_AddTime
+        )
+VALUES  ( 141 ,
+          141 ,
+          13 ,
+          '修改资料目录' ,
+          'LearningDataCategory' ,
+          'Edit' ,
+          NULL ,
+          CAST(0x079DAEB04D8BAB3A0B AS DATETIME2)
+        )
+INSERT  INTO [dbo].[Permissions]
+        ( P_Id ,
+          P_AutoId ,
+          PC_Id ,
+          P_Name ,
+          P_Controller ,
+          P_Action ,
+          P_Remark ,
+          P_AddTime
+        )
+VALUES  ( 142 ,
+          142 ,
+          13 ,
+          '回收资料目录' ,
+          'LearningDataCategory' ,
+          'Recycle' ,
+          NULL ,
+          CAST(0x079DAEB04D8BAB3A0B AS DATETIME2)
+        )
+INSERT  INTO [dbo].[Permissions]
+        ( P_Id ,
+          P_AutoId ,
+          PC_Id ,
+          P_Name ,
+          P_Controller ,
+          P_Action ,
+          P_Remark ,
+          P_AddTime
+        )
+VALUES  ( 143 ,
+          143 ,
+          13 ,
+          '恢复资料目录' ,
+          'LearningDataCategory' ,
+          'Resume' ,
+          NULL ,
+          CAST(0x079DAEB04D8BAB3A0B AS DATETIME2)
+        )
+INSERT  INTO [dbo].[Permissions]
+        ( P_Id ,
+          P_AutoId ,
+          PC_Id ,
+          P_Name ,
+          P_Controller ,
+          P_Action ,
+          P_Remark ,
+          P_AddTime
+        )
+VALUES  ( 144 ,
+          144 ,
+          13 ,
+          '删除资料目录' ,
+          'LearningDataCategory' ,
+          'Delete' ,
+          NULL ,
+          CAST(0x079DAEB04D8BAB3A0B AS DATETIME2)
+        )
+
+INSERT  INTO [dbo].[Permissions]
+        ( P_Id ,
+          P_AutoId ,
+          PC_Id ,
+          P_Name ,
+          P_Controller ,
+          P_Action ,
+          P_Remark ,
+          P_AddTime
+        )
+VALUES  ( 145 ,
+          145 ,
+          13 ,
+          '检查资料目录名称' ,
+          'LearningDataCategory' ,
+          'DuplicateName' ,
+          NULL ,
+          CAST(0x079DAEB04D8BAB3A0B AS DATETIME2)
+        )
+
+INSERT  INTO [dbo].[Permissions]
+        ( P_Id ,
+          P_AutoId ,
+          PC_Id ,
+          P_Name ,
+          P_Controller ,
+          P_Action ,
+          P_Remark ,
+          P_AddTime
+        )
+VALUES  ( 146 ,
+          146 ,
+          13 ,
+          '资料目录排序' ,
+          'LearningDataCategory' ,
+          'Sort' ,
+          NULL ,
+          CAST(0x079DAEB04D8BAB3A0B AS DATETIME2)
+        )
+
+SET IDENTITY_INSERT [dbo].[Permissions] OFF
+
+GO
+
+-- 添加关联记录
+DELETE  FROM dbo.Role_Permission
+WHERE   R_Id = 1;
+INSERT  [dbo].[Role_Permission]
+        SELECT  1 ,
+                P_Id
+        FROM    dbo.[Permissions]
+
+GO
+
+/* 添加“资料”权限 */
+-- 添加权限值
+SET IDENTITY_INSERT [dbo].[Permissions] ON
+
+INSERT  INTO [dbo].[Permissions]
+        ( P_Id ,
+          P_AutoId ,
+          PC_Id ,
+          P_Name ,
+          P_Controller ,
+          P_Action ,
+          P_Remark ,
+          P_AddTime
+        )
+VALUES  ( 147 ,
+          147 ,
+          13 ,
+          N'资料列表' ,
+          N'LearningData' ,
+          N'List' ,
+          NULL ,
+          CAST(0x079DAEB04D8BAB3A0B AS DATETIME2)
+        )
+
+INSERT  INTO [dbo].[Permissions]
+        ( P_Id ,
+          P_AutoId ,
+          PC_Id ,
+          P_Name ,
+          P_Controller ,
+          P_Action ,
+          P_Remark ,
+          P_AddTime
+        )
+VALUES  ( 148 ,
+          148 ,
+          13 ,
+          N'查询资料' ,
+          N'LearningData' ,
+          N'ListDataTablesAjax' ,
+          NULL ,
+          CAST(0x079DAEB04D8BAB3A0B AS DATETIME2)
+        )
+
+INSERT  INTO [dbo].[Permissions]
+        ( P_Id ,
+          P_AutoId ,
+          PC_Id ,
+          P_Name ,
+          P_Controller ,
+          P_Action ,
+          P_Remark ,
+          P_AddTime
+        )
+VALUES  ( 149 ,
+          149 ,
+          13 ,
+          '新建资料' ,
+          'LearningData' ,
+          'Create' ,
+          NULL ,
+          CAST(0x079DAEB04D8BAB3A0B AS DATETIME2)
+        )
+INSERT  INTO [dbo].[Permissions]
+        ( P_Id ,
+          P_AutoId ,
+          PC_Id ,
+          P_Name ,
+          P_Controller ,
+          P_Action ,
+          P_Remark ,
+          P_AddTime
+        )
+VALUES  ( 150 ,
+          150 ,
+          13 ,
+          '添加资料' ,
+          'LearningData' ,
+          'Create' ,
+          NULL ,
+          CAST(0x079DAEB04D8BAB3A0B AS DATETIME2)
+        )
+INSERT  INTO [dbo].[Permissions]
+        ( P_Id ,
+          P_AutoId ,
+          PC_Id ,
+          P_Name ,
+          P_Controller ,
+          P_Action ,
+          P_Remark ,
+          P_AddTime
+        )
+VALUES  ( 151 ,
+          151 ,
+          13 ,
+          '查看资料' ,
+          'LearningData' ,
+          'Edit' ,
+          NULL ,
+          CAST(0x079DAEB04D8BAB3A0B AS DATETIME2)
+        )
+INSERT  INTO [dbo].[Permissions]
+        ( P_Id ,
+          P_AutoId ,
+          PC_Id ,
+          P_Name ,
+          P_Controller ,
+          P_Action ,
+          P_Remark ,
+          P_AddTime
+        )
+VALUES  ( 152 ,
+          152 ,
+          13 ,
+          '修改资料' ,
+          'LearningData' ,
+          'Edit' ,
+          NULL ,
+          CAST(0x079DAEB04D8BAB3A0B AS DATETIME2)
+        )
+INSERT  INTO [dbo].[Permissions]
+        ( P_Id ,
+          P_AutoId ,
+          PC_Id ,
+          P_Name ,
+          P_Controller ,
+          P_Action ,
+          P_Remark ,
+          P_AddTime
+        )
+VALUES  ( 153 ,
+          153 ,
+          13 ,
+          '回收资料' ,
+          'LearningData' ,
+          'Recycle' ,
+          NULL ,
+          CAST(0x079DAEB04D8BAB3A0B AS DATETIME2)
+        )
+INSERT  INTO [dbo].[Permissions]
+        ( P_Id ,
+          P_AutoId ,
+          PC_Id ,
+          P_Name ,
+          P_Controller ,
+          P_Action ,
+          P_Remark ,
+          P_AddTime
+        )
+VALUES  ( 154 ,
+          154 ,
+          13 ,
+          '恢复资料' ,
+          'LearningData' ,
+          'Resume' ,
+          NULL ,
+          CAST(0x079DAEB04D8BAB3A0B AS DATETIME2)
+        )
+INSERT  INTO [dbo].[Permissions]
+        ( P_Id ,
+          P_AutoId ,
+          PC_Id ,
+          P_Name ,
+          P_Controller ,
+          P_Action ,
+          P_Remark ,
+          P_AddTime
+        )
+VALUES  ( 155 ,
+          155 ,
+          13 ,
+          '删除资料' ,
+          'LearningData' ,
+          'Delete' ,
+          NULL ,
+          CAST(0x079DAEB04D8BAB3A0B AS DATETIME2)
+        )
+
+INSERT  INTO [dbo].[Permissions]
+        ( P_Id ,
+          P_AutoId ,
+          PC_Id ,
+          P_Name ,
+          P_Controller ,
+          P_Action ,
+          P_Remark ,
+          P_AddTime
+        )
+VALUES  ( 156 ,
+          156 ,
+          13 ,
+          '检查资料标题' ,
+          'LearningData' ,
+          'DuplicateName' ,
+          NULL ,
+          CAST(0x079DAEB04D8BAB3A0B AS DATETIME2)
+        )
+
+INSERT  INTO [dbo].[Permissions]
+        ( P_Id ,
+          P_AutoId ,
+          PC_Id ,
+          P_Name ,
+          P_Controller ,
+          P_Action ,
+          P_Remark ,
+          P_AddTime
+        )
+VALUES  ( 157 ,
+          157 ,
+          13 ,
+          '资料排序' ,
+          'LearningData' ,
+          'Sort' ,
+          NULL ,
+          CAST(0x079DAEB04D8BAB3A0B AS DATETIME2)
+        )
+
+SET IDENTITY_INSERT [dbo].[Permissions] OFF
+
+GO
+
+-- 添加关联记录
+DELETE  FROM dbo.Role_Permission
+WHERE   R_Id = 1;
+INSERT  [dbo].[Role_Permission]
+        SELECT  1 ,
+                P_Id
+        FROM    dbo.[Permissions]
+
 GO
 
 -- 更新角色记录
---UPDATE  Roles
---SET     R_Permissions = '[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,135]' ,
---        R_PermissionCategories = '[1,2,3,4,5,6,7,8,9,10,11,12]'
---WHERE   R_Id = 1
+DECLARE @table TABLE ( PC_Id INT );
+DECLARE @table1 TABLE ( P_Id INT );
+DECLARE @pcs VARCHAR(500) ,
+    @ps VARCHAR(2000);
+DECLARE @id INT;
 
---GO
+SET @pcs = '';
+SET @ps = '';
+
+INSERT  INTO @table
+        SELECT  PC_Id
+        FROM    dbo.PermissionCategories
+        ORDER BY PC_Id ASC;
+
+WHILE ( SELECT  COUNT(PC_Id)
+        FROM    @table
+      ) > 0 
+    BEGIN
+        SELECT TOP 1
+                @id = PC_Id
+        FROM    @table
+        ORDER BY PC_Id ASC;
+        DELETE  FROM @table
+        WHERE   PC_Id = @id;
+        SET @pcs = @pcs + CAST(@id AS VARCHAR(5)) + ',';
+    END
+
+SET @pcs = '[' + STUFF(@pcs, LEN(@pcs), 1, ']');
+
+INSERT  INTO @table1
+        SELECT  P_Id
+        FROM    dbo.[Permissions]
+        ORDER BY P_Id ASC
+
+WHILE ( SELECT  COUNT(P_Id)
+        FROM    @table1
+      ) > 0 
+    BEGIN
+        SELECT TOP 1
+                @id = P_Id
+        FROM    @table1
+        ORDER BY P_Id ASC;
+        DELETE  FROM @table1
+        WHERE   P_Id = @id;
+        SET @ps = @ps + CAST(@id AS VARCHAR(5)) + ',';
+    END
+
+SET @ps = '[' + STUFF(@ps, LEN(@ps), 1, ']');
+
+UPDATE  Roles
+SET     R_Permissions = @ps ,
+        R_PermissionCategories = @pcs
+WHERE   R_Id = 1
+
+GO

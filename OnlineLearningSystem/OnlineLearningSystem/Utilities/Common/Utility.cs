@@ -128,6 +128,16 @@ namespace OnlineLearningSystem.Utilities
             return GetNewId("Roles", "R_");
         }
 
+        public Int32 GetLDCId()
+        {
+            return GetNewId("LearningDataCategories", "LDC_");
+        }
+
+        public Int32 GetLDId()
+        {
+            return GetNewId("LearningDatas", "LD_");
+        }
+
         public Int32 GetNewId(String tableName, String prefix)
         {
 

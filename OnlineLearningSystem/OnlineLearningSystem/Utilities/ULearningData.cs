@@ -1,64 +1,66 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Data;
+using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using OnlineLearningSystem.Models;
 
 namespace OnlineLearningSystem.Utilities
 {
-    public class UDuty : Utility
+    public class ULearningData : Utility
     {
+
         public DataTablesResponse ListDataTablesAjax(DataTablesRequest dtRequest)
         {
 
             DataTablesResponse dtResponse;
-            UModel<Duty> umodel;
+            UModel<LearningData> umodel;
 
-            umodel = new UModel<Duty>(dtRequest, "Duties", "Du_Id");
-            dtResponse = umodel.GetList("Du_Status", "Du_Sort");
+            umodel = new UModel<LearningData>(dtRequest, "LearningDatas", "LD_Id");
+            dtResponse = umodel.GetList("LD_Status", "LD_Sort");
 
             return dtResponse;
         }
 
-        public Duty GetNew()
+        public LearningData GetNew()
         {
 
-            Duty model;
+            LearningData model;
 
-            model = new Duty()
+            model = new LearningData()
             {
-                Du_Name = "",
-                Du_Remark = "",
-                Du_AddTime = DateTime.Now,
-                Du_Status = (Byte)Status.Available
+                LD_Title = "",
+                LD_Content = "",
+                LD_Remark = "",
+                LD_AddTime = DateTime.Now,
+                LD_Status = (Byte)Status.Available
             };
 
             return model;
         }
 
-        public Duty Get(Int32 id)
+        public LearningData Get(Int32 id)
         {
-            Duty model;
+            LearningData model;
 
-            model = olsEni.Duties.Single(m => m.Du_Id == id && m.Du_Status == (Byte)Status.Available);
+            model = olsEni.LearningDatas.Single(m => m.LD_Id == id && m.LD_Status == (Byte)Status.Available);
 
             return model;
         }
 
-        public Boolean Create(Duty model)
+        public Boolean Create(LearningData model)
         {
             try
             {
 
                 Int32 id;
 
-                id = GetDuId();
+                id = GetLDId();
 
-                model.Du_Id = id;
-                model.Du_Sort = id;
-                olsEni.Duties.Add(model);
+                model.LD_Id = id;
+                model.LD_Sort = id;
+                olsEni.LearningDatas.Add(model);
                 olsEni.SaveChanges();
 
                 return true;
@@ -70,7 +72,7 @@ namespace OnlineLearningSystem.Utilities
             }
         }
 
-        public Boolean Edit(Duty model)
+        public Boolean Edit(LearningData model)
         {
             try
             {
@@ -113,9 +115,9 @@ namespace OnlineLearningSystem.Utilities
 
             try
             {
-                Duty model;
+                LearningData model;
 
-                model = olsEni.Duties.SingleOrDefault(m => m.Du_Id == id);
+                model = olsEni.LearningDatas.SingleOrDefault(m => m.LD_Id == id);
 
                 if (null == model)
                 {
@@ -123,7 +125,7 @@ namespace OnlineLearningSystem.Utilities
                     return resJson;
                 }
 
-                model.Du_Status = (Byte)status;
+                model.LD_Status = (Byte)status;
                 olsEni.Entry(model).State = EntityState.Modified;
                 olsEni.SaveChanges();
 
@@ -146,7 +148,7 @@ namespace OnlineLearningSystem.Utilities
 
                 Int32 count;
 
-                count = olsEni.Duties.Where(m => m.Du_Id != id && m.Du_Name == name).Count();
+                count = olsEni.LearningDatas.Where(m => m.LD_Id != id && m.LD_Title == name).Count();
 
                 if (count > 0)
                 {
@@ -174,22 +176,22 @@ namespace OnlineLearningSystem.Utilities
 
                 String name;
                 Double originSort, destSort;
-                Duty originModel, destModel, adjustModel;
-                Duty[] modelAry;
-                List<Duty> us;
+                LearningData originModel, destModel, adjustModel;
+                LearningData[] modelAry;
+                List<LearningData> us;
 
-                name = "职务";
-                modelAry = new Duty[2];
+                name = "资料";
+                modelAry = new LearningData[2];
 
-                originModel = olsEni.Duties.Single(m => m.Du_Id == originId);
-                originSort = originModel.Du_Sort;
+                originModel = olsEni.LearningDatas.Single(m => m.LD_Id == originId);
+                originSort = originModel.LD_Sort;
 
                 // 置顶
                 if (1 == sortFlag)
                 {
 
-                    destSort = olsEni.Duties.Min(m => m.Du_Sort);
-                    destModel = olsEni.Duties.Single(m => m.Du_Sort == destSort);
+                    destSort = olsEni.LearningDatas.Min(m => m.LD_Sort);
+                    destModel = olsEni.LearningDatas.Single(m => m.LD_Sort == destSort);
 
                     if (destSort == originSort)
                     {
@@ -199,14 +201,14 @@ namespace OnlineLearningSystem.Utilities
                     }
 
                     originSort = destSort - 1;
-                    originModel.Du_Sort = originSort;
+                    originModel.LD_Sort = originSort;
                 }
                 else if (2 == sortFlag)
                 {
 
-                    us = olsEni.Duties
-                        .Where(m => m.Du_Sort < originSort)
-                        .OrderByDescending(m => m.Du_Sort).Take(2).ToList();
+                    us = olsEni.LearningDatas
+                        .Where(m => m.LD_Sort < originSort)
+                        .OrderByDescending(m => m.LD_Sort).Take(2).ToList();
 
                     if (us.Count == 0)
                     {
@@ -217,26 +219,26 @@ namespace OnlineLearningSystem.Utilities
                     else if (us.Count == 1)
                     {
                         destModel = us[0];
-                        originSort = destModel.Du_Sort;
-                        destSort = originModel.Du_Sort;
-                        originModel.Du_Sort = originSort;
-                        destModel.Du_Sort = destSort;
+                        originSort = destModel.LD_Sort;
+                        destSort = originModel.LD_Sort;
+                        originModel.LD_Sort = originSort;
+                        destModel.LD_Sort = destSort;
                     }
                     else
                     {
                         destModel = us[1];
-                        destSort = destModel.Du_Sort;
+                        destSort = destModel.LD_Sort;
                         originSort = Math.Round(destSort + 0.00001, 5, MidpointRounding.AwayFromZero);
-                        originModel.Du_Sort = originSort;
+                        originModel.LD_Sort = originSort;
                     }
 
                 }
                 else// if (3 == sortFlag)
                 {
 
-                    us = olsEni.Duties
-                        .Where(m => m.Du_Sort > originSort)
-                        .OrderBy(m => m.Du_Sort).Take(1).ToList();
+                    us = olsEni.LearningDatas
+                        .Where(m => m.LD_Sort > originSort)
+                        .OrderBy(m => m.LD_Sort).Take(1).ToList();
 
                     if (us.Count == 0)
                     {
@@ -246,16 +248,16 @@ namespace OnlineLearningSystem.Utilities
                     }
 
                     destModel = us[0];
-                    destSort = destModel.Du_Sort;
+                    destSort = destModel.LD_Sort;
 
                     originSort = Math.Round(destSort + 0.00001, 5, MidpointRounding.AwayFromZero);
-                    originModel.Du_Sort = originSort;
+                    originModel.LD_Sort = originSort;
                 }
 
-                adjustModel = olsEni.Duties.SingleOrDefault(m => m.Du_Sort == originSort);
+                adjustModel = olsEni.LearningDatas.SingleOrDefault(m => m.LD_Sort == originSort);
                 if (adjustModel != null)
                 {
-                    adjustModel.Du_Sort = Math.Round(originSort + 0.00001, 5, MidpointRounding.AwayFromZero);
+                    adjustModel.LD_Sort = Math.Round(originSort + 0.00001, 5, MidpointRounding.AwayFromZero);
                 }
 
                 if (0 == olsEni.SaveChanges())
@@ -278,6 +280,29 @@ namespace OnlineLearningSystem.Utilities
                 resJson.message = StaticHelper.GetExceptionMessageAndRecord(ex);
                 return resJson;
             }
+        }
+
+        internal List<SelectListItem> GetCategoryList(Int32 currentValue)
+        {
+
+            List<SelectListItem> list;
+
+            var items = olsEni.LearningDataCategories.Select(model => new { model.LDC_Name, model.LDC_Id });
+
+            list = new List<SelectListItem>();
+            list.Add(new SelectListItem() { Text = "[未设置]", Value = "" });
+
+            foreach (var i in items)
+            {
+                list.Add(new SelectListItem
+                {
+                    Text = i.LDC_Name,
+                    Value = i.LDC_Id.ToString(),
+                    Selected = i.LDC_Id == currentValue ? true : false
+                });
+            }
+
+            return list;
         }
     }
 }

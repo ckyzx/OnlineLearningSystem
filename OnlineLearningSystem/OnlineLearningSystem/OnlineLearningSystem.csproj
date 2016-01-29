@@ -79,6 +79,8 @@
     <Compile Include="Controllers\ExaminationPaperController.cs" />
     <Compile Include="Controllers\ExaminationTaskStatisticController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\LearningDataCategoryController.cs" />
+    <Compile Include="Controllers\LearningDataController.cs" />
     <Compile Include="Controllers\PanelController.cs" />
     <Compile Include="Controllers\DutyController.cs" />
     <Compile Include="Controllers\ExaminationTaskTemplateController.cs" />
@@ -105,6 +107,8 @@
     <Compile Include="Models\ExaminationPaperTemplateQuestion.cs" />
     <Compile Include="Models\ExaminationTask.cs" />
     <Compile Include="Models\ExaminationTaskAttendee.cs" />
+    <Compile Include="Models\LearningData.cs" />
+    <Compile Include="Models\LearningDataCategory.cs" />
     <Compile Include="Models\SystemLog.cs" />
     <Compile Include="Utilities\Common\DatabaseOperator.cs" />
     <Compile Include="Utilities\Common\ModelConvert.cs" />
@@ -112,6 +116,8 @@
     <Compile Include="Utilities\Enums\ExaminationTaskMode.cs" />
     <Compile Include="Utilities\Enums\ExaminationTaskType.cs" />
     <Compile Include="Utilities\Enums\SystemLogType.cs" />
+    <Compile Include="Utilities\ULearningData.cs" />
+    <Compile Include="Utilities\ULearningDataCategory.cs" />
     <Compile Include="Utilities\USystemLog.cs" />
     <Compile Include="ViewModels\VMExaminationTaskPersonalStatistic.cs" />
     <Compile Include="Utilities\UExaminationTaskStatistic.cs" />
@@ -205,6 +211,7 @@
     <Content Include="Content\js\init-page.js" />
     <Content Include="Content\js\init-menu.js" />
     <Content Include="Content\js\init-page-edit.js" />
+    <Content Include="Content\js\LearningData\Edit.js" />
     <Content Include="Content\js\PermissionCategory\Edit.js" />
     <Content Include="Content\js\QuestionClassify\List.js" />
     <Content Include="Content\js\Question\DocxUploadAndImport.js" />
@@ -254,6 +261,8 @@
     <Content Include="Content\js\ExaminationTask\List.js" />
     <Content Include="Content\js\ExaminationPaperTemplate\List.js" />
     <Content Include="Content\js\User\Login.js" />
+    <Content Include="Content\js\LearningDataCategory\List.js" />
+    <Content Include="Content\js\LearningData\List.js" />
     <Content Include="Content\lib\datatables\1.10.0\jquery.dataTables.min.js" />
     <Content Include="Content\lib\datatables\1.10.9\jquery.dataTables.js" />
     <Content Include="Content\lib\datatables\1.10.9\jquery.dataTables.min.js" />
@@ -970,6 +979,12 @@
     <Content Include="Views\ExaminationTaskStatistic\Personal.cshtml" />
     <Content Include="Views\ExaminationPaperTemplate\PaperView.cshtml" />
     <Content Include="Views\SystemLog\List.cshtml" />
+    <Content Include="Views\LearningDataCategory\Create.cshtml" />
+    <Content Include="Views\LearningDataCategory\Edit.cshtml" />
+    <Content Include="Views\LearningDataCategory\List.cshtml" />
+    <Content Include="Views\LearningData\Create.cshtml" />
+    <Content Include="Views\LearningData\Edit.cshtml" />
+    <Content Include="Views\LearningData\List.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
