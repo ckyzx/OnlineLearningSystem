@@ -32,6 +32,15 @@ namespace OnlineLearningSystem.Controllers
         }
 
         //
+        // GET: /LearningData/ListStudent
+
+        [Description("资料列表")]
+        public ActionResult ListStudent()
+        {
+            return View();
+        }
+
+        //
         // POST: /LearningData/ListDataTablesAjax
 
         [Description("查询资料")]
@@ -81,6 +90,22 @@ namespace OnlineLearningSystem.Controllers
                 }
             }
 
+            ViewBag.categories = um.GetCategoryList(m.LDC_Id);
+
+            return View(m);
+        }
+
+        //
+        // GET: /LearningData/View
+
+        [Description("查看资料")]
+        [HttpGet]
+        public ActionResult View(Int32 id)
+        {
+
+            LearningData m;
+
+            m = um.Get(id);
             ViewBag.categories = um.GetCategoryList(m.LDC_Id);
 
             return View(m);

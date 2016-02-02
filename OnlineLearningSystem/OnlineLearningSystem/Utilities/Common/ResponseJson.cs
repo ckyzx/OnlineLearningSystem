@@ -10,6 +10,7 @@ namespace OnlineLearningSystem.Utilities
         public ResponseStatus status { get; set; }
         public Object data { get; set; }
         public String message { get; set; }
+        public String detail { get; set; }
         public Object addition { get; set; }
         public DateTime time { get; set; }
         public String remark { get; set; }

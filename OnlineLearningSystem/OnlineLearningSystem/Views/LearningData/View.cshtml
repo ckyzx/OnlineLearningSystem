@@ -1,0 +1,10 @@
+﻿@model OnlineLearningSystem.Models.LearningData
+@{
+    ViewBag.Title = "查看资料";
+    Layout = "~/Views/Shared/_PageEdit.cshtml";
+}
+<div class="ld-container">
+    <div class="ld-title">@Model.LD_Title</div>
+    <div class="ld-info">@Model.LD_AddTime.ToString("yyyy年MM月dd日 hh时mm分")</div>
+    <div class="ld-content">@Html.Raw(Model.LD_Content)</div>
+</div>

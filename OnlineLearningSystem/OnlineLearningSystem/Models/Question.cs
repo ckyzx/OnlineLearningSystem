@@ -46,6 +46,7 @@ namespace OnlineLearningSystem.Models
         public String Q_ModelAnswer { get; set; }
 
         [DisplayName("备注")]
+        [MaxLength(200, ErrorMessage="请输入小于200个字符的内容。")]
         public String Q_Remark { get; set; }
 
         [DisplayName("添加时间")]

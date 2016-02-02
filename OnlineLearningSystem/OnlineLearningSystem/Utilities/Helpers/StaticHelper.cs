@@ -149,34 +149,63 @@ namespace OnlineLearningSystem.Utilities
         public static String GetExceptionMessageAndRecord(Exception ex)
         {
 
-            String message;
+            String exDetail;
+            String[] exMsgAry;
 
-            message = GetExceptionMessage(ex);
+            exMsgAry = GetExceptionMessageWithSplit(ex);
+            exDetail = String.Join("", exMsgAry);
+            RecordSystemLog(SystemLogType.Exception, ex.Message, exDetail);
 
-            RecordSystemLog(SystemLogType.Exception, ex.Message, message);
-
-            return message;
+            return exDetail;
         }
 
-        public static String GetExceptionMessage(Exception ex) {
+        public static String GetExceptionMessage(Exception ex)
+        {
 
-            String message;
+            String exMsg;
 
-            message = "Message: " + ex.Message + "\\r\\n";
-            message += "Source: " + ex.Source + "\\r\\n";
-            message += "StackTrace: \\r\\n" + ex.StackTrace + "\\r\\n";
+            exMsg = "Message: " + ex.Message + "\\r\\n";
+            exMsg += "Source: " + ex.Source + "\\r\\n";
+            exMsg += "StackTrace: \\r\\n" + ex.StackTrace + "\\r\\n";
 
             if (null != ex.Data && null != ex.Data["Info"])
             {
-                message += "DataInfo: " + ex.Data["Info"] + "\\r\\n";
+                exMsg += "DataInfo: " + ex.Data["Info"] + "\\r\\n";
             }
 
             if (null != ex.InnerException)
             {
-                message += "\\r\\n" + GetExceptionMessage(ex.InnerException);
+                exMsg += "\\r\\n" + GetExceptionMessage(ex.InnerException);
             }
 
-            return message;
+            return exMsg;
+        }
+
+        public static String[] GetExceptionMessageWithSplit(Exception ex)
+        {
+
+            String message, stackTrace;
+            String[] exMsgAry;
+
+            message = "Message: " + ex.Message + "\\r\\n";
+            stackTrace = "Source: " + ex.Source + "\\r\\n";
+            stackTrace += "StackTrace: \\r\\n" + ex.StackTrace + "\\r\\n";
+
+            if (null != ex.Data && null != ex.Data["Info"])
+            {
+                stackTrace += "DataInfo: " + ex.Data["Info"] + "\\r\\n";
+            }
+
+            if (null != ex.InnerException)
+            {
+
+                exMsgAry = GetExceptionMessageWithSplit(ex.InnerException);
+
+                stackTrace += "Inner Detail: \\r\\n" + exMsgAry[0] + "\\r\\n";
+                stackTrace += exMsgAry[1] + "\\r\\n";
+            }
+
+            return new String[] { message, stackTrace };
         }
 
         public static void RecordSystemLog(SystemLogType type, String name, String content)
@@ -228,7 +257,7 @@ namespace OnlineLearningSystem.Utilities
                 Directory.CreateDirectory(txtFile);
             }
             txtFile += DateTime.Now.Ticks + ".txt";
-            
+
             fs = new FileStream(txtFile, FileMode.OpenOrCreate);
             sw = new StreamWriter(fs);
 

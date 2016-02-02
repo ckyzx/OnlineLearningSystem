@@ -133,7 +133,8 @@ namespace OnlineLearningSystem.Utilities
             catch (Exception ex)
             {
                 resJson.status = ResponseStatus.Error;
-                resJson.message = StaticHelper.GetExceptionMessageAndRecord(ex);
+                resJson.message = ex.Message;
+                resJson.detail = StaticHelper.GetExceptionMessageAndRecord(ex);
                 return resJson;
             }
         }
@@ -171,7 +172,6 @@ namespace OnlineLearningSystem.Utilities
 
             try
             {
-
                 String name;
                 Double originSort, destSort;
                 Duty originModel, destModel, adjustModel;
@@ -275,7 +275,8 @@ namespace OnlineLearningSystem.Utilities
             catch (Exception ex)
             {
                 resJson.status = ResponseStatus.Error;
-                resJson.message = StaticHelper.GetExceptionMessageAndRecord(ex);
+                resJson.message = ex.Message;
+                resJson.detail = StaticHelper.GetExceptionMessageAndRecord(ex);
                 return resJson;
             }
         }

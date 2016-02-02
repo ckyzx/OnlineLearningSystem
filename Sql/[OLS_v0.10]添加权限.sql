@@ -2,8 +2,18 @@ USE OLS;
 
 GO
 
+DELETE FROM [dbo].[Role_Permission];
+
+DELETE FROM dbo.[Permissions] WHERE PC_Id = 12;
+DELETE FROM dbo.PermissionCategories WHERE PC_Id = 12;
+
+DELETE FROM dbo.[Permissions] WHERE PC_Id = 13;
+DELETE FROM dbo.PermissionCategories WHERE PC_Id = 13;
+
+GO
+
 /* 添加“系统日志”角色权限 */
-/*-- 添加权限目录
+-- 添加权限目录
 SET IDENTITY_INSERT dbo.PermissionCategories ON
 
 INSERT  INTO dbo.PermissionCategories
@@ -81,12 +91,14 @@ INSERT  [dbo].[Role_Permission]
         SELECT  1 ,
                 134
 
-GO*/
+GO
 
 /* 添加“查询考试任务”权限 */
-/*-- 添加权限值
+-- 添加权限值
 SET IDENTITY_INSERT [dbo].[Permissions] ON
 
+IF EXISTS(SELECT P_Id FROM dbo.[Permissions] WHERE P_Id = 135)
+	DELETE FROM dbo.[Permissions] WHERE P_Id = 135;
 INSERT  [dbo].[Permissions]
         ( P_Id ,
           P_AutoId ,
@@ -116,7 +128,7 @@ INSERT  [dbo].[Role_Permission]
         SELECT  1 ,
                 135
 
-GO*/
+GO
 
 /* 添加“资料目录”权限 */
 -- 添加权限目录
@@ -363,16 +375,6 @@ SET IDENTITY_INSERT [dbo].[Permissions] OFF
 
 GO
 
--- 添加关联记录
-DELETE  FROM dbo.Role_Permission
-WHERE   R_Id = 1;
-INSERT  [dbo].[Role_Permission]
-        SELECT  1 ,
-                P_Id
-        FROM    dbo.[Permissions]
-
-GO
-
 /* 添加“资料”权限 */
 -- 添加权限值
 SET IDENTITY_INSERT [dbo].[Permissions] ON
@@ -591,6 +593,46 @@ VALUES  ( 157 ,
           CAST(0x079DAEB04D8BAB3A0B AS DATETIME2)
         )
 
+INSERT  INTO [dbo].[Permissions]
+        ( P_Id ,
+          P_AutoId ,
+          PC_Id ,
+          P_Name ,
+          P_Controller ,
+          P_Action ,
+          P_Remark ,
+          P_AddTime
+        )
+VALUES  ( 158 ,
+          158 ,
+          13 ,
+          '查看资料' ,
+          'LearningData' ,
+          'View' ,
+          NULL ,
+          CAST(0x079DAEB04D8BAB3A0B AS DATETIME2)
+        )
+
+INSERT  INTO [dbo].[Permissions]
+        ( P_Id ,
+          P_AutoId ,
+          PC_Id ,
+          P_Name ,
+          P_Controller ,
+          P_Action ,
+          P_Remark ,
+          P_AddTime
+        )
+VALUES  ( 159 ,
+          159 ,
+          13 ,
+          '资料列表，学员后台' ,
+          'LearningData' ,
+          'ListStudent' ,
+          NULL ,
+          CAST(0x079DAEB04D8BAB3A0B AS DATETIME2)
+        )
+
 SET IDENTITY_INSERT [dbo].[Permissions] OFF
 
 GO
@@ -661,3 +703,45 @@ SET     R_Permissions = @ps ,
 WHERE   R_Id = 1
 
 GO
+
+-- 设置用户公共权限
+INSERT [dbo].[Role_Permission]
+SELECT R_Id, 46 FROM dbo.Roles WHERE R_Id <> 1
+UNION ALL
+SELECT R_Id, 47 FROM dbo.Roles WHERE R_Id <> 1
+UNION ALL
+SELECT R_Id, 79 FROM dbo.Roles WHERE R_Id <> 1
+UNION ALL
+SELECT R_Id, 81 FROM dbo.Roles WHERE R_Id <> 1
+UNION ALL
+SELECT R_Id, 89 FROM dbo.Roles WHERE R_Id <> 1
+UNION ALL
+SELECT R_Id, 90 FROM dbo.Roles WHERE R_Id <> 1
+UNION ALL
+SELECT R_Id, 93 FROM dbo.Roles WHERE R_Id <> 1
+UNION ALL
+SELECT R_Id, 94 FROM dbo.Roles WHERE R_Id <> 1
+UNION ALL
+SELECT R_Id, 95 FROM dbo.Roles WHERE R_Id <> 1
+UNION ALL
+SELECT R_Id, 96 FROM dbo.Roles WHERE R_Id <> 1
+UNION ALL
+SELECT R_Id, 130 FROM dbo.Roles WHERE R_Id <> 1
+UNION ALL
+SELECT R_Id, 131 FROM dbo.Roles WHERE R_Id <> 1
+UNION ALL
+SELECT R_Id, 132 FROM dbo.Roles WHERE R_Id <> 1
+UNION ALL
+SELECT R_Id, 148 FROM dbo.Roles WHERE R_Id <> 1
+UNION ALL
+SELECT R_Id, 158 FROM dbo.Roles WHERE R_Id <> 1
+UNION ALL
+SELECT R_Id, 159 FROM dbo.Roles WHERE R_Id <> 1;
+
+UPDATE Roles SET 
+R_Permissions = '[46,47,79,81,89,90,93,94,95,96,130,131,132,148,158,159]',
+R_PermissionCategories = '[6,11,13]'
+WHERE R_Id <> 1;
+
+GO
+

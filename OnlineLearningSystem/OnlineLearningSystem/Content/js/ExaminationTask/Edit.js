@@ -31,6 +31,9 @@ $(function() {
     // 初始化提交事件
     initSubmitEvent();
 
+    // 初始化控件
+    initControls();
+
     function initTemplateEvent() {
 
         $('#ET_Template').on('change', function() {
@@ -863,5 +866,16 @@ $(function() {
         }
 
         return valid;
+    }
+
+    function initControls(){
+
+        $('head').prepend('<link href="/Content/lib/jquery-ui/jquery-ui.min.css" rel="stylesheet" type="text/css" />')
+
+        $('#ET_TimeSpan').spinner({
+            min: 0,
+            max: 600,
+            step: 10
+        });
     }
 });

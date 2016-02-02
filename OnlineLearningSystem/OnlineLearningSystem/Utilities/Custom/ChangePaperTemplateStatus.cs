@@ -53,8 +53,9 @@ namespace OnlineLearningSystem.Utilities
                         changed = true;
                         success += 1;
                         operate += 1;
-                    }else if (ept.EPT_PaperTemplateStatus == (Byte)PaperTemplateStatus.Undone
-                        && now > ept.EPT_StartTime)
+                    }
+                    else if (ept.EPT_PaperTemplateStatus == (Byte)PaperTemplateStatus.Undone
+                       && now > ept.EPT_StartTime)
                     {
                         ept.EPT_PaperTemplateStatus = (Byte)PaperTemplateStatus.Doing;
                         changed = true;
@@ -94,7 +95,8 @@ namespace OnlineLearningSystem.Utilities
             catch (Exception ex)
             {
                 resJson.status = ResponseStatus.Error;
-                resJson.message = StaticHelper.GetExceptionMessageAndRecord(ex);
+                resJson.message = ex.Message;
+                resJson.detail = StaticHelper.GetExceptionMessageAndRecord(ex);
                 return resJson;
             }
         }

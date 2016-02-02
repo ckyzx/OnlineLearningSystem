@@ -34,6 +34,7 @@ namespace OnlineLearningSystem.Models
         public String P_Action { get; set; }
 
         [DisplayName("备注")]
+        [MaxLength(200, ErrorMessage="请输入小于200个字符的内容。")]
         public String P_Remark { get; set; }
 
         [DisplayName("添加时间")]

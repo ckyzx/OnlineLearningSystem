@@ -107,6 +107,20 @@ body.prompt{ }
 .form-personal{ margin:20px; border-right:1px solid #CCC; border-bottom: 1px solid #CCC; }
 .form-personal .row-personal{ line-height: 38px; border-top:1px solid #CCC; border-left:1px solid #CCC; }
 
+.custom-spinner span.ui-spinner{display:block;border-radius:0;}
+.custom-spinner .ui-spinner-input{margin:0;padding:4px;border:1px solid #ddd;}
+.custom-spinner .ui-spinner-input:hover, .formControls .ui-spinner-input.focus{border:1px solid #3bb4f2;}
+.custom-spinner .ui-widget-content{border:0;}
+.custom-spinner .ui-spinner-button{right:1px;}
+.custom-spinner .ui-spinner-up{top:1px;}
+.custom-spinner .ui-spinner-down{bottom:1px;}
+.custom-spinner .ui-spinner .ui-icon-triangle-1-s{background-position:-64px -16px;}
+
+.ld-container{margin:0 auto;padding:20px;width:980px;}
+.ld-title{margin-bottom:10px;padding:20px;font:bold 28px "宋体","微软雅黑";text-align:center;border-bottom:1px solid #CCC;}
+.ld-info{font-size:12px;font-style:italic;text-align:right;}
+.ld-content{padding:10px;}
+
 /* Global */
 .ml-200{ margin-left: 200px; }
 

@@ -187,7 +187,8 @@ namespace OnlineLearningSystem.Utilities
             catch (Exception ex)
             {
                 resJson.status = ResponseStatus.Error;
-                resJson.message = StaticHelper.GetExceptionMessageAndRecord(ex);
+                resJson.message = ex.Message;
+                resJson.detail = StaticHelper.GetExceptionMessageAndRecord(ex);
                 return resJson;
             }
         }
@@ -247,8 +248,8 @@ namespace OnlineLearningSystem.Utilities
                 foreach (var ud in uds)
                 {
 
-                    u = olsEni.Users.SingleOrDefault(m => 
-                        m.U_Id == ud.U_Id 
+                    u = olsEni.Users.SingleOrDefault(m =>
+                        m.U_Id == ud.U_Id
                         && m.U_Status == (Byte)Status.Available);
                     if (null != u)
                     {
@@ -402,7 +403,8 @@ namespace OnlineLearningSystem.Utilities
             catch (Exception ex)
             {
                 resJson.status = ResponseStatus.Error;
-                resJson.message = StaticHelper.GetExceptionMessageAndRecord(ex);
+                resJson.message = ex.Message;
+                resJson.detail = StaticHelper.GetExceptionMessageAndRecord(ex);
                 return resJson;
             }
         }

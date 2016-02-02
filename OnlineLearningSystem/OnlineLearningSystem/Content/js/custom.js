@@ -268,6 +268,16 @@ Kyzx.List = {
 
         self = this.self;
 
+        self.jqTable.on('click', 'tbody a.view', function() {
+
+            var data, id;
+
+            data = self.dataTables.row($(this).parents('tr')).data();
+            id = data[self.settings.modelPrefix + 'Id'];
+
+            ShowPage('查看' + self.settings.modelCnName, '/' + self.settings.modelEnName + '/View?id=' + id);
+        });
+
         self.jqTable.on('click', 'tbody a.edit', function() {
 
             var data, id;

@@ -58,6 +58,7 @@ namespace OnlineLearningSystem.ViewModels
         public String U_RePassword { get; set; }
 
         [DisplayName("备注")]
+        [MaxLength(200, ErrorMessage="请输入小于200个字符的内容。")]
         public String U_Remark { get; set; }
 
         [DisplayName("添加时间")]

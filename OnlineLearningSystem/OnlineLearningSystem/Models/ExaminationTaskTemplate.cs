@@ -86,6 +86,7 @@ namespace OnlineLearningSystem.Models
         public Int32 ETT_TimeSpan { get; set; }
 
         [DisplayName("备注")]
+        [MaxLength(200, ErrorMessage="请输入小于200个字符的内容。")]
         public String ETT_Remark { get; set; }
 
         [DisplayName("添加时间")]

@@ -18,7 +18,7 @@ namespace OnlineLearningSystem.Utilities
 
         public DataTablesResponse ListDataTablesAjax(DataTablesRequest dtRequest)
         {
-            
+
             String dutyName;
             DataTablesResponse dtResponse;
             Duty d;
@@ -26,7 +26,7 @@ namespace OnlineLearningSystem.Utilities
             List<User> ms;
 
             umodel = new UModel<User>(dtRequest, "Users", "U_Id");
-            dtResponse = umodel.GetList("U_Status", "U_Sort", new String[]{ "Du_Name" });
+            dtResponse = umodel.GetList("U_Status", "U_Sort", new String[] { "Du_Name" });
 
             ms = (List<User>)dtResponse.data;
             foreach (var m1 in ms)
@@ -132,8 +132,8 @@ namespace OnlineLearningSystem.Utilities
             Duty duty;
             String duName;
 
-            model = olsEni.Users.Single(m => 
-                m.U_Id == id 
+            model = olsEni.Users.Single(m =>
+                m.U_Id == id
                 && m.U_Status == (Byte)Status.Available);
 
             if (null != model.Du_Id)
@@ -282,8 +282,8 @@ namespace OnlineLearningSystem.Utilities
 
                 User model;
 
-                model = olsEni.Users.Single(m => 
-                    m.U_Id == vmModel.U_Id 
+                model = olsEni.Users.Single(m =>
+                    m.U_Id == vmModel.U_Id
                     && m.U_Status == (Byte)Status.Available);
 
                 model.U_Id = vmModel.U_Id;
@@ -363,7 +363,8 @@ namespace OnlineLearningSystem.Utilities
             catch (Exception ex)
             {
                 resJson.status = ResponseStatus.Error;
-                resJson.message = StaticHelper.GetExceptionMessageAndRecord(ex);
+                resJson.message = ex.Message;
+                resJson.detail = StaticHelper.GetExceptionMessageAndRecord(ex);
                 return resJson;
             }
         }
@@ -387,7 +388,7 @@ namespace OnlineLearningSystem.Utilities
                         ((m.U_Name.ToLower() == userName
                             && m.U_Password == password)
                         || (m.U_LoginName.ToLower() == userName
-                            && m.U_Password == password)) 
+                            && m.U_Password == password))
                         && m.U_Status == (Byte)Status.Available);
 
                 if (null == u)
@@ -422,7 +423,8 @@ namespace OnlineLearningSystem.Utilities
             catch (Exception ex)
             {
                 resJson.status = ResponseStatus.Error;
-                resJson.message = StaticHelper.GetExceptionMessageAndRecord(ex);
+                resJson.message = ex.Message;
+                resJson.detail = StaticHelper.GetExceptionMessageAndRecord(ex);
                 return resJson;
             }
         }
@@ -538,8 +540,8 @@ namespace OnlineLearningSystem.Utilities
 
                 User model;
 
-                model = olsEni.Users.SingleOrDefault(m => 
-                    m.U_Id == uId 
+                model = olsEni.Users.SingleOrDefault(m =>
+                    m.U_Id == uId
                     && m.U_Status == (Byte)Status.Available);
 
                 if (null == model)
@@ -573,7 +575,8 @@ namespace OnlineLearningSystem.Utilities
             catch (Exception ex)
             {
                 resJson.status = ResponseStatus.Error;
-                resJson.message = StaticHelper.GetExceptionMessageAndRecord(ex);
+                resJson.message = ex.Message;
+                resJson.detail = StaticHelper.GetExceptionMessageAndRecord(ex);
                 return resJson;
             }
         }
@@ -585,8 +588,8 @@ namespace OnlineLearningSystem.Utilities
 
                 User model;
 
-                model = olsEni.Users.SingleOrDefault(m => 
-                    m.U_Id == uId 
+                model = olsEni.Users.SingleOrDefault(m =>
+                    m.U_Id == uId
                     && m.U_Status == (Byte)Status.Available);
 
                 if (null == model)
@@ -616,8 +619,8 @@ namespace OnlineLearningSystem.Utilities
 
                 Int32 count;
 
-                count = olsEni.Users.Where(m => 
-                    m.U_Id != uId 
+                count = olsEni.Users.Where(m =>
+                    m.U_Id != uId
                     && m.U_Name == name).Count();
 
                 if (count > 0)
@@ -640,8 +643,8 @@ namespace OnlineLearningSystem.Utilities
 
                 Int32 count;
 
-                count = olsEni.Users.Where(m => 
-                    m.U_Id != uId 
+                count = olsEni.Users.Where(m =>
+                    m.U_Id != uId
                     && m.U_LoginName == loginName).Count();
 
                 if (count > 0)
@@ -697,7 +700,7 @@ namespace OnlineLearningSystem.Utilities
                 else if (2 == sortFlag)
                 {
 
-                    us = olsEni.Users.Where(m => 
+                    us = olsEni.Users.Where(m =>
                         m.U_Sort < originSort)
                         .OrderByDescending(m => m.U_Sort).Take(2).ToList();
 
@@ -727,7 +730,7 @@ namespace OnlineLearningSystem.Utilities
                 else// if (3 == sortFlag)
                 {
 
-                    us = olsEni.Users.Where(m => 
+                    us = olsEni.Users.Where(m =>
                         m.U_Sort > originSort)
                         .OrderBy(m => m.U_Sort)
                         .Take(1).ToList();
@@ -772,7 +775,8 @@ namespace OnlineLearningSystem.Utilities
             catch (Exception ex)
             {
                 resJson.status = ResponseStatus.Error;
-                resJson.message = StaticHelper.GetExceptionMessageAndRecord(ex);
+                resJson.message = ex.Message;
+                resJson.detail = StaticHelper.GetExceptionMessageAndRecord(ex);
                 return resJson;
             }
         }
