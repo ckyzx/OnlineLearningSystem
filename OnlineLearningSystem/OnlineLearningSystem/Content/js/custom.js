@@ -190,7 +190,7 @@ Kyzx.List = {
                 recycleBin.attr('data-status', status);
                 self.dataTables.ajax.reload(null, false);
             });
-        }else{
+        } else {
 
             self.settings.dtParams.ajax.data = function(originData) {
 
@@ -423,9 +423,31 @@ Kyzx.List = {
 
         checkbox = $(elem);
         if (1 == checkbox.attr('data-checked')) {
-
-            checkbox.removeAttr('data-checked');
             checkbox.get(0).checked = true;
+        }
+
+        checkbox.removeAttr('data-checked');
+    },
+
+    checkboxMutipleClickEvent: function(elem) {
+
+        var checkbox;
+
+        checkbox = $(elem);
+        checkbox.attr('data-checked', 1).blur().focus();
+    },
+
+    checkboxMutipleChangeEvent: function(elem) {
+
+        var checkbox;
+
+        checkbox = $(elem);
+        checkbox.removeAttr('data-checked');
+        checkbox = checkbox.get(0);
+        if (checkbox.checked) {
+            checkbox = false;
+        } else {
+            checkbox = true;
         }
     },
 
@@ -469,7 +491,7 @@ Kyzx.List = {
 
         // 显示已选数据数量
         container.find('.select-data-item').remove();
-        countSpan = $('<div class="select-data-item mb-10">已选 <span class="select-data-count">' + ms.length + '</span> 条</div>');
+        countSpan = $('<div class="select-data-item">已选 <span class="select-data-count">' + ms.length + '</span> 条</div>');
         countSpan.prependTo(container);
 
         // 判断是否复选“全选”框
@@ -557,7 +579,7 @@ Kyzx.List = {
     renderSelectCount: function(container, num) {
 
         container.find('.select-data-item').remove();
-        countSpan = $('<div class="select-data-item mb-10">已选 <span class="select-data-count">' + num + '</span> 条</div>');
+        countSpan = $('<div class="select-data-item">已选 <span class="select-data-count">' + num + '</span> 条</div>');
         countSpan.prependTo(container);
     },
 

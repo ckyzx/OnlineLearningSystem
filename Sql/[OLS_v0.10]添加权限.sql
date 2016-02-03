@@ -10,6 +10,9 @@ DELETE FROM dbo.PermissionCategories WHERE PC_Id = 12;
 DELETE FROM dbo.[Permissions] WHERE PC_Id = 13;
 DELETE FROM dbo.PermissionCategories WHERE PC_Id = 13;
 
+DELETE FROM dbo.[Permissions] WHERE PC_Id = 14;
+DELETE FROM dbo.PermissionCategories WHERE PC_Id = 14;
+
 GO
 
 /* 添加“系统日志”角色权限 */
@@ -745,3 +748,27 @@ WHERE R_Id <> 1;
 
 GO
 
+-- 添加权限目录“权限回收”
+SET IDENTITY_INSERT dbo.PermissionCategories ON
+
+INSERT  INTO dbo.PermissionCategories
+        ( PC_Id ,
+          PC_AutoId ,
+          PC_Name ,
+          PC_Level ,
+          PC_Remark ,
+          PC_AddTime ,
+          PC_Status
+        )
+VALUES  ( 14 ,
+          14 ,
+          '权限回收' ,
+          '0014' ,
+          NULL ,
+          CAST(0x079DAEB04D8BAB3A0B AS DATETIME2) ,
+          1
+        )
+
+SET IDENTITY_INSERT dbo.PermissionCategories OFF
+
+GO

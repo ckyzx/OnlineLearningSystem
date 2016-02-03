@@ -34,7 +34,7 @@ namespace OnlineLearningSystem.Controllers
         //
         // GET: /LearningData/ListStudent
 
-        [Description("资料列表")]
+        [Description("资料列表，学员后台")]
         public ActionResult ListStudent()
         {
             return View();
@@ -195,7 +195,7 @@ namespace OnlineLearningSystem.Controllers
         //
         // GET: /LearningData/DuplicateName
 
-        [Description("检查资料名称")]
+        [Description("检查资料标题")]
         public JsonResult DuplicateName(Int32 LD_Id, String LD_Name)
         {
 

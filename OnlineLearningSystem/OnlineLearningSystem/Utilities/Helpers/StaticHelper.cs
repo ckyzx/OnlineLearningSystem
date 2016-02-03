@@ -208,6 +208,11 @@ namespace OnlineLearningSystem.Utilities
             return new String[] { message, stackTrace };
         }
 
+        public static void RecordSystemLog(Exception ex)
+        {
+            RecordSystemLog(SystemLogType.Exception, ex.Message, GetExceptionMessage(ex), "");
+        }
+
         public static void RecordSystemLog(SystemLogType type, String name, String content)
         {
             RecordSystemLog(type, name, content, "");

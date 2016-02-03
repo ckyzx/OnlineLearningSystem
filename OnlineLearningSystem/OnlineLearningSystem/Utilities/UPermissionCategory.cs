@@ -8,6 +8,8 @@ using System.Web.Mvc;
 using OnlineLearningSystem.Models;
 using Newtonsoft.Json;
 using System.Text;
+using System.Configuration;
+using System.Web.Configuration;
 
 namespace OnlineLearningSystem.Utilities
 {
@@ -128,7 +130,7 @@ namespace OnlineLearningSystem.Utilities
             }
             catch (Exception ex)
             {
-
+                StaticHelper.RecordSystemLog(ex);
                 throw;
             }
         }
@@ -136,9 +138,24 @@ namespace OnlineLearningSystem.Utilities
         private void UpdatePermission(PermissionCategory model)
         {
 
-            Int32 id;
-            List<ActionPermission> aps;
+            Int32 id, recycleBinPCId;
+            Configuration config;
+            AppSettingsSection appseting;
             Permission p;
+            List<ActionPermission> aps;
+            List<Permission> ps;
+
+            config = WebConfigurationManager.OpenWebConfiguration("/");
+            appseting = (AppSettingsSection)config.GetSection("appSettings");
+            recycleBinPCId = Convert.ToInt32(appseting.Settings["RecycleBinPermissionCategoryId"].Value);
+
+            // 先清除已选择的权限记录
+            ps = olsEni.Permissions.Where(m => m.PC_Id == model.PC_Id).ToList();
+            foreach (var p1 in ps)
+            {
+                p1.PC_Id = recycleBinPCId;
+            }
+            olsEni.SaveChanges();
 
             aps = (List<ActionPermission>)JsonConvert.DeserializeObject<List<ActionPermission>>(model.PC_Permissions);
 

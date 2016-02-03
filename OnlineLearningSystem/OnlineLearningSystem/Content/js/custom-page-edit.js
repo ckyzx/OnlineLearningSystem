@@ -40,7 +40,7 @@ function SetDataTablesChecked(tableSelector, valueSelector) {
 
     // 显示已选数据数量
     container.find('.select-data-item').remove();
-    countSpan = $('<div class="select-data-item mb-10">已选 <span class="select-data-count">' + ms.length + '</span> 条</div>');
+    countSpan = $('<div class="select-data-item">已选 <span class="select-data-count">' + ms.length + '</span> 条</div>');
     countSpan.prependTo(container);
 
     // 判断是否复选“全选”框

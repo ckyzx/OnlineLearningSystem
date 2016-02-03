@@ -870,12 +870,19 @@ $(function() {
 
     function initControls(){
 
-        $('head').prepend('<link href="/Content/lib/jquery-ui/jquery-ui.min.css" rel="stylesheet" type="text/css" />')
+        var etTimeSpan;
 
-        $('#ET_TimeSpan').spinner({
+        etTimeSpan = $('#ET_TimeSpan');
+
+        $('script[src$="jquery.min.js"]').after('<script type="text/javascript" src="/Content/lib/jquery-ui/jquery-ui.min.js"></script>');
+        $('head').prepend('<link href="/Content/lib/jquery-ui/jquery-ui.min.css" rel="stylesheet" type="text/css" />');
+        
+        etTimeSpan.spinner({
             min: 0,
             max: 600,
             step: 10
         });
+
+        etTimeSpan.parents('div').addClass('custom-spinner');
     }
 });

@@ -47,11 +47,16 @@ namespace OnlineLearningSystem.Utilities
             return model;
         }
 
-        public Boolean Create(Duty model)
+        public ResponseJson Create(Duty model)
         {
+
+            ResponseJson resJson;
+
+            resJson = new ResponseJson(ResponseStatus.Success, now);
+
             try
             {
-
+                throw new NotImplementedException();
                 Int32 id;
 
                 id = GetDuId();
@@ -61,13 +66,15 @@ namespace OnlineLearningSystem.Utilities
                 olsEni.Duties.Add(model);
                 olsEni.SaveChanges();
 
-                return true;
             }
             catch (Exception ex)
             {
-                StaticHelper.GetExceptionMessageAndRecord(ex);
-                throw;
+                resJson.status = ResponseStatus.Error;
+                resJson.message = ex.Message;
+                resJson.detail = StaticHelper.GetExceptionMessageAndRecord(ex);
             }
+
+            return resJson;
         }
 
         public Boolean Edit(Duty model)

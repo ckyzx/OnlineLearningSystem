@@ -6,6 +6,7 @@ $(function() {
     table = $('.table-sort');
     dtData = table.DataTable.settings[0].aoData;
 
+    // 初始化已选项目
     permissions = $('#PC_Permissions').val();
     aps = $.parseJSON(permissions);
 
@@ -25,10 +26,43 @@ $(function() {
         }
     }
 
+    Kyzx.List.renderSelectCount(table.parent(), aps.length);
+
+    // 初始化选择事件
+    table
+        .on('click', ':checkbox', function() {
+            Kyzx.List.checkboxMutipleClickEvent(this);
+        })
+        .on('change', ':checkbox', function() {
+
+            var dtData, actionPermissions;
+
+            Kyzx.List.checkboxMutipleChangeEvent(this);
+
+            dtData = table.DataTable.settings[0].aoData;
+
+            actionPermissions = [];
+
+            for (var i = 0; i < dtData.length; i++) {
+
+                cells = dtData[i].anCells;
+                if ($(cells[0]).find(':checkbox').get(0).checked) {
+
+                    actionPermissions.push({
+                        'ControllerName': $(cells[1]).text().trim(),
+                        'ActionName': $(cells[2]).text().trim(),
+                        'Description': $(cells[3]).text().trim()
+                    });
+                }
+            }
+
+            $('#PC_Permissions').val(JSON.stringify(actionPermissions));
+
+            Kyzx.List.renderSelectCount(table.parent(), actionPermissions.length);
+        });
+
     // 提交前，获取被选择的操作权限值
     $('form').submit(function(e) {
-
-        var table, dtData, actionPermissions;
 
         if(!confirm('确定提交吗？')){
             
@@ -36,24 +70,5 @@ $(function() {
             return;
         }
 
-        table = $('.table-sort');
-        dtData = table.DataTable.settings[0].aoData;
-
-        actionPermissions = [];
-
-        for (var i = 0; i < dtData.length; i++) {
-
-            cells = dtData[i].anCells;
-            if ($(cells[0]).find(':checkbox').get(0).checked) {
-
-                actionPermissions.push({
-                    'ControllerName': $(cells[1]).text().trim(),
-                    'ActionName': $(cells[2]).text().trim(),
-                    'Description': $(cells[3]).text().trim()
-                });
-            }
-        }
-
-        $('#PC_Permissions').val(JSON.stringify(actionPermissions));
     });
 });

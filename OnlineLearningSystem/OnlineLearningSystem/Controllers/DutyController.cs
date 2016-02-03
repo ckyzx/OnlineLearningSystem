@@ -70,13 +70,18 @@ namespace OnlineLearningSystem.Controllers
         public ActionResult Create(Duty m)
         {
 
+            ResponseJson resJson;
+
             if (ModelState.IsValid)
             {
 
-                if (um.Create(m))
+                resJson = um.Create(m);
+                if (ResponseStatus.Success == resJson.status)
                 {
                     return Redirect("/Content/html/parent_reload.htm");
                 }
+
+                ModelState.AddModelError("", resJson.detail);
             }
 
             return View(m);

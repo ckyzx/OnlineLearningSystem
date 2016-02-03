@@ -176,7 +176,7 @@
             <label class="form-label col-2">
                 @Html.LabelFor(m => m.ET_TimeSpan)
             </label>
-            <div class="formControls col-2 custom-spinner">
+            <div class="formControls col-2">
                 @Html.TextBoxFor(m => m.ET_TimeSpan, new { @class = "input-text" }) <span>（单位：分钟）</span>
                 @Html.ValidationMessageFor(m => m.ET_TimeSpan)
             </div>
@@ -251,6 +251,5 @@
 <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/lib/jtimepicker/css/ui/base/ui.slider.css")" />
 <link rel="stylesheet" type="text/css" href="@Url.Content("~/Content/lib/jtimepicker/css/jquery.timepicker.css")" />
 <script type="text/javascript" src="@Url.Content("~/Content/lib/jtimepicker/lib/jquery.jtimepicker.bundle.js")"></script>
-<script type="text/javascript" src="@Url.Content("~/Content/lib/jquery-ui/jquery-ui.min.js")"></script>
 <script type="text/javascript" src="@Url.Content("/Content/js/Question/ListSelect.js")"></script>
 <script type="text/javascript" src="@Url.Content("/Content/js/ExaminationTask/Edit.js")"></script>
