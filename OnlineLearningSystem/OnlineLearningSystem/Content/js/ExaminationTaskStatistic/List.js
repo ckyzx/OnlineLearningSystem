@@ -58,16 +58,17 @@
             etsDate = data['ETS_PaperTemplateDate'];
             etsDate = etsDate.jsonDateToDate();
             span.text(etsDate.format('yyyy年MM月dd日'));
-        },
-        'initComplete': function(settings, json) {
 
-            $('tbody').find('.ETS_AttendeeNumber, .ETS_PaperNumber, .ETS_PassNumber, .ETS_FlunkNumber').each(function(){
+            row.find('.ETS_AttendeeNumber, .ETS_PaperNumber, .ETS_PassNumber, .ETS_FlunkNumber').each(function(){
 
                 var td;
 
                 td = $(this);
                 td.html('<span class="bold">' + td.text() + '</span> <span class="fz-9">人</span>');
             });
+        },
+        'initComplete': function(settings, json) {
+
         }
     });
 

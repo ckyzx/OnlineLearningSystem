@@ -288,16 +288,42 @@ namespace OnlineLearningSystem.Utilities
             return result;
         }
 
-        public DataSet GetDataSet(string sql, SqlParameter[] sqlParameters)
+        public DataSet GetDataSet(string sql, List<SqlParameter> sqlParameters)
+        {
+            return GetDataSet(sql, sqlParameters, CommandType.Text);
+        }
+
+        public DataSet GetDataSet(string sql, List<SqlParameter> sqlParameters, CommandType commandType)
         {
 
 
             sqlConnection.Open();
 
             sqlCommand = new SqlCommand(sql, sqlConnection);
-            sqlCommand.CommandType = CommandType.StoredProcedure;
+            sqlCommand.CommandType = commandType;
+            sqlCommand.Parameters.AddRange(sqlParameters.ToArray());
+            sqlDataAdapter = new SqlDataAdapter(sqlCommand);
+            dataSet = new DataSet();
+            sqlDataAdapter.Fill(dataSet);
+            sqlCommand.Parameters.Clear();
+
+            sqlConnection.Close();
+
+
+            return dataSet;
+        }
+
+        public DataSet GetDataSet(string sql, SqlParameter[] sqlParameters, CommandType commandType)
+        {
+
+
+            sqlConnection.Open();
+
+            sqlCommand = new SqlCommand(sql, sqlConnection);
+            sqlCommand.CommandType = commandType;
             sqlCommand.Parameters.AddRange(sqlParameters);
             sqlDataAdapter = new SqlDataAdapter(sqlCommand);
+            dataSet = new DataSet();
             sqlDataAdapter.Fill(dataSet);
             sqlCommand.Parameters.Clear();
 

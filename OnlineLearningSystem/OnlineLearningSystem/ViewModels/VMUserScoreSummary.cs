@@ -7,8 +7,9 @@ namespace OnlineLearningSystem.ViewModels
 {
     public class VMUserScoreSummary
     {
-        public String USS_DepartmentName { get; set; }
+        public Int32 USS_UserId { get; set; }
         public String USS_UserName { get; set; }
+        public String USS_DepartmentName { get; set; }
         public String USS_DutyName { get; set; }
         public Int32 USS_TotalNumber { get; set; }
         public Int32 USS_DoneNumber { get; set; }

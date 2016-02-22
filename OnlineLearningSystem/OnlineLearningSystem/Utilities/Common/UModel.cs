@@ -132,6 +132,28 @@ namespace OnlineLearningSystem.Utilities
             return dtResponse;
         }
 
+        public DataTablesResponse GetList(String sql, List<SqlParameter> sps)
+        {
+
+            DataTablesResponse dtResponse;
+            Int32 recordsTotal, recordsFiltered;
+            Object[] modelData;
+            List<T> ms;
+
+            modelData = GetModels(sql, sps);
+            ms = (List<T>)modelData[0];
+            recordsTotal = (Int32)modelData[1];
+            recordsFiltered = (Int32)modelData[2];
+
+            dtResponse = new DataTablesResponse();
+            dtResponse.draw = dtRequest.Draw;
+            dtResponse.recordsTotal = recordsTotal;
+            dtResponse.recordsFiltered = recordsFiltered;
+            dtResponse.data = ms;
+
+            return dtResponse;
+        }
+
         public DataTablesResponse GetList(String sql, List<SqlParameter> sps, String statusFieldName, String sortFieldName)
         {
 
@@ -350,6 +372,31 @@ namespace OnlineLearningSystem.Utilities
             return new Object[] { ms, total, filter };
         }
 
+        private Object[] GetModels(String sql, List<SqlParameter> spsAddition)
+        {
+
+            Int32 total, filter;
+            String orderSql, countSql;
+            DataTable dataTable;
+            Object[] sqlConditions;
+            List<T> ms;
+            List<SqlParameter> sps;
+
+            sqlConditions = GetSqlCondition(sql, spsAddition);
+            sql = (String)sqlConditions[0];
+            sps = (List<SqlParameter>)sqlConditions[1];
+            orderSql = (String)sqlConditions[2];
+
+            dataTable = olsDBO.GetDataTableWithStart(sql + orderSql, sps, dtRequest.Length, dtRequest.Start);
+            ms = (List<T>)ModelConvert<T>.ConvertToModel(dataTable);
+
+            countSql = sql.Replace("SELECT * FROM ", "SELECT COUNT(" + idFieldName + ") FROM ");
+            total = Convert.ToInt32(olsDBO.ExecuteSqlScalar(countSql, sps));
+            filter = Convert.ToInt32(olsDBO.ExecuteSqlScalar(countSql, sps));
+
+            return new Object[] { ms, total, filter };
+        }
+
         private Object[] GetModels(String sql, List<SqlParameter> spsAddition, String statusFieldName, String sortFieldName)
         {
 
@@ -532,6 +579,59 @@ namespace OnlineLearningSystem.Utilities
             sql += sql.IndexOf("WHERE ") == -1 ? "WHERE " : "AND ";
             sql += statusFieldName + " = @status ";
             sps.Add(new SqlParameter("@status", (Byte)dtRequest.Status));
+
+            // 指定排序列
+            orderSql = dtRequest.Columns[dtRequest.OrderColumn].Name;
+            if ("" != orderSql)
+            {
+                orderSql += dtRequest.OrderDir == 0 ? " ASC" : " DESC";
+                orderSql += "ORDER BY " + orderSql;
+            }
+
+            return new Object[] { sql, sps, orderSql };
+        }
+
+        private Object[] GetSqlCondition(String sql, List<SqlParameter> spsAddition)
+        {
+
+            String whereSql, orderSql;
+            List<SqlParameter> sps;
+
+            whereSql = "";
+            sps = new List<SqlParameter>();
+
+            // 指定筛选条件
+            if ("" != dtRequest.SearchValue)
+            {
+
+                foreach (var col in dtRequest.Columns)
+                {
+
+                    if ("" != col.Name)
+                    {
+
+                        whereSql += col.Name + " LIKE @" + col.Name + " OR ";
+                        sps.Add(new SqlParameter("@" + col.Name, "%" + dtRequest.SearchValue + "%"));
+                    }
+                }
+
+                if ("" != whereSql)
+                {
+                    whereSql = whereSql.Substring(0, whereSql.Length - 3);
+                    whereSql = "(" + whereSql + ") ";
+
+                    sql += sql.IndexOf("WHERE ") == -1 ? "WHERE " + whereSql : "AND " + whereSql + " ";
+                }
+            }
+
+            whereSql = "";
+            foreach (var sp in spsAddition)
+            {
+                whereSql += "AND " + sp.ParameterName.Replace("@", "") + " = " + sp.ParameterName + " ";
+            }
+            sql += sql.IndexOf("WHERE ") == -1 ? "WHERE " + whereSql.Substring(4) : whereSql;
+
+            sps.AddRange(spsAddition);
 
             // 指定排序列
             orderSql = dtRequest.Columns[dtRequest.OrderColumn].Name;
@@ -839,5 +939,6 @@ namespace OnlineLearningSystem.Utilities
 
             return new Object[] { sql, sps, orderSql };
         }
+
     }
 }

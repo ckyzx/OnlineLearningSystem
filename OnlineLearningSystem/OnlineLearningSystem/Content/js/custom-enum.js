@@ -31,3 +31,21 @@ SystemLogType = {
     3: '异常',
     4: '错误'
 };
+
+var StatisticType;
+
+StatisticType = {
+    0: '[未设置]',
+    1: '得分',
+    2: '正确率'
+};
+
+var UserScoreState;
+
+UserScoreState = {
+    0: '[未设置]',
+    1: '未考试',
+    2: '未打分',
+    3: '合格',
+    4: '未合格'
+};

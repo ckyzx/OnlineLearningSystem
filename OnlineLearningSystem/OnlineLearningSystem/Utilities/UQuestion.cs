@@ -47,7 +47,7 @@ namespace OnlineLearningSystem.Utilities
                 formatFlag = true;
                 errorIds = new StringBuilder();
 
-                docxPara = OpenXmlHelper.GetDocxParagraphs(filePath);
+                docxPara = OpenXmlDocHelper.GetDocxParagraphs(filePath);
 
                 now = DateTime.Now;
 
