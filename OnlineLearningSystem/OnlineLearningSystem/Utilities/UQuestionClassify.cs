@@ -73,8 +73,8 @@ namespace OnlineLearningSystem.Utilities
             }
             catch (Exception ex)
             {
-
-                throw;
+                StaticHelper.RecordSystemLog(ex);
+                return false;
             }
         }
 
@@ -89,8 +89,8 @@ namespace OnlineLearningSystem.Utilities
             }
             catch (Exception ex)
             {
-
-                throw;
+                StaticHelper.RecordSystemLog(ex);
+                return false;
             }
         }
 
@@ -166,6 +166,7 @@ namespace OnlineLearningSystem.Utilities
             }
             catch (Exception ex)
             {
+                StaticHelper.RecordSystemLog(ex);
                 return false;
             }
         }

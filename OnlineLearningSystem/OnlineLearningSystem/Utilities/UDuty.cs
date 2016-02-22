@@ -81,6 +81,7 @@ namespace OnlineLearningSystem.Utilities
         {
             try
             {
+                
                 olsEni.Entry(model).State = EntityState.Modified;
                 olsEni.SaveChanges();
 
@@ -88,8 +89,8 @@ namespace OnlineLearningSystem.Utilities
             }
             catch (Exception ex)
             {
-                StaticHelper.GetExceptionMessageAndRecord(ex);
-                throw;
+                StaticHelper.RecordSystemLog(ex);
+                return false;
             }
         }
 
@@ -165,7 +166,7 @@ namespace OnlineLearningSystem.Utilities
             }
             catch (Exception ex)
             {
-                StaticHelper.GetExceptionMessageAndRecord(ex);
+                StaticHelper.RecordSystemLog(ex);
                 return false;
             }
         }

@@ -58,6 +58,7 @@ $(function() {
         if (!confirm('确定提交吗？')) {
 
             e.preventDefault();
+            ifSubmit = false;
             return;
         }
 
@@ -71,5 +72,7 @@ $(function() {
             psInput.val(ps);
             $('#U_RePassword').val(ps);
         }
+
+        ifSubmit = true;
     });
 });

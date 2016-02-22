@@ -95,6 +95,7 @@
     <Compile Include="Controllers\ExaminationTaskController.cs" />
     <Compile Include="Controllers\ExaminationPaperTemplateController.cs" />
     <Compile Include="Controllers\QuestionClassifyController.cs" />
+    <Compile Include="Controllers\UserScoreController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -173,6 +174,8 @@
     <Compile Include="ViewModels\VMExaminationTaskUserStatistic.cs" />
     <Compile Include="ViewModels\VMUser.cs" />
     <Compile Include="ViewModels\VMUserModifyPassword.cs" />
+    <Compile Include="ViewModels\VMUserScoreDetail.cs" />
+    <Compile Include="ViewModels\VMUserScoreSummary.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Aspxs\Default.aspx" />
