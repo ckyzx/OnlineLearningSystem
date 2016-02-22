@@ -108,9 +108,11 @@ $(function() {
         if (confirm('确定提交吗？')) {
 
             changeContentAndAnswer();
+            ifSubmit = true;
         } else {
 
             e.preventDefault();
+            ifSubmit = false;
         }
     });
 

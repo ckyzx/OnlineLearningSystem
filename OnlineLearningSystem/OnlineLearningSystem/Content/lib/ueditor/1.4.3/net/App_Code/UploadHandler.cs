@@ -72,7 +72,7 @@ public class UploadHandler : Handler
                 Directory.CreateDirectory(Path.GetDirectoryName(localPath));
             }
             File.WriteAllBytes(localPath, uploadFileBytes);
-            Result.Url = UploadConfig.UrlPrefix + savePath;
+            Result.Url = savePath;
             Result.State = UploadState.Success;
         }
         catch (Exception e)

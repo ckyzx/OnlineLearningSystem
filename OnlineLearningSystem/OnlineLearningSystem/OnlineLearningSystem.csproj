@@ -34,6 +34,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DocumentFormat.OpenXml, Version=2.0.5022.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="EntityFramework">
       <HintPath>..\packages\EntityFramework.4.1.10331.0\lib\EntityFramework.dll</HintPath>
     </Reference>
@@ -95,6 +96,10 @@
     <Compile Include="Controllers\ExaminationTaskController.cs" />
     <Compile Include="Controllers\ExaminationPaperTemplateController.cs" />
     <Compile Include="Controllers\QuestionClassifyController.cs" />
+    <Compile Include="Controllers\UserScoreController.cs" />
+    <Compile Include="Utilities\Helpers\OpenXmlExcel.cs" />
+    <Compile Include="Utilities\Helpers\OpenXmlExcelHelper.cs" />
+    <Compile Include="Utilities\UUserScore.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -153,7 +158,7 @@
     <Compile Include="Utilities\Common\ResponseMessage.cs" />
     <Compile Include="Utilities\Common\ResponseStatus.cs" />
     <Compile Include="Utilities\Helpers\StaticHelper.cs" />
-    <Compile Include="Utilities\Helpers\OpenXmlHelper.cs" />
+    <Compile Include="Utilities\Helpers\OpenXmlDocHelper.cs" />
     <Compile Include="Utilities\Enums\StatisticType.cs" />
     <Compile Include="Utilities\Enums\Status.cs" />
     <Compile Include="Utilities\UDepartment.cs" />
@@ -173,6 +178,8 @@
     <Compile Include="ViewModels\VMExaminationTaskUserStatistic.cs" />
     <Compile Include="ViewModels\VMUser.cs" />
     <Compile Include="ViewModels\VMUserModifyPassword.cs" />
+    <Compile Include="ViewModels\VMUserScoreDetail.cs" />
+    <Compile Include="ViewModels\VMUserScoreSummary.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Aspxs\Default.aspx" />
@@ -253,6 +260,8 @@
     <Content Include="Content\js\Role\List.js" />
     <Content Include="Content\js\Role\ListLocal.js" />
     <Content Include="Content\js\SystemLog\List.js" />
+    <Content Include="Content\js\UserScore\ListSummary.js" />
+    <Content Include="Content\js\UserScore\ListDetail.js" />
     <Content Include="Content\js\User\Edit.js" />
     <Content Include="Content\js\User\List.js" />
     <Content Include="Content\js\Department\List.js" />
@@ -996,6 +1005,8 @@
     <Content Include="Views\LearningData\List.cshtml" />
     <Content Include="Views\LearningData\View.cshtml" />
     <Content Include="Views\LearningData\ListStudent.cshtml" />
+    <Content Include="Views\UserScore\ListSummary.cshtml" />
+    <Content Include="Views\UserScore\ListDetail.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

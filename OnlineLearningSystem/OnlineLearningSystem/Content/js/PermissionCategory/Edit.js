@@ -67,7 +67,11 @@ $(function() {
         if(!confirm('确定提交吗？')){
             
             e.preventDefault();
+            ifSubmit = false;
             return;
+        }else{
+
+            ifSubmit = true;
         }
 
     });

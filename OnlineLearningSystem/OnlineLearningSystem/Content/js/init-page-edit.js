@@ -1,3 +1,8 @@
+var ifSubmit, ifConfirm;
+
+ifSubmit = false;
+ifConfirm = true;
+
 $(function() {
 
     /*$('form').on('click', ':submit', function() {
@@ -20,11 +25,37 @@ $(function() {
 
         $('form').submit(function(e) {
 
-            if (!confirm('确定提交吗？')) {
+            /*if (!confirm('确定提交吗？')) {
 
                 e.preventDefault();
+                ifSubmit = true;
                 return;
+            }else{
+
+                ifSubmit = false;
+            }*/
+
+            if (ifConfirm) {
+
+                e.preventDefault();
+
+                layer.confirm('确定保存吗？', {
+                    title: '',
+                    btn: ['确定', '取消']
+                }, function() {
+
+                    ifSubmit = true;
+                    ifConfirm = false;
+                    $('form').submit();
+                    return;
+                }, function() {
+
+                    ifSubmit = false;
+                    ifConfirm = true;
+                    return;
+                });
             }
+
         });
     }
 });

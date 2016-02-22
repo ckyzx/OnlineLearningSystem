@@ -47,7 +47,7 @@ namespace OnlineLearningSystem.Utilities
                 formatFlag = true;
                 errorIds = new StringBuilder();
 
-                docxPara = OpenXmlHelper.GetDocxParagraphs(filePath);
+                docxPara = OpenXmlDocHelper.GetDocxParagraphs(filePath);
 
                 now = DateTime.Now;
 
@@ -444,9 +444,7 @@ namespace OnlineLearningSystem.Utilities
             }
             catch (Exception ex)
             {
-
                 dic["Message"] = StaticHelper.GetExceptionMessageAndRecord(ex);
-
                 return dic;
             }
         }
@@ -687,8 +685,8 @@ namespace OnlineLearningSystem.Utilities
             }
             catch (Exception ex)
             {
-
-                throw;
+                StaticHelper.RecordSystemLog(ex);
+                return false;
             }
         }
 
@@ -703,8 +701,8 @@ namespace OnlineLearningSystem.Utilities
             }
             catch (Exception ex)
             {
-
-                throw;
+                StaticHelper.RecordSystemLog(ex);
+                return false;
             }
         }
 

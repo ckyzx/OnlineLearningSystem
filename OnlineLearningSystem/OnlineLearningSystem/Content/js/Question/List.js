@@ -80,11 +80,12 @@ $(function() {
             qcName = data['QC_Name'];
             Kyzx.List.columnContentEllipsis(jqTable, row, '.QC_Name', qcName);
 
-            th = jqTable.find('th.Q_Content');
+            /*th = jqTable.find('th.Q_Content');
             span = row.find('span.Q_Content');
-            qContent = data['Q_Content'];
             qContent = qContent.replace(/^(\\r\\n)+/g, '').replace(/(\\r\\n)+$/g, '').replace(/\\r\\n/g, '[换行]').replace(/\s+/g, '');
-            span.addClass('ellipsis').width(th.width()).html(qContent).attr('title', qContent);
+            span.addClass('ellipsis').width(th.width()).html(qContent).attr('title', qContent);*/
+            qContent = data['Q_Content'];
+            Kyzx.List.columnContentEllipsis(jqTable, row, '.Q_Content', qContent);
 
             status = data['Q_Status'];
             switch (status) {

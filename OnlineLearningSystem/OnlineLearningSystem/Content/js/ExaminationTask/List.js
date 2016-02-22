@@ -146,7 +146,7 @@ $(function() {
         modelCnName: '考试任务',
         modelEnName: 'ExaminationTask',
         modelPrefix: 'ET_',
-        additionRequestParams: [{name: 'mode', input:'#ET_Mode'}]
+        additionRequestParams: [{ name: 'mode', input: '#ET_Mode' }]
     });
     list.initList();
 
@@ -164,99 +164,121 @@ $(function() {
     $('.table-sort tbody').on('click', 'a.start-task', function() {
 
         var tr;
-        var data, id, autoType;
-
-        if (!confirm('确认开始考试任务吗？')) {
-            return;
-        }
 
         tr = $(this).parents('tr');
-        data = list.dataTables.row(tr).data();
-        id = data['ET_Id'];
-        autoType = data['ET_AutoType'];
 
-        $.post('/ExaminationTask/StartTask', {
-                id: id
-            }, function(data) {
+        /*if (!confirm('是否开始考试任务？')) {
+            return;
+        }*/
 
-                var stopTask;
+        layer.confirm('是否开始考试任务？', {
+            title: '',
+            btn: ['是', '否']
+        }, function() {
 
-                if (1 == data.status) {
+            var data, id, autoType;
 
-                    tr.find('a.start-task').addClass('hide');
-                    stopTask = tr.find('a.stop-task');
+            data = list.dataTables.row(tr).data();
+            id = data['ET_Id'];
+            autoType = data['ET_AutoType'];
 
-                    if (0 == autoType) {
-                        stopTask.text('结束');
-                    } else {
-                        stopTask.text('关闭');
+            $.post('/ExaminationTask/StartTask', {
+                    id: id
+                }, function(data) {
+
+                    var stopTask;
+
+                    if (1 == data.status) {
+
+                        tr.find('a.start-task').addClass('hide');
+                        stopTask = tr.find('a.stop-task');
+
+                        if (0 == autoType) {
+                            stopTask.text('结束');
+                        } else {
+                            stopTask.text('关闭');
+                        }
+                        stopTask.removeClass('hide');
+
+                        // 隐藏常规控制按钮
+                        tr.find('a.edit, a.recycle, a.resume, a.delete').addClass('hide');
+
+                        layer.msg('操作成功', {
+                            offset: '100px'
+                        });
+                    } else if (0 == data.status) {
+
+                        alert(data.message);
                     }
-                    stopTask.removeClass('hide');
+                }, 'json')
+                .error(function() {
 
-                    // 隐藏常规控制按钮
-                    tr.find('a.edit, a.recycle, a.resume, a.delete').addClass('hide');
+                    alert('请求返回错误！');
+                });
+        }, function() {
+            return;
+        });
 
-                    layer.msg('操作成功', {
-                        offset: '100px'
-                    });
-                } else if (0 == data.status) {
-
-                    alert(data.message);
-                }
-            }, 'json')
-            .error(function() {
-
-                alert('请求返回错误！');
-            });
     });
 
     $('.table-sort tbody').on('click', 'a.stop-task', function() {
 
         var tr;
-        var data, id, autoType;
-
-        if (!confirm('确认关闭考试任务吗？')) {
-            return;
-        }
 
         tr = $(this).parents('tr');
-        data = list.dataTables.row(tr).data();
-        id = data['ET_Id'];
-        autoType = data['ET_AutoType'];
 
-        $.post('/ExaminationTask/StopTask', {
-                id: id
-            }, function(data) {
+        /*if (!confirm('是否关闭考试任务？')) {
+            return;
+        }*/
 
-                var startTask;
+        layer.confirm('是否关闭考试任务？', {
+            title: '',
+            btn: ['是', '否']
+        }, function() {
 
-                if (1 == data.status) {
+            var data, id, autoType;
 
-                    tr.find('a.stop-task').addClass('hide');
+            data = list.dataTables.row(tr).data();
+            id = data['ET_Id'];
+            autoType = data['ET_AutoType'];
+
+            $.post('/ExaminationTask/StopTask', {
+                    id: id
+                }, function(data) {
+
+                    var startTask;
+
+                    if (1 == data.status) {
+
+                        tr.find('a.stop-task').addClass('hide');
 
 
-                    // 自动任务切换按钮
-                    if (0 != autoType) {
+                        // 自动任务切换按钮
+                        if (0 != autoType) {
 
-                        startTask = tr.find('a.start-task');
-                        startTask.text('开启');
-                        startTask.removeClass('hide');
-                        // 显示常规控制按钮
-                        tr.find('a.edit, a.recycle').removeClass('hide');
+                            startTask = tr.find('a.start-task');
+                            startTask.text('开启');
+                            startTask.removeClass('hide');
+                            // 显示常规控制按钮
+                            tr.find('a.edit, a.recycle').removeClass('hide');
+                        }
+
+                        layer.msg('操作成功', {
+                            offset: '100px'
+                        });
+                    } else if (0 == data.status) {
+
+                        alert(data.message);
                     }
+                }, 'json')
+                .error(function() {
 
-                    layer.msg('操作成功', {
-                        offset: '100px'
-                    });
-                } else if (0 == data.status) {
+                    alert('请求返回错误！');
+                });
+        }, function(){
+            return;
+        });
 
-                    alert(data.message);
-                }
-            }, 'json')
-            .error(function() {
-
-                alert('请求返回错误！');
-            });
     });
 
     // 任务类型选项卡

@@ -1,4 +1,4 @@
-﻿$(function() {
+$(function() {
 
     var dtParams, list;
 
@@ -22,8 +22,9 @@
             "name": "SL_Id",
             "data": "SL_Id"
         }, {
-            "name": "SL_Name",
-            "data": "SL_Name"
+            "width": "15%",
+            "className": "SL_Name",
+            "defaultContent": '<span class="SL_Name"></span>'
         }, {
             "name": "SL_Type",
             "defaultContent": '<span class="SL_Type"></span>'
@@ -32,7 +33,7 @@
             "defaultContent": '<span class="SL_AddTime"></span>'
         }, {
             "width": "40%",
-            "name": "SL_Content",
+            "className": "SL_Content",
             "defaultContent": '<span class="SL_Content"></span>'
         }, {
             "width": "20%",
@@ -82,6 +83,7 @@
             row.find('span.SL_Type').text(SystemLogType[type]);
 
             Kyzx.List.columnContentEllipsis($('.table-sort'), row, '.SL_Content', data['SL_Content']);
+            Kyzx.List.columnContentEllipsis($('.table-sort'), row, '.SL_Name', data['SL_Name']);
         }
     };
 
