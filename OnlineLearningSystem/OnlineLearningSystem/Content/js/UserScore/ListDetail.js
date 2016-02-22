@@ -1,12 +1,12 @@
 ﻿$(function () {
 
-    var table;
+    var table, dtParams;
     var request, uId;
 
     request = Request.init();
     uId = request.getValue('uId', 0);
 
-    table = $('.table-sort').DataTable({
+    dtParams = {
         "processing": true,
         "serverSide": true,
         "ajax": {
@@ -17,6 +17,7 @@
         "lengthChange": false,
         "pageLength": 15,
         "ordering": false,
+        "searching": false,
         "columns": [{
             "width": "10px",
             "className": "text-c",
@@ -80,10 +81,19 @@
         'initComplete': function(settings, json) {
 
         }
-    });
+    };
+
+    table = $('.table-sort').DataTable(dtParams);
 
     $('#ExportBtn').click(function(){
 
         location.href = '/UserScore/DetailExportToExcel?uId=' + uId;
     });
+
+    $(window).resize(function() {
+
+        table.destroy();
+        table = $('.table-sort').DataTable(dtParams);
+    });
+
 });

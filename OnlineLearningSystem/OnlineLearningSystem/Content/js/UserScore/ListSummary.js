@@ -1,8 +1,8 @@
-﻿$(function () {
+﻿$(function() {
 
-    var table;
+    var table, dtParams;
 
-    table = $('.table-sort').DataTable({
+    dtParams = {
         "processing": true,
         "serverSide": true,
         "ajax": {
@@ -62,7 +62,7 @@
 
             row = $(row);
 
-            row.find('.USS_TotalNumber, .USS_DoneNumber, .USS_UndoNumber, .USS_PassNumber').each(function(){
+            row.find('.USS_TotalNumber, .USS_DoneNumber, .USS_UndoNumber, .USS_PassNumber').each(function() {
 
                 var td;
 
@@ -70,7 +70,7 @@
                 td.html('<span class="bold">' + td.text() + '</span> <span class="fz-9">次</span>');
             });
 
-            row.find('.USS_PassRatio, .USS_DoneRatio').each(function(){
+            row.find('.USS_PassRatio, .USS_DoneRatio').each(function() {
 
                 var td;
 
@@ -78,13 +78,15 @@
                 td.html('<span class="bold">' + td.text() + '</span> <span class="fz-9">%</span>');
             });
         },
-        'rowCallback':function(row, data, index){
+        'rowCallback': function(row, data, index) {
 
         },
         'initComplete': function(settings, json) {
 
         }
-    });
+    };
+
+    table = $('.table-sort').DataTable(dtParams);
 
     $('.table-sort tbody').on('click', 'a.detail', function() {
 
@@ -94,6 +96,12 @@
         id = data['USS_UserId'];
 
         ShowPage('成绩详情', '/UserScore/ListDetail?uId=' + id);
+    });
+
+    $(window).resize(function() {
+
+        table.destroy();
+        table = $('.table-sort').DataTable(dtParams);
     });
 
 });

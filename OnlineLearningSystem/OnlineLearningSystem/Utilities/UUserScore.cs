@@ -46,10 +46,10 @@ namespace OnlineLearningSystem.Utilities
             String excelFile;
             DataSet dataSet;
             List<SqlParameter> sps;
-            
+
             sps = new List<SqlParameter>();
             sps.Add(new SqlParameter("@USD_UserId", uId));
-            dataSet = GetDataSet("SELECT * FROM UserScoreDetails ", sps);
+            dataSet = GetDataSet("SELECT * FROM UserScoreDetailToExcel ", sps);
 
             excelFile = AppDomain.CurrentDomain.BaseDirectory + "Excels\\";
 
@@ -59,6 +59,15 @@ namespace OnlineLearningSystem.Utilities
             }
 
             excelFile += now.Ticks.ToString() + ".xlsx";
+
+            // 去除第一列
+            for (var i = 0; i < dataSet.Tables.Count; i++)
+            {
+                dataSet.Tables[i].Columns.RemoveAt(0);
+            }
+
+            //TODO: 添加用户试卷数据表
+
 
             OpenXmlExcelHelper.ExportExcel(excelFile, dataSet);
 
@@ -79,7 +88,7 @@ namespace OnlineLearningSystem.Utilities
             sql += sql.IndexOf("WHERE ") == -1 ? "WHERE " + whereSql.Substring(4) : whereSql;
 
             dataSet = olsDBO.GetDataSet(sql, sps);
-            
+
             return dataSet;
         }
 
