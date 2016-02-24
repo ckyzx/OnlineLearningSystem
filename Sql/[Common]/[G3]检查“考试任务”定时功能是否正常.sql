@@ -4,9 +4,10 @@ DECLARE @etName VARCHAR(50);
 DECLARE @etId INT ,
     @eptId INT;
 
-SET @etName = '每日自动任务1';
+--SET @etName = '每日自动任务1';
 --SET @etName = '每周自动任务2';
 --SET @etName = '每月自动任务1';
+SET @etName = '测试考试任务3';
 
 SELECT  @etId = ET_Id
 FROM    ExaminationTasks

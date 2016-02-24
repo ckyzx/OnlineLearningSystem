@@ -104,4 +104,17 @@
         table = $('.table-sort').DataTable(dtParams);
     });
 
+    $('#ExportBtn').click(function() {
+
+        layer.confirm('是否导出成绩报表？', {
+            title: '',
+            btn: ['是', '否']
+        }, function() {
+            location.href = '/UserScore/SummaryExportToExcel';
+            layer.closeAll();
+        }, function() {
+            
+        })
+    });
+
 });

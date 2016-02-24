@@ -627,7 +627,26 @@ namespace OnlineLearningSystem.Utilities
             whereSql = "";
             foreach (var sp in spsAddition)
             {
-                whereSql += "AND " + sp.ParameterName.Replace("@", "") + " = " + sp.ParameterName + " ";
+                if (sp.ParameterName.IndexOf("@EQ_") == 0)
+                {
+                    whereSql += "AND " + sp.ParameterName.Replace("@EQ_", "") + " = " + sp.ParameterName + " ";
+                }
+                else if (sp.ParameterName.IndexOf("@LT_") == 0)
+                {
+                    whereSql += "AND " + sp.ParameterName.Replace("@LT_", "") + " < " + sp.ParameterName + " ";
+                }
+                else if (sp.ParameterName.IndexOf("@GT_") == 0)
+                {
+                    whereSql += "AND " + sp.ParameterName.Replace("@GT_", "") + " > " + sp.ParameterName + " ";
+                }
+                else if (sp.ParameterName.IndexOf("@LIKE_") == 0)
+                {
+                    whereSql += "AND " + sp.ParameterName.Replace("@LIKE_", "") + " LIKE " + sp.ParameterName + " ";
+                }
+                else // EQ
+                {
+                    whereSql += "AND " + sp.ParameterName.Replace("@", "") + " = " + sp.ParameterName + " ";
+                }
             }
             sql += sql.IndexOf("WHERE ") == -1 ? "WHERE " + whereSql.Substring(4) : whereSql;
 

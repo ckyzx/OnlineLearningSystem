@@ -145,7 +145,29 @@ INSERT  [dbo].[Permissions]
 VALUES  ( @pId ,
           @pId ,
           @pcId ,
-          N'导出详情到表格' ,
+          N'导出用户成绩概览到表格' ,
+          N'UserScore' ,
+          N'SummaryExportToExcel' ,
+          NULL ,
+          CAST(0x079DAEB04D8BAB3A0B AS DATETIME2)
+        )
+
+SET @pId = @pId + 1;
+
+INSERT  [dbo].[Permissions]
+        ( P_Id ,
+          P_AutoId ,
+          PC_Id ,
+          P_Name ,
+          P_Controller ,
+          P_Action ,
+          P_Remark ,
+          P_AddTime
+        )
+VALUES  ( @pId ,
+          @pId ,
+          @pcId ,
+          N'导出用户成绩详情到表格' ,
           N'UserScore' ,
           N'DetailExportToExcel' ,
           NULL ,

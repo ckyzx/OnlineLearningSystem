@@ -1,7 +1,8 @@
-﻿$(function () {
+﻿$(function() {
 
     var table, dtParams;
     var request, uId;
+    var getRequestString;
 
     request = Request.init();
     uId = request.getValue('uId', 0);
@@ -64,18 +65,18 @@
 
             span = row.find('span.USD_Score');
             score = data['USD_Score'];
-            if(score == -1){
+            if (score == -1) {
                 score = '...'
-            }else if(statisticType == 1){
+            } else if (statisticType == 1) {
                 score = '<span class="bold">' + score + '</span> <span class="fz-9">分</span>';
-            }else if(statisticType == 2){
+            } else if (statisticType == 2) {
                 score = '<span class="bold">' + score + '</span> <span class="fz-9">%</span>';
-            }else{
+            } else {
                 score = '...';
             }
             span.html(score);
         },
-        'rowCallback':function(row, data, index){
+        'rowCallback': function(row, data, index) {
 
         },
         'initComplete': function(settings, json) {
@@ -85,9 +86,58 @@
 
     table = $('.table-sort').DataTable(dtParams);
 
-    $('#ExportBtn').click(function(){
+    getRequestString = function() {
 
-        location.href = '/UserScore/DetailExportToExcel?uId=' + uId;
+        var taskName, beginTime, endTime;
+        var requestString;
+
+        taskName = $('#TaskName').val();
+        beginTime = $('#BeginTime').val();
+        endTime = $('#EndTime').val();
+
+        if ((beginTime == '' && endTime != '') || (beginTime != '' && endTime == '')) {
+
+            layer.confirm('请同时选择“开始时间”与“结束时间”。', {
+                    title: '',
+                    btn: ['确定']
+                },
+                function() {
+                    layer.closeAll();
+                });
+
+            return '';
+        }
+
+        requestString = '';
+
+        if (taskName != '')
+            requestString += '&taskName=' + taskName;
+
+        if (beginTime != '')
+            requestString += '&beginTime=' + beginTime;
+
+        if (endTime != '')
+            requestString += '&endTime=' + endTime;
+
+        return requestString;
+    };
+
+    $('#SearchBtn').click(function() {
+
+        table.ajax.url('/UserScore/ListDetailDataTablesAjax?uId=' + uId + getRequestString()).load();
+    });
+
+    $('#ExportBtn').click(function() {
+
+        layer.confirm('是否导出成绩报表？', {
+            title: '',
+            btn: ['是', '否']
+        }, function() {
+            location.href = '/UserScore/DetailExportToExcel?uId=' + uId + getRequestString();
+            layer.closeAll();
+        }, function() {
+            
+        })
     });
 
     $(window).resize(function() {

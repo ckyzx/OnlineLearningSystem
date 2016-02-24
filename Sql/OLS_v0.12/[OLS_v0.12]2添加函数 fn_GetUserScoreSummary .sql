@@ -34,15 +34,11 @@ AS
                         USS_PassNumber ,
                         ( CASE USS_TotalNumber
                             WHEN 0 THEN 0
-                            ELSE ROUND(( USS_DoneNumber
-                                         / CAST(USS_TotalNumber AS FLOAT) ), 2)
-                                 * 100
+                            ELSE ROUND(( USS_DoneNumber / CAST(USS_TotalNumber AS FLOAT) ), 2) * 100
                           END ) USS_DoneRatio ,
                         ( CASE USS_TotalNumber
                             WHEN 0 THEN 0
-                            ELSE ROUND(( USS_PassNumber
-                                         / CAST(USS_TotalNumber AS FLOAT) ), 2)
-                                 * 100
+                            ELSE ROUND(( USS_PassNumber / CAST(USS_TotalNumber AS FLOAT) ), 2) * 100
                           END ) USS_PassRatio
                 FROM    ( SELECT    USS_UserId ,
                                     USS_UserName ,
@@ -73,22 +69,14 @@ AS
                                                             AND ep1.EP_Id IS NOT NULL
                                                 ) USS_DoneNumber ,
                                                 ( SELECT    SUM(CASE et2.ET_StatisticType
-                                                              WHEN 1
-                                                              THEN ( CASE
-                                                              WHEN ( ep2.EP_Score
-                                                              / CAST(et2.ET_TotalScore AS FLOAT)
-                                                              * 100 ) > 59
-                                                              THEN 1
-                                                              ELSE 0
-                                                              END )
-                                                              WHEN 2
-                                                              THEN ( CASE
-                                                              WHEN ep2.EP_Score > 59
-                                                              THEN 1
-                                                              ELSE 0
-                                                              END )
-                                                              ELSE 0
-                                                              END)
+                                                                  WHEN 1 THEN ( CASE WHEN ( ep2.EP_Score / CAST(et2.ET_TotalScore AS FLOAT) * 100 ) > 59 THEN 1
+                                                                                     ELSE 0
+                                                                                END )
+                                                                  WHEN 2 THEN ( CASE WHEN ep2.EP_Score > 59 THEN 1
+                                                                                     ELSE 0
+                                                                                END )
+                                                                  ELSE 0
+                                                                END)
                                                   FROM      dbo.ExaminationTasks et2
                                                             LEFT JOIN dbo.ExaminationTaskAttendees eta2 ON et2.ET_Id = eta2.ET_Id
                                                             LEFT JOIN dbo.Users u2 ON eta2.U_Id = u2.U_Id
@@ -108,6 +96,14 @@ AS
                                                 LEFT JOIN dbo.ExaminationTaskAttendees eta ON u.U_Id = eta.U_Id
                                                 LEFT JOIN dbo.ExaminationTasks et ON eta.ET_Id = et.ET_Id
                                                 LEFT JOIN dbo.ExaminationPaperTemplates ept ON et.ET_Id = ept.ET_Id
+                                      WHERE     ( et.ET_Status = 1
+                                                  OR et.ET_Status IS NULL
+                                                )
+                                                AND u.U_Status = 1
+                                                AND d.D_Status = 1
+                                                AND ( du.Du_Status = 1
+                                                      OR du.Du_Status IS NULL
+                                                    )
                                     ) TmpTable
                           GROUP BY  USS_UserId ,
                                     USS_UserName ,
@@ -117,3 +113,5 @@ AS
 		
         RETURN;
     END
+
+GO

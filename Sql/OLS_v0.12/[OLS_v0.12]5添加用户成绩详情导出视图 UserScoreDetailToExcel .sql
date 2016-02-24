@@ -9,7 +9,11 @@ GO
 CREATE VIEW dbo.UserScoreDetailToExcel
 AS
     SELECT  USD_UserId,
-			USD_TaskName 任务 ,
+			USD_TaskName,
+			USD_StartTime,
+			USD_PaperId,
+			CASE WHEN USD_PaperId = 0 THEN '' ELSE CAST(USD_PaperId AS NVARCHAR(20)) END 试卷编号,
+			USD_TaskName 考试任务 ,
             CONVERT(VARCHAR(20), USD_StartTime, 20) 考试时间 ,
             CASE USD_TaskStatisticType
               WHEN 1 THEN '得分'
@@ -17,11 +21,11 @@ AS
               ELSE '[未设置]'
             END 成绩类型 ,
             CASE USD_Score
-              WHEN -1 THEN '...'
+              WHEN -1 THEN ''
               ELSE CASE USD_TaskStatisticType
                      WHEN 1 THEN CAST(USD_Score AS VARCHAR(10)) + '分'
                      WHEN 2 THEN CAST(USD_Score AS VARCHAR(10)) + '%'
-                     ELSE '...'
+                     ELSE ''
                    END
             END 成绩 ,
             CASE USD_State

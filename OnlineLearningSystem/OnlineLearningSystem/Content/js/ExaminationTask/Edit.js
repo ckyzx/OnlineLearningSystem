@@ -361,7 +361,7 @@ $(function() {
         }
 
         // 是否复选父节点
-        if (nodes.length == checkedCount) {
+        if (nodes.length != 0 && nodes.length == checkedCount) {
             return true;
         }
 

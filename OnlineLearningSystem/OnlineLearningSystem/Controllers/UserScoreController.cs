@@ -64,11 +64,17 @@ namespace OnlineLearningSystem.Controllers
         public JsonResult ListDetailDataTablesAjax(Int32 uId)
         {
 
+            String taskName;
+            DateTime beginTime, endTime;
             DataTablesRequest dtRequest;
             DataTablesResponse dtResponse;
 
+            taskName = Request["taskName"] != null ? Request["taskName"].ToString() : "";
+            beginTime = Request["beginTime"] != null ? Convert.ToDateTime(Request["beginTime"]) : new DateTime(1, 1, 1);
+            endTime = Request["endTime"] != null ? Convert.ToDateTime(Request["endTime"]) : new DateTime(1, 1, 1);
+
             dtRequest = GetDataTablesRequest();
-            dtResponse = um.ListDetailDataTablesAjax(dtRequest, uId);
+            dtResponse = um.ListDetailDataTablesAjax(dtRequest, uId, taskName, beginTime, endTime);
 
             return Json(dtResponse, JsonRequestBehavior.DenyGet);
         }
@@ -76,15 +82,42 @@ namespace OnlineLearningSystem.Controllers
         //
         // GET: /UserScore/DetailExportToExcel
 
-        [Description("导出详情到表格")]
+        [Description("导出用户成绩详情到表格")]
         public JsonResult DetailExportToExcel(Int32 uId)
         {
 
-            String excelFile;
-            DataTablesRequest dtRequest;
+            String taskName, excelFile;
+            DateTime beginTime, endTime;
 
-            dtRequest = GetDataTablesRequest();
-            excelFile = um.DetailExportToExcel(uId);
+            taskName = Request["taskName"] != null ? Request["taskName"].ToString() : "";
+            beginTime = Request["beginTime"] != null ? Convert.ToDateTime(Request["beginTime"]) : new DateTime(1,1,1);
+            endTime = Request["endTime"] != null ? Convert.ToDateTime(Request["endTime"]) : new DateTime(1, 1, 1);
+            
+            excelFile = um.DetailExportToExcel(uId, taskName, beginTime, endTime);
+
+            FileInfo downloadFile = new FileInfo(excelFile);
+            Response.Clear();
+            Response.ClearHeaders();
+            Response.Buffer = false;
+            Response.ContentType = "application/octet-stream";
+            Response.AppendHeader("Content-Disposition", "attachment;filename=" + System.Web.HttpUtility.UrlEncode(downloadFile.Name, System.Text.Encoding.UTF8));
+            Response.AppendHeader("Content-Length", downloadFile.Length.ToString());
+            Response.WriteFile(downloadFile.FullName);
+            Response.Flush();
+            Response.End();
+
+            return Json(downloadFile.Name, JsonRequestBehavior.AllowGet);
+        }
+
+        //
+        // GET: /UserScore/SummaryExportToExcel
+
+        [Description("导出用户成绩概览到表格")]
+        public JsonResult SummaryExportToExcel()
+        {
+            String excelFile;
+
+            excelFile = um.SummaryExportToExcel();
 
             FileInfo downloadFile = new FileInfo(excelFile);
             Response.Clear();

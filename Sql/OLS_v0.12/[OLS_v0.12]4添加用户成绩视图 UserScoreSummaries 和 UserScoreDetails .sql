@@ -19,3 +19,5 @@ GO
 CREATE VIEW dbo.UserScoreDetails
 AS
 SELECT * FROM dbo.fn_GetUserScoreDetail()
+
+GO

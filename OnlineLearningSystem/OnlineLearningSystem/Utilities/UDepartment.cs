@@ -243,7 +243,7 @@ namespace OnlineLearningSystem.Utilities
             if (uds.Count > 0)
             {
 
-                zTreeJson.Append(", \"children\":[");
+                zTreeJson.Append(", \"children\":[ ");
 
                 foreach (var ud in uds)
                 {
@@ -259,7 +259,6 @@ namespace OnlineLearningSystem.Utilities
                     }
 
                 }
-
                 zTreeJson.Remove(zTreeJson.Length - 1, 1);
                 zTreeJson.Append("]");
             }
