@@ -126,6 +126,12 @@
         btn.hide();
         filePath = btn.attr('file-path');
 
+        if(filePath == undefined || filePath == null || filePath == ''){
+            alert('未上传试题模板。');
+        }
+
+        filePath = '/Content/lib/ueditor/1.4.3/net/' + filePath;
+
         jqXHR = $.post('/Question/Import', {
                 filePath: filePath
             }, function(data, textStatus, jqXHR) {

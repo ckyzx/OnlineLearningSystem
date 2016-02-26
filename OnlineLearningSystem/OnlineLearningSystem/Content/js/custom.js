@@ -9,19 +9,29 @@ function ShowPage(title, url) {
         content: url,
         // 初始化为小区域，可避免展现错位的控件
         //area: ['180px', '36px']
-        area: ['800px', '600px']
+        area: ['800px', '600px'],
+        shade: 0
     });
     layer.full(index);
 }
 
 function ShowPageWithSize(title, url, w, h) {
+
+    if (w == undefined)
+        w = 800;
+
+    if (h == undefined) {
+        h = 600;
+    }
+
     layer.open({
         type: 2,
         area: [w + 'px', h + 'px'],
         fix: false, //不固定
         shade: 0.4,
         title: title,
-        content: url
+        content: url,
+        shade: 0
     });
 }
 
@@ -97,11 +107,13 @@ Kyzx.List = {
 
         self._initListEvent();
 
-        $(window).resize(function() {
+        if (!brower.ieVersion) {
+            $(window).resize(function() {
 
-            self.dataTables.destroy();
-            self.dataTables = self.jqTable.DataTable(self.settings.dtParams);
-        });
+                self.dataTables.destroy();
+                self.dataTables = self.jqTable.DataTable(self.settings.dtParams);
+            });
+        }
 
         return self.dataTables;
     },

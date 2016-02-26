@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Data;
+using System.Transactions;
 using System.Web;
 using System.Web.Mvc;
 using OnlineLearningSystem.Models;
@@ -120,35 +121,74 @@ namespace OnlineLearningSystem.Utilities
         public ResponseJson Create(ExaminationTask model)
         {
 
-            ResponseJson resJson;
-
-            resJson = new ResponseJson(ResponseStatus.Success, now);
-
-            try
+            using (TransactionScope scope = new TransactionScope())
             {
 
                 Int32 id;
+                ExaminationTask et;
+                ResponseJson resJson;
+                List<ExaminationTaskAttendee> etas;
+
+                resJson = new ResponseJson(ResponseStatus.Success, now);
 
                 id = GetETId();
 
-                model.ET_Id = id;
-                olsEni.ExaminationTasks.Add(model);
-                olsEni.SaveChanges();
+                try
+                {
 
-                // 添加参与人员
-                AddAttendees(model);
+                    model.ET_Id = id;
+                    olsEni.ExaminationTasks.Add(model);
+                    olsEni.SaveChanges();
 
-                // 添加试卷模板与试题模板
-                AddPaperTemplateAndQuestionTemplate(model);
+                    try
+                    {
 
-                return resJson;
-            }
-            catch (Exception ex)
-            {
-                resJson.status = ResponseStatus.Error;
-                resJson.message = ex.Message;
-                resJson.detail = StaticHelper.GetExceptionMessageAndRecord(ex);
-                return resJson;
+                        // 添加参与人员
+                        AddAttendees(model);
+
+                        // 添加试卷模板与试题模板
+                        AddPaperTemplateAndQuestionTemplate(model);
+
+                    }
+                    catch (Exception ex1)
+                    {
+
+                        /*// 如果已添加任务，则删除之
+                        et = olsEni.ExaminationTasks.SingleOrDefault(m => m.ET_Id == id);
+                        if (et != null)
+                        {
+                            olsEni.Entry(et).State = EntityState.Deleted;
+                            olsEni.SaveChanges();
+                        }
+
+                        // 删除任务用户关联
+                        etas = olsEni.ExaminationTaskAttendees.Where(m => m.ET_Id == model.ET_Id).ToList();
+                        foreach (var eta1 in etas)
+                        {
+                            olsEni.Entry(eta1).State = EntityState.Deleted;
+                        }
+                        olsEni.SaveChanges();
+
+                        if (0 == olsEni.SaveChanges())
+                        {
+                            throw new Exception(ResponseMessage.SaveChangesError);
+                        }*/
+
+                        throw ex1;
+                    }
+
+                    scope.Complete();
+
+                    return resJson;
+                }
+                catch (Exception ex)
+                {
+
+                    resJson.status = ResponseStatus.Error;
+                    resJson.message = ex.Message;
+                    resJson.detail = StaticHelper.GetExceptionMessageAndRecord(ex);
+                    return resJson;
+                }
             }
         }
 
@@ -345,7 +385,10 @@ namespace OnlineLearningSystem.Utilities
                     olsEni.Entry(eta).State = EntityState.Added;
                 }
             }
-            olsEni.SaveChanges();
+            if (0 == olsEni.SaveChanges())
+            {
+                throw new Exception(ResponseMessage.SaveChangesError);
+            }
         }
 
         public Boolean Edit(ExaminationTask model)
@@ -363,7 +406,10 @@ namespace OnlineLearningSystem.Utilities
                 }
                 olsEni.Entry(et).State = EntityState.Detached;
                 olsEni.Entry(model).State = EntityState.Modified;
-                olsEni.SaveChanges();
+                if (0 == olsEni.SaveChanges())
+                {
+                    throw new Exception(ResponseMessage.SaveChangesError);
+                }
 
                 // 添加参与人员
                 AddAttendees(model);

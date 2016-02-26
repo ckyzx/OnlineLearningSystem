@@ -87,7 +87,7 @@ h4{line-height:30px}
 		Explain:页脚
 		Last Modify:	jackying
 	*/
-	.footer{position:fixed;bottom:0;width:100%;border-top:1px solid #E8E8E8;margin-top:10px;padding-top:10px; padding-bottom:10px; font-family:tahoma,Arial;font-size:12px;color:#999;line-height:22px;text-align:center;background-color:rgba(238,238,238,0.98);}
+	.footer{position:fixed;bottom:0;width:100%;border-top:1px solid #E8E8E8;margin-top:10px;padding-top:10px; padding-bottom:10px; font-family:tahoma,Arial;font-size:12px;color:#999;line-height:22px;text-align:center;background-color:#FFF;}
 	.footer p{padding-top:15px}
 	.footer a,.footer a:hover{color:#999}
 /*横向手机 竖向平板*/
