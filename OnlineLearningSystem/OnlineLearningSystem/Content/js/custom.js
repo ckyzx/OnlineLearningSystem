@@ -545,9 +545,9 @@ Kyzx.List = {
         for (var i = 0; i < dtData.length; i++) {
 
             cells = dtData[i].anCells;
-            if ($(cells[0]).find(':checkbox').get(0).checked) {
+            if ($(cells[0]).find(':checkbox, :radio').get(0).checked) {
 
-                id = $(cells[0]).find(':checkbox').val();
+                id = $(cells[0]).find(':checkbox, :radio').val();
                 id = parseInt(id);
                 ms.push(id);
             }

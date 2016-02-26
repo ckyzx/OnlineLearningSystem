@@ -25,8 +25,8 @@
             "name": "U_Name",
             "data": "U_Name"
         }, {
-            "name": "U_LoginName",
-            "data": "U_LoginName"
+            "name": "U_IdCardNumber",
+            "data": "U_IdCardNumber"
         }, {
             "name": "U_AddTime",
             "defaultContent": '<span class="U_AddTime"></span>'

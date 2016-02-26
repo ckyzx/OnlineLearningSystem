@@ -344,7 +344,7 @@ $(function() {
                         ztree.checkNode(nodes[i], true, true);
                         nodes[i].now = now;
                         checkedCount += 1;
-                    }else if(nodes[i].now != now){
+                    } else if (nodes[i].now != now) {
 
                         ztree.checkNode(nodes[i], false, true);
                     }
@@ -439,7 +439,7 @@ $(function() {
                     ztree.checkNode(nodes[i], true, true);
                     nodes[i].now = now;
                     checkedCount += 1;
-                }else if(nodes[i].now != now){
+                } else if (nodes[i].now != now) {
 
                     ztree.checkNode(nodes[i], false, true);
                 }
@@ -679,8 +679,8 @@ $(function() {
 
                 e.preventDefault();
                 ifSubmit = false;
-            }else{
-                
+            } else {
+
                 ifSubmit = true;
             }
 
@@ -755,7 +755,7 @@ $(function() {
                 ratioNumber += autoRatio[i].percent;
             }
 
-            if (ratioNumber < 0.5 ||ratioNumber > 1) {
+            if (ratioNumber < 0.5 || ratioNumber > 1) {
 
                 $('<div class="custom-validation-error">' +
                     '<div class="cl"></div>' +
@@ -790,17 +790,25 @@ $(function() {
         }
 
         // 手动任务
-        etQuestions = $('#ETT_Questions');
-        if (0 == autoType && etQuestions.length != 0) {
+        etQuestions = $('#ET_Questions');
+        sdiContainer = $('.select-data-item');
+        questions = etQuestions.val();
+        qAry = JSON.parse(questions);
+        if (0 == autoType && qAry.length == 0) {
+
+            $('<div class="custom-validation-error">' +
+                '<div class="cl"></div>' +
+                '<span class="field-validation-error">' +
+                '<span htmlfor="ETT_Questions" generated="true" class="">请选择试题</span>' +
+                '</span>' +
+                '<div>').appendTo(sdiContainer);
+
+            valid = false;
+        } else if (0 == autoType && qAry.length != 0) {
 
             // 试题选择数据验证
             // 数据格式：[1, 2, ...]
             qsRegex = /^\[((\d+)|("{1}\d+"{1}),?\s*)+\]$/g;
-
-
-            sdiContainer = $('.select-data-item');
-            questions = etQuestions.val();
-            qAry = JSON.parse(questions);
 
             if (!qsRegex.test(questions)) {
 
@@ -829,12 +837,12 @@ $(function() {
             }
 
             // 限制选题数量
-            if (qAry.length < totalScore / 10 || qAry.length > totalScore) {
+            if (totalScore * 0.1 > qAry.length || qAry.length > totalScore) {
 
                 $('<div class="custom-validation-error">' +
                     '<div class="cl"></div>' +
                     '<span class="field-validation-error">' +
-                    '<span htmlfor="ETT_TotalScore" generated="true" class="">已选试题数量与出题分数不合理</span>' +
+                    '<span htmlfor="ETT_TotalScore" generated="true" class="">选题总数不合理。选题数量最低应占总分的10%，最高不超过出题总分。</span>' +
                     '</span>' +
                     '<div>').appendTo(sdiContainer);
 
@@ -874,7 +882,7 @@ $(function() {
         return valid;
     }
 
-    function initControls(){
+    function initControls() {
 
         var etTimeSpan;
 
@@ -882,7 +890,7 @@ $(function() {
 
         $('script[src$="jquery.min.js"]').after('<script type="text/javascript" src="/Content/lib/jquery-ui/jquery-ui.min.js"></script>');
         $('head').prepend('<link href="/Content/lib/jquery-ui/jquery-ui.min.css" rel="stylesheet" type="text/css" />');
-        
+
         etTimeSpan.spinner({
             min: 0,
             max: 600,

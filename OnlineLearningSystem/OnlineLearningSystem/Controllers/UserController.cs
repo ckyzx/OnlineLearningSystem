@@ -253,18 +253,18 @@ namespace OnlineLearningSystem.Controllers
         //
         // GET: /User/CheckOldPassword
 
-        [Description("检查密码")]
-        public JsonResult CheckOldPassword(String U_OldPassword)
+        //
+        // GET: /User/DuplicateIdCardNumber
+
+        [Description("检查身份证号")]
+        public JsonResult DuplicateIdCardNumber(Int32 U_Id, String U_IdCardNumber)
         {
 
-            User m;
             Boolean matching;
 
-            m = (User)Session["User"];
+            matching = um.DuplicateIdCardNumber(U_Id, U_IdCardNumber);
 
-            matching = um.CheckOldPassword(m.U_Id, U_OldPassword);
-
-            return Json(matching, JsonRequestBehavior.AllowGet);
+            return Json(!matching, JsonRequestBehavior.AllowGet);
         }
 
         //
@@ -293,6 +293,20 @@ namespace OnlineLearningSystem.Controllers
             matching = um.DuplicateLoginName(U_Id, U_LoginName);
 
             return Json(!matching, JsonRequestBehavior.AllowGet);
+        }
+
+        [Description("检查密码")]
+        public JsonResult CheckOldPassword(String U_OldPassword)
+        {
+
+            User m;
+            Boolean matching;
+
+            m = (User)Session["User"];
+
+            matching = um.CheckOldPassword(m.U_Id, U_OldPassword);
+
+            return Json(matching, JsonRequestBehavior.AllowGet);
         }
 
         //

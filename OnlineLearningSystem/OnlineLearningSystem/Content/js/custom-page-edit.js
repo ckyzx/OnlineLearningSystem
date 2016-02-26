@@ -180,7 +180,7 @@ function GetDataTablesAllCheckStatus(tableSelector) {
     return [checked, unchecked];
 }
 
-//[IECompatible]
+//[IECompatibility]
 function GetDataTablesAllCheckStatus1(tableSelector, checked) {
 
     var table, dtData, id, checkedAry, uncheckedAry;

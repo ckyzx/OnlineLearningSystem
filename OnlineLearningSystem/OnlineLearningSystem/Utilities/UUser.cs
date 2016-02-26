@@ -151,6 +151,7 @@ namespace OnlineLearningSystem.Utilities
                 U_Id = model.U_Id,
                 Du_Id = model.Du_Id,
                 Du_Name = duName,
+                U_IdCardNumber = model.U_IdCardNumber,
                 U_Name = model.U_Name,
                 U_LoginName = model.U_LoginName,
                 U_Password = "**********",
@@ -180,6 +181,7 @@ namespace OnlineLearningSystem.Utilities
                 {
                     U_Id = uId,
                     Du_Id = vmModel.Du_Id,
+                    U_IdCardNumber = vmModel.U_IdCardNumber,
                     U_Name = vmModel.U_Name,
                     U_LoginName = "LoginName" + uId,
                     U_Password = EncryptPassword(vmModel.U_Password),
@@ -288,6 +290,7 @@ namespace OnlineLearningSystem.Utilities
 
                 model.U_Id = vmModel.U_Id;
                 model.Du_Id = vmModel.Du_Id;
+                model.U_IdCardNumber = vmModel.U_IdCardNumber;
                 model.U_Name = vmModel.U_Name;
                 model.U_LoginName = vmModel.U_LoginName;
                 model.U_Departments = vmModel.U_Departments;
@@ -388,6 +391,8 @@ namespace OnlineLearningSystem.Utilities
                         ((m.U_Name.ToLower() == userName
                             && m.U_Password == password)
                         || (m.U_LoginName.ToLower() == userName
+                            && m.U_Password == password) 
+                        || (m.U_IdCardNumber.ToLower() == userName
                             && m.U_Password == password))
                         && m.U_Status == (Byte)Status.Available);
 
@@ -648,6 +653,31 @@ namespace OnlineLearningSystem.Utilities
                 count = olsEni.Users.Where(m =>
                     m.U_Id != uId
                     && m.U_LoginName == loginName).Count();
+
+                if (count > 0)
+                {
+                    return true;
+                }
+
+                return false;
+            }
+            catch (Exception ex)
+            {
+                StaticHelper.RecordSystemLog(ex);
+                return false;
+            }
+        }
+
+        public Boolean DuplicateIdCardNumber(Int32 uId, String idCardNumber)
+        {
+            try
+            {
+
+                Int32 count;
+
+                count = olsEni.Users.Where(m =>
+                    m.U_Id != uId
+                    && m.U_IdCardNumber == idCardNumber).Count();
 
                 if (count > 0)
                 {

@@ -34,14 +34,20 @@ namespace OnlineLearningSystem.ViewModels
         [NotMapped]
         public List<Permission> U_PermissionList { get; set; }
 
+        [DisplayName("身份证号")]
+        [Remote("DuplicateIdCardNumber", "User", ErrorMessage = "身份证号已存在", AdditionalFields = "U_Id")]
+        [Required(ErrorMessage = "请输入{0}")]
+        [RegularExpression(@"(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)", ErrorMessage = "请输入正确格式的身份证号")]
+        public String U_IdCardNumber { get; set; }
+
         [DisplayName("用户名")]
-        [Remote("DuplicateName", "User", ErrorMessage = "用户名已存在", AdditionalFields = "U_Id")]
+        //[Remote("DuplicateName", "User", ErrorMessage = "用户名已存在", AdditionalFields = "U_Id")]
         [Required(ErrorMessage = "请输入{0}")]
         [RegularExpression(@"^[\u4E00-\u9FA5\uF900-\uFA2D]{1}[\u4E00-\u9FA5\uF900-\uFA2D0-9]{1,11}$", ErrorMessage = "请输入2至12位，中文开头的字符，可带数字")]
         public String U_Name { get; set; }
 
         [DisplayName("登录名")]
-        [Remote("DuplicateLoginName", "User", ErrorMessage = "登录名已存在", AdditionalFields = "U_Id")]
+        //[Remote("DuplicateLoginName", "User", ErrorMessage = "登录名已存在", AdditionalFields = "U_Id")]
         [Required(ErrorMessage = "请输入{0}")]
         [RegularExpression(@"^[A-Za-z]{1}[A-Za-z0-9]{4,21}$", ErrorMessage = "请输入5至22位，字母开头的字符，可带数字")]
         public String U_LoginName { get; set; }

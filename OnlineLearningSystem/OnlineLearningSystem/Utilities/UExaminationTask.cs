@@ -294,7 +294,7 @@ namespace OnlineLearningSystem.Utilities
             // 选题数量必须 > 总分的1/10、<= 总分
             if (eptqs.Count < totalScore / 10 || eptqs.Count > totalScore)
             {
-                throw new Exception("选题总数不合理。");
+                throw new Exception("选题总数不合理。选题数量最低应占总分的10%，最高不超过出题总分。");
             }
 
             selectedScore = eptqs.Sum(m => m.EPTQ_Score);

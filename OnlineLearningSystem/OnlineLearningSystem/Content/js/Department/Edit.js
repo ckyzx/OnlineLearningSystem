@@ -14,29 +14,56 @@ $(function() {
 
     rTable.find(':checkbox[value=""]').attr('disabled', 'disabled');
 
-    rTable
-        .on('click', ':checkbox', function() {
-            Kyzx.List.checkboxClickEvent(this);
-        })
-        .on('change', ':checkbox', function() {
+    //[IECompatibility]
+    if (brower.ieVersion) {
 
-            var roles;
+        rTable.find(':checkbox').each(function() {
 
-            Kyzx.List.checkboxChangeEvent(this);
+            var checkbox;
+
+            checkbox = $(this);
+            checkbox.after('<input type="radio" name="role" value="' + checkbox.val() + '" />');
+
+            if (checkbox.get(0).checked) {
+                checkbox.parent().find(':radio').get(0).checked = true;
+            }
+
+            checkbox.remove()
+        });
+
+        rTable.on('change', ':radio', function() {
+
             Kyzx.List.getChecked('.role-table', dRoleSel);
 
             roles = $(dRoleSel).val();
             Kyzx.List.renderSelectCount(rTable.parent(), JSON.parse(roles).length);
         });
-	/*----------------------------------------------------------------------*/
+    } else {
+
+        rTable
+            .on('click', ':checkbox', function() {
+                Kyzx.List.checkboxClickEvent(this);
+            })
+            .on('change', ':checkbox', function() {
+
+                var roles;
+
+                Kyzx.List.checkboxChangeEvent(this);
+                Kyzx.List.getChecked('.role-table', dRoleSel);
+
+                roles = $(dRoleSel).val();
+                Kyzx.List.renderSelectCount(rTable.parent(), JSON.parse(roles).length);
+            });
+    }
+    /*----------------------------------------------------------------------*/
 
     $('form').submit(function(e) {
 
-        if(!confirm('确定提交吗？')){
-            
+        if (!confirm('确定提交吗？')) {
+
             e.preventDefault();
             ifSubmit = false;
-        }else{
+        } else {
             ifSubmit = true;
         }
     });

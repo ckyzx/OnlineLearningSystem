@@ -37,6 +37,10 @@ namespace OnlineLearningSystem.Models
         [NotMapped]
         public List<Permission> U_PermissionList { get; set; }
 
+        [DisplayName("身份证号")]
+        [Required(ErrorMessage = "请输入{0}")]
+        public String U_IdCardNumber { get; set; }
+
         [DisplayName("用户名")]
         [Required(ErrorMessage = "请输入{0}")]
         public String U_Name { get; set; }
