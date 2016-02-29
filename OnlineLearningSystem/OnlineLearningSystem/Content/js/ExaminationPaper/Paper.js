@@ -94,7 +94,9 @@ $(function() {
 
                 saveLocalAnswers();
                 submitAnswers(function() {
-                    layer_close();
+                    handIn(function() {
+                        location.href = '/Content/html/parent_reload.htm';
+                    });
                 });
 
             }
@@ -224,11 +226,11 @@ $(function() {
         // 控制按钮状态
         $('.swiper-button-question').removeClass('disabled');
 
-        if(a.parent().prev().length == 0 && a.parentsUntil('ul').last().prev().length == 0){
+        if (a.parent().prev().length == 0 && a.parentsUntil('ul').last().prev().length == 0) {
             $('.swiper-button-prev-question').addClass('disabled');
         }
 
-        if(a.parent().next().length == 0 && a.parentsUntil('ul').last().next().length == 0){
+        if (a.parent().next().length == 0 && a.parentsUntil('ul').last().next().length == 0) {
             $('.swiper-button-next-question').addClass('disabled');
         }
 
@@ -356,15 +358,45 @@ $(function() {
 
                         $('#AnswerData_' + a.EPTQ_Id).val(JSON.stringify(a));
 
-                        if ('function' == typeof(successCallback)) {
-                            successCallback();
-                        }
                     }
 
+                    if ('function' == typeof(successCallback)) {
+                        successCallback();
+                    }
                     //updateAnswerProgress(questionTypesAry);
                 } else if (0 == data.status) {
 
                     alert(data.message);
+
+                    if (data.message == '考试已结束') {
+                        location.href = '/Content/html/parent_reload.htm';
+                    }
+                }
+            }, 'json')
+            .error(function() {
+
+                alert('请求返回错误！');
+            });
+    }
+
+    function handIn(successCallback) {
+
+        $.post('/ExaminationPaper/HandIn', {
+                id: epId
+            }, function(data) {
+
+                if (1 == data.status) {
+
+                    if ('function' == typeof(successCallback)) {
+                        successCallback();
+                    }
+                } else if (0 == data.status) {
+
+                    alert(data.message);
+
+                    if (data.message == '考试已结束') {
+                        location.href = '/Content/html/parent_reload.htm';
+                    }
                 }
             }, 'json')
             .error(function() {

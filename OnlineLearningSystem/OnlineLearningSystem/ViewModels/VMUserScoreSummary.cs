@@ -9,6 +9,7 @@ namespace OnlineLearningSystem.ViewModels
     {
         public Int32 USS_UserId { get; set; }
         public String USS_UserName { get; set; }
+        public Int32 USS_DepartmentId { get; set; }
         public String USS_DepartmentName { get; set; }
         public String USS_DutyName { get; set; }
         public Int32 USS_TotalNumber { get; set; }

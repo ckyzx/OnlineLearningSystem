@@ -408,5 +408,28 @@ namespace OnlineLearningSystem.Utilities
                 return resJson;
             }
         }
+
+        internal List<SelectListItem> GetDepartmentList(Int32 currentValue = 0)
+        {
+
+            List<SelectListItem> list;
+
+            var items = olsEni.Departments.Where(m=>m.D_Status == (Byte)Status.Available).OrderBy(m=>m.D_Sort).Select(model => new { model.D_Name, model.D_Id });
+
+            list = new List<SelectListItem>();
+            list.Add(new SelectListItem() { Text = "", Value = "" });
+
+            foreach (var i in items)
+            {
+                list.Add(new SelectListItem
+                {
+                    Text = i.D_Name,
+                    Value = i.D_Id.ToString(),
+                    Selected = i.D_Id == currentValue ? true : false
+                });
+            }
+
+            return list;
+        }
     }
 }

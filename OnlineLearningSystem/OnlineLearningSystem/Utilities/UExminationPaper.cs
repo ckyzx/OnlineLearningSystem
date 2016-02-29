@@ -282,7 +282,13 @@ namespace OnlineLearningSystem.Utilities
 
                     // 检查是否在考试时间内
                     ep = olsEni.ExaminationPapers.SingleOrDefault(m => m.EP_Id == epq.EP_Id);
-                    if (null != ep && ep.EP_PaperStatus != (Byte)PaperStatus.Doing)
+                    if (null != ep && ep.EP_PaperStatus == (Byte)PaperStatus.Done)
+                    {
+                        resJson.status = ResponseStatus.Error;
+                        resJson.message = "考试已结束";
+                        return resJson; 
+                    }
+                    else if (null != ep && ep.EP_PaperStatus == (Byte)PaperStatus.Undone)
                     {
                         continue;
                     }
@@ -320,6 +326,53 @@ namespace OnlineLearningSystem.Utilities
                     resJson.message = ResponseMessage.SaveChangesError;
                     return resJson;
                 }
+
+                resJson.status = ResponseStatus.Success;
+                return resJson;
+            }
+            catch (Exception ex)
+            {
+                resJson.status = ResponseStatus.Error;
+                resJson.message = ex.Message;
+                resJson.detail = StaticHelper.GetExceptionMessageAndRecord(ex);
+                return resJson;
+            }
+        }
+
+        internal ResponseJson HandIn(Int32 id, Int32 uId)
+        {
+            
+            ResponseJson resJson;
+
+            resJson = new ResponseJson();
+
+            try
+            {
+
+                ExaminationPaper ep;
+                UExaminationPaperTemplate uept;
+
+                ep = olsEni.ExaminationPapers.SingleOrDefault(m => m.EP_Id == id && m.EP_UserId == uId);
+
+                if (ep == null)
+                {
+                    resJson.status = ResponseStatus.Error;
+                    resJson.message = "试卷不存在";
+                    return resJson;
+                }
+
+                ep.EP_PaperStatus = (Byte)PaperStatus.Done;
+
+                if (0 == olsEni.SaveChanges())
+                {
+                    resJson.status = ResponseStatus.Error;
+                    resJson.message = ResponseMessage.SaveChangesError;
+                    return resJson;
+                }
+
+                uept = new UExaminationPaperTemplate();
+                uept.GradePaper(ep);
+                uept.SaveChange();
 
                 resJson.status = ResponseStatus.Success;
                 return resJson;

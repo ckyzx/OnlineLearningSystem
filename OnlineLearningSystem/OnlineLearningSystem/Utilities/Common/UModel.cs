@@ -132,6 +132,28 @@ namespace OnlineLearningSystem.Utilities
             return dtResponse;
         }
 
+        public DataTablesResponse GetList(List<SqlParameter> sps)
+        {
+
+            DataTablesResponse dtResponse;
+            Int32 recordsTotal, recordsFiltered;
+            Object[] modelData;
+            List<T> ms;
+
+            modelData = GetModels(sps);
+            ms = (List<T>)modelData[0];
+            recordsTotal = (Int32)modelData[1];
+            recordsFiltered = (Int32)modelData[2];
+
+            dtResponse = new DataTablesResponse();
+            dtResponse.draw = dtRequest.Draw;
+            dtResponse.recordsTotal = recordsTotal;
+            dtResponse.recordsFiltered = recordsFiltered;
+            dtResponse.data = ms;
+
+            return dtResponse;
+        }
+
         public DataTablesResponse GetList(String sql, List<SqlParameter> sps)
         {
 
@@ -358,6 +380,33 @@ namespace OnlineLearningSystem.Utilities
 
             sql = "SELECT * FROM " + tableName + " ";
             sqlConditions = GetSqlCondition(sql, spsAddition, statusFieldName, sortFieldName);
+            sql = (String)sqlConditions[0];
+            sps = (List<SqlParameter>)sqlConditions[1];
+            orderSql = (String)sqlConditions[2];
+
+            dataTable = olsDBO.GetDataTableWithStart(sql + orderSql, sps, dtRequest.Length, dtRequest.Start);
+            ms = (List<T>)ModelConvert<T>.ConvertToModel(dataTable);
+
+            countSql = sql.Replace("SELECT * FROM ", "SELECT COUNT(" + idFieldName + ") FROM ");
+            total = Convert.ToInt32(olsDBO.ExecuteSqlScalar(countSql, sps));
+            filter = Convert.ToInt32(olsDBO.ExecuteSqlScalar(countSql, sps));
+
+            return new Object[] { ms, total, filter };
+        }
+
+        private Object[] GetModels(List<SqlParameter> spsAddition)
+        {
+
+            Int32 total, filter;
+            String sql, orderSql, countSql;
+            DataTable dataTable;
+            Object[] sqlConditions;
+            List<T> ms;
+            List<SqlParameter> sps;
+
+            sql = "SELECT * FROM " + tableName + " ";
+
+            sqlConditions = GetSqlCondition(sql, spsAddition);
             sql = (String)sqlConditions[0];
             sps = (List<SqlParameter>)sqlConditions[1];
             orderSql = (String)sqlConditions[2];

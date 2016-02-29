@@ -288,7 +288,7 @@ namespace OnlineLearningSystem.Utilities
 
             List<SelectListItem> list;
 
-            var items = olsEni.LearningDataCategories.Select(model => new { model.LDC_Name, model.LDC_Id });
+            var items = olsEni.LearningDataCategories.Where(m=>m.LDC_Status == (Byte)Status.Available).Select(model => new { model.LDC_Name, model.LDC_Id });
 
             list = new List<SelectListItem>();
             list.Add(new SelectListItem() { Text = "[未设置]", Value = "" });

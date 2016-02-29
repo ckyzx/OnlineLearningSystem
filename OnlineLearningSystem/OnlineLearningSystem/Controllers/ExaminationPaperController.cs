@@ -49,7 +49,7 @@ namespace OnlineLearningSystem.Controllers
         }
 
         //
-        // POST: /ExaminationPaper/SubmitAnswers
+        // GET: /ExaminationPaper/SubmitAnswers
 
         [Description("提交答案")]
         public JsonResult SubmitAnswers(String answersJson)
@@ -58,6 +58,22 @@ namespace OnlineLearningSystem.Controllers
             ResponseJson resJson;
 
             resJson = um.SubmitAnswers(answersJson);
+
+            return Json(resJson, JsonRequestBehavior.AllowGet);
+        }
+
+        //
+        // GET: /ExaminationPaper/HandIn
+
+        [Description("交卷")]
+        public JsonResult HandIn(Int32 id)
+        {
+
+            User u;
+            ResponseJson resJson;
+
+            u = (User)Session["User"];
+            resJson = um.HandIn(id, u.U_Id);
 
             return Json(resJson, JsonRequestBehavior.AllowGet);
         }

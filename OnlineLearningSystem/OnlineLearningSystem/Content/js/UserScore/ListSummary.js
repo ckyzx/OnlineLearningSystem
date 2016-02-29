@@ -1,6 +1,7 @@
 ﻿$(function() {
 
     var table, dtParams;
+    var getDepartmentId;
 
     dtParams = {
         "processing": true,
@@ -98,10 +99,19 @@
         ShowPage('成绩详情', '/UserScore/ListDetail?uId=' + id);
     });
 
-    $(window).resize(function() {
+    getDepartmentId = function(){
 
-        table.destroy();
-        table = $('.table-sort').DataTable(dtParams);
+        var dId;
+
+        dId = $('#Department').val();
+        dId = dId == '' ? 0 : dId;
+
+        return dId;
+    };
+
+    $('#SearchBtn').click(function() {
+
+        table.ajax.url('/UserScore/ListSummaryDataTablesAjax?dId=' + getDepartmentId()).load();
     });
 
     $('#ExportBtn').click(function() {
@@ -110,11 +120,19 @@
             title: '',
             btn: ['是', '否']
         }, function() {
-            location.href = '/UserScore/SummaryExportToExcel';
+
+            location.href = '/UserScore/SummaryExportToExcel?dId=' + getDepartmentId();
             layer.closeAll();
         }, function() {
-            
+
         })
+    });
+
+    $(window).resize(function() {
+
+        table.destroy();
+        dtParams.ajax.url = '/UserScore/ListSummaryDataTablesAjax?dId=' + getDepartmentId();
+        table = $('.table-sort').DataTable(dtParams);
     });
 
 });

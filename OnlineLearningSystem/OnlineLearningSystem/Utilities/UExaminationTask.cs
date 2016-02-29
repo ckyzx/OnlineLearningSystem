@@ -501,80 +501,117 @@ namespace OnlineLearningSystem.Utilities
 
             try
             {
+
+                Int32 eptId, saveReturn;
                 ExaminationTask model;
+                UExaminationPaperTemplate uept;
                 List<ExaminationPaperTemplate> epts;
+                List<ExaminationPaper> eps;
 
-                model = olsEni.ExaminationTasks.SingleOrDefault(m => m.ET_Id == etId);
-
-                if (null == model)
-                {
-                    resJson.message = "数据不存在！";
-                    return resJson;
-                }
-
-                // 手动任务处理
-                if ((Byte)AutoType.Manual == model.ET_AutoType)
+                using (TransactionScope scope = new TransactionScope())
                 {
 
-                    epts =
-                        olsEni
-                        .ExaminationPaperTemplates
-                        .Where(m => m.ET_Id == model.ET_Id)
-                        .ToList();
-                    if (epts.Count != 1)
+                    model = olsEni.ExaminationTasks.SingleOrDefault(m => m.ET_Id == etId);
+
+                    if (null == model)
                     {
-                        resJson.status = ResponseStatus.Error;
-                        resJson.message = "试卷模板不匹配。";
+                        resJson.message = "数据不存在！";
                         return resJson;
                     }
 
-                    epts[0].EPT_PaperTemplateStatus = (Byte)etStatus;
-                    // 开始任务及试卷模板
-                    if (ExaminationTaskStatus.Enabled == etStatus)
-                    {
-                        epts[0].EPT_StartTime = now;
-                        epts[0].EPT_StartDate = now.Date;
-                        epts[0].EPT_EndTime = now.AddMinutes(epts[0].EPT_TimeSpan);
-                    }
-                    // 终止任务及试卷模板
-                    else if (ExaminationTaskStatus.Disabled == etStatus
-                        && epts[0].EPT_TimeSpan == 0)
-                    {
-                        epts[0].EPT_EndTime = DateTime.Now;
-                    }
-                    olsEni.Entry(epts[0]).State = EntityState.Modified;
-                }
-                else
-                {
+                    uept = new UExaminationPaperTemplate();
 
-                    // 终止自动任务时，同时终止进行中的试卷模板。
-                    if (ExaminationTaskStatus.Disabled == etStatus)
+                    // 手动任务处理
+                    if ((Byte)AutoType.Manual == model.ET_AutoType)
                     {
+
                         epts =
                             olsEni
                             .ExaminationPaperTemplates
-                            .Where(m =>
-                                m.ET_Id == etId
-                                && m.EPT_PaperTemplateStatus == (Byte)PaperTemplateStatus.Doing)
+                            .Where(m => m.ET_Id == model.ET_Id)
                             .ToList();
-
-                        foreach (var ept in epts)
+                        if (epts.Count != 1)
                         {
-                            ept.EPT_PaperTemplateStatus = (Byte)PaperTemplateStatus.Done;
+                            resJson.status = ResponseStatus.Error;
+                            resJson.message = "试卷模板不匹配。";
+                            return resJson;
+                        }
+
+                        epts[0].EPT_PaperTemplateStatus = (Byte)etStatus;
+                        // 开始任务及试卷模板
+                        if (ExaminationTaskStatus.Enabled == etStatus)
+                        {
+                            epts[0].EPT_StartTime = now;
+                            epts[0].EPT_StartDate = now.Date;
+                            epts[0].EPT_EndTime = now.AddMinutes(epts[0].EPT_TimeSpan);
+                        }
+
+                        // 终止任务及试卷模板、试卷
+                        else if (ExaminationTaskStatus.Disabled == etStatus
+                            /*&& epts[0].EPT_TimeSpan == 0*/)
+                        {
+
+                            epts[0].EPT_EndTime = DateTime.Now;
+
+                            // 终止试卷
+                            eptId = epts[0].EPT_Id;
+                            eps = olsEni.ExaminationPapers.Where(m => m.EPT_Id == eptId).ToList();
+                            foreach (var ep in eps)
+                            {
+                                ep.EP_PaperStatus = (Byte)PaperStatus.Done;
+                                uept.GradePaper(ep);
+                                uept.SaveChange();
+                            }
                         }
                     }
-                }
+                    else
+                    {
 
-                model.ET_Enabled = (Byte)etStatus;
-                if (0 == olsEni.SaveChanges())
-                {
-                    resJson.status = ResponseStatus.Error;
-                    resJson.message = ResponseMessage.SaveChangesError;
+                        // 终止自动任务时，同时终止进行中的试卷模板、试卷。
+                        if (ExaminationTaskStatus.Disabled == etStatus)
+                        {
+                            epts =
+                                olsEni
+                                .ExaminationPaperTemplates
+                                .Where(m =>
+                                    m.ET_Id == etId
+                                    && m.EPT_PaperTemplateStatus == (Byte)PaperTemplateStatus.Doing)
+                                .ToList();
+
+                            foreach (var ept in epts)
+                            {
+
+                                ept.EPT_PaperTemplateStatus = (Byte)PaperTemplateStatus.Done;
+
+                                // 终止试卷
+                                eps = olsEni.ExaminationPapers.Where(m => m.EPT_Id == ept.EPT_Id).ToList();
+                                foreach (var ep in eps)
+                                {
+                                    ep.EP_PaperStatus = (Byte)PaperStatus.Done;
+                                    uept.GradePaper(ep);
+                                    uept.SaveChange();
+                                }
+                            }
+                        }
+                    }
+
+                    model.ET_Enabled = (Byte)etStatus;
+
+                    saveReturn = olsEni.SaveChanges();
+                    scope.Complete();
+
+                    if (0 == saveReturn)
+                    {
+                        resJson.status = ResponseStatus.Error;
+                        resJson.message = ResponseMessage.SaveChangesError;
+
+                        return resJson;
+                    }
+
+                    resJson.status = ResponseStatus.Success;
                     return resJson;
-                }
 
-                resJson.status = ResponseStatus.Success;
-                return resJson;
+                }
             }
             catch (Exception ex)
             {
@@ -637,8 +674,8 @@ namespace OnlineLearningSystem.Utilities
                 }
 
                 epts = olsEni.ExaminationPaperTemplates
-                    .Where(m => 
-                        m.ET_Id == id 
+                    .Where(m =>
+                        m.ET_Id == id
                         && m.EPT_PaperTemplateStatus == (Byte)PaperTemplateStatus.Doing
                         && m.EPT_Status == (Byte)Status.Available)
                     .ToList();
@@ -648,9 +685,9 @@ namespace OnlineLearningSystem.Utilities
                 {
 
                     tmpEps = olsEni.ExaminationPapers
-                        .Where(m => 
-                            m.EPT_Id == ept.EPT_Id 
-                            && m.EP_PaperStatus == (Byte)PaperStatus.Doing 
+                        .Where(m =>
+                            m.EPT_Id == ept.EPT_Id
+                            && m.EP_PaperStatus == (Byte)PaperStatus.Doing
                             && m.EP_Status == (Byte)Status.Available)
                         .ToList();
 

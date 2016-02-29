@@ -9,6 +9,8 @@ namespace OnlineLearningSystem.ViewModels
     {
         public Int32 USD_UserId { get; set; }
         public String USD_UserName { get; set; }
+        public Int32 USD_DepartmentId { get; set; }
+        public String USD_DepartmentName { get; set; }
         public Int32 USD_TaskId { get; set; }
         public String USD_TaskName { get; set; }
         public Byte USD_TaskStatisticType { get; set; }

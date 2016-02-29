@@ -20,7 +20,7 @@ $(function() {
         "ordering": false,
         "createdRow": function(row, data, dataIndex) {
 
-            var span, addTime, startTime, status, type;
+            var span, addTime, startTime, status, type, epScore;
 
             row = $(row);
 
@@ -48,24 +48,9 @@ $(function() {
                 span.text(timeSpan + '分钟');
             }
 
-            /*status = data['EPT_Status'];
-            switch (status) {
-                case 1:
-                    row.find('a.recycle').removeClass('hide');
-                    row.find('a.edit').removeClass('hide');
-                    break;
-                case 2:
-                    row.find('a.resume').removeClass('hide');
-                    row.find('a.delete').removeClass('hide');
-                    break;
-                case 3:
-                    break;
-                default:
-                    break;
-            }*/
-
             type = data['ET_Type'];
             status = data['EPT_PaperTemplateStatus'];
+            epScore = data['EP_Score'];
             switch (status) {
                 case 0:
                     break;
@@ -77,6 +62,15 @@ $(function() {
                     }
                     a.removeClass('hide');
 
+                    if (epScore == '[未参与]' || epScore == '[未评分]') {
+
+                        row.find('a.enter-exam').removeClass('hide');
+                        row.find('a.view-exam').addClass('hide');
+                    } else {
+
+                        row.find('a.enter-exam').addClass('hide');
+                        row.find('a.view-exam').removeClass('hide');
+                    }
                     break;
                 case 2:
 
@@ -86,10 +80,16 @@ $(function() {
                     }
                     a.removeClass('hide');
 
+                    if (epScore == '[未参与]' || epScore == '[未评分]') {
+
+                        row.find('a.enter-exam').addClass('hide');
+                        row.find('a.view-exam').addClass('hide');
+                    }
                     break;
                 default:
                     break;
             }
+
         }
     };
 
@@ -133,8 +133,7 @@ $(function() {
     params.columns.push({
         "width": "100px",
         "className": "text-c",
-        "defaultContent": 
-            '<a class="btn btn-primary radius size-MINI enter-exam fz-9 hide" href="javascript:void(0);">进入考试</a>' +
+        "defaultContent": '<a class="btn btn-primary radius size-MINI enter-exam fz-9 hide" href="javascript:void(0);">进入考试</a>' +
             '<a class="btn btn-primary radius size-MINI view-exam fz-9 hide" href="javascript:void(0);">查看试卷</a>'
     });
 

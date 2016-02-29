@@ -29,6 +29,9 @@ namespace OnlineLearningSystem.Controllers
         [Description("用户成绩概览")]
         public ActionResult ListSummary()
         {
+
+            ViewBag.departments = new UDepartment().GetDepartmentList();
+
             return View();
         }
 
@@ -36,14 +39,14 @@ namespace OnlineLearningSystem.Controllers
         // POST: /UserScore/ListSummaryDataTablesAjax
 
         [Description("查询用户成绩概览")]
-        public JsonResult ListSummaryDataTablesAjax()
+        public JsonResult ListSummaryDataTablesAjax(Int32 dId = 0)
         {
 
             DataTablesRequest dtRequest;
             DataTablesResponse dtResponse;
 
             dtRequest = GetDataTablesRequest();
-            dtResponse = um.ListSummaryDataTablesAjax(dtRequest);
+            dtResponse = um.ListSummaryDataTablesAjax(dtRequest, dId);
 
             return Json(dtResponse, JsonRequestBehavior.DenyGet);
         }
@@ -113,11 +116,11 @@ namespace OnlineLearningSystem.Controllers
         // GET: /UserScore/SummaryExportToExcel
 
         [Description("导出用户成绩概览到表格")]
-        public JsonResult SummaryExportToExcel()
+        public JsonResult SummaryExportToExcel(Int32 dId = 0)
         {
             String excelFile;
 
-            excelFile = um.SummaryExportToExcel();
+            excelFile = um.SummaryExportToExcel(dId);
 
             FileInfo downloadFile = new FileInfo(excelFile);
             Response.Clear();

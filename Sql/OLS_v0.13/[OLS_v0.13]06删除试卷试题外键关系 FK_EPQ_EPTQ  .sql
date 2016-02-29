@@ -1,0 +1,8 @@
+USE OLS;
+
+GO
+
+ALTER TABLE dbo.ExaminationPaperQuestions
+DROP CONSTRAINT FK_EPQ_EPTQ
+
+GO

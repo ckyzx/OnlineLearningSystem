@@ -5,22 +5,33 @@ using System.Data.SqlClient;
 using System.Data;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Web.Mvc;
 
 namespace OnlineLearningSystem.Utilities
 {
     public class UUserScore : Utility
     {
 
-        private DatabaseOperator olsDBO = new DatabaseOperator("OLSDBO");
-
-        internal DataTablesResponse ListSummaryDataTablesAjax(Utilities.DataTablesRequest dtRequest)
+        internal DataTablesResponse ListSummaryDataTablesAjax(DataTablesRequest dtRequest, Int32 dId = 0)
         {
 
             DataTablesResponse dtResponse;
             UModel<VMUserScoreSummary> umodel;
+            List<SqlParameter> sps;
 
             umodel = new UModel<VMUserScoreSummary>(dtRequest, "UserScoreSummaries", "USS_UserId");
-            dtResponse = umodel.GetList();
+
+            if (dId == 0)
+            {
+                dtResponse = umodel.GetList();
+            }
+            else
+            {
+                sps = new List<SqlParameter>();
+                sps.Add(new SqlParameter("@USS_DepartmentId", dId));
+
+                dtResponse = umodel.GetList(sps);
+            }
 
             return dtResponse;
         }
@@ -119,7 +130,7 @@ namespace OnlineLearningSystem.Utilities
             }
             sql += sql.IndexOf("WHERE ") == -1 ? "WHERE " + whereSql.Substring(4) : whereSql;
 
-            dataSet = olsDBO.GetDataSet(sql, sps);
+            dataSet = olsDbo.GetDataSet(sql, sps);
 
             return dataSet;
         }
@@ -153,8 +164,8 @@ namespace OnlineLearningSystem.Utilities
                 sps.Add(new SqlParameter("@endTime", endTime));
             }
 
-            dataSet = olsDBO.GetDataSet(sql, sps);
-            dataSet.Tables[0].TableName = "概览";
+            dataSet = olsDbo.GetDataSet(sql, sps);
+            dataSet.Tables[0].TableName = "用户成绩详情";
 
             excelFile = AppDomain.CurrentDomain.BaseDirectory + "Excels\\";
 
@@ -216,14 +227,52 @@ namespace OnlineLearningSystem.Utilities
             return excelFile;
         }
 
-        internal String SummaryExportToExcel()
+        internal String SummaryExportToExcel(Int32 dId = 0)
         {
 
             String sql, excelFile, columnName;
             DataSet dataSet;
+            DataTable dataTable, dt;
+            DataRow dr;
+            List<SqlParameter> sps;
+            List<DataTable> dts;
 
-            sql = "SELECT * FROM UserScoreSummaryToExcel ";
-            dataSet = olsDBO.GetDataSet(sql);
+            if (dId == 0)
+            {
+                sql = "SELECT * FROM UserScoreSummaryToExcel ";
+                dataSet = olsDbo.GetDataSet(sql);
+            }
+            else
+            {
+
+                sps = new List<SqlParameter>();
+                sps.Add(new SqlParameter("@dId", dId));
+
+                sql = "SELECT * FROM UserScoreSummaryToExcel WHERE USS_DepartmentId = @dId";
+
+                dataSet = olsDbo.GetDataSet(sql, sps);
+            }
+
+            dts = new List<DataTable>();
+            for (var i = 0; i < dataSet.Tables.Count;i++)
+            {
+
+                dt = dataSet.Tables[i];
+                for (var i1 = 0; i1 < dt.Rows.Count; i1++)
+                {
+
+                    dr = dataSet.Tables[i].Rows[i1];
+                    sps = new List<SqlParameter>();
+                    sps.Add(new SqlParameter("@uId", dr["USS_UserId"]));
+                    dataTable = olsDbo.GetDataTable("SELECT * FROM UserScoreDetailToExcel WHERE USD_UserId = @uId ", sps);
+
+                    dataTable.TableName = dr["USS_UserName"].ToString();
+                    dts.Add(dataTable);
+                }
+            }
+
+            dataSet.Tables[0].TableName = "用户成绩概览";
+            dataSet.Tables.AddRange(dts.ToArray());
 
             excelFile = AppDomain.CurrentDomain.BaseDirectory + "Excels\\";
 
@@ -237,15 +286,17 @@ namespace OnlineLearningSystem.Utilities
             for (var i = 0; i < dataSet.Tables.Count; i++)
             {
 
+                dt = dataSet.Tables[i];
+
                 // 去除英文数据列
-                for (var i1 = 0; i1 < dataSet.Tables[i].Columns.Count; i1++)
+                for (var i1 = 0; i1 < dt.Columns.Count; i1++)
                 {
 
-                    columnName = dataSet.Tables[i].Columns[i1].ColumnName;
+                    columnName = dt.Columns[i1].ColumnName;
 
                     if (!Regex.IsMatch(columnName, @"[\u4e00-\u9fbb]+"))
                     {
-                        dataSet.Tables[i].Columns.RemoveAt(i1);
+                        dt.Columns.RemoveAt(i1);
                         i1 = -1;
                     }
                 }
@@ -255,5 +306,6 @@ namespace OnlineLearningSystem.Utilities
 
             return excelFile;
         }
+
     }
 }
