@@ -608,5 +608,70 @@ namespace OnlineLearningSystem.Utilities
             }
         }
 
+        internal ResponseJson GetDoingUserNumber(Int32 id)
+        {
+
+            ResponseJson resJson;
+
+            resJson = new ResponseJson(ResponseStatus.Error, now);
+
+            try
+            {
+
+                ExaminationTask et;
+                List<ExaminationPaperTemplate> epts;
+                List<ExaminationPaper> eps, tmpEps;
+
+                et = olsEni.ExaminationTasks.SingleOrDefault(m => m.ET_Id == id);
+
+                if (et == null)
+                {
+                    resJson.message = "任务不存在。";
+                    return resJson;
+                }
+
+                if (et.ET_Enabled != (Byte)ExaminationTaskStatus.Enabled)
+                {
+                    resJson.message = "任务未启动。";
+                    return resJson;
+                }
+
+                epts = olsEni.ExaminationPaperTemplates
+                    .Where(m => 
+                        m.ET_Id == id 
+                        && m.EPT_PaperTemplateStatus == (Byte)PaperTemplateStatus.Doing
+                        && m.EPT_Status == (Byte)Status.Available)
+                    .ToList();
+
+                eps = new List<ExaminationPaper>();
+                foreach (var ept in epts)
+                {
+
+                    tmpEps = olsEni.ExaminationPapers
+                        .Where(m => 
+                            m.EPT_Id == ept.EPT_Id 
+                            && m.EP_PaperStatus == (Byte)PaperStatus.Doing 
+                            && m.EP_Status == (Byte)Status.Available)
+                        .ToList();
+
+                    if (tmpEps.Count() > 0)
+                    {
+                        eps.AddRange(tmpEps);
+                    }
+                }
+
+                resJson.status = ResponseStatus.Success;
+                resJson.data = eps.Count();
+
+                return resJson;
+            }
+            catch (Exception ex)
+            {
+                resJson.message = ex.Message;
+                StaticHelper.RecordSystemLog(ex);
+                return resJson;
+            }
+
+        }
     }
 }

@@ -454,7 +454,7 @@ namespace OnlineLearningSystem.Utilities
                                 ET_Id = ept.ET_Id,
                                 EPT_Id = ept.EPT_Id,
                                 EP_PaperStatus = (Byte)PaperStatus.Doing,
-                                EP_EndTime = ept.EPT_EndTime,
+                                EP_EndTime = now.AddMinutes(ept.EPT_TimeSpan), // 进入考试时开始计算考试时间
                                 EP_TimeSpan = ept.EPT_TimeSpan,
                                 EP_UserId = userId,
                                 EP_UserName = "",

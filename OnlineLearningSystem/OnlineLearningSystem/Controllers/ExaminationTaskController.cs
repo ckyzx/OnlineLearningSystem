@@ -236,5 +236,13 @@ namespace OnlineLearningSystem.Controllers
             return Json(!matching, JsonRequestBehavior.AllowGet);
         }
 
+        //
+        // GET: /ExaminationTask/GetDoingUserNumber
+
+        [Description("获取正在考试的人数")]
+        public JsonResult GetDoingUserNumber(Int32 id)
+        {
+            return Json(um.GetDoingUserNumber(id), JsonRequestBehavior.AllowGet);
+        }
     }
 }

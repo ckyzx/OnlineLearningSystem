@@ -387,13 +387,16 @@ namespace OnlineLearningSystem.Utilities
                 userName = userName.ToLower();
                 password = EncryptPassword(password);
 
-                u = olsEni.Users.SingleOrDefault(m =>
+                /*u = olsEni.Users.SingleOrDefault(m =>
                         ((m.U_Name.ToLower() == userName
                             && m.U_Password == password)
                         || (m.U_LoginName.ToLower() == userName
-                            && m.U_Password == password) 
-                        || (m.U_IdCardNumber.ToLower() == userName
                             && m.U_Password == password))
+                        && m.U_Status == (Byte)Status.Available);*/
+
+                u = olsEni.Users.SingleOrDefault(m =>
+                        m.U_IdCardNumber.ToLower() == userName
+                        && m.U_Password == password
                         && m.U_Status == (Byte)Status.Available);
 
                 if (null == u)

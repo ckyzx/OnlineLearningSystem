@@ -224,60 +224,87 @@ $(function() {
     $('.table-sort tbody').on('click', 'a.stop-task', function() {
 
         var tr;
+        var layerIndex, data, id;
+        var closeEvent;
+
+        layerIndex = layer.load(0, {
+            shade: [0.3, '#FFF']
+        });
 
         tr = $(this).parents('tr');
 
-        /*if (!confirm('是否关闭考试任务？')) {
-            return;
-        }*/
+        data = list.dataTables.row(tr).data();
+        id = data['ET_Id'];
 
-        layer.confirm('是否关闭考试任务？', {
-            title: '',
-            btn: ['是', '否']
-        }, function() {
+        closeEvent = function(tip) {
 
-            var data, id, autoType;
+            layer.confirm(tip, {
+                title: '',
+                btn: ['是', '否']
+            }, function() {
 
-            data = list.dataTables.row(tr).data();
-            id = data['ET_Id'];
-            autoType = data['ET_AutoType'];
+                var autoType;
 
-            $.post('/ExaminationTask/StopTask', {
-                    id: id
-                }, function(data) {
+                autoType = data['ET_AutoType'];
 
-                    var startTask;
+                $.post('/ExaminationTask/StopTask', {
+                        id: id
+                    }, function(data) {
 
-                    if (1 == data.status) {
+                        var startTask;
 
-                        tr.find('a.stop-task').addClass('hide');
+                        if (1 == data.status) {
 
+                            tr.find('a.stop-task').addClass('hide');
 
-                        // 自动任务切换按钮
-                        if (0 != autoType) {
+                            // 自动任务切换按钮
+                            if (0 != autoType) {
 
-                            startTask = tr.find('a.start-task');
-                            startTask.text('开启');
-                            startTask.removeClass('hide');
-                            // 显示常规控制按钮
-                            tr.find('a.edit, a.recycle').removeClass('hide');
+                                startTask = tr.find('a.start-task');
+                                startTask.text('开启');
+                                startTask.removeClass('hide');
+                                // 显示常规控制按钮
+                                tr.find('a.edit, a.recycle').removeClass('hide');
+                            }
+
+                            layer.msg('操作成功', {
+                                offset: '100px'
+                            });
+                        } else if (0 == data.status) {
+
+                            alert(data.message);
                         }
+                    }, 'json')
+                    .error(function() {
 
-                        layer.msg('操作成功', {
-                            offset: '100px'
-                        });
-                    } else if (0 == data.status) {
+                        alert('请求返回错误！');
+                    });
+            }, function() {
+                return;
+            });
+        };
 
-                        alert(data.message);
-                    }
-                }, 'json')
-                .error(function() {
+        $.post('/ExaminationTask/GetDoingUserNumber', {id: id}, function(data) {
 
-                    alert('请求返回错误！');
-                });
-        }, function(){
-            return;
-        });
+                if (1 == data.status && 0 == data.data) {
+
+                    closeEvent('是否关闭考试任务？');
+                } else if (1 == data.status && 0 != data.data) {
+
+                    closeEvent('当前有 ' + data.data + ' 人正在进行考试，确定要关闭考试任务？');
+                } else {
+
+                    alert(data.message);
+                }
+            }, 'json')
+            .error(function() {
+
+                alert('请求返回错误！');
+            })
+            .complete(function(){
+
+                layer.close(layerIndex);
+            });
 
     });
 

@@ -1,0 +1,9 @@
+TestResults/
+OnlineLearningSystem/App_Data/
+OnlineLearningSystem/aspnet_client/
+OnlineLearningSystem/bin/
+OnlineLearningSystem/Content/lib/ueditor/1.4.3/net/upload
+OnlineLearningSystem/Excels/
+OnlineLearningSystem/obj/
+OnlineLearningSystem/TimeTaskTestProject/bin
+OnlineLearningSystem/TimeTaskTestProject/obj
