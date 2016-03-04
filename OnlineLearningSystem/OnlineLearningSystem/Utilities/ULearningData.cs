@@ -5,20 +5,28 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using OnlineLearningSystem.Models;
+using System.Data.SqlClient;
 
 namespace OnlineLearningSystem.Utilities
 {
     public class ULearningData : Utility
     {
 
-        public DataTablesResponse ListDataTablesAjax(DataTablesRequest dtRequest)
+        public DataTablesResponse ListDataTablesAjax(DataTablesRequest dtRequest, Int32 ldcId)
         {
 
             DataTablesResponse dtResponse;
             UModel<LearningData> umodel;
+            List<SqlParameter> sps;
+
+            sps = new List<SqlParameter>();
+            if (0 != ldcId)
+            {
+                sps.Add(new SqlParameter("@LDC_Id", ldcId));
+            }
 
             umodel = new UModel<LearningData>(dtRequest, "LearningDatas", "LD_Id");
-            dtResponse = umodel.GetList("LD_Status", "LD_Sort");
+            dtResponse = umodel.GetList(sps, "LD_Status", "LD_Sort");
 
             return dtResponse;
         }
@@ -288,7 +296,9 @@ namespace OnlineLearningSystem.Utilities
 
             List<SelectListItem> list;
 
-            var items = olsEni.LearningDataCategories.Where(m=>m.LDC_Status == (Byte)Status.Available).Select(model => new { model.LDC_Name, model.LDC_Id });
+            var items = olsEni.LearningDataCategories
+                .Where(m => m.LDC_Status == (Byte)Status.Available)
+                .Select(model => new { model.LDC_Name, model.LDC_Id });
 
             list = new List<SelectListItem>();
             list.Add(new SelectListItem() { Text = "[未设置]", Value = "" });

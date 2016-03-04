@@ -6,6 +6,7 @@ using System.Data;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Web.Mvc;
+using OpenXmlExcel;
 
 namespace OnlineLearningSystem.Utilities
 {
@@ -74,8 +75,8 @@ namespace OnlineLearningSystem.Utilities
 
             if (beginTime.Year != 1 && endTime.Year != 1)
             {
-                sps.Add(new SqlParameter("@LT_USD_StartTime", beginTime));
-                sps.Add(new SqlParameter("@GT_USD_StartTime", endTime));
+                sps.Add(new SqlParameter("@GT_USD_StartTime", beginTime));
+                sps.Add(new SqlParameter("@LT_USD_StartTime", endTime));
             }
 
             dtResponse = umodel.GetList(sql, sps);
@@ -112,7 +113,7 @@ namespace OnlineLearningSystem.Utilities
             //TODO: 添加用户试卷数据表
 
 
-            OpenXmlExcelHelper.ExportExcel(excelFile, dataSet);
+            OpenXmlExcelStaticHelper.ExportExcel(excelFile, dataSet);
 
             return excelFile;
         }
@@ -222,7 +223,7 @@ namespace OnlineLearningSystem.Utilities
                 }
             }
 
-            OpenXmlExcelHelper.ExportExcel(excelFile, dataSet);
+            OpenXmlExcelStaticHelper.ExportExcel(excelFile, dataSet);
 
             return excelFile;
         }
@@ -302,7 +303,7 @@ namespace OnlineLearningSystem.Utilities
                 }
             }
 
-            OpenXmlExcelHelper.ExportExcel(excelFile, dataSet);
+            OpenXmlExcelStaticHelper.ExportExcel(excelFile, dataSet);
 
             return excelFile;
         }

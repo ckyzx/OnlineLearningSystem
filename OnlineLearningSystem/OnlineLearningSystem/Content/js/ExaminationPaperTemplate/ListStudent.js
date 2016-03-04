@@ -20,7 +20,7 @@ $(function() {
         "ordering": false,
         "createdRow": function(row, data, dataIndex) {
 
-            var span, addTime, startTime, status, type, epScore;
+            var span, addTime, startTime, status, type, epScore, epStatus;
 
             row = $(row);
 
@@ -51,6 +51,7 @@ $(function() {
             type = data['ET_Type'];
             status = data['EPT_PaperTemplateStatus'];
             epScore = data['EP_Score'];
+            epStatus = data['EP_PaperStatus'];
             switch (status) {
                 case 0:
                     break;
@@ -59,10 +60,11 @@ $(function() {
                     a = row.find('a.enter-exam');
                     if (1 == type) {
                         a.text('进入练习').attr('title', '进入练习');
+                        a.text('查看练习').attr('title', '查看练习');
                     }
                     a.removeClass('hide');
 
-                    if (epScore == '[未参与]' || epScore == '[未评分]') {
+                    if (epScore == '[未参与]' || epStatus == 1) {
 
                         row.find('a.enter-exam').removeClass('hide');
                         row.find('a.view-exam').addClass('hide');
@@ -76,14 +78,23 @@ $(function() {
 
                     a = row.find('a.view-exam');
                     if (1 == type) {
+                        a.text('进入练习').attr('title', '进入练习');
                         a.text('查看练习').attr('title', '查看练习');
                     }
                     a.removeClass('hide');
 
-                    if (epScore == '[未参与]' || epScore == '[未评分]') {
+                    if(epScore == '[未参与]'){
 
                         row.find('a.enter-exam').addClass('hide');
                         row.find('a.view-exam').addClass('hide');
+                    }else if (epStatus == 1) {
+
+                        row.find('a.enter-exam').removeClass('hide');
+                        row.find('a.view-exam').addClass('hide');
+                    }else{
+
+                        row.find('a.enter-exam').addClass('hide');
+                        row.find('a.view-exam').removeClass('hide');
                     }
                     break;
                 default:

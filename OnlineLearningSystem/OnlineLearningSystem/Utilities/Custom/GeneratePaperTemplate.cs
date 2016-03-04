@@ -149,7 +149,9 @@ namespace OnlineLearningSystem.Utilities
                     .ExaminationPaperTemplates
                     .Where(m =>
                         m.EPT_StartDate == nowDate
-                        && m.ET_Id == et.ET_Id)
+                        && m.ET_Id == et.ET_Id
+                        && (m.EPT_PaperTemplateStatus == (Byte)PaperTemplateStatus.Undone
+                        || m.EPT_PaperTemplateStatus == (Byte)PaperTemplateStatus.Doing))
                     .Count();
 
                 if (0 != eptCount)
@@ -373,9 +375,7 @@ namespace OnlineLearningSystem.Utilities
 
                 qIds =
                     qs
-                    .Where(m =>
-                        m.Q_Type == r.type
-                        && m.Q_Status == (Byte)Status.Available)
+                    .Where(m => m.Q_Type == r.type)
                     .Select(m => m.Q_Id)
                     .ToArray();
 
@@ -388,7 +388,7 @@ namespace OnlineLearningSystem.Utilities
                 typeScore = (Int32)(totalScore * r.percent);
 
                 // 判断试题总分是否足够选题
-                tmpScore = qs.Where(m => m.Q_Type == r.type && m.Q_Status == (Byte)Status.Available).Sum(m => m.Q_Score);
+                tmpScore = qs.Where(m => m.Q_Type == r.type).Sum(m => m.Q_Score);
                 if (tmpScore < typeScore)
                 {
                     throw new Exception("“" + r.type + "”备选试题总分小于类型总分。");
@@ -598,7 +598,7 @@ namespace OnlineLearningSystem.Utilities
 
             Int32 eptId, eptqId;
             String eptQs;
-            DateTime startTime;
+            DateTime startTime, endTime;
             Int32[] eptQsAry;
             ExaminationPaperTemplate ept;
             ExaminationPaperTemplateQuestion eptq;
@@ -611,6 +611,9 @@ namespace OnlineLearningSystem.Utilities
             startTime = et.ET_StartTime;
             startTime = new DateTime(nowDate.Year, nowDate.Month, nowDate.Day, startTime.Hour, startTime.Minute, startTime.Second);
 
+            endTime = et.ET_EndTime;
+            endTime = new DateTime(nowDate.Year, nowDate.Month, nowDate.Day, endTime.Hour, endTime.Minute, endTime.Second);
+
             ept = new ExaminationPaperTemplate
             {
                 EPT_Id = eptId,
@@ -619,7 +622,7 @@ namespace OnlineLearningSystem.Utilities
                 EPT_PaperTemplateStatus = (Byte)PaperTemplateStatus.Undone,
                 EPT_StartDate = nowDate,
                 EPT_StartTime = startTime,
-                EPT_EndTime = startTime.AddMinutes(et.ET_TimeSpan),
+                EPT_EndTime = endTime,
                 EPT_TimeSpan = et.ET_TimeSpan,
                 EPT_Questions = eptQs,
                 EPT_Remark = "本试卷模板由系统于" + now.ToString("yyyy年MM月dd日") + "自动生成。",

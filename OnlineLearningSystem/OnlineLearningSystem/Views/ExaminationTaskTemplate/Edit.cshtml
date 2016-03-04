@@ -9,7 +9,6 @@
         @Html.ValidationSummary(true)
         @Html.HiddenFor(m => m.ETT_Id)
         @Html.HiddenFor(m => m.ETT_AutoId)
-        @Html.HiddenFor(m => m.ETT_EndTime)
         @Html.HiddenFor(m => m.ETT_AddTime)
         <div class="row cl">
             <label class="form-label col-2">
@@ -161,12 +160,22 @@
                 @Html.ValidationMessageFor(m => m.ETT_StartTime)
             </div>
         </div>
+        <div class="row cl" style="display:none;">
+            <label class="form-label col-2">
+                @Html.LabelFor(m => m.ETT_EndTime)
+            </label>
+            <div class="formControls col-2">
+                <div id="EndTime" class="time-picker"></div>
+                @Html.HiddenFor(m => m.ETT_EndTime)
+                @Html.ValidationMessageFor(m => m.ETT_EndTime)
+            </div>
+        </div>
         <div class="row cl">
             <label class="form-label col-2">
                 @Html.LabelFor(m => m.ETT_TimeSpan)
             </label>
             <div class="formControls col-2">
-                @Html.TextBoxFor(m => m.ETT_TimeSpan, new { @class = "input-text" }) <span>（单位：分钟）</span>
+                @Html.TextBoxFor(m => m.ETT_TimeSpan, new { @class = "input-text" }) <div>（单位：分钟）</div>
                 @Html.ValidationMessageFor(m => m.ETT_TimeSpan)
             </div>
         </div>

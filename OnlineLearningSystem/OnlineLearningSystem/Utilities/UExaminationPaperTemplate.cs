@@ -148,7 +148,7 @@ namespace OnlineLearningSystem.Utilities
                 .ExaminationPaperTemplates
                 .OrderBy(model => model.EPT_Id)
                 .Where(model =>
-                    model.EPT_Status != (Byte)Status.Delete
+                    model.EPT_Status == (Byte)Status.Available
                     && usableEtIds.Contains(model.ET_Id)
                     && model.ET_Type == type
                     && model.EPT_PaperTemplateStatus == paperTemplateStatus)
@@ -159,7 +159,7 @@ namespace OnlineLearningSystem.Utilities
                 .ExaminationPaperTemplates
                 .OrderBy(model => model.EPT_Id)
                 .Where(model =>
-                    model.EPT_Status != (Byte)Status.Delete
+                    model.EPT_Status == (Byte)Status.Available
                     && usableEtIds.Contains(model.ET_Id)
                     && model.ET_Type == type
                     && model.EPT_PaperTemplateStatus == paperTemplateStatus)
@@ -183,6 +183,7 @@ namespace OnlineLearningSystem.Utilities
                 else if (-1 == ep.EP_Score)
                 {
                     m1.EP_Score = "[未评分]";
+                    m1.EP_PaperStatus = ep.EP_PaperStatus;
                     continue;
                 }
 
@@ -276,7 +277,11 @@ namespace OnlineLearningSystem.Utilities
             now = DateTime.Now;
 
             // 删除原有试题模板
-            eptqs = olsEni.ExaminationPaperTemplateQuestions.Where(m => m.EPT_Id == model.EPT_Id).ToList();
+            eptqs = olsEni.ExaminationPaperTemplateQuestions
+                .Where(m => 
+                    m.EPT_Id == model.EPT_Id
+                    && m.EPTQ_Status == (Byte)Status.Available)
+                .ToList();
 
             foreach (var eptq in eptqs)
             {
@@ -488,6 +493,21 @@ namespace OnlineLearningSystem.Utilities
                     //case 2:// 考试已结束
                     default:
 
+                        ep =
+                            olsEni
+                            .ExaminationPapers
+                            .SingleOrDefault(m =>
+                            m.EPT_Id == ept.EPT_Id
+                            && m.EP_UserId == userId);
+
+                        if (null != ep)
+                        {
+
+                            resJson.status = ResponseStatus.Success;
+                            resJson.addition = ep.EP_Id;
+                            break;
+                        }
+
                         resJson.message = "考试已结束。";
                         break;
                 }
@@ -534,7 +554,11 @@ namespace OnlineLearningSystem.Utilities
                 model.EPT_PaperTemplateStatus = (Byte)PaperTemplateStatus.Done;
                 olsEni.Entry(model).State = EntityState.Modified;
 
-                eps = olsEni.ExaminationPapers.Where(m => m.EPT_Id == id).ToList();
+                eps = olsEni.ExaminationPapers
+                    .Where(m => 
+                        m.EPT_Id == id
+                        && m.EP_Status == (Byte)Status.Available)
+                    .ToList();
                 foreach (var ep in eps)
                 {
                     ep.EP_PaperStatus = (Byte)PaperStatus.Done;
@@ -691,7 +715,9 @@ namespace OnlineLearningSystem.Utilities
                 eptqs =
                     olsEni
                     .ExaminationPaperTemplateQuestions
-                    .Where(m => m.EPT_Id == id)
+                    .Where(m => 
+                        m.EPT_Id == id
+                        && m.EPTQ_Status == (Byte)Status.Available)
                     .ToList();
                 epqs = olsEni.ExaminationPaperQuestions.Where(m => m.EP_Id == epId).ToList();
 
@@ -788,7 +814,11 @@ namespace OnlineLearningSystem.Utilities
                         // 计算分数
 
                         epqs = olsEni.ExaminationPaperQuestions.Where(m => m.EP_Id == ep1.EP_Id).ToList();
-                        eptqs = olsEni.ExaminationPaperTemplateQuestions.Where(m => m.EPT_Id == ep1.EPT_Id).ToList();
+                        eptqs = olsEni.ExaminationPaperTemplateQuestions
+                            .Where(m => 
+                                m.EPT_Id == ep1.EPT_Id
+                                && m.EPTQ_Status == (Byte)Status.Available)
+                            .ToList();
 
                         foreach (var epq in epqs)
                         {
@@ -804,7 +834,11 @@ namespace OnlineLearningSystem.Utilities
                         // 计算正确率
 
                         exactnessNumber = olsEni.ExaminationPaperQuestions.Where(m => m.EP_Id == ep1.EP_Id && m.EPQ_Exactness == (Byte)AnswerStatus.Exactness).Count();
-                        totalNumber = olsEni.ExaminationPaperTemplateQuestions.Where(m => m.EPT_Id == ep1.EPT_Id).Count();
+                        totalNumber = olsEni.ExaminationPaperTemplateQuestions
+                            .Where(m => 
+                                m.EPT_Id == ep1.EPT_Id
+                                && m.EPTQ_Status == (Byte)Status.Available)
+                            .Count();
 
                         score = (Int32)Math.Round((double)exactnessNumber / (double)totalNumber * 100, MidpointRounding.AwayFromZero);
                     }
@@ -885,7 +919,8 @@ namespace OnlineLearningSystem.Utilities
                     m.EPT_Id == ep.EPT_Id
                     && m.EPTQ_Type != "单选题"
                     && m.EPTQ_Type != "多选题"
-                    && m.EPTQ_Type != "判断题")
+                    && m.EPTQ_Type != "判断题"
+                    && m.EPTQ_Status == (Byte)Status.Available)
                 .Count();
             et = olsEni.ExaminationTasks.Single(m => m.ET_Id == ep.ET_Id);
 

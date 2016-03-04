@@ -1,5 +1,6 @@
 var Kyzx = {};
 var OLS = {};
+var WebUploaderHelper = {};
 
 /* 在模态框中显示页面 */
 function ShowPage(title, url) {
@@ -58,6 +59,7 @@ Kyzx.List = {
         modelCnName: null,
         modelEnName: null,
         modelPrefix: null,
+        actionName: null,
         treeIdName: null,
         treeIdDefaultValue: null,
         additionRequestParams: null
@@ -79,7 +81,9 @@ Kyzx.List = {
 
         if (null != self.settings.treeIdName) {
 
-            self.settings.dtParams.ajax.url += '?' + self.settings.treeIdName + '=' + self.request.getValue(self.settings.treeIdName, self.settings.treeIdDefaultValue);
+            self.settings.dtParams.ajax.url +=
+                '?' + self.settings.treeIdName + '=' +
+                self.request.getValue(self.settings.treeIdName, self.settings.treeIdDefaultValue);
         }
 
         if (undefined == self.settings.dtParams.initComplete) {
@@ -252,14 +256,18 @@ Kyzx.List = {
                     n.checked = true;
                 }
 
-                n.click = 'location.href = \'/' + self.settings.modelEnName + '/List?status=' + status + '&' + self.settings.treeIdName + '=' + n[self.settings.treeIdName] + '\';';
+                n.click = 'location.href = \'/' + self.settings.modelEnName + '/' +
+                    (self.settings.actionName == null ? 'List' : self.settings.actionName) +
+                    '?status=' + status + '&' + self.settings.treeIdName + '=' + n[self.settings.treeIdName] + '\';';
             };
 
             // 添加根节点“全部”
             nodes = [{
                 name: '全部',
                 open: true,
-                click: 'location.href = \'/' + self.settings.modelEnName + '/List?status=' + status + '&' + self.settings.treeIdName + '=0\';',
+                click: 'location.href = \'/' + self.settings.modelEnName + '/' +
+                    (self.settings.actionName == null ? 'List' : self.settings.actionName) +
+                    '?status=' + status + '&' + self.settings.treeIdName + '=0\';',
                 children: nodes
             }];
             nodes[0][self.settings.treeIdName] = 0;
@@ -603,45 +611,193 @@ Kyzx.List = {
         span = row.find('span' + className);
         span.addClass('ellipsis').width(th.width()).text(content);
     }
-
 };
 
-OLS.renderMenu = function(authorize) {
+OLS = {
+    renderMenu: function(authorize) {
 
-    var permissions;
+        var permissions;
 
-    if (!authorize) {
+        if (!authorize) {
 
-        $('.menu_dropdown').show();
-        return;
-    }
-
-    permissions = $('#User').attr('permissions');
-
-    $('.menu_dropdown a[_href]').each(function() {
-
-        var a, item;
-        var i;
-        var href;
-
-        a = $(this);
-        href = a.attr('_href');
-
-        i = href.indexOf('?');
-        i = i == -1 ? href.length : i;
-        href = href.substring(0, i) + ';';
-
-        if (permissions.indexOf(href) == -1) {
-
-            item = a.parentsUntil('div');
-            count = item.find('a[_href]').length;
-            if (1 == count) {
-                item.remove();
-            } else {
-                a.parent().remove();
-            }
+            $('.menu_dropdown').show();
+            return;
         }
-    });
 
-    $('.menu_dropdown').fadeIn();
+        permissions = $('#User').attr('permissions');
+
+        $('.menu_dropdown a[_href]').each(function() {
+
+            var a, item;
+            var i;
+            var href;
+
+            a = $(this);
+            href = a.attr('_href');
+
+            i = href.indexOf('?');
+            i = i == -1 ? href.length : i;
+            href = href.substring(0, i) + ';';
+
+            if (permissions.indexOf(href) == -1) {
+
+                item = a.parentsUntil('div');
+                count = item.find('a[_href]').length;
+                if (1 == count) {
+                    item.remove();
+                } else {
+                    a.parent().remove();
+                }
+            }
+        });
+
+        $('.menu_dropdown').fadeIn();
+    }
+};
+
+WebUploaderHelper = {
+    self: null,
+    settings: {
+        action: 'uploadfile',
+        accept: {
+            title: '',
+            extensions: '',
+            mimeTypes: ''
+        },
+        uploadSuccess: function(file, response) {
+            return;
+        }
+    },
+    init: function(settings) {
+
+        var self;
+
+        self = this;
+        this.self = self;
+
+        $.extend(self.settings, settings);
+
+        $list = $("#fileList"),
+            $btn = $("#btn-star"),
+            state = "pending",
+            uploader;
+
+        var uploader = WebUploader.create({
+            auto: true,
+            swf: '/Content/lib/webuploader/0.1.5/Uploader.swf',
+
+            // 文件接收服务端。
+            server: '/Content/lib/ueditor/1.4.3/net/controller.ashx?action=' + settings.action,
+
+            // 选择文件的按钮。可选。
+            // 内部根据当前运行是创建，可能是input元素，也可能是flash.
+            pick: '#filePicker',
+
+            // 不压缩image, 默认如果是jpeg，文件上传前会压缩一把再上传！
+            resize: false,
+            // 上传文件类型。
+            accept: self.settings.accept,
+            fileVal: "upfile"
+        });
+
+        uploader.on('fileQueued', function(file) {
+            var $li = $(
+                    '<div id="' + file.id + '" class="item mt-3 mb-10">' +
+                    '<!--div class="pic-box"><img></div-->' +
+                    '<div class="info">' + file.name + '</div>' +
+                    '<p class="state">等待上传...</p>' +
+                    '</div>'
+                ),
+                $img = $li.find('img');
+            $list.html($li);
+
+            // 创建缩略图
+            // 如果为非图片文件，可以不用调用此方法。
+            // thumbnailWidth x thumbnailHeight 为 100 x 100
+            uploader.makeThumb(file, function(error, src) {
+                if (error) {
+                    $img.replaceWith('<span>不能预览</span>');
+                    return;
+                }
+
+                $img.attr('src', src);
+            }, 100, 100);
+        });
+
+        uploader.on('error', function(type) {
+
+            switch (type) {
+                case 'Q_EXCEED_NUM_LIMIT':
+                    //在设置了fileNumLimit且尝试给uploader添加的文件数量超出这个值时派送。
+                    alert('上传的文件超过最大数量限制。');
+                    break;
+                case 'Q_EXCEED_SIZE_LIMIT':
+                    //在设置了Q_EXCEED_SIZE_LIMIT且尝试给uploader添加的文件总大小超出这个值时派送。
+                    alert('上传的文件超过最大尺寸限制。');
+                    break;
+                case 'Q_TYPE_DENIED':
+                    //当文件类型不满足时触发。
+                    alert('只支持上传 ' + self.settings.accept.extensions + ' 格式的文件。');
+                    break;
+                default:
+                    break;
+            }
+        });
+
+        // 文件上传过程中创建进度条实时显示。
+        uploader.on('uploadProgress', function(file, percentage) {
+            var $li = $('#' + file.id),
+                $percent = $li.find('.progress-box .sr-only');
+
+            // 避免重复创建
+            if (!$percent.length) {
+                $percent = $('<div class="progress-box"><span class="progress-bar radius"><span class="sr-only" style="width:0%"></span></span></div>').appendTo($li).find('.sr-only');
+            }
+            $li.find(".state").text("上传中");
+            $percent.css('width', percentage * 100 + '%');
+        });
+
+        // 文件上传成功，给item添加成功class, 用样式标记上传成功。
+        uploader.on('uploadSuccess', function(file, response) {
+
+            $('#' + file.id).addClass('upload-state-success').find(".state").text("已上传");
+
+            self.settings.uploadSuccess(file, response);
+        });
+
+        // 文件上传失败，显示上传出错。
+        uploader.on('uploadError', function(file) {
+            $('#' + file.id).addClass('upload-state-error').find(".state").text("上传出错");
+        });
+
+        // 完成上传完了，成功或者失败，先删除进度条。
+        uploader.on('uploadComplete', function(file) {
+
+            $('#' + file.id).find('.progress-box').fadeOut();
+        });
+
+        uploader.on('all', function(type) {
+            if (type === 'startUpload') {
+                state = 'uploading';
+            } else if (type === 'stopUpload') {
+                state = 'paused';
+            } else if (type === 'uploadFinished') {
+                state = 'done';
+            }
+
+            if (state === 'uploading') {
+                $btn.text('暂停上传');
+            } else {
+                $btn.text('开始上传');
+            }
+        });
+
+        $btn.on('click', function() {
+            if (state === 'uploading') {
+                uploader.stop();
+            } else {
+                uploader.upload();
+            }
+        });
+    }
 };

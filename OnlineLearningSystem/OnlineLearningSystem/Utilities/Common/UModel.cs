@@ -697,7 +697,11 @@ namespace OnlineLearningSystem.Utilities
                     whereSql += "AND " + sp.ParameterName.Replace("@", "") + " = " + sp.ParameterName + " ";
                 }
             }
-            sql += sql.IndexOf("WHERE ") == -1 ? "WHERE " + whereSql.Substring(4) : whereSql;
+
+            if ("" != whereSql)
+            {
+                sql += sql.IndexOf("WHERE ") == -1 ? "WHERE " + whereSql.Substring(4) : whereSql;
+            }
 
             sps.AddRange(spsAddition);
 

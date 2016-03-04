@@ -1,0 +1,8 @@
+USE OLS;
+
+GO
+
+ALTER TABLE dbo.LearningDatas
+ALTER COLUMN LD_Content TEXT NULL;
+
+GO

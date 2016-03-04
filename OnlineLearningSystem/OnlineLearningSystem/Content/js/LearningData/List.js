@@ -79,11 +79,14 @@ $(function() {
     };
 
     list = Kyzx.List.init({
+        hasTree: true,
         dtSelector: '.table-sort',
         dtParams: dtParams,
         modelCnName: '资料',
         modelEnName: 'LearningData',
-        modelPrefix: 'LD_'
+        modelPrefix: 'LD_',
+        treeIdName: 'ldcId',
+        treeIdDefaultValue: 0
     });
     list.initList();
 

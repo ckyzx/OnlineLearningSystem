@@ -232,7 +232,9 @@ namespace OnlineLearningSystem.Utilities
                 eptqs =
                     olsEni
                     .ExaminationPaperTemplateQuestions
-                    .Where(m => m.EPT_Id == eptId)
+                    .Where(m => 
+                        m.EPT_Id == eptId
+                        && m.EPTQ_Status == (Byte)Status.Available)
                     .ToList();
                 epqs = olsEni.ExaminationPaperQuestions.Where(m => m.EP_Id == epId).ToList();
 

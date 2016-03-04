@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using System.ComponentModel;
 using OnlineLearningSystem.Models;
 using OnlineLearningSystem.Utilities;
+using System.IO;
 
 namespace OnlineLearningSystem.Controllers
 {
@@ -38,11 +39,17 @@ namespace OnlineLearningSystem.Controllers
         public JsonResult ListDataTablesAjax()
         {
 
+            String taskName;
+            DateTime beginTime, endTime;
             DataTablesRequest dtRequest;
             DataTablesResponse dtResponse;
 
+            taskName = Request["taskName"] != null ? Request["taskName"].ToString() : "";
+            beginTime = Request["beginTime"] != null ? Convert.ToDateTime(Request["beginTime"]) : new DateTime(1, 1, 1);
+            endTime = Request["endTime"] != null ? Convert.ToDateTime(Request["endTime"]) : new DateTime(1, 1, 1);
+
             dtRequest = GetDataTablesRequest();
-            dtResponse = um.ListDataTablesAjax(dtRequest);
+            dtResponse = um.ListDataTablesAjax(dtRequest, taskName, beginTime, endTime);
 
             return Json(dtResponse, JsonRequestBehavior.DenyGet);
         }
@@ -85,6 +92,36 @@ namespace OnlineLearningSystem.Controllers
             uId = u.U_Id;
 
             return View(um.GetPersonalStatistic(uId));
+        }
+
+        //
+        // GET: /ExaminationTaskStatistic/TaskExportToExcel
+
+        [Description("导出考试统计概览到表格")]
+        public JsonResult TaskExportToExcel()
+        {
+
+            String excelFile, taskName;
+            DateTime beginTime, endTime;
+
+            taskName = Request["taskName"] != null ? Request["taskName"].ToString() : "";
+            beginTime = Request["beginTime"] != null ? Convert.ToDateTime(Request["beginTime"]) : new DateTime(1, 1, 1);
+            endTime = Request["endTime"] != null ? Convert.ToDateTime(Request["endTime"]) : new DateTime(1, 1, 1);
+
+            excelFile = um.TaskExportToExcel(taskName, beginTime, endTime);
+
+            FileInfo downloadFile = new FileInfo(excelFile);
+            Response.Clear();
+            Response.ClearHeaders();
+            Response.Buffer = false;
+            Response.ContentType = "application/octet-stream";
+            Response.AppendHeader("Content-Disposition", "attachment;filename=" + System.Web.HttpUtility.UrlEncode(downloadFile.Name, System.Text.Encoding.UTF8));
+            Response.AppendHeader("Content-Length", downloadFile.Length.ToString());
+            Response.WriteFile(downloadFile.FullName);
+            Response.Flush();
+            Response.End();
+
+            return Json(downloadFile.Name, JsonRequestBehavior.AllowGet);
         }
     }
 }

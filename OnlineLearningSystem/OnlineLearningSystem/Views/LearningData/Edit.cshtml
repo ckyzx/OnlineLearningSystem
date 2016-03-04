@@ -44,6 +44,23 @@
         </div>
         <div class="row cl">
             <label class="form-label col-2">
+                @Html.LabelFor(m => m.LD_Video)
+            </label>
+            <div class="formControls col-5">
+                <div class="uploader-thum-container">
+                    <div id="fileList" class="uploader-list">
+                    </div>
+                    <div id="filePicker">
+                        选择视频</div>
+                    <button id="btn-star" class="btn btn-default btn-uploadstar radius ml-10">
+                        开始上传</button>
+                </div>
+                @Html.HiddenFor(m => m.LD_Video)
+                @Html.ValidationMessageFor(m => m.LD_Video)
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-2">
                 @Html.LabelFor(m => m.LD_Content)
             </label>
             <div class="formControls col-10">

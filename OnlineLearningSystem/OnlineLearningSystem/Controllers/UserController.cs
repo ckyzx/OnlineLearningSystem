@@ -30,7 +30,7 @@ namespace OnlineLearningSystem.Controllers
         public ActionResult List()
         {
 
-            ViewBag.DepartmentsZTreeJson = new UDepartment().GetDepartmentsZTreeJson();
+            ViewBag.DepartmentsZTreeJson = new UDepartment().GetZTreeJson();
 
             return View();
         }

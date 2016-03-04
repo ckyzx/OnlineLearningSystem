@@ -57,5 +57,8 @@ namespace OnlineLearningSystem.Models
 
         [NotMapped]
         public String EP_Score { get; set; }
+
+        [NotMapped]
+        public Byte EP_PaperStatus { get; set; }
     }
 }

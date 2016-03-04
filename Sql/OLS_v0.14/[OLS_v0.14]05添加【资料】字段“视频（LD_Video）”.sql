@@ -1,0 +1,8 @@
+USE OLS;
+
+GO
+
+ALTER TABLE dbo.LearningDatas
+ADD LD_Video VARCHAR(500) NULL;
+
+GO

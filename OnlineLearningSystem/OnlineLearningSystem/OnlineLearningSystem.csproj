@@ -99,7 +99,7 @@
     <Compile Include="Controllers\QuestionClassifyController.cs" />
     <Compile Include="Controllers\UserScoreController.cs" />
     <Compile Include="Utilities\Helpers\OpenXmlExcel.cs" />
-    <Compile Include="Utilities\Helpers\OpenXmlExcelHelper.cs" />
+    <Compile Include="Utilities\Helpers\OpenXmlExcelStaticHelper.cs" />
     <Compile Include="Utilities\UUserScore.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -287,6 +287,8 @@
     <Content Include="Content\lib\jquery-ui\jquery-ui.min.css" />
     <Content Include="Content\lib\jquery-ui\jquery-ui.min.js" />
     <Content Include="Content\lib\js.brower-detection.js" />
+    <Content Include="Content\lib\jwplayer-7.3.4\jwplayer.flash.swf" />
+    <Content Include="Content\lib\jwplayer-7.3.4\jwplayer.js" />
     <Content Include="Content\lib\swiper_2.7.0\idangerous.swiper.css" />
     <Content Include="Content\lib\swiper_2.7.0\idangerous.swiper.js" />
     <Content Include="Content\lib\swiper_2.7.0\idangerous.swiper.min.js" />

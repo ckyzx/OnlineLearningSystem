@@ -613,7 +613,9 @@ namespace OnlineLearningSystem.Utilities
 
             List<SelectListItem> list;
 
-            var items = olsEni.QuestionClassifies.Select(model => new { model.QC_Name, model.QC_Id });
+            var items = olsEni.QuestionClassifies
+                .Where(m=>m.QC_Status == (Byte)Status.Available)
+                .Select(model => new { model.QC_Name, model.QC_Id });
 
             list = new List<SelectListItem>();
             list.Add(new SelectListItem() { Text = "[未设置]", Value = "" });

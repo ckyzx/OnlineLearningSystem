@@ -1,4 +1,5 @@
 ﻿$(function() {
+
     $('.skin-minimal input').iCheck({
         checkboxClass: 'icheckbox-blue',
         radioClass: 'iradio-blue',
@@ -31,6 +32,7 @@
         },
         fileVal: "upfile"
     });
+    
     uploader.on('fileQueued', function(file) {
         var $li = $(
                 '<div id="' + file.id + '" class="item">' +
@@ -54,9 +56,11 @@
             $img.attr('src', src);
         }, 100, 100);
     });
+
     uploader.on('error', function(type) {
         alert(type);
     });
+
     // 文件上传过程中创建进度条实时显示。
     uploader.on('uploadProgress', function(file, percentage) {
         var $li = $('#' + file.id),
@@ -87,6 +91,7 @@
 
         $('#' + file.id).find('.progress-box').fadeOut();
     });
+
     uploader.on('all', function(type) {
         if (type === 'startUpload') {
             state = 'uploading';
@@ -126,7 +131,7 @@
         btn.hide();
         filePath = btn.attr('file-path');
 
-        if(filePath == undefined || filePath == null || filePath == ''){
+        if (filePath == undefined || filePath == null || filePath == '') {
             alert('未上传试题模板。');
         }
 

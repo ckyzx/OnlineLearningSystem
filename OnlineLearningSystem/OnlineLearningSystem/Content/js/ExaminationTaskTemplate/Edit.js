@@ -22,8 +22,9 @@
     // 初始化自动出题比例选择控件
     renderAutoRatio();
 
-    // 初始化开始时间控件事件
+    // 初始化开始时间、结束时间控件事件
     initStartTimeEvent();
+    initEndTimeEvent();
 
     // 初始化提交事件
     initSubmitEvent();
@@ -99,6 +100,7 @@
                     $('#ETT_AutoClassifies').parentsUntil('form').last().hide();
                     $('#ETT_AutoRatio').parentsUntil('form').last().hide();
                     $('#ETT_StartTime').parentsUntil('form').last().hide();
+                    $('#ETT_EndTime').parentsUntil('form').last().hide();
                     break;
                 case 1:
 
@@ -111,6 +113,7 @@
                     $('#ETT_AutoClassifies').parentsUntil('form').last().show();
                     $('#ETT_AutoRatio').parentsUntil('form').last().show();
                     $('#ETT_StartTime').parentsUntil('form').last().show();
+                    $('#ETT_EndTime').parentsUntil('form').last().show();
                     break;
                 default:
                     break;
@@ -525,7 +528,7 @@
             });
 
         // 设置时间
-        $('body').everyTime('1s', 'SetHour', function() {
+        $('body').everyTime('1s', 'SetStartTime', function() {
 
             var startTimeDiv, hourcombo, mincombo, seccombo;
             var startTime;
@@ -547,7 +550,57 @@
                 mincombo.val(startTime.getMinutes());
                 seccombo.val(startTime.getSeconds())
 
-                $('body').stopTime('SetHour');
+                $('body').stopTime('SetStartTime');
+            }
+        });
+    }
+
+    function initEndTimeEvent() {
+
+        $('#EndTime')
+            .on('change', 'select', function() {
+
+                var container, hourcombo, mincombo, seccombo;
+                var hour, min, sec, datetime;
+
+                container = $(this).parent();
+                hourcombo = container.find('select.hourcombo');
+                mincombo = container.find('select.mincombo');
+                seccombo = container.find('select.seccombo');
+
+                hour = hourcombo.val();
+                min = mincombo.val();
+                sec = seccombo.val();
+
+                datetime = '1970/1/1 ' + hour + ':' + min + ':' + sec;
+
+                $('#ETT_EndTime').val(datetime);
+            });
+
+        // 设置时间
+        $('body').everyTime('1s', 'SetEndTime', function() {
+
+            var startTimeDiv, hourcombo, mincombo, seccombo;
+            var startTime;
+
+            startTimeDiv = $('#EndTime');
+            hourcombo = startTimeDiv.find('select.hourcombo');
+            mincombo = startTimeDiv.find('select.mincombo');
+            seccombo = startTimeDiv.find('select.seccombo');
+            hourcombo.addClass('select');
+            mincombo.addClass('select');
+            seccombo.addClass('select');
+
+            if (hourcombo.length > 0) {
+
+                startTime = $('#ETT_EndTime').val();
+                startTime = startTime.toDate();
+
+                hourcombo.val(startTime.getHours())
+                mincombo.val(startTime.getMinutes());
+                seccombo.val(startTime.getSeconds())
+
+                $('body').stopTime('SetEndTime');
             }
         });
     }
@@ -600,8 +653,11 @@
     function validateData() {
 
         var errorSpan, etAutoType, container, etAutoClassifies, etAutoRatio,
-            etQuestions, sdiContainer, etStartTime, etTotalScore, etStatisticType, etTotalNumber;
-        var autoType, autoClassifies, autoRatio, questions, qAry, startTime, totalScore, ratioNumber, statisticType, totalNumber;
+            etQuestions, sdiContainer, etStartTime, etEndTime, etTotalScore, 
+            etStatisticType, etTotalNumber;
+        var autoType, autoClassifies, autoRatio, questions, qAry, 
+            startTime, endTime, totalScore, ratioNumber, statisticType, 
+            totalNumber;
         var acRegex, arRegex, qsRegex, stRegex, stRegex1;
         var valid;
 
@@ -692,6 +748,27 @@
                     '<div class="cl"></div>' +
                     '<span class="field-validation-error">' +
                     '<span htmlfor="ETT_StartTime" generated="true" class="">请选择开始时间</span>' +
+                    '</span>' +
+                    '<div>').appendTo(container);
+
+                valid = false;
+            }
+
+            // 结束时间验证
+            // 数据格式：1970/1/1 8:00:00
+            stRegex = /^1970\/1\/1 (([0-9]{1})|(1{1}[0-9]{1})|(2{1}[0-3]{1})):[0-5]{1}[0-9]{0,1}:[0-5]{0,1}[0-9]{1}$/g;
+            stRegex1 = /^1970\/1\/1 0{1,2}:0{1,2}:0{1,2}$/g;
+
+            etEndTime = $('#ETT_EndTime');
+            container = etEndTime.parent();
+            endTime = etEndTime.val();
+
+            if (stRegex1.test(endTime) || !stRegex.test(endTime)) {
+
+                $('<div class="custom-validation-error">' +
+                    '<div class="cl"></div>' +
+                    '<span class="field-validation-error">' +
+                    '<span htmlfor="ETT_EndTime" generated="true" class="">请选择结束时间</span>' +
                     '</span>' +
                     '<div>').appendTo(container);
 

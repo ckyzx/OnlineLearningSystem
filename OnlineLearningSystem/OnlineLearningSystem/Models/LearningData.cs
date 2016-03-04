@@ -26,6 +26,10 @@ namespace OnlineLearningSystem.Models
         [Required(ErrorMessage = "请选择{0}")]
         public Int32 LDC_Id { get; set; }
 
+        [DisplayName("视频")]
+        [MaxLength(500,ErrorMessage = "{0}链接长度大于{1}。")]
+        public String LD_Video { get; set; }
+
         [DisplayName("内容")]
         public String LD_Content { get; set; }
 

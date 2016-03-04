@@ -555,7 +555,9 @@ namespace OnlineLearningSystem.Utilities
 
                             // 终止试卷
                             eptId = epts[0].EPT_Id;
-                            eps = olsEni.ExaminationPapers.Where(m => m.EPT_Id == eptId).ToList();
+                            eps = olsEni.ExaminationPapers
+                                .Where(m => m.EPT_Id == eptId)
+                                .ToList();
                             foreach (var ep in eps)
                             {
                                 ep.EP_PaperStatus = (Byte)PaperStatus.Done;
@@ -584,7 +586,9 @@ namespace OnlineLearningSystem.Utilities
                                 ept.EPT_PaperTemplateStatus = (Byte)PaperTemplateStatus.Done;
 
                                 // 终止试卷
-                                eps = olsEni.ExaminationPapers.Where(m => m.EPT_Id == ept.EPT_Id).ToList();
+                                eps = olsEni.ExaminationPapers
+                                    .Where(m => m.EPT_Id == ept.EPT_Id)
+                                    .ToList();
                                 foreach (var ep in eps)
                                 {
                                     ep.EP_PaperStatus = (Byte)PaperStatus.Done;

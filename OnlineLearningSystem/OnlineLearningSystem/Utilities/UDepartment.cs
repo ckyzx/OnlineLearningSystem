@@ -193,13 +193,13 @@ namespace OnlineLearningSystem.Utilities
             }
         }
 
-        public String GetDepartmentsAndUsersZTreeJson()
+        public String GetZTreeJsonWithUsers()
         {
 
-            return GetDepartmentsZTreeJson(true);
+            return GetZTreeJson(true);
         }
 
-        public String GetDepartmentsZTreeJson(Boolean hasUser = false)
+        public String GetZTreeJson(Boolean hasUser = false)
         {
 
             List<Department> ds;
@@ -414,7 +414,10 @@ namespace OnlineLearningSystem.Utilities
 
             List<SelectListItem> list;
 
-            var items = olsEni.Departments.Where(m=>m.D_Status == (Byte)Status.Available).OrderBy(m=>m.D_Sort).Select(model => new { model.D_Name, model.D_Id });
+            var items = olsEni.Departments
+                .Where(m => m.D_Status == (Byte)Status.Available)
+                .OrderBy(m => m.D_Sort)
+                .Select(model => new { model.D_Name, model.D_Id });
 
             list = new List<SelectListItem>();
             list.Add(new SelectListItem() { Text = "", Value = "" });

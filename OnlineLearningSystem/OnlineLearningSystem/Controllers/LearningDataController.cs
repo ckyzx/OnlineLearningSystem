@@ -28,6 +28,9 @@ namespace OnlineLearningSystem.Controllers
         [Description("资料列表")]
         public ActionResult List()
         {
+
+            ViewBag.LearningDataCategoryZTreeJson = new ULearningDataCategory().GetZTreeJson();
+
             return View();
         }
 
@@ -37,6 +40,9 @@ namespace OnlineLearningSystem.Controllers
         [Description("资料列表，学员后台")]
         public ActionResult ListStudent()
         {
+
+            ViewBag.LearningDataCategoryZTreeJson = new ULearningDataCategory().GetZTreeJson();
+
             return View();
         }
 
@@ -44,14 +50,14 @@ namespace OnlineLearningSystem.Controllers
         // POST: /LearningData/ListDataTablesAjax
 
         [Description("查询资料")]
-        public JsonResult ListDataTablesAjax()
+        public JsonResult ListDataTablesAjax(Int32 ldcId = 0)
         {
 
             DataTablesRequest dtRequest;
             DataTablesResponse dtResponse;
 
             dtRequest = GetDataTablesRequest();
-            dtResponse = um.ListDataTablesAjax(dtRequest);
+            dtResponse = um.ListDataTablesAjax(dtRequest, ldcId);
 
             return Json(dtResponse, JsonRequestBehavior.DenyGet);
         }
@@ -196,12 +202,12 @@ namespace OnlineLearningSystem.Controllers
         // GET: /LearningData/DuplicateName
 
         [Description("检查资料标题")]
-        public JsonResult DuplicateName(Int32 LD_Id, String LD_Name)
+        public JsonResult DuplicateName(Int32 LD_Id, String LD_Title)
         {
 
             Boolean matching;
 
-            matching = um.DuplicateName(LD_Id, LD_Name);
+            matching = um.DuplicateName(LD_Id, LD_Title);
 
             return Json(!matching, JsonRequestBehavior.AllowGet);
         }

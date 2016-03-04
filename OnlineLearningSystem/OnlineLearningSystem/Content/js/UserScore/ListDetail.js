@@ -95,6 +95,19 @@
         beginTime = $('#BeginTime').val();
         endTime = $('#EndTime').val();
 
+        if(taskName == '' && beginTime == '' && endTime == ''){
+
+            layer.confirm('请输入搜索条件。', {
+                    title: '',
+                    btn: ['确定']
+                },
+                function() {
+                    layer.closeAll();
+                });
+
+            return '';
+        }
+
         if ((beginTime == '' && endTime != '') || (beginTime != '' && endTime == '')) {
 
             layer.confirm('请同时选择“开始时间”与“结束时间”。', {
@@ -124,7 +137,14 @@
 
     $('#SearchBtn').click(function() {
 
-        table.ajax.url('/UserScore/ListDetailDataTablesAjax?uId=' + uId + getRequestString()).load();
+        var requestString;
+
+        requestString = getRequestString();
+        if (requestString == '') {
+            return;
+        } else {
+            table.ajax.url('/UserScore/ListDetailDataTablesAjax?uId=' + uId + requestString).load();
+        }
     });
 
     $('#ExportBtn').click(function() {
@@ -136,14 +156,14 @@
             location.href = '/UserScore/DetailExportToExcel?uId=' + uId + getRequestString();
             layer.closeAll();
         }, function() {
-            
+
         })
     });
 
-    $(window).resize(function() {
+    /*$(window).resize(function() {
 
         table.destroy();
         table = $('.table-sort').DataTable(dtParams);
-    });
+    });*/
 
 });

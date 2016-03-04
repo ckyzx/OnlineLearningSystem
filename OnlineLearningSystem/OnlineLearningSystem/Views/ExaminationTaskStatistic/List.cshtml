@@ -4,6 +4,16 @@
 }
 <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 系统 <span class="c-gray en">&gt;</span> 考试统计 <a class="btn btn-success radius r mr-20" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
 <div class="pd-20">
+    <div class="pd-5">
+        <span class="mr-5">考试任务</span>
+        <input type="text" id="TaskName" style="width:160px" class="input-text" />
+        <span class="ml-10 mr-5">考试日期</span>
+        <input type="text" onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'EndTime\')||\'%y-%M-%d\'}'})" id="BeginTime" class="input-text Wdate" style="width:160px;" />
+		-
+		<input type="text" onfocus="WdatePicker({minDate:'#F{$dp.$D(\'BeginTime\')}',maxDate:'%y-%M-%d'})" id="EndTime" class="input-text Wdate mr-5" style="width:160px;" />
+		<button id="SearchBtn" class="btn btn-success mr-5" type="button"><i class="Hui-iconfont">&#xe665;</i> 查询</button>
+        <button id="ExportBtn" class="btn btn-success" type="button"><i class="Hui-iconfont">&#xe641;</i> 导出</button>
+    </div>             
     <div class="mt-20">
         <table class="table table-border table-bordered table-bg table-hover table-sort">
             <thead>
@@ -15,13 +25,13 @@
                         ID
                     </th>
                     <th>
-                        考试名称
+                        考试任务
                     </th>
                     <th>
-                        日期
+                        考试日期
                     </th>
                     <th>
-                        参考
+                        应考
                     </th>
                     <th>
                         已考

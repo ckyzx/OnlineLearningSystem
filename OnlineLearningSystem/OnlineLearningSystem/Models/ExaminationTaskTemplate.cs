@@ -83,10 +83,11 @@ namespace OnlineLearningSystem.Models
 
         [DisplayName("考试时长")]
         [Required(ErrorMessage = "请输入{0}")]
+        [Range(10, 360, ErrorMessage = "请输入{1}至{2}之间的数字。")]
         public Int32 ETT_TimeSpan { get; set; }
 
         [DisplayName("备注")]
-        [MaxLength(200, ErrorMessage="请输入小于200个字符的内容。")]
+        [MaxLength(200, ErrorMessage="请输入小于{1}个字符的内容。")]
         public String ETT_Remark { get; set; }
 
         [DisplayName("添加时间")]

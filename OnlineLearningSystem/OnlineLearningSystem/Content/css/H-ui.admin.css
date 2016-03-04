@@ -74,7 +74,7 @@ h4{line-height:30px}
 	.Hui-tabNav .acrossTab li{height:26px;line-height:26px;}
 	.Hui-tabNav .acrossTab li em{ right:-16px; height: 26px; width: 16px}
 	.loading {background:url(../images/loading.gif) no-repeat center; height:100px}
-	.show_iframe iframe {position: absolute;bottom: 0;height: 100%;width: 100%}
+	.show_iframe iframe {position: absolute;bottom: 0;height: 100%;width: 100%;}
 	.Hui-tabNav-more {position: absolute;right:0px;width:70px;top:4px;display: none}
 
 	/*面包屑导航*/

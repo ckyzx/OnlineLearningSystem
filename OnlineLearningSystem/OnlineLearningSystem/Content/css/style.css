@@ -99,7 +99,7 @@ body.prompt{ }
 
 #AutoOffsetDayContainer .offset-day-item{ margin-left: 10px; }
 #AutoOffsetDayContainer .offset-day-item .offset-day-text{ margin-right:5px; }
-#AutoOffsetDayContainer .offset-day-item .select-box, #StartTime .select{ margin-right:5px; padding: 0 3px; width: 50px; height: 24px; }
+#AutoOffsetDayContainer .offset-day-item .select-box, .time-picker .select{ margin-right:5px; padding: 0 3px; width: 50px; height: 24px; }
 #AutoOffsetDayContainer .offset-day-item .offset-day-num{ width: 44px; border: 0; }
 
 .validation-summary-errors{ margin-left:16.666666666666664%; width: 83.33333%; color:red; }
@@ -119,9 +119,10 @@ body.prompt{ }
 .ld-container{ margin:0 auto; padding:20px; width:980px; }
 .ld-title{ margin-bottom:10px; padding:20px; font:bold 28px "宋体","微软雅黑"; text-align:center; border-bottom:1px solid #CCC; }
 .ld-info{ font-size:12px; font-style:italic; text-align:right; }
+.ld-video-player-container { }
 .ld-content{ padding:10px; }
 
-.select-data-item{margin-top:3px;margin-bottom:10px;}
+.select-data-item{ margin-top:3px; margin-bottom:10px; }
 
 /* Global */
 .ml-200{ margin-left: 200px; }
@@ -140,7 +141,7 @@ body.prompt{ }
 
 .bold{ font-weight: bold!important; }
 
-.c{ color:#CCC!important; }
+.c, .c-c, .gray{ color:#CCC!important; }
 
 .bg-f{ background-color:#FFF!important; }
 .bg-c{ background-color:#CCC!important; }

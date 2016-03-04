@@ -184,6 +184,7 @@ namespace OnlineLearningSystem.Utilities
 
             if (status == (Byte)Status.Unset)
             {
+                // 显示状态为“正常”与“缓存”的分类
                 qcs = olsEni
                     .QuestionClassifies
                     .Where(m =>

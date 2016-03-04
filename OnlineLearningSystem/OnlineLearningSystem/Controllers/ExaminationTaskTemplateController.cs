@@ -58,7 +58,7 @@ namespace OnlineLearningSystem.Controllers
             ExaminationTaskTemplate m;
 
             m = um.GetNew();
-            ViewBag.DepartmentsAndUsers = new UDepartment().GetDepartmentsAndUsersZTreeJson();
+            ViewBag.DepartmentsAndUsers = new UDepartment().GetZTreeJsonWithUsers();
             ViewBag.QuestionClassifies = new UQuestionClassify().GetZTreeJson(Status.Available);
 
             return View(m);
@@ -81,7 +81,7 @@ namespace OnlineLearningSystem.Controllers
                 }
             }
 
-            ViewBag.DepartmentsAndUsers = new UDepartment().GetDepartmentsAndUsersZTreeJson();
+            ViewBag.DepartmentsAndUsers = new UDepartment().GetZTreeJsonWithUsers();
             ViewBag.QuestionClassifies = new UQuestionClassify().GetZTreeJson(Status.Available);
 
             return View(m);
@@ -98,7 +98,7 @@ namespace OnlineLearningSystem.Controllers
             ExaminationTaskTemplate m;
 
             m = um.Get(id);
-            ViewBag.DepartmentsAndUsers = new UDepartment().GetDepartmentsAndUsersZTreeJson();
+            ViewBag.DepartmentsAndUsers = new UDepartment().GetZTreeJsonWithUsers();
             ViewBag.QuestionClassifies = new UQuestionClassify().GetZTreeJson(Status.Available);
 
             return View(m);
@@ -121,7 +121,7 @@ namespace OnlineLearningSystem.Controllers
                 }
             }
 
-            ViewBag.DepartmentsAndUsers = new UDepartment().GetDepartmentsAndUsersZTreeJson();
+            ViewBag.DepartmentsAndUsers = new UDepartment().GetZTreeJsonWithUsers();
             ViewBag.QuestionClassifies = new UQuestionClassify().GetZTreeJson(Status.Available);
 
             return View(m);

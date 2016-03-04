@@ -42,6 +42,10 @@ $(function() {
         } else if (0 == data.status) {
 
             alert(data.message);
+
+            if(data.message == '考试已结束。'){
+                layer_close();
+            }
         }
     }, 'json');
 

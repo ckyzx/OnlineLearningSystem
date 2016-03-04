@@ -118,6 +118,7 @@ namespace OnlineLearningSystem.Controllers
         [Description("导出用户成绩概览到表格")]
         public JsonResult SummaryExportToExcel(Int32 dId = 0)
         {
+
             String excelFile;
 
             excelFile = um.SummaryExportToExcel(dId);

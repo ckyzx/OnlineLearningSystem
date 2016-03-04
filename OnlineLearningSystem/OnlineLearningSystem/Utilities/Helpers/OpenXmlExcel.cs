@@ -8,7 +8,8 @@ using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Spreadsheet;
 using System.Text.RegularExpressions;
 using System.Data;
-namespace ExcelWriter
+
+namespace OpenXmlExcel
 {
     public class OpenXmlExcel : IDisposable
     {

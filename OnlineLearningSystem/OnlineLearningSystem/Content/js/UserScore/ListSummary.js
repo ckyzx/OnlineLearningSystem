@@ -128,11 +128,11 @@
         })
     });
 
-    $(window).resize(function() {
+    /*$(window).resize(function() {
 
         table.destroy();
         dtParams.ajax.url = '/UserScore/ListSummaryDataTablesAjax?dId=' + getDepartmentId();
         table = $('.table-sort').DataTable(dtParams);
-    });
+    });*/
 
 });
