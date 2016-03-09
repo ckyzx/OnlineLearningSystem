@@ -1,0 +1,66 @@
+﻿@model OnlineLearningSystem.Models.Role
+@{
+    ViewBag.Title = "修改角色";
+    Layout = "~/Views/Shared/_PageEdit.cshtml";
+}
+<div class="pd-20">
+    @using (Html.BeginForm("Edit", "Role", FormMethod.Post, new { name = "create", @class = "form form-horizontal" }))
+    {
+        @Html.ValidationSummary(true)
+        @Html.HiddenFor(m => m.R_Id)
+        @Html.HiddenFor(m => m.R_AutoId)
+        @Html.HiddenFor(m => m.R_AddTime)
+        <div class="row cl">
+            <label class="form-label col-2">
+                @Html.LabelFor(m => m.R_Status)    
+            </label>
+            <div class="formControls col-2">
+                <span class="select-box">
+                    @Html.EditorFor(m => m.R_Status, "Status")
+                </span>
+                @Html.ValidationMessageFor(m => m.R_Status)
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-2">
+                @Html.LabelFor(m => m.R_Name)
+            </label>
+            <div class="formControls col-2">
+                @Html.TextBoxFor(m => m.R_Name, new { @class = "input-text" })
+                @Html.ValidationMessageFor(m => m.R_Name)
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-2">
+                @Html.LabelFor(m => m.R_Permissions)
+            </label>
+            <div class="formControls col-10">
+                <ul id="Permissions" class="ztree" value="@ViewBag.PermissionCategories"></ul>
+                @Html.HiddenFor(m => m.R_Permissions)
+                @Html.ValidationMessageFor(m => m.R_Permissions)
+                @Html.HiddenFor(m => m.R_PermissionCategories)
+                @Html.ValidationMessageFor(m => m.R_PermissionCategories)
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-2">
+                @Html.LabelFor(m => m.R_Remark)
+            </label>
+            <div class="formControls col-4">
+                @Html.TextAreaFor(m => m.R_Remark, new { @class = "textarea" })
+                @Html.ValidationMessageFor(m => m.R_Remark)
+            </div>
+        </div>
+        <div class="row cl">
+            <div class="col-10 col-offset-2">
+                <input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;保存&nbsp;&nbsp;" />
+                <button onclick="layer_close();" class="btn btn-default radius" type="button">
+                    &nbsp;&nbsp;取消&nbsp;&nbsp;</button>
+            </div>
+        </div>
+    }
+</div>
+<link type="text/css" rel="Stylesheet" href="@Url.Content("/Contents/lib/zTree_v3/css/metroStyle/metroStyle.css")" />
+<script type="text/javascript" src="@Url.Content("/Contents/lib/zTree_v3/js/jquery.ztree.core-3.5.min.js")"></script>
+<script type="text/javascript" src="@Url.Content("/Contents/lib/zTree_v3/js/jquery.ztree.excheck-3.5.min.js")"></script>
+<script type="text/javascript" src="@Url.Content("/Contents/js/Role/Edit.js")"></script>

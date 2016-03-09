@@ -1,0 +1,17 @@
+.login-bg{ position: relative; width: 100%; height: 256px; background:url(/Contents/images/login/bg_sky.png) no-repeat; background-size: cover; background-position: top; /* background-attachment: fixed; */ }
+.login-container { position: absolute; top: 50%; width: 100%; height: 550px; font-size:12px; color: #666; }
+.login-container .login-head { margin: 0 auto; padding-top: 25px; padding-bottom: 10px; width: 900px; height: 40px; }
+.login-container img.logo{ }
+.login-container .login-content-bg{ height: 435px; background: url(/Contents/images/login/bg.png); }
+.login-container .login-content-container { padding-top: 60px; height: 375px; background: url(/Contents/images/login/bg_content.png) no-repeat; background-size: cover; background-position: top; /* background-attachment: fixed; */ }
+.login-container .login-content { margin: 0 auto; width: 900px; height: 320px; }
+.login-container .login-poster { float:left; width: 600px; height: 320px; /* background-color: #EEE; */}
+.login-container img.poster{ margin-top: 32px; margin-left: 50px; }
+.login-container .login-box{ float:left; width:300px; height:320px; background-color:#FFF; border-radius: 5px;box-shadow: 2px 2px 5px #666; }
+.login-container .login-box .title{ margin-top: 25px; margin-bottom: 15px; padding: 0 40px; line-height: 25px; font-size: 14px; letter-spacing: 1px; }
+.login-container .login-box .row{ padding: 8px 40px; min-height: 52px; }
+.login-container .login-box .row .input-text{ width: 220px; height: 36px; font-size: 16px; line-height: 36px; }
+.login-container .login-box .row .checkbox{ padding-top: 5px; }
+.login-container .login-box .row .input-btn{ width: 220px; height: 36px; border: 0; font-size: 18px; color: #FFF; background-color: #fc5741; border-radius: 2px;cursor: pointer; }
+.login-container .login-foot { margin: 0 auto; padding: 5px 0;width: 900px; height: 50px; text-align: right; }
+.login-container .login-foot .info{  }

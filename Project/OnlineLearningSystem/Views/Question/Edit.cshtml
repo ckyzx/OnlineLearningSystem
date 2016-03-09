@@ -1,0 +1,88 @@
+﻿@model OnlineLearningSystem.Models.Question
+@{
+    ViewBag.Title = "编辑试题";
+    Layout = "~/Views/Shared/_PageEdit.cshtml";
+}
+<div class="pd-20">
+    @using (Html.BeginForm("Edit", "Question", FormMethod.Post, new { name = "create", @class = "form form-horizontal" }))
+    {
+        @Html.ValidationSummary(true)
+        @Html.HiddenFor(m => m.Q_Id)
+        @Html.HiddenFor(m => m.Q_AutoId)
+        @Html.HiddenFor(m => m.Q_Content)
+        @Html.HiddenFor(m => m.Q_OptionalAnswer)
+        @Html.HiddenFor(m => m.Q_ModelAnswer)
+        @Html.HiddenFor(m => m.Q_AddTime)
+        <div class="row cl">
+            <label class="form-label col-2">
+                @Html.LabelFor(m => m.Q_Status)
+            </label>
+            <div class="formControls col-2">
+                <span class="select-box">
+                    @Html.EditorFor(m => m.Q_Status, "Status")
+                </span>
+                @Html.ValidationMessageFor(m => m.Q_Status)
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-2">
+                @Html.LabelFor(m => m.Q_Type)
+            </label>
+            <div class="formControls col-2">
+                <span class="select-box">
+                    @Html.DropDownListFor(m => m.Q_Type, (List<SelectListItem>)ViewBag.Types, new { @class = "select" })
+                </span>
+                @Html.ValidationMessageFor(m => m.Q_Type)
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-2">
+                @Html.LabelFor(m => m.QC_Id)
+            </label>
+            <div class="formControls col-2">
+                <span class="select-box">
+                    @Html.DropDownListFor(m => m.QC_Id, (List<SelectListItem>)ViewBag.Classifies, new { @class = "select" })
+                </span>
+                @Html.ValidationMessageFor(m => m.QC_Id)
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-2">
+                @Html.LabelFor(m => m.Q_DifficultyCoefficient)
+            </label>
+            <div class="formControls col-2">
+                <span class="select-box">
+                    @Html.EditorFor(m => m.Q_DifficultyCoefficient, "ExaminationTaskDifficultyCoefficient")
+                </span>
+                @Html.ValidationMessageFor(m => m.Q_DifficultyCoefficient)
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-2">
+                @Html.LabelFor(m => m.Q_Score)
+            </label>
+            <div class="formControls col-2">
+                @Html.TextBoxFor(m => m.Q_Score, new { @class = "input-text" })
+                @Html.ValidationMessageFor(m => m.Q_Score)
+            </div>
+        </div>
+        <div id="QuestionContentAndAnswer"></div>
+        <div class="row cl">
+            <label class="form-label col-2">
+                @Html.LabelFor(m => m.Q_Remark)
+            </label>
+            <div class="formControls col-4">
+                @Html.TextAreaFor(m => m.Q_Remark, new { @class = "textarea" })
+                @Html.ValidationMessageFor(m => m.Q_Remark)
+            </div>
+        </div>
+        <div class="row cl">
+            <div class="col-10 col-offset-2">
+                <input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;保存&nbsp;&nbsp;" />
+                <button onclick="layer_close();" class="btn btn-default radius" type="button">
+                    &nbsp;&nbsp;取消&nbsp;&nbsp;</button>
+            </div>
+        </div>
+    }
+</div>
+<script type="text/javascript" src="@Url.Content("~/Contents/js/Question/Edit.js")"></script>

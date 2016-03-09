@@ -1,0 +1,103 @@
+﻿@model OnlineLearningSystem.Models.Department
+@{
+    ViewBag.Title = "添加部门";
+    Layout = "~/Views/Shared/_PageEdit.cshtml";
+}
+<div class="pd-20">
+    @using (Html.BeginForm("Create", "Department", FormMethod.Post, new { name = "create", @class = "form form-horizontal" }))
+    {
+        @Html.ValidationSummary(true)
+        @Html.HiddenFor(m => m.D_Id)
+        @Html.HiddenFor(m => m.D_Level)
+        @Html.HiddenFor(m => m.D_AutoId)
+        @Html.HiddenFor(m => m.D_AddTime)
+        @Html.HiddenFor(m => m.D_Sort)
+        <div class="row cl">
+            <label class="form-label col-2">
+                @Html.LabelFor(m => m.D_Status)    
+            </label>
+            <div class="formControls col-2">
+                <span class="select-box">
+                    @Html.EditorFor(m => m.D_Status, "Status")
+                </span>
+                @Html.ValidationMessageFor(m => m.D_Status)
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-2">
+                @Html.LabelFor(m => m.D_Name)
+            </label>
+            <div class="formControls col-2">
+                @Html.TextBoxFor(m => m.D_Name, new { @class = "input-text" })
+                @Html.ValidationMessageFor(m => m.D_Name)
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-2">
+                @Html.LabelFor(m => m.D_Roles)
+            </label>
+            <div class="formControls col-10">
+                <table class="table table-border table-bordered table-bg table-hover table-sort role-table">
+                    <thead>
+                        <tr>
+                            <th class="text-c">
+                                <input type="checkbox" name="" value="" />
+                            </th>
+                            <th>
+                                ID
+                            </th>
+                            <th>
+                                名称
+                            </th>
+                            <th>
+                                添加时间
+                            </th>
+                            <th>
+                                备注
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in ViewBag.Roles)
+                        {
+                            <tr>
+                                <td class="text-c">
+                                    <input type="checkbox" value="@item.R_Id" />
+                                </td>
+                                <td>@item.R_Id
+                                </td>
+                                <td>@item.R_Name
+                                </td>
+                                <td>@item.R_AddTime
+                                </td>
+                                <td>@item.R_Remark
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                @Html.HiddenFor(m => m.D_Roles)
+                @Html.ValidationMessageFor(m => m.D_Roles)
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-2">
+                @Html.LabelFor(m => m.D_Remark)
+            </label>
+            <div class="formControls col-4">
+                @Html.TextAreaFor(m => m.D_Remark, new { @class = "textarea" })
+                @Html.ValidationMessageFor(m => m.D_Remark)
+            </div>
+        </div>
+        <div class="row cl">
+            <div class="col-10 col-offset-2">
+                <input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;保存&nbsp;&nbsp;" />
+                <button onclick="layer_close();" class="btn btn-default radius" type="button">
+                    &nbsp;&nbsp;取消&nbsp;&nbsp;</button>
+            </div>
+        </div>
+    }
+</div>
+<script type="text/javascript" src="@Url.Content("~/Contents/lib/datatables/1.10.9/jquery.dataTables.min.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Contents/js/Role/ListLocal.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Contents/js/Department/Edit.js")"></script>

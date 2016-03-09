@@ -1,0 +1,100 @@
+﻿@{
+    ViewBag.Title = "查看试卷";
+    Layout = "~/Views/Shared/_PageEdit.cshtml";
+}
+<div id="ExaminationPaperGradeContainer">
+    <div id="PaperContainer">
+    </div>
+</div>
+<script type="text/javascript" src="@Url.Content("/Contents/lib/jquery-tmpl/jquery.tmpl.min.js")"></script>
+<script type="text/javascript" src="@Url.Content("/Contents/lib/jquery.timers-1.2.js")"></script>
+<script type="text/javascript" src="@Url.Content("/Contents/lib/js.request.js")"></script>
+<script type="text/javascript" src="@Url.Content("/Contents/js/ExaminationPaperTemplate/PaperView.js")"></script>
+<script id="PaperTmpl" type="text/x-jquery-tmpl">
+    <div id="Paper_${epId}" data-paper-id="${epId}" data-user-id="${uId}">
+        {{tmpl(types) '#TypeTmpl'}}
+        <div class="button-container">
+            <button id="Close" class="btn btn-primary radius prev-paper f-r mr-10" type="button">关闭</button>
+            <div class="cl"></div>
+        </div>
+    </div>
+</script>
+<script id="TypeTmpl" type="text/x-jquery-tmpl">
+    <div class="question-container">
+        <div class="type-name col-12">${type}</div>
+        {{tmpl(questions) '#QuestionTmpl'}}
+        <div class="cl"></div>
+    </div>
+</script>
+<script id="QuestionTmpl" type="text/x-jquery-tmpl">
+    <div class="col-12 cl question" data-eptq-id="${EPTQ_Id}">
+        <div class="col-12 cl question-item question-content">
+            <div class="col-12"><span class="tip">题</span>{{html EPTQ_Content}}</div>
+        </div>
+        <div class="col-12 cl question-item question-answer">
+            <div class="col-12">
+                <span class="tip">答</span>
+                {{if EPTQ_Type == '单选题'}}
+                    {{each(i, oa) EPTQ_OptionalAnswer}}
+                    <span class="mr-10"><input type="radio" name="question_radios_${EPTQ_Id}" value="${oa.key}" class="mr-5" disabled />${oa.key}.${oa.text}</span>
+                    {{/each}}
+                {{else EPTQ_Type == '多选题'}}
+                    {{each(i, oa) EPTQ_OptionalAnswer}}
+                    <span class="mr-10"><input type="checkbox" name="question_checkboxs_${EPTQ_Id}" value="${oa.key}" class="mr-5" disabled />${oa.key}.${oa.text}</span>
+                    {{/each}}
+                {{else EPTQ_Type == '判断题'}}
+                <span class="mr-10"><input type="radio" name="question_radios_${EPTQ_Id}" value="√" class="mr-5" disabled />√</span>
+                <span class="mr-10"><input type="radio" name="question_radios_${EPTQ_Id}" value="×" class="mr-5" disabled />×</span>
+                {{else EPTQ_Type == '公文改错题' || EPTQ_Type == '计算题' || EPTQ_Type == '案例分析题' || EPTQ_Type == '问答题'}}
+                <br />
+                <textarea name="question_textarea_${EPTQ_Id}" class="textarea disabled" cols="20" rows="2"></textarea>
+                {{/if}}
+            </div>
+        </div>
+        <div class="col-12 cl question-item question-grade">
+            <div class="col-12">
+                <span class="tip">标</span>
+                <span data-id="ModelAnswerContainer_${EPTQ_Id}" class="fz-18"></span>
+                {{if EPTQ_Type == '单选题'}}
+                    {{each(i, oa) EPTQ_OptionalAnswer}}
+                    <span class="mr-10 hide"><input type="radio" name="question_radios_${EPTQ_Id}_model_answer" value="${oa.key}" class="mr-5" disabled />${oa.key}.${oa.text}</span>
+                    {{/each}}
+                {{else EPTQ_Type == '多选题'}}
+                    {{each(i, oa) EPTQ_OptionalAnswer}}
+                    <span class="mr-10 hide"><input type="checkbox" name="question_checkboxs_${EPTQ_Id}_model_answer" value="${oa.key}" class="mr-5" disabled />${oa.key}.${oa.text}</span>
+                    {{/each}}
+                {{else EPTQ_Type == '判断题'}}
+                <span class="mr-10 hide"><input type="radio" name="question_radios_${EPTQ_Id}_model_answer" value="√" class="mr-5" disabled />√</span>
+                <span class="mr-10 hide"><input type="radio" name="question_radios_${EPTQ_Id}_model_answer" value="×" class="mr-5" disabled />×</span>
+                {{else EPTQ_Type == '公文改错题' || EPTQ_Type == '计算题' || EPTQ_Type == '案例分析题' || EPTQ_Type == '问答题'}}
+                <br />
+                <textarea name="question_textarea_${EPTQ_Id}_model_answer" class="textarea disabled" cols="20" rows="2"></textarea>
+                {{/if}}
+            </div>
+        </div>
+        <div class="col-12 cl question-item question-grade">
+            <div class="col-12">
+                <span class="tip">评</span>
+                <span data-id="question_radios_${EPTQ_Id}_grade_0" data-name="question_radios_${EPTQ_Id}_grade" data-value="0" class="grade unset fz-28 mr-10"><a href="javascript:void()" title="未评"><i class="Hui-iconfont">&#xe608;</i></a></span>
+                <span data-id="question_radios_${EPTQ_Id}_grade_1" data-name="question_radios_${EPTQ_Id}_grade" data-value="1" class="grade exactness fz-28 mr-10"><a href="javascript:void()" title="正确"><i class="Hui-iconfont">&#xe676;</i></a></span>
+                <span data-id="question_radios_${EPTQ_Id}_grade_2" data-name="question_radios_${EPTQ_Id}_grade" data-value="2" class="grade wrong fz-28 mr-10"><a href="javascript:void()" title="错误"><i class="Hui-iconfont">&#xe6dd;</i></a></span>
+                <span class="mr-10 hide">
+                    <label for="question_radios_${EPTQ_Id}_grade_0">
+                        <input type="radio" id="question_radios_${EPTQ_Id}_grade_0" name="question_radios_${EPTQ_Id}_grade" value="0" class="mr-5" />未评
+                    </label>
+                </span>
+                <span class="mr-10 hide">
+                    <label for="question_radios_${EPTQ_Id}_grade_1">
+                        <input type="radio" id="question_radios_${EPTQ_Id}_grade_1" name="question_radios_${EPTQ_Id}_grade" value="1" class="mr-5" />正确
+                    </label>
+                </span>
+                <span class="mr-10 hide">
+                    <label for="question_radios_${EPTQ_Id}_grade_2">
+                        <input type="radio" id="question_radios_${EPTQ_Id}_grade_2" name="question_radios_${EPTQ_Id}_grade" value="2" class="mr-5" />错误
+                    </label>
+                </span>
+            </div>
+        </div>
+        <div class="cl"></div>
+    </div>
+</script>

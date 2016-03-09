@@ -1,0 +1,137 @@
+﻿@using OnlineLearningSystem.Models;
+@{
+    User u;
+    List<Department> ds;
+    List<Role> rs;
+    List<Permission> ps;
+    String departmentNames, permissions;
+
+    //[禁用权限验证]
+    /*u = new User();
+    departmentNames = "";
+    permissions = "";*/
+    
+    u = (User)Session["User"];
+
+    ds = u.U_DepartmentList;
+    rs = u.U_RoleList;
+    ps = u.U_PermissionList;
+
+    departmentNames = "";
+    foreach(var d in ds){
+        departmentNames += d.D_Name + "，";
+    }
+    departmentNames = departmentNames.Substring(0, departmentNames.Length - 1);
+
+    permissions = "";
+    foreach(var p in ps){
+        permissions += p.P_Name + "/" + p.P_Controller + "/" + p.P_Action + ";";
+    }
+}
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8" />
+<meta name="renderer" content="webkit|ie-comp|ie-stand" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<!--LINK rel="Bookmark" href="/favicon.ico" /-->
+<!--LINK rel="Shortcut Icon" href="/favicon.ico" /-->
+<!--[if lt IE 9]>
+<script type="text/javascript" src="@Url.Content("~/Contents/lib/html5.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Contents/lib/respond.min.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Contents/lib/PIE_IE678.js")"></script>
+<![endif]-->
+<!--<link href="css/H-ui.min.css" rel="stylesheet" type="text/css" />-->
+<link href="@Url.Content("~/Contents/css/H-ui.css")" rel="stylesheet" type="text/css" />
+<link href="@Url.Content("~/Contents/css/H-ui.admin.css")" rel="stylesheet" type="text/css" />
+<link href="@Url.Content("~/Contents/skin/blue/skin.css")" rel="stylesheet" type="text/css" id="skin" />
+<link href="@Url.Content("~/Contents/lib/Hui-iconfont/1.0.1/iconfont.css")" rel="stylesheet" type="text/css" />
+<link href="@Url.Content("~/Contents/css/style.css")" rel="stylesheet" type="text/css" />
+<!--[if IE 6]>
+<script type="text/javascript" src="http://lib.h-ui.net/DD_belatedPNG_0.0.8a-min.js" ></script>
+<script>DD_belatedPNG.fix('*');</script>
+<![endif]-->
+<title>在线学习系统</title>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+</head>
+<body style="min-width:1280px;">
+<header class="Hui-header cl">
+    <div class="top-img top-img-l"></div>
+    <div class="top-img top-img-r"></div>
+    <a class="Hui-logo l" href="/"><img src="/Contents/images/logo.png" alt="" />
+    <span class="Hui-subtitle">在线学习系统 V1.0</span>
+    </a>
+	<nav class="mainnav cl" id="Hui-nav">
+		<ul>
+            <li class="dropDown dropDown_hover"><a _href="/Panel/Index" href="javascript:void(0);" class="dropDown_A desktop">我的桌面</a></li>
+		</ul>
+	</nav>
+	<ul class="Hui-userbar">
+		<li id="User" 
+            user-name="@u.U_Name" 
+            department-Names="@departmentNames" 
+            permissions="@permissions">@u.U_Name&nbsp;&nbsp;@departmentNames </li>
+		<li class="dropDown dropDown_hover"><a href="javascript:void(0);" class="dropDown_A">@u.U_LoginName <i class="Hui-iconfont">&#xe6d5;</i></a>
+			<ul class="dropDown-menu radius box-shadow">
+				<li><a href="javascript:void(0);" class="show-page" data-title="修改密码" data-url="/User/ModifyPassword" data-width="500" data-height="400">修改密码</a></li>
+				<li><a href="javascript:void(0);" class="show-page" data-title="个人统计" data-url="/ExaminationTaskStatistic/Personal" data-width="800" data-height="400">个人统计</a></li>
+				<li><a href="javascript:void(0);" id="Logout">退&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;出</a></li>
+			</ul>
+		</li>
+		<!--li id="Hui-msg">
+            <a href="javascript:void(0);" title="消息"><span class="badge badge-danger">1</span><i class="Hui-iconfont" style="font-size:18px">&#xe68a;</i></a>
+        </li-->
+		<!--li id="Hui-skin" class="dropDown right dropDown_hover">
+            <a href="javascript:void(0);" title="换肤"><i class="Hui-iconfont" style="font-size:18px">&#xe62a;</i></a>
+			<ul class="dropDown-menu radius box-shadow">
+				<li><a href="javascript:void(0);" data-val="default" title="默认（黑色）">默认（黑色）</a></li>
+				<li><a href="javascript:void(0);" data-val="blue" title="蓝色">蓝色</a></li>
+				<li><a href="javascript:void(0);" data-val="green" title="绿色">绿色</a></li>
+				<li><a href="javascript:void(0);" data-val="red" title="红色">红色</a></li>
+				<li><a href="javascript:void(0);" data-val="yellow" title="黄色">黄色</a></li>
+				<li><a href="javascript:void(0);" data-val="orange" title="绿色">橙色</a></li>
+			</ul>
+		</li-->
+	</ul>
+	<a aria-hidden="false" class="Hui-nav-toggle" href="javascript:void(0);"></a> </header>
+    <aside class="Hui-aside">
+	    <input runat="server" id="divScrollValue" type="hidden" value="" />
+	    @{
+            string menu = ViewBag.MenuPartial;
+            @Html.Partial(menu);
+        }
+    </aside>
+    <div class="dislpayArrow"><a class="pngfix" href="javascript:void(0);" onClick="displaynavbar(this)"></a></div>
+    <section class="Hui-article-box">
+	    <div id="Hui-tabNav" class="Hui-tabNav">
+		    <div class="Hui-tabNav-wp">
+			    <ul id="min_title_list" class="acrossTab cl">
+				    <li class="active"><span title="我的桌面" data-href="/Panel/Index">我的桌面</span><em></em></li>
+			    </ul>
+		    </div>
+		    <div class="Hui-tabNav-more btn-group">
+                <a id="js-tabNav-prev" class="btn radius btn-default size-S" href="javascript:void(0);">
+                    <i class="Hui-iconfont">&#xe6d4;</i>
+                </a>
+                <a id="js-tabNav-next" class="btn radius btn-default size-S" href="javascript:void(0);">
+                    <i class="Hui-iconfont">&#xe6d7;</i>
+                </a>
+            </div>
+	    </div>
+        @RenderBody()
+    </section>
+    <script type="text/javascript" src="@Url.Content("~/Contents/lib/jquery/1.9.1/jquery.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Contents/lib/layer/1.9.3/layer.js")"></script> 
+    <script type="text/javascript" src="@Url.Content("~/Contents/lib/jquery.cookie.js")"></script> 
+    <script type="text/javascript" src="@Url.Content("~/Contents/js/H-ui.js")"></script> 
+    <script type="text/javascript" src="@Url.Content("~/Contents/js/H-ui.admin.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Contents/js/H-ui.admin.ready.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Contents/js/custom.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Contents/js/init-common.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Contents/js/init-background.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Contents/js/init-menu.js")"></script>
+</body>
+</html>

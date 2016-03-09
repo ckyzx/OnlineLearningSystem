@@ -1,0 +1,54 @@
+﻿@{
+    ViewBag.Title = "用户成绩";
+    Layout = "~/Views/Shared/_Page.cshtml";
+}
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 系统 <span class="c-gray en">&gt;</span> 成绩详情 <a class="btn btn-success radius r mr-20" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<div class="pd-20">
+    <div class="pd-5">
+        <span class="mr-5">考试任务</span>
+        <input type="text" id="TaskName" style="width:160px" class="input-text" />
+        <span class="ml-10 mr-5">考试时间</span>
+        <input type="text" onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'EndTime\')||\'%y-%M-%d\'}'})" id="BeginTime" class="input-text Wdate" style="width:160px;" />
+		-
+		<input type="text" onfocus="WdatePicker({minDate:'#F{$dp.$D(\'BeginTime\')}',maxDate:'%y-%M-%d'})" id="EndTime" class="input-text Wdate mr-5" style="width:160px;" />
+		<button id="SearchBtn" class="btn btn-success mr-5" type="button"><i class="Hui-iconfont">&#xe665;</i> 查询</button>
+        <button id="ExportBtn" class="btn btn-success" type="button"><i class="Hui-iconfont">&#xe641;</i> 导出</button>
+    </div>                          
+    <div class="mt-20">
+        <table class="table table-border table-bordered table-bg table-hover table-sort">
+            <thead>
+                <tr>
+                    <th class="text-c">
+                        <input type="checkbox" name="" value="" />
+                    </th>
+                    <th>
+                        ID
+                    </th>
+                    <th>
+                        考试任务
+                    </th>
+                    <th>
+                        成绩类型
+                    </th>
+                    <th>
+                        考试时间
+                    </th>
+                    <th>
+                        成绩
+                    </th>
+                    <th>
+                        状态
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+    <div class="cl"></div>
+</div>
+<script type="text/javascript" src="@Url.Content("~/Contents/lib/js.datetime.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Contents/lib/My97DatePicker/WdatePicker.js")"></script> 
+<script type="text/javascript" src="@Url.Content("~/Contents/lib/datatables/1.10.9/jquery.dataTables.min.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Contents/js/custom-enum.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Contents/js/UserScore/ListDetail.js")"></script>

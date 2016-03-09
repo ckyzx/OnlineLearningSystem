@@ -1,0 +1,70 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="renderer" content="webkit|ie-comp|ie-stand" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <script type="text/javascript" src="@Url.Content("~/Contents/lib/js.brower-detection.js")"></script>
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="@Url.Content("~/Contents/lib/html5.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Contents/lib/respond.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Contents/lib/PIE_IE678.js")"></script>
+    <![endif]-->
+    <link href="@Url.Content("~/Contents/css/H-ui.min.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Contents/css/custom-login.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Contents/css/style.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Contents/lib/Hui-iconfont/1.0.1/iconfont.css")" rel="stylesheet" type="text/css" />
+    <!--[if IE 6]>
+    <script type="text/javascript" src="http://lib.h-ui.net/DD_belatedPNG_0.0.8a-min.js" ></script>
+    <script>DD_belatedPNG.fix('*');</script>
+    <![endif]-->
+    <title>登录 - 在线学习系统</title>
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+</head>
+<body>
+    <div class="login-bg">
+        <div class="login-container">
+            <div class="login-head">
+                <img src="/Contents/images/login/logo.png" alt="" class="logo" />
+            </div>
+            <div class="login-content-bg">
+                <div class="login-content-container">
+                    <div class="login-content">
+                        <div class="login-poster">
+                            <img src="/Contents/images/login/poster.png" alt="" class="poster" />
+                        </div>
+                        <div class="login-box">
+                            <div class="title">请登录</div>
+                            <div class="row">
+                                <input type="text" id="UserName" class="input-text" placeholder="身份证号" />
+                            </div>
+                            <div class="row">
+                                <input type="password" id="Password" class="input-text" placeholder="密码" />
+                                <div class="checkbox">
+                                    <label for="Online">
+                                        <input type="checkbox" id="Online" class="input-checkbox" /> 保持登录状态
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <input type="button" id="Submit" class="input-btn" value="登&nbsp;&nbsp;&nbsp;&nbsp;录" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="login-foot">
+                <span class="info">技术支持 梅州市开源资讯科技有限公司 &copy;2015</span>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="@Url.Content("~/Contents/lib/jquery/1.9.1/jquery.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Contents/lib/layer/1.9.3/layer.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Contents/lib/jquery.cookie.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Contents/js/H-ui.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Contents/js/User/Login.js")"></script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+﻿@model OnlineLearningSystem.Models.LearningData
+@{
+    ViewBag.Title = "查看资料";
+    Layout = "~/Views/Shared/_PageEdit.cshtml";
+}
+<div class="ld-container">
+    <div class="ld-title">@Model.LD_Title</div>
+    <div class="ld-info">添加时间：@Model.LD_AddTime.ToString("yyyy年MM月dd日 hh时mm分")</div>
+    <div class="ld-video-player-container">
+        <div id="VideoPlayer"></div>
+    </div>
+    <input type="hidden" id="LD_Video" value="@Model.LD_Video" />
+    <div class="ld-content">@Html.Raw(Model.LD_Content)</div>
+</div>
+<script type="text/javascript" src="@Url.Content("~/Contents/lib/jwplayer-7.3.4/jwplayer.js")"></script>
+<script type="text/javascript">jwplayer.key = "5wzA2XEh9JSJJrGWRm3Ri31qJCdQY4WPX6T/1g==";</script>
+<script type="text/javascript" src="@Url.Content("~/Contents/js/LearningData/View.js")"></script>
