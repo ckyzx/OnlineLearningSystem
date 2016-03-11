@@ -59,8 +59,7 @@
                     // validate the form on submit
                     this.submit(function (event) {
 
-                    	// ifSubmit 是自定义的全局变量，用来检查闭包外的验证情况
-                        if (!ifSubmit || validator.settings.debug)
+                        if (validator.settings.debug)
                         // prevent form submit to be able to see console output
                             event.preventDefault();
 
@@ -77,6 +76,13 @@
                                 }
                                 return false;
                             }
+
+                            if(typeof(submitCallback) == 'function'){
+
+                				event.preventDefault();
+                            	submitCallback();
+                            }
+
                             return true;
                         }
 

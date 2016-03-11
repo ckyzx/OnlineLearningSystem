@@ -4,8 +4,9 @@ $(function() {
     var videoJson;
 
     ldContentInput = $('#LearningDataContent');
-
-    $('#LD_Content').html(ldContentInput.val());
+    if ($('#LD_Content').length == 0) {
+        $('<script id="LD_Content" name="LD_Content" type="text/plain" style="width:100%;height:400px;">' + ldContentInput.val() + '</script>').insertBefore(ldContentInput);
+    }
     ueContent = UE.getEditor('LD_Content');
 
     // 视频上传

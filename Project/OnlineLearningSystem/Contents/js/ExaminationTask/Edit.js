@@ -732,17 +732,12 @@ $(function() {
             if (!validateData()) {
 
                 e.preventDefault();
-                ifSubmit = false;
                 return;
             }
 
             if (!confirm('确定提交吗？')) {
 
                 e.preventDefault();
-                ifSubmit = false;
-            } else {
-
-                ifSubmit = true;
             }
 
         });

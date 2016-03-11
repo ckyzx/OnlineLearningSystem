@@ -39,7 +39,7 @@ namespace OnlineLearningSystem.Utilities
 
             if (null == u)
             {
-                filterContext.Result = new ContentResult { Content = @"<script>alert('您尚未登录系统！');location.href='/Content/html/goto_login.htm';</script>" };
+                filterContext.Result = new ContentResult { Content = @"<script>alert('您尚未登录系统！');location.href='/Contents/html/goto_login.htm';</script>" };
                 return;
             }
 

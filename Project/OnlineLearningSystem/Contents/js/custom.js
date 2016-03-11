@@ -422,8 +422,9 @@ Kyzx.List = {
 
             bodyH = Kyzx.Common.getElemHeight('body');
             h = Kyzx.Common.getElemHeight('.list-container');
-            h = bodyH > h ? bodyH : h;
-            $('.tree-container').height(h);
+            h = bodyH > h ? bodyH - 40 : h;
+            //$('.tree-container').height(h);
+            $('.list-body').height(h);
         }
     },
 
@@ -609,7 +610,7 @@ Kyzx.List = {
 
         th = jqTable.find('th' + className);
         span = row.find('span' + className);
-        span.addClass('ellipsis').width(th.width()).text(content);
+        span.addClass('ellipsis').width(th.width()).text(content).attr('title', content);
     },
 
     columnContentEllipsisAgain: function(jqTable, className) {

@@ -43,7 +43,7 @@ StatisticType = {
 var UserScoreState;
 
 UserScoreState = {
-    0: '[未设置]',
+    0: '未考试',//'[未设置]',
     1: '未考试',
     2: '未打分',
     3: '合格',

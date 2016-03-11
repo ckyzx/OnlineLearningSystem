@@ -60,19 +60,4 @@ $(function() {
 
             Kyzx.List.renderSelectCount(table.parent(), actionPermissions.length);
         });
-
-    // 提交前，获取被选择的操作权限值
-    $('form').submit(function(e) {
-
-        if(!confirm('确定提交吗？')){
-            
-            e.preventDefault();
-            ifSubmit = false;
-            return;
-        }else{
-
-            ifSubmit = true;
-        }
-
-    });
 });

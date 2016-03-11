@@ -246,8 +246,11 @@ namespace OnlineLearningSystem.Controllers
             {
                 return Redirect("/Contents/html/layer_close.htm");
             }
+            else if(resJson.status == ResponseStatus.Error){
+                ModelState.AddModelError("", resJson.message);
+            }
 
-            return View(new VMUser());
+            return View(new VMUserModifyPassword());
         }
 
         //

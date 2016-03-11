@@ -55,16 +55,4 @@ $(function() {
                 Kyzx.List.renderSelectCount(rTable.parent(), JSON.parse(roles).length);
             });
     }
-    /*----------------------------------------------------------------------*/
-
-    $('form').submit(function(e) {
-
-        if (!confirm('确定提交吗？')) {
-
-            e.preventDefault();
-            ifSubmit = false;
-        } else {
-            ifSubmit = true;
-        }
-    });
 });

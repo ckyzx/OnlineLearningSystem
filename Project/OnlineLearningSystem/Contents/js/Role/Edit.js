@@ -87,7 +87,6 @@ $(function() {
         if(!confirm('确定提交吗？')){
             
             e.preventDefault();
-            ifSubmit = false;
             return;
         }
 
@@ -101,7 +100,5 @@ $(function() {
 
         $('#R_Permissions').val(JSON.stringify(permissionIds));
         $('#R_PermissionCategories').val(JSON.stringify(permissionCategoryIds));
-
-        ifSubmit = true;
     });
 });

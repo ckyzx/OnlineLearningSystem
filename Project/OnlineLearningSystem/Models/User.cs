@@ -38,23 +38,18 @@ namespace OnlineLearningSystem.Models
         public List<Permission> U_PermissionList { get; set; }
 
         [DisplayName("身份证号")]
-        [Required(ErrorMessage = "请输入{0}")]
         public String U_IdCardNumber { get; set; }
 
         [DisplayName("用户名")]
-        [Required(ErrorMessage = "请输入{0}")]
         public String U_Name { get; set; }
 
         [DisplayName("登录名")]
-        [Required(ErrorMessage = "请输入{0}")]
         public String U_LoginName { get; set; }
 
         [DisplayName("密码")]
-        [Required(ErrorMessage = "请输入{0}")]
         public String U_Password { get; set; }
 
         [DisplayName("备注")]
-        [MaxLength(200, ErrorMessage="请输入小于200个字符的内容。")]
         public String U_Remark { get; set; }
 
         [DisplayName("添加时间")]
@@ -62,11 +57,9 @@ namespace OnlineLearningSystem.Models
         public DateTime U_AddTime { get; set; }
 
         [DisplayName("状态")]
-        [Required(ErrorMessage = "请选择{0}")]
         public Byte U_Status { get; set; }
 
         [DisplayName("排序")]
-        [Required(ErrorMessage = "请设置{0}")]
         public Double U_Sort { get; set; }
 
         [NotMapped]

@@ -175,6 +175,12 @@ namespace OnlineLearningSystem.Utilities
                 Int32 uId;
                 User model;
 
+                // 不允许将密码设置为“**********”
+                if (vmModel.U_Password == "**********")
+                {
+                    return false;
+                }
+
                 uId = GetUId();
 
                 model = new User
@@ -401,7 +407,7 @@ namespace OnlineLearningSystem.Utilities
 
                 if (null == u)
                 {
-                    resJson.message = "用户名或密码有误。";
+                    resJson.message = "身份证号或密码有误。";
                     return resJson;
                 }
 
@@ -565,6 +571,14 @@ namespace OnlineLearningSystem.Utilities
                 {
                     resJson.status = ResponseStatus.Error;
                     resJson.message = "旧密码不正确。";
+                    return resJson;
+                }
+
+                // 不允许将密码设置为“**********”
+                if (newPassword == "**********")
+                {
+                    resJson.status = ResponseStatus.Error;
+                    resJson.message = "新密码无效。";
                     return resJson;
                 }
 

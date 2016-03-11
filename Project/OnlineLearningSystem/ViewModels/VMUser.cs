@@ -20,12 +20,14 @@ namespace OnlineLearningSystem.ViewModels
         public String Du_Name { get; set; }
 
         [DisplayName("部门")]
+        [RegularExpression(@"\[(\d+){1}\]", ErrorMessage = "请选择{0}")]
         public String U_Departments { get; set; }
 
         [NotMapped]
         public List<Department> U_DepartmentList { get; set; }
 
         [DisplayName("角色")]
+        [RegularExpression(@"\[(\d+){1}\]", ErrorMessage = "请选择{0}")]
         public String U_Roles { get; set; }
 
         [NotMapped]
@@ -53,18 +55,18 @@ namespace OnlineLearningSystem.ViewModels
         public String U_LoginName { get; set; }
 
         [DisplayName("输入密码")]
-        [Required(ErrorMessage = "请输入{0}")]
-        [RegularExpression(@"^[\@A-Za-z0-9\!\#\$\%\^\&\*\.\~]{6,22}$", ErrorMessage = "请输入6至22位，字母、数字或英文标点的混合字符")]
+        [Required(ErrorMessage = "请输入密码")]
+        [RegularExpression(@"^[\@A-Za-z0-9~\!\@\#\$\%\^\&\*\(\)_\+\-\=\[\]\{\};'\\\:""\|\,\.\/\<\>\?]{6,22}$", ErrorMessage = "请输入6至22位，字母、数字或英文标点的混合字符")]
         public String U_Password { get; set; }
 
         [DisplayName("重复密码")]
         [Compare("U_Password", ErrorMessage = "重复密码不一致")]
         [Required(ErrorMessage = "请输入{0}")]
-        [RegularExpression(@"^[\@A-Za-z0-9\!\#\$\%\^\&\*\.\~]{6,22}$", ErrorMessage = "请输入6至22位，字母、数字或英文标点的混合字符")]
+        [RegularExpression(@"^[\@A-Za-z0-9~\!\@\#\$\%\^\&\*\(\)_\+\-\=\[\]\{\};'\\\:""\|\,\.\/\<\>\?]{6,22}$", ErrorMessage = "请输入6至22位，字母、数字或英文标点的混合字符")]
         public String U_RePassword { get; set; }
 
         [DisplayName("备注")]
-        [MaxLength(200, ErrorMessage="请输入小于200个字符的内容。")]
+        [MaxLength(200, ErrorMessage="请输入小于 {1} 个字符的内容。")]
         public String U_Remark { get; set; }
 
         [DisplayName("添加时间")]

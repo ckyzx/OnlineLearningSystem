@@ -99,27 +99,31 @@ $(function() {
 
     $('form').submit(function(e) {
 
-        var psInput;
-        var ps;
+        var form, psInput;
+        var ps, action;
 
         if (!confirm('确定提交吗？')) {
 
             e.preventDefault();
-            ifSubmit = false;
             return;
         }
 
-
+        form = $(this);
+        action = form.attr('action');
         psInput = $('#U_Password');
         ps = psInput.val();
 
-        if ('' == ps) {
+        if (action == '/User/Edit' && '' == ps) {
 
             ps = '**********';
             psInput.val(ps);
             $('#U_RePassword').val(ps);
+        }else if(action == '/User/Create' && '**********' == ps){
+
+            psInput.val('');
+            $('#U_RePassword').val('');
+            e.preventDefault();
         }
 
-        ifSubmit = true;
     });
 });

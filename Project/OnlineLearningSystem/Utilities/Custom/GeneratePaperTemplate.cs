@@ -11,6 +11,8 @@ namespace OnlineLearningSystem.Utilities
     public class GeneratePaperTemplate : Utility
     {
 
+        private Int32 totalTimeout = 1000; // 选题时，超过重复次数，则选题失败
+
         public ResponseJson Generate()
         {
 
@@ -61,11 +63,16 @@ namespace OnlineLearningSystem.Utilities
                         et.ET_Enabled = (Byte)ExaminationTaskStatus.Disabled;
 
                         resJson.status = ResponseStatus.Error;
-                        resJson.message += et.ET_Name + "：" + ex.Message + "\r\n";
+                        resJson.message += et.ET_Name + "：" + ex.Message + "\\r\\n";
+
+                        if (ex.Data != null && ex.Data["Info"] != null)
+                        {
+                            resJson.message += "\\r\\n" + ex.Data["Info"];
+                        }
 
                         if (0 == olsEni.SaveChanges())
                         {
-                            resJson.message += ResponseMessage.SaveChangesError + "\r\n";
+                            resJson.message += ResponseMessage.SaveChangesError + "\\r\\n";
                         }
 
                         StaticHelper.RecordSystemLog(SystemLogType.Exception, ex.Message, resJson.message);
@@ -359,7 +366,7 @@ namespace OnlineLearningSystem.Utilities
         private List<Question> SelectQuestionsWithScore(List<AutoRatio> ratios, Int32 totalScore, List<Question> qs)
         {
 
-            Int32 typeScore, tmpScore, overflowScore, maxValue, qId, totalTimeout, timeout, readyTotalScore;
+            Int32 typeScore, tmpScore, overflowScore, maxValue, qId, timeout, readyTotalScore;
             Random random;
             Question q;
             Int32[] qIds;
@@ -368,7 +375,6 @@ namespace OnlineLearningSystem.Utilities
             random = new Random((Int32)DateTime.Now.Ticks);
             readyQs = new List<Question>();
             overflowScore = 0;
-            totalTimeout = totalScore; // 选题时，超过重复次数，则选题失败
 
             foreach (var r in ratios)
             {
@@ -419,7 +425,7 @@ namespace OnlineLearningSystem.Utilities
 
                     if (totalTimeout == timeout)
                     {
-                        throw new Exception("随机选取试题失败。");
+                        throw new Exception("随机选取试题失败。失败原因：可选试题不足。");
                     }
                 }
 
@@ -511,7 +517,7 @@ namespace OnlineLearningSystem.Utilities
             {
 
                 typeNumber = (Int32)(totalNumber * r.percent); // 取较小的整数
-                tmpQs = SelectQuestionsWithNumber(qs, r.type, typeNumber, totalNumber);
+                tmpQs = SelectQuestionsWithNumber(qs, r.type, typeNumber, totalTimeout);
                 readyQs.AddRange(tmpQs);
             }
 
@@ -520,7 +526,7 @@ namespace OnlineLearningSystem.Utilities
             if (absence > 0)
             {
                 type = ratios[ratios.Count - 1].type;
-                tmpQs = SelectQuestionsWithNumber(qs, type, absence, totalNumber);
+                tmpQs = SelectQuestionsWithNumber(qs, type, absence, totalTimeout);
                 readyQs.AddRange(tmpQs);
             } // 试题数量溢出时，从后边减去
             /*else if (absence < 0)
@@ -547,6 +553,8 @@ namespace OnlineLearningSystem.Utilities
                 .Select(m => m.Q_Id)
                 .ToArray();
 
+            tmpQs = new List<Question>();
+
             if (qIds.Length == 0)
             {
                 throw new Exception("“" + type + "”没有备选试题。");
@@ -557,12 +565,24 @@ namespace OnlineLearningSystem.Utilities
                 e.Data.Add("Info", "试题类型：" + type + "；现有数量：" + qIds.Count() + "；需要数量：" + typeNumber + "。");
                 throw e;
             }
+            else if (qIds.Length == typeNumber)
+            {
+                foreach (var id in qIds)
+                {
+                    var q1 = qs.Single(m => m.Q_Id == id);
+                    olsEni.Entry(q1).State = EntityState.Detached;
+                    tmpQs.Add(q1);
+                }
+
+                return tmpQs;
+            }
 
             maxValue = qIds.Length - 1;
             timeout = 0;
             increment = 0;
             random = new Random((Int32)DateTime.Now.Ticks);
-            tmpQs = new List<Question>();
+
+            
 
             while (increment < typeNumber)
             {
@@ -584,7 +604,7 @@ namespace OnlineLearningSystem.Utilities
 
                 if (totalTimeout == timeout)
                 {
-                    var e = new Exception("随机选取试题失败。");
+                    var e = new Exception("随机选取试题失败。失败原因：可选试题不足。");
                     e.Data.Add("Info", "试题类型：" + type + "；现有数量：" + qIds.Count() + "；需要数量：" + typeNumber + "；重复次数：" + totalTimeout + "。");
                     throw e;
                 }

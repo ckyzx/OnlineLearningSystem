@@ -53,7 +53,11 @@
             span = row.find('span.USD_StartTime');
             startDate = data['USD_StartTime'];
             startDate = startDate.jsonDateToDate();
-            span.text(startDate.format('yyyy年MM月dd日 hh时mm分'));
+            if(startDate.getFullYear()==1){
+                span.text('[无试卷]');
+            }else{
+                span.text(startDate.format('yyyy年MM月dd日 hh时mm分'));
+            }
 
             span = row.find('span.USD_TaskStatisticType');
             statisticType = data['USD_TaskStatisticType'];
