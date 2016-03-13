@@ -372,6 +372,7 @@ function setAnswer(qType, answer) {
         case '单选题':
 
             tmpAnswer = answerContent;
+            tmpAnswer = tmpAnswer == '' ? '[]' : tmpAnswer;
             tmpAnswer = JSON.parse(tmpAnswer);
             tmpAnswer = tmpAnswer.length == 1 ? tmpAnswer[0] : '';
 
@@ -384,6 +385,7 @@ function setAnswer(qType, answer) {
         case '多选题':
 
             tmpAnswer = answerContent;
+            tmpAnswer = tmpAnswer == '' ? '[]' : tmpAnswer;
             tmpAnswer = JSON.parse(tmpAnswer);
 
             for (var i = 0; i < tmpAnswer.length; i++) {

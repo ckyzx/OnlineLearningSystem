@@ -75,6 +75,7 @@ namespace OnlineLearningSystem.Utilities
 
             if (beginTime.Year != 1 && endTime.Year != 1)
             {
+                endTime = endTime.AddHours(23).AddMinutes(59).AddSeconds(59);
                 sps.Add(new SqlParameter("@GT_USD_StartTime", beginTime));
                 sps.Add(new SqlParameter("@LT_USD_StartTime", endTime));
             }
@@ -160,7 +161,10 @@ namespace OnlineLearningSystem.Utilities
 
             if (beginTime.Year != 1 && endTime.Year != 1)
             {
+
                 sql += "AND USD_StartTime > @beginTime AND USD_StartTime < @endTime ";
+
+                endTime = endTime.AddHours(23).AddMinutes(59).AddSeconds(59);
                 sps.Add(new SqlParameter("@beginTime", beginTime));
                 sps.Add(new SqlParameter("@endTime", endTime));
             }
@@ -255,7 +259,7 @@ namespace OnlineLearningSystem.Utilities
             }
 
             dts = new List<DataTable>();
-            for (var i = 0; i < dataSet.Tables.Count;i++)
+            for (var i = 0; i < dataSet.Tables.Count; i++)
             {
 
                 dt = dataSet.Tables[i];
@@ -267,7 +271,7 @@ namespace OnlineLearningSystem.Utilities
                     sps.Add(new SqlParameter("@uId", dr["USS_UserId"]));
                     dataTable = olsDbo.GetDataTable("SELECT * FROM UserScoreDetailToExcel WHERE USD_UserId = @uId ", sps);
 
-                    dataTable.TableName = dr["USS_UserName"].ToString();
+                    dataTable.TableName = dr["USS_UserName"].ToString() + "(" + dr["USS_UserId"].ToString() + ")";
                     dts.Add(dataTable);
                 }
             }

@@ -34,6 +34,7 @@ namespace OnlineLearningSystem.Utilities
 
             if (beginTime.Year != 1 && endTime.Year != 1)
             {
+                endTime = endTime.AddHours(23).AddMinutes(59).AddSeconds(59);
                 sps.Add(new SqlParameter("@GT_ETS_PaperTemplateDate", beginTime));
                 sps.Add(new SqlParameter("@LT_ETS_PaperTemplateDate", endTime));
             }
@@ -146,8 +147,11 @@ namespace OnlineLearningSystem.Utilities
 
             if (beginTime.Year != 1 && endTime.Year != 1)
             {
+
                 whereSql = whereSql == "" ? "" : "AND ";
                 whereSql += "ETS_PaperTemplateDate > @beginTime AND ETS_PaperTemplateDate < @endTime ";
+                
+                endTime = endTime.AddHours(23).AddMinutes(59).AddSeconds(59);
                 sps.Add(new SqlParameter("@beginTime", beginTime));
                 sps.Add(new SqlParameter("@endTime", endTime));
             }

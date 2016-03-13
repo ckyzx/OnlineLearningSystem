@@ -39,10 +39,18 @@ function ShowPageWithSize(title, url, w, h) {
 Kyzx.Common = {
     getElemHeight: function(elem) {
 
-        var h;
+        var h, tmp;
 
         elem = $(elem);
-        h = elem.height() + parseInt(elem.css('margin-top')) + parseInt(elem.css('margin-bottom')) + parseInt(elem.css('padding-top')) + parseInt(elem.css('padding-bottom'));
+        h = elem.height()
+        tmp = parseInt(elem.css('margin-top'));
+        h += isNaN(tmp) ? 0 : tmp;
+        tmp = parseInt(elem.css('margin-bottom'));
+        h += isNaN(tmp) ? 0 : tmp;
+        tmp = parseInt(elem.css('padding-top'));
+        h += isNaN(tmp) ? 0 : tmp;
+        tmp = parseInt(elem.css('padding-bottom'));
+        h += isNaN(tmp) ? 0 : tmp;
 
         return h;
     }

@@ -230,6 +230,9 @@ $(function() {
         } else if ('多选题' == qType) {
 
             selector = ':checkbox';
+        } else if ('判断题' == qType) {
+
+            return '';
         } else {
 
             return returnJson ? {} : '{}';

@@ -424,9 +424,10 @@ namespace OnlineLearningSystem.Utilities
             try
             {
 
-                Int32 epId;
+                Int32 epId, epqId;
                 ExaminationPaperTemplate ept;
                 ExaminationPaper ep;
+                List<ExaminationPaperTemplateQuestion> eptqs;
 
 
                 ept = Get(id);
@@ -469,6 +470,24 @@ namespace OnlineLearningSystem.Utilities
                                 EP_Status = (Byte)Status.Available
                             };
 
+                            // 添加试卷试题数据
+                            eptqs = olsEni.ExaminationPaperTemplateQuestions.Where(m => m.EPT_Id == ept.EPT_Id && m.EPTQ_Status == (Byte)Status.Available).ToList();
+                            epqId = GetEPQId();
+                            foreach (var eptq in eptqs)
+                            {
+                                var epq = new ExaminationPaperQuestion {
+                                     EPQ_Id = epqId,
+                                     EP_Id = epId,
+                                     EPTQ_Id = eptq.EPTQ_Id,
+                                     EPQ_Answer = "",
+                                     EPQ_Exactness = 0,
+                                     EPQ_Critique = "",
+                                     EPQ_AddTime = now
+                                };
+                                olsEni.Entry(epq).State = EntityState.Added;
+                                epqId += 1;
+                            }
+                            
                             olsEni.Entry(ep).State = EntityState.Added;
                             olsEni.SaveChanges();
 

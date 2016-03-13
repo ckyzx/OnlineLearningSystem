@@ -29,9 +29,11 @@ $(function() {
             "name": "ET_Name",
             "data": "ET_Name"
         }, {
+            "className": "nowrap",
             "name": "ET_StartTime",
             "defaultContent": '<span class="ET_StartTime"></span>'
         }, {
+            "className": "nowrap",
             "name": "ET_TimeSpan",
             "defaultContent": '<span class="ET_TimeSpan"></span>'
         }, {
@@ -68,8 +70,8 @@ $(function() {
                 span.text('[手动开始]');
             } else {
 
-                strDate = date.format('hh时 mm分');
-                strDate += ' - ' + data['ET_EndTime'].jsonDateToDate().format('hh时 mm分');
+                strDate = date.format('hh时mm分');
+                strDate += ' - ' + data['ET_EndTime'].jsonDateToDate().format('hh时mm分');
                 span.text(strDate);
             }
 

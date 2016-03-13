@@ -152,7 +152,9 @@
     });
 
     $('#ExportBtn').click(function() {
-
+        
+        $('#SearchBtn').click();
+        
         layer.confirm('是否导出成绩报表？', {
             title: '',
             btn: ['是', '否']
