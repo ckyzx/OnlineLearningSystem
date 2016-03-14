@@ -2,7 +2,7 @@ USE OLS;
 
 GO
 
-/*DECLARE @pcId INT ,
+DECLARE @pcId INT ,
     @pId INT;
 
 SELECT  @pcId = 6;
@@ -101,7 +101,7 @@ SET     R_Permissions = @ps ,
         R_PermissionCategories = @pcs
 WHERE   R_Id = 1
 
-GO*/
+GO
 
 -- 设置用户公共权限
 DECLARE @pId INT;

@@ -303,7 +303,8 @@ namespace OnlineLearningSystem.Utilities
                 zTreeJson.Append("},");
             }
 
-            zTreeJson.Remove(zTreeJson.Length - 1, 1);
+            if(zTreeJson.ToString() != "[")
+                zTreeJson.Remove(zTreeJson.Length - 1, 1);
             zTreeJson.Append("]");
 
             return zTreeJson.ToString();

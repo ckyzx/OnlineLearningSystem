@@ -25,3 +25,5 @@ AS
               WHEN 4 THEN 'Î´´ò·Ö'
             END ×´Ì¬
     FROM    dbo.fn_GetExaminationTaskUserStatistic()
+
+GO

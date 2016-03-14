@@ -32,7 +32,8 @@ function ShowPageWithSize(title, url, w, h) {
         shade: 0.4,
         title: title,
         content: url,
-        shade: 0
+        shade: 0,
+        offset: '0'
     });
 }
 

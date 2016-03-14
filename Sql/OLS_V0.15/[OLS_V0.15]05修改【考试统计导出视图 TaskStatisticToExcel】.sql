@@ -20,3 +20,5 @@ AS
             ETS_PassNumber 合格 ,
             ETS_FlunkNumber 未合格
     FROM    dbo.fn_GetExaminationTaskStatistic()
+
+GO
