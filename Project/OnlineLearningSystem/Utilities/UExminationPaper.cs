@@ -216,7 +216,7 @@ namespace OnlineLearningSystem.Utilities
                 if (null == ep)
                 {
                     resJson.status = ResponseStatus.Error;
-                    resJson.message = "试卷不存在。";
+                    resJson.message = "试卷不存在";
                     return resJson;
                 }
 

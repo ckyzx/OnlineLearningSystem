@@ -53,9 +53,9 @@
             span = row.find('span.USD_StartTime');
             startDate = data['USD_StartTime'];
             startDate = startDate.jsonDateToDate();
-            if(startDate.getFullYear()==1){
+            if (startDate.getFullYear() == 1) {
                 span.text('[无试卷]');
-            }else{
+            } else {
                 span.text(startDate.format('yyyy年MM月dd日 hh时mm分'));
             }
 
@@ -99,7 +99,7 @@
         beginTime = $('#BeginTime').val();
         endTime = $('#EndTime').val();
 
-        if(taskName == '' && beginTime == '' && endTime == ''){
+        /*if(taskName == '' && beginTime == '' && endTime == ''){
 
             layer.confirm('请输入搜索条件。', {
                     title: '',
@@ -110,7 +110,7 @@
                 });
 
             return '';
-        }
+        }*/
 
         if ((beginTime == '' && endTime != '') || (beginTime != '' && endTime == '')) {
 
@@ -122,7 +122,7 @@
                     layer.closeAll();
                 });
 
-            return '';
+            return '-1';
         }
 
         requestString = '';
@@ -144,7 +144,7 @@
         var requestString;
 
         requestString = getRequestString();
-        if (requestString == '') {
+        if (requestString == '-1') {
             return;
         } else {
             table.ajax.url('/UserScore/ListDetailDataTablesAjax?uId=' + uId + requestString).load();
@@ -152,9 +152,20 @@
     });
 
     $('#ExportBtn').click(function() {
-        
-        $('#SearchBtn').click();
-        
+
+        var requestString;
+
+        requestString = getRequestString();
+
+        if (requestString == '') {
+
+            $('#TaskName').val('');
+            $('#BeginTime').val('');
+            $('#EndTime').val('');
+        }
+
+        table.ajax.url('/UserScore/ListDetailDataTablesAjax?uId=' + uId + requestString).load();
+
         layer.confirm('是否导出成绩报表？', {
             title: '',
             btn: ['是', '否']

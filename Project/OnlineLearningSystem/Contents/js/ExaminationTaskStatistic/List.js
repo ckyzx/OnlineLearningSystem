@@ -94,7 +94,7 @@
         beginTime = $('#BeginTime').val();
         endTime = $('#EndTime').val();
 
-        if(taskName == '' && beginTime == '' && endTime == ''){
+        /*if (taskName == '' && beginTime == '' && endTime == '') {
 
             layer.confirm('请输入搜索条件。', {
                     title: '',
@@ -105,7 +105,7 @@
                 });
 
             return '';
-        }
+        }*/
 
         if ((beginTime == '' && endTime != '') || (beginTime != '' && endTime == '')) {
 
@@ -117,7 +117,7 @@
                     layer.closeAll();
                 });
 
-            return '';
+            return '-1';
         }
 
         requestString = '';
@@ -139,7 +139,7 @@
         var requestString;
 
         requestString = getRequestString();
-        if (requestString == '') {
+        if (requestString == '-1') {
             return;
         } else {
             table.ajax.url('/ExaminationTaskStatistic/ListDataTablesAjax' + requestString).load();
@@ -148,13 +148,24 @@
 
     $('#ExportBtn').click(function() {
 
-        $('#SearchBtn').click();
+        var requestString;
+
+        requestString = getRequestString();
+
+        if (requestString == '') {
+
+            $('#TaskName').val('');
+            $('#BeginTime').val('');
+            $('#EndTime').val('');
+        }
+
+        table.ajax.url('/ExaminationTaskStatistic/ListDataTablesAjax' + requestString).load();
 
         layer.confirm('是否导出统计报表？', {
             title: '',
             btn: ['是', '否']
         }, function() {
-            location.href = '/ExaminationTaskStatistic/TaskExportToExcel' + getRequestString();
+            location.href = '/ExaminationTaskStatistic/TaskExportToExcel' + requestString;
             layer.closeAll();
         }, function() {
 

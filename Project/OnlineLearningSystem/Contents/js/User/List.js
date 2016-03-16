@@ -19,6 +19,7 @@
             "defaultContent": '<input type="checkbox" value="" name="">'
         }, {
             "width": "30px",
+            "className": "U_Id",
             "name": "U_Id",
             "data": "U_Id"
         }, {
@@ -35,8 +36,7 @@
             "data": "Du_Name"
         }, {
             "className": "text-c nowrap",
-            "defaultContent": 
-                '<a class="recycle mr-5 fz-18 hide" href="javascript:void(0);" title="回收"><i class="Hui-iconfont">&#xe631;</i></a>' +
+            "defaultContent": '<a class="recycle mr-5 fz-18 hide" href="javascript:void(0);" title="回收"><i class="Hui-iconfont">&#xe631;</i></a>' +
                 '<a class="resume mr-5 fz-18 hide" href="javascript:void(0);" title="恢复"><i class="Hui-iconfont">&#xe615;</i></a>' +
                 '<a class="edit mr-5 fz-18 hide" href="javascript:void(0);" title="编辑"><i class="Hui-iconfont">&#xe60c;</i></a>' +
                 '<a class="delete mr-5 fz-18 hide" href="javascript:void(0);" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a>' +
@@ -78,6 +78,12 @@
                 default:
                     break;
             }
+        },
+        "drawCallback": function(settings) {
+
+            var api;
+            api = this.api();
+            Kyzx.List.setId(api, 'U_Id');
         }
     };
 
@@ -131,6 +137,7 @@
                         originTr.remove();
                     }
 
+                    Kyzx.List.setId(list.dataTables, 'U_Id');
                     refreshRowBackgroundColor('.table-sort');
                 } else if (0 == data.status) {
 
@@ -176,6 +183,7 @@
                         originTr.insertBefore(destTr);
                     }
 
+                    Kyzx.List.setId(list.dataTables, 'U_Id');
                     refreshRowBackgroundColor('.table-sort');
                 } else if (0 == data.status) {
 
@@ -221,6 +229,7 @@
                         originTr.insertAfter(destTr);
                     }
 
+                    Kyzx.List.setId(list.dataTables, 'U_Id');
                     refreshRowBackgroundColor('.table-sort');
                 } else if (0 == data.status) {
 

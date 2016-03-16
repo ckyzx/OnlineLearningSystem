@@ -61,7 +61,7 @@ namespace OnlineLearningSystem.Controllers
         // POST: /ExaminationPaperTemplate/ListDataTablesAjaxStudent
 
         [Description("查询试卷模板，学员后台")]
-        public JsonResult ListDataTablesAjaxStudent(Byte type, Byte ptStatus)
+        /*public JsonResult ListDataTablesAjaxStudent(Byte type, Byte ptStatus)
         {
 
             Int32 uId;
@@ -72,6 +72,20 @@ namespace OnlineLearningSystem.Controllers
 
             dtRequest = GetDataTablesRequest();
             dtResponse = um.ListDataTablesAjax(dtRequest, uId, type, ptStatus);
+
+            return Json(dtResponse, JsonRequestBehavior.DenyGet);
+        }*/
+        public JsonResult ListDataTablesAjaxStudent(Byte etType, Byte pageType)
+        {
+
+            Int32 uId;
+            DataTablesRequest dtRequest;
+            DataTablesResponse dtResponse;
+
+            uId = ((User)Session["User"]).U_Id;
+
+            dtRequest = GetDataTablesRequest();
+            dtResponse = um.ListDataTablesAjax1(dtRequest, uId, etType, pageType);
 
             return Json(dtResponse, JsonRequestBehavior.DenyGet);
         }

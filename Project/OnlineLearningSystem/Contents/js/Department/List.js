@@ -19,6 +19,7 @@ $(function() {
             "defaultContent": '<input type="checkbox" value="" name="">'
         }, {
             "width": "30px",
+            "className": "D_Id",
             "name": "D_Id",
             "data": "D_Id"
         }, {
@@ -72,6 +73,12 @@ $(function() {
                 default:
                     break;
             }
+        },
+        "drawCallback": function(settings) {
+
+            var api;
+            api = this.api();
+            Kyzx.List.setId(api, 'D_Id');
         }
     };
 
@@ -123,6 +130,7 @@ $(function() {
                         originTr.remove();
                     }
 
+                    Kyzx.List.setId(list.dataTables, 'D_Id');
                     refreshRowBackgroundColor('.table-sort');
                 } else if (0 == data.status) {
 
@@ -169,6 +177,7 @@ $(function() {
                         originTr.insertBefore(destTr);
                     }
 
+                    Kyzx.List.setId(list.dataTables, 'D_Id');
                     refreshRowBackgroundColor('.table-sort');
                 } else if (0 == data.status) {
 
@@ -215,6 +224,7 @@ $(function() {
                         originTr.insertAfter(destTr);
                     }
 
+                    Kyzx.List.setId(list.dataTables, 'D_Id');
                     refreshRowBackgroundColor('.table-sort');
                 } else if (0 == data.status) {
 

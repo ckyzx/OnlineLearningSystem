@@ -133,6 +133,7 @@
     <Compile Include="Utilities\ULearningData.cs" />
     <Compile Include="Utilities\ULearningDataCategory.cs" />
     <Compile Include="Utilities\USystemLog.cs" />
+    <Compile Include="ViewModels\VMExaminationStudentPaperTemplate.cs" />
     <Compile Include="ViewModels\VMExaminationTaskPersonalStatistic.cs" />
     <Compile Include="Utilities\UExaminationTaskStatistic.cs" />
     <Compile Include="ViewModels\VMExaminationTaskStatistic.cs" />
@@ -1072,8 +1073,8 @@
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
           <UseIIS>False</UseIIS>
-          <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>2409</DevelopmentServerPort>
+          <AutoAssignPort>False</AutoAssignPort>
+          <DevelopmentServerPort>8090</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>
           </IISUrl>

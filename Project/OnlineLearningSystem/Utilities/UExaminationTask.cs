@@ -577,7 +577,7 @@ namespace OnlineLearningSystem.Utilities
                                 .ExaminationPaperTemplates
                                 .Where(m =>
                                     m.ET_Id == etId
-                                    && m.EPT_PaperTemplateStatus == (Byte)PaperTemplateStatus.Doing)
+                                    /*&& m.EPT_PaperTemplateStatus == (Byte)PaperTemplateStatus.Doing*/)
                                 .ToList();
 
                             foreach (var ept in epts)

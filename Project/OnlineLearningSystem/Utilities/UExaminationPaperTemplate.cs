@@ -6,6 +6,8 @@ using System.Web;
 using System.Web.Mvc;
 using OnlineLearningSystem.Models;
 using Newtonsoft.Json;
+using System.Data.SqlClient;
+using OnlineLearningSystem.ViewModels;
 
 namespace OnlineLearningSystem.Utilities
 {
@@ -78,7 +80,7 @@ namespace OnlineLearningSystem.Utilities
 
             DataTablesResponse dtResponse;
             Int32 recordsTotal, recordsFiltered;
-            String whereSql, orderColumn;
+            String orderColumn;
             Object[] modelData;
 
 
@@ -89,20 +91,6 @@ namespace OnlineLearningSystem.Utilities
             recordsTotal = olsEni.ExaminationPaperTemplates.Count();
             dtResponse.recordsTotal = recordsTotal;
 
-
-            //TODO:指定筛选条件
-            whereSql = "";
-            foreach (var col in dtRequest.Columns)
-            {
-
-                if ("" != col.Name)
-                {
-
-                    whereSql += col.Name + "||";
-                }
-            }
-
-            //TODO:指定排序列
             orderColumn = dtRequest.Columns[dtRequest.OrderColumn].Name;
 
             modelData = GetModels(dtRequest, uId, type, paperTemplateStatus);
@@ -198,6 +186,23 @@ namespace OnlineLearningSystem.Utilities
             }
 
             return new Object[] { count, ms };
+        }
+
+        public DataTablesResponse ListDataTablesAjax1(DataTablesRequest dtRequest, Int32 uId, Byte etType, Byte pageType)
+        {
+
+            DataTablesResponse dtResponse;
+            UModel<VMExaminationStudentPaperTemplate> umodel;
+            List<SqlParameter> sps;
+
+            umodel = new UModel<VMExaminationStudentPaperTemplate>(dtRequest, "ExaminationStudentPaperTemplates", "ESPT_PaperTemplateId");
+            sps = new List<SqlParameter>();
+            sps.Add(new SqlParameter("@EQ_ESPT_UserId", uId));
+            sps.Add(new SqlParameter("@EQ_ESPT_TaskType", etType));
+            sps.Add(new SqlParameter("@EQ_ESPT_PageType", pageType));
+            dtResponse = umodel.GetList(sps);
+
+            return dtResponse;
         }
 
         public ExaminationPaperTemplate GetNew(Int32 etId)
@@ -718,14 +723,14 @@ namespace OnlineLearningSystem.Utilities
                 if (null == ep)
                 {
                     resJson.status = ResponseStatus.Error;
-                    resJson.message = "试卷不存在。";
+                    resJson.message = "未考试";
                     return resJson;
                 }
 
                 if (ep.EP_PaperStatus != (Byte)PaperStatus.Done)
                 {
                     resJson.status = ResponseStatus.Error;
-                    resJson.message = "考试未结束。";
+                    resJson.message = "考试未结束";
                     return resJson;
                 }
 

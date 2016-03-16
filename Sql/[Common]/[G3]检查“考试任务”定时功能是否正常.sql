@@ -8,7 +8,7 @@ DECLARE @etId INT ,
 --SET @etName = '每周自动任务2';
 --SET @etName = '每月自动任务1';
 --SET @etName = '测试考试任务';
-SET @etName = '测试任务031303';
+SET @etName = '测试任务031604';
 
 --UPDATE  dbo.ExaminationTasks
 --SET     ET_StartTime = '1970-01-01 16:16:00.0000000' ,

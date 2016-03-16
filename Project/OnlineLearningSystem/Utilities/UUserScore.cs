@@ -76,6 +76,7 @@ namespace OnlineLearningSystem.Utilities
             if (beginTime.Year != 1 && endTime.Year != 1)
             {
                 endTime = endTime.AddHours(23).AddMinutes(59).AddSeconds(59);
+                beginTime = beginTime.AddSeconds(-1);
                 sps.Add(new SqlParameter("@GT_USD_StartTime", beginTime));
                 sps.Add(new SqlParameter("@LT_USD_StartTime", endTime));
             }
@@ -165,6 +166,7 @@ namespace OnlineLearningSystem.Utilities
                 sql += "AND USD_StartTime > @beginTime AND USD_StartTime < @endTime ";
 
                 endTime = endTime.AddHours(23).AddMinutes(59).AddSeconds(59);
+                beginTime = beginTime.AddSeconds(-1);
                 sps.Add(new SqlParameter("@beginTime", beginTime));
                 sps.Add(new SqlParameter("@endTime", endTime));
             }

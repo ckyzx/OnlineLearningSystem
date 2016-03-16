@@ -630,7 +630,27 @@ Kyzx.List = {
             span = $(this);
             Kyzx.List.columnContentEllipsis(jqTable, span.parents('tr'), className, span.text());
         });
+    },
+
+    setId: function(dataTables, idClassName) {
+
+        var pageInfo;
+        var currentPageIndex, pages, length, recordsDisplay, id;
+
+        currentPageIndex = dataTables.page();
+        pageInfo = dataTables.page.info();
+        pages = pageInfo.pages;
+        length = pageInfo.length;
+        recordsDisplay = pageInfo.recordsDisplay;
+
+        id = length * currentPageIndex + 1;
+        $('.table-sort tbody td.' + idClassName).each(function() {
+
+            $(this).text(id);
+            id += 1;
+        })
     }
+
 };
 
 OLS = {
