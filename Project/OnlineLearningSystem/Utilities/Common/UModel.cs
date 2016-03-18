@@ -10,7 +10,7 @@ namespace OnlineLearningSystem.Utilities
     public class UModel<T> where T : new()
     {
 
-        private DatabaseOperator olsDBO = new DatabaseOperator("OLSDBO");
+        private DatabaseOperator olsDbo = new DatabaseOperator("OLSDBO");
         private DataTablesRequest dtRequest;
         private String tableName;
         private String idFieldName;
@@ -250,7 +250,29 @@ namespace OnlineLearningSystem.Utilities
             Object[] modelData;
             List<T> ms;
 
-            modelData = GetModels(statusFieldName, sortFieldName);
+            modelData = GetModels(statusFieldName, sortFieldName, exceptFields);
+            ms = (List<T>)modelData[0];
+            recordsTotal = (Int32)modelData[1];
+            recordsFiltered = (Int32)modelData[2];
+
+            dtResponse = new DataTablesResponse();
+            dtResponse.draw = dtRequest.Draw;
+            dtResponse.recordsTotal = recordsTotal;
+            dtResponse.recordsFiltered = recordsFiltered;
+            dtResponse.data = ms;
+
+            return dtResponse;
+        }
+
+        public DataTablesResponse GetList(String sql, String statusFieldName, String[] sortFieldNames, String[] exceptFields)
+        {
+
+            DataTablesResponse dtResponse;
+            Int32 recordsTotal, recordsFiltered;
+            Object[] modelData;
+            List<T> ms;
+
+            modelData = GetModels(sql, statusFieldName, sortFieldNames, exceptFields);
             ms = (List<T>)modelData[0];
             recordsTotal = (Int32)modelData[1];
             recordsFiltered = (Int32)modelData[2];
@@ -280,12 +302,12 @@ namespace OnlineLearningSystem.Utilities
             sps = (List<SqlParameter>)sqlConditions[1];
             orderSql = (String)sqlConditions[2];
 
-            dataTable = olsDBO.GetDataTableWithStart(sql + orderSql, sps, dtRequest.Length, dtRequest.Start);
+            dataTable = olsDbo.GetDataTableWithStart(sql + orderSql, sps, dtRequest.Length, dtRequest.Start);
             ms = (List<T>)ModelConvert<T>.ConvertToModel(dataTable);
 
             countSql = sql.Replace("SELECT * FROM ", "SELECT COUNT(" + idFieldName + ") FROM ");
-            total = Convert.ToInt32(olsDBO.ExecuteSqlScalar(countSql, sps));
-            filter = Convert.ToInt32(olsDBO.ExecuteSqlScalar(countSql, sps));
+            total = Convert.ToInt32(olsDbo.ExecuteSqlScalar(countSql, sps));
+            filter = Convert.ToInt32(olsDbo.ExecuteSqlScalar(countSql, sps));
 
             return new Object[] { ms, total, filter };
         }
@@ -306,12 +328,12 @@ namespace OnlineLearningSystem.Utilities
             sps = (List<SqlParameter>)sqlConditions[1];
             orderSql = (String)sqlConditions[2];
 
-            dataTable = olsDBO.GetDataTableWithStart(sql + orderSql, sps, dtRequest.Length, dtRequest.Start);
+            dataTable = olsDbo.GetDataTableWithStart(sql + orderSql, sps, dtRequest.Length, dtRequest.Start);
             ms = (List<T>)ModelConvert<T>.ConvertToModel(dataTable);
 
             countSql = sql.Replace("SELECT * FROM ", "SELECT COUNT(" + idFieldName + ") FROM ");
-            total = Convert.ToInt32(olsDBO.ExecuteSqlScalar(countSql, sps));
-            filter = Convert.ToInt32(olsDBO.ExecuteSqlScalar(countSql, sps));
+            total = Convert.ToInt32(olsDbo.ExecuteSqlScalar(countSql, sps));
+            filter = Convert.ToInt32(olsDbo.ExecuteSqlScalar(countSql, sps));
 
             return new Object[] { ms, total, filter };
         }
@@ -332,12 +354,12 @@ namespace OnlineLearningSystem.Utilities
             sps = (List<SqlParameter>)sqlConditions[1];
             orderSql = (String)sqlConditions[2];
 
-            dataTable = olsDBO.GetDataTableWithStart(sql + orderSql, sps, dtRequest.Length, dtRequest.Start);
+            dataTable = olsDbo.GetDataTableWithStart(sql + orderSql, sps, dtRequest.Length, dtRequest.Start);
             ms = (List<T>)ModelConvert<T>.ConvertToModel(dataTable);
 
             countSql = sql.Replace("SELECT * FROM ", "SELECT COUNT(" + idFieldName + ") FROM ");
-            total = Convert.ToInt32(olsDBO.ExecuteSqlScalar(countSql, sps));
-            filter = Convert.ToInt32(olsDBO.ExecuteSqlScalar(countSql, sps));
+            total = Convert.ToInt32(olsDbo.ExecuteSqlScalar(countSql, sps));
+            filter = Convert.ToInt32(olsDbo.ExecuteSqlScalar(countSql, sps));
 
             return new Object[] { ms, total, filter };
         }
@@ -358,12 +380,12 @@ namespace OnlineLearningSystem.Utilities
             sps = (List<SqlParameter>)sqlConditions[1];
             orderSql = (String)sqlConditions[2];
 
-            dataTable = olsDBO.GetDataTableWithStart(sql + orderSql, sps, dtRequest.Length, dtRequest.Start);
+            dataTable = olsDbo.GetDataTableWithStart(sql + orderSql, sps, dtRequest.Length, dtRequest.Start);
             ms = (List<T>)ModelConvert<T>.ConvertToModel(dataTable);
 
             countSql = sql.Replace("SELECT * FROM ", "SELECT COUNT(" + idFieldName + ") FROM ");
-            total = Convert.ToInt32(olsDBO.ExecuteSqlScalar(countSql, sps));
-            filter = Convert.ToInt32(olsDBO.ExecuteSqlScalar(countSql, sps));
+            total = Convert.ToInt32(olsDbo.ExecuteSqlScalar(countSql, sps));
+            filter = Convert.ToInt32(olsDbo.ExecuteSqlScalar(countSql, sps));
 
             return new Object[] { ms, total, filter };
         }
@@ -384,12 +406,12 @@ namespace OnlineLearningSystem.Utilities
             sps = (List<SqlParameter>)sqlConditions[1];
             orderSql = (String)sqlConditions[2];
 
-            dataTable = olsDBO.GetDataTableWithStart(sql + orderSql, sps, dtRequest.Length, dtRequest.Start);
+            dataTable = olsDbo.GetDataTableWithStart(sql + orderSql, sps, dtRequest.Length, dtRequest.Start);
             ms = (List<T>)ModelConvert<T>.ConvertToModel(dataTable);
 
             countSql = sql.Replace("SELECT * FROM ", "SELECT COUNT(" + idFieldName + ") FROM ");
-            total = Convert.ToInt32(olsDBO.ExecuteSqlScalar(countSql, sps));
-            filter = Convert.ToInt32(olsDBO.ExecuteSqlScalar(countSql, sps));
+            total = Convert.ToInt32(olsDbo.ExecuteSqlScalar(countSql, sps));
+            filter = Convert.ToInt32(olsDbo.ExecuteSqlScalar(countSql, sps));
 
             return new Object[] { ms, total, filter };
         }
@@ -411,12 +433,12 @@ namespace OnlineLearningSystem.Utilities
             sps = (List<SqlParameter>)sqlConditions[1];
             orderSql = (String)sqlConditions[2];
 
-            dataTable = olsDBO.GetDataTableWithStart(sql + orderSql, sps, dtRequest.Length, dtRequest.Start);
+            dataTable = olsDbo.GetDataTableWithStart(sql + orderSql, sps, dtRequest.Length, dtRequest.Start);
             ms = (List<T>)ModelConvert<T>.ConvertToModel(dataTable);
 
             countSql = sql.Replace("SELECT * FROM ", "SELECT COUNT(" + idFieldName + ") FROM ");
-            total = Convert.ToInt32(olsDBO.ExecuteSqlScalar(countSql, sps));
-            filter = Convert.ToInt32(olsDBO.ExecuteSqlScalar(countSql, sps));
+            total = Convert.ToInt32(olsDbo.ExecuteSqlScalar(countSql, sps));
+            filter = Convert.ToInt32(olsDbo.ExecuteSqlScalar(countSql, sps));
 
             return new Object[] { ms, total, filter };
         }
@@ -436,12 +458,12 @@ namespace OnlineLearningSystem.Utilities
             sps = (List<SqlParameter>)sqlConditions[1];
             orderSql = (String)sqlConditions[2];
 
-            dataTable = olsDBO.GetDataTableWithStart(sql + orderSql, sps, dtRequest.Length, dtRequest.Start);
+            dataTable = olsDbo.GetDataTableWithStart(sql + orderSql, sps, dtRequest.Length, dtRequest.Start);
             ms = (List<T>)ModelConvert<T>.ConvertToModel(dataTable);
 
             countSql = sql.Replace("SELECT * FROM ", "SELECT COUNT(" + idFieldName + ") FROM ");
-            total = Convert.ToInt32(olsDBO.ExecuteSqlScalar(countSql, sps));
-            filter = Convert.ToInt32(olsDBO.ExecuteSqlScalar(countSql, sps));
+            total = Convert.ToInt32(olsDbo.ExecuteSqlScalar(countSql, sps));
+            filter = Convert.ToInt32(olsDbo.ExecuteSqlScalar(countSql, sps));
 
             return new Object[] { ms, total, filter };
         }
@@ -461,12 +483,12 @@ namespace OnlineLearningSystem.Utilities
             sps = (List<SqlParameter>)sqlConditions[1];
             orderSql = (String)sqlConditions[2];
 
-            dataTable = olsDBO.GetDataTableWithStart(sql + orderSql, sps, dtRequest.Length, dtRequest.Start);
+            dataTable = olsDbo.GetDataTableWithStart(sql + orderSql, sps, dtRequest.Length, dtRequest.Start);
             ms = (List<T>)ModelConvert<T>.ConvertToModel(dataTable);
 
             countSql = sql.Replace("SELECT * FROM ", "SELECT COUNT(" + idFieldName + ") FROM ");
-            total = Convert.ToInt32(olsDBO.ExecuteSqlScalar(countSql, sps));
-            filter = Convert.ToInt32(olsDBO.ExecuteSqlScalar(countSql, sps));
+            total = Convert.ToInt32(olsDbo.ExecuteSqlScalar(countSql, sps));
+            filter = Convert.ToInt32(olsDbo.ExecuteSqlScalar(countSql, sps));
 
             return new Object[] { ms, total, filter };
         }
@@ -486,12 +508,12 @@ namespace OnlineLearningSystem.Utilities
             sps = (List<SqlParameter>)sqlConditions[1];
             orderSql = (String)sqlConditions[2];
 
-            dataTable = olsDBO.GetDataTableWithStart(sql + orderSql, sps, dtRequest.Length, dtRequest.Start);
+            dataTable = olsDbo.GetDataTableWithStart(sql + orderSql, sps, dtRequest.Length, dtRequest.Start);
             ms = (List<T>)ModelConvert<T>.ConvertToModel(dataTable);
 
             countSql = sql.Replace("SELECT * FROM ", "SELECT COUNT(" + idFieldName + ") FROM ");
-            total = Convert.ToInt32(olsDBO.ExecuteSqlScalar(countSql, sps));
-            filter = Convert.ToInt32(olsDBO.ExecuteSqlScalar(countSql, sps));
+            total = Convert.ToInt32(olsDbo.ExecuteSqlScalar(countSql, sps));
+            filter = Convert.ToInt32(olsDbo.ExecuteSqlScalar(countSql, sps));
 
             return new Object[] { ms, total, filter };
         }
@@ -512,12 +534,12 @@ namespace OnlineLearningSystem.Utilities
             sps = (List<SqlParameter>)sqlConditions[1];
             orderSql = (String)sqlConditions[2];
 
-            dataTable = olsDBO.GetDataTableWithStart(sql + orderSql, sps, dtRequest.Length, dtRequest.Start);
+            dataTable = olsDbo.GetDataTableWithStart(sql + orderSql, sps, dtRequest.Length, dtRequest.Start);
             ms = (List<T>)ModelConvert<T>.ConvertToModel(dataTable);
 
             countSql = sql.Replace("SELECT * FROM ", "SELECT COUNT(" + idFieldName + ") FROM ");
-            total = Convert.ToInt32(olsDBO.ExecuteSqlScalar(countSql, sps));
-            filter = Convert.ToInt32(olsDBO.ExecuteSqlScalar(countSql, sps));
+            total = Convert.ToInt32(olsDbo.ExecuteSqlScalar(countSql, sps));
+            filter = Convert.ToInt32(olsDbo.ExecuteSqlScalar(countSql, sps));
 
             return new Object[] { ms, total, filter };
         }
@@ -533,21 +555,46 @@ namespace OnlineLearningSystem.Utilities
             List<SqlParameter> sps;
 
             sql = "SELECT * FROM " + tableName + " ";
-            sqlConditions = GetSqlCondition(sql, statusFieldName, sortFieldName);
+            sqlConditions = GetSqlCondition(sql, statusFieldName, sortFieldName, exceptFields);
             sql = (String)sqlConditions[0];
             sps = (List<SqlParameter>)sqlConditions[1];
             orderSql = (String)sqlConditions[2];
 
-            dataTable = olsDBO.GetDataTableWithStart(sql + orderSql, sps, dtRequest.Length, dtRequest.Start);
+            dataTable = olsDbo.GetDataTableWithStart(sql + orderSql, sps, dtRequest.Length, dtRequest.Start);
             ms = (List<T>)ModelConvert<T>.ConvertToModel(dataTable);
 
             countSql = sql.Replace("SELECT * FROM ", "SELECT COUNT(" + idFieldName + ") FROM ");
-            total = Convert.ToInt32(olsDBO.ExecuteSqlScalar(countSql, sps));
-            filter = Convert.ToInt32(olsDBO.ExecuteSqlScalar(countSql, sps));
+            total = Convert.ToInt32(olsDbo.ExecuteSqlScalar(countSql, sps));
+            filter = Convert.ToInt32(olsDbo.ExecuteSqlScalar(countSql, sps));
 
             return new Object[] { ms, total, filter };
         }
-        
+
+        private Object[] GetModels(String sql, String statusFieldName, String[] sortFieldNames, String[] exceptFields)
+        {
+
+            Int32 total, filter;
+            String orderSql, countSql;
+            DataTable dataTable;
+            Object[] sqlConditions;
+            List<T> ms;
+            List<SqlParameter> sps;
+
+            sqlConditions = GetSqlCondition(sql, statusFieldName, sortFieldNames, exceptFields);
+            sql = (String)sqlConditions[0];
+            sps = (List<SqlParameter>)sqlConditions[1];
+            orderSql = (String)sqlConditions[2];
+
+            dataTable = olsDbo.GetDataTableWithStart(sql + orderSql, sps, dtRequest.Length, dtRequest.Start);
+            ms = (List<T>)ModelConvert<T>.ConvertToModel(dataTable);
+
+            countSql = sql.Replace("SELECT * FROM ", "SELECT COUNT(" + idFieldName + ") FROM ");
+            total = Convert.ToInt32(olsDbo.ExecuteSqlScalar(countSql, sps));
+            filter = Convert.ToInt32(olsDbo.ExecuteSqlScalar(countSql, sps));
+
+            return new Object[] { ms, total, filter };
+        }
+
         private Object[] GetSqlCondition(String sql)
         {
 
@@ -1008,6 +1055,57 @@ namespace OnlineLearningSystem.Utilities
 
             // 指定排序列
             orderSql = "ORDER BY " + sortFieldName + " ASC";
+
+            return new Object[] { sql, sps, orderSql };
+        }
+
+        private Object[] GetSqlCondition(String sql, String statusFieldName, String[] sortFieldNames, String[] exceptFields)
+        {
+
+            String whereSql, orderSql;
+            List<SqlParameter> sps;
+
+            whereSql = "";
+            sps = new List<SqlParameter>();
+
+            // 指定筛选条件
+            if ("" != dtRequest.SearchValue)
+            {
+
+                foreach (var col in dtRequest.Columns)
+                {
+
+                    if ("" != col.Name && !exceptFields.Contains(col.Name))
+                    {
+
+                        whereSql += col.Name + " LIKE @" + col.Name + " OR ";
+                        sps.Add(new SqlParameter("@" + col.Name, "%" + dtRequest.SearchValue + "%"));
+                    }
+                }
+
+                if ("" != whereSql)
+                {
+                    whereSql = whereSql.Substring(0, whereSql.Length - 3);
+                    whereSql = "(" + whereSql + ") ";
+
+                    sql += sql.IndexOf("WHERE ") == -1 ? "WHERE " + whereSql : "AND " + whereSql + " ";
+                }
+            }
+
+            sql += sql.IndexOf("WHERE ") == -1 ? "WHERE " : "AND ";
+            sql += statusFieldName + " = @status ";
+            sps.Add(new SqlParameter("@status", (Byte)dtRequest.Status));
+
+            // 指定排序列
+            orderSql = "";
+            foreach (var f in sortFieldNames)
+            {
+                orderSql += "ORDER BY " + f + " ASC, ";
+            }
+            if (orderSql != "")
+            {
+                orderSql = orderSql.Substring(0, orderSql.Length - 2);
+            }
 
             return new Object[] { sql, sps, orderSql };
         }

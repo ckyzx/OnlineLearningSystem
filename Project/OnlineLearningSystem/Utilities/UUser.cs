@@ -721,18 +721,24 @@ namespace OnlineLearningSystem.Utilities
             try
             {
 
+                Int32 originDepartmentId;
                 Double originSort, destSort;
                 User originUser, destUser, adjustUser;
+                User_Department ud;
                 User[] userAry;
                 List<User> us;
+                DataTable dataTable;
+                List<SqlParameter> sps;
 
                 userAry = new User[2];
 
                 originUser = olsEni.Users.Single(m => m.U_Id == originId);
                 originSort = originUser.U_Sort;
 
-                // 置顶
-                if (1 == sortFlag)
+                ud = olsEni.User_Department.Single(m => m.U_Id == originUser.U_Id);
+                originDepartmentId = ud.D_Id;
+
+                if (1 == sortFlag) // 置顶
                 {
 
                     destSort = olsEni.Users.Min(m => m.U_Sort);
@@ -748,12 +754,18 @@ namespace OnlineLearningSystem.Utilities
                     originSort = destSort - 1;
                     originUser.U_Sort = originSort;
                 }
-                else if (2 == sortFlag)
+                else if (2 == sortFlag) // 上移
                 {
 
-                    us = olsEni.Users.Where(m =>
-                        m.U_Sort < originSort)
-                        .OrderByDescending(m => m.U_Sort).Take(2).ToList();
+                    //us = olsEni.Users
+                    //    .Where(m => m.U_Sort < originSort)
+                    //    .OrderByDescending(m => m.U_Sort).Take(2).ToList();
+
+                    sps = new List<SqlParameter>();
+                    sps.Add(new SqlParameter("@dId", originDepartmentId));
+                    sps.Add(new SqlParameter("@uSort", originSort));
+                    dataTable = olsDbo.GetDataTable("SELECT TOP 2 * FROM Users u LEFT JOIN User_Department ud ON u.U_Id = ud.U_Id LEFT JOIN Departments d ON d.D_Id = ud.D_Id WHERE d.D_Id = @dId AND u.U_Sort < @uSort ORDER BY u.U_Sort DESC", sps);
+                    us = (List<User>)ModelConvert<User>.ConvertToModel(dataTable);
 
                     if (us.Count == 0)
                     {
@@ -764,10 +776,8 @@ namespace OnlineLearningSystem.Utilities
                     else if (us.Count == 1)
                     {
                         destUser = us[0];
-                        originSort = destUser.U_Sort;
-                        destSort = originUser.U_Sort;
+                        originSort = destUser.U_Sort - 1;
                         originUser.U_Sort = originSort;
-                        destUser.U_Sort = destSort;
                     }
                     else
                     {
@@ -778,13 +788,19 @@ namespace OnlineLearningSystem.Utilities
                     }
 
                 }
-                else// if (3 == sortFlag)
+                else// if (3 == sortFlag) // 下移
                 {
 
-                    us = olsEni.Users.Where(m =>
-                        m.U_Sort > originSort)
-                        .OrderBy(m => m.U_Sort)
-                        .Take(1).ToList();
+                    //us = olsEni.Users
+                    //    .Where(m => m.U_Sort > originSort)
+                    //    .OrderBy(m => m.U_Sort)
+                    //    .Take(1).ToList();
+
+                    sps = new List<SqlParameter>();
+                    sps.Add(new SqlParameter("@dId", originDepartmentId));
+                    sps.Add(new SqlParameter("@uSort", originSort));
+                    dataTable = olsDbo.GetDataTable("SELECT TOP 1 * FROM Users u LEFT JOIN User_Department ud ON u.U_Id = ud.U_Id LEFT JOIN Departments d ON d.D_Id = ud.D_Id WHERE d.D_Id = @dId AND u.U_Sort > @uSort ORDER BY u.U_Sort ASC", sps);
+                    us = (List<User>)ModelConvert<User>.ConvertToModel(dataTable);
 
                     if (us.Count == 0)
                     {
@@ -792,18 +808,22 @@ namespace OnlineLearningSystem.Utilities
                         resJson.message = "该用户已处于底部。";
                         return resJson;
                     }
+                    else
+                    {
 
-                    destUser = us[0];
-                    destSort = destUser.U_Sort;
-
-                    originSort = Math.Round(destSort + 0.00001, 5, MidpointRounding.AwayFromZero);
-                    originUser.U_Sort = originSort;
+                        destUser = us[0];
+                        destSort = destUser.U_Sort;
+                        originSort = Math.Round(destSort + 0.00001, 5, MidpointRounding.AwayFromZero);
+                        originUser.U_Sort = originSort;
+                    }
                 }
 
                 adjustUser = olsEni.Users.SingleOrDefault(m => m.U_Sort == originSort);
-                if (adjustUser != null)
+                while (adjustUser != null)
                 {
-                    adjustUser.U_Sort = Math.Round(originSort + 0.00001, 5, MidpointRounding.AwayFromZero);
+                    originSort = Math.Round(originSort + 0.00001, 5, MidpointRounding.AwayFromZero);
+                    originUser.U_Sort = originSort;
+                    adjustUser = olsEni.Users.SingleOrDefault(m => m.U_Sort == originSort);
                 }
 
                 if (0 == olsEni.SaveChanges())

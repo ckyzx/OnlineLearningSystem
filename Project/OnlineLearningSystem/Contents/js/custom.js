@@ -507,14 +507,14 @@ Kyzx.List = {
         for (var i = 0; i < dtData.length; i++) {
 
             cells = dtData[i].anCells;
-            checkbox = $(cells[0]).find(':checkbox');
+            checkbox = $(cells[0]).find(':checkbox, :radio');
             id = checkbox.val();
 
             for (var i1 = 0; i1 < ms.length; i1++) {
 
                 if (id == ms[i1]) {
 
-                    $(cells[0]).find(':checkbox').get(0).checked = true;
+                    $(cells[0]).find(':checkbox, :radio').get(0).checked = true;
                 }
             }
         }

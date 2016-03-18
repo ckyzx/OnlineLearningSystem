@@ -18,84 +18,24 @@ $(function() {
     dTable = $(dTableSel);
     rTable = $(rTableSel);
 
-    dTable.find(':checkbox[value=""]').attr('disabled', 'disabled');
-    rTable.find(':checkbox[value=""]').attr('disabled', 'disabled');
+    dTable.find(':radio[value=""]').attr('disabled', 'disabled');
+    rTable.find(':radio[value=""]').attr('disabled', 'disabled');
 
-    //[IECompatibility]
-    if (brower.ieVersion) {
+    dTable.on('change', ':radio', function() {
 
-        dTable.find(':checkbox').each(function() {
+        Kyzx.List.getChecked(dTableSel, uDepartmentsSel);
 
-            var checkbox;
+        deps = $(uDepartmentsSel).val();
+        Kyzx.List.renderSelectCount(dTable.parent(), JSON.parse(deps).length);
+    });
 
-            checkbox = $(this);
-            checkbox.after('<input type="radio" name="department" value="' + checkbox.val() + '" />');
+    rTable.on('change', ':radio', function() {
 
-            if(checkbox.get(0).checked){
-                checkbox.parent().find(':radio').get(0).checked = true;
-            }
+        Kyzx.List.getChecked(rTableSel, uRolesSel);
 
-            checkbox.remove()
-        });
-        rTable.find(':checkbox').each(function() {
-
-            var checkbox;
-
-            checkbox = $(this);
-            checkbox.after('<input type="radio" name="role" value="' + checkbox.val() + '" />');
-
-            if(checkbox.get(0).checked){
-                checkbox.parent().find(':radio').get(0).checked = true;
-            }
-
-            checkbox.remove()
-        });
-
-        dTable.on('change', ':radio', function() {
-
-            Kyzx.List.getChecked(dTableSel, uDepartmentsSel);
-
-            deps = $(uDepartmentsSel).val();
-            Kyzx.List.renderSelectCount(dTable.parent(), JSON.parse(deps).length);
-        });
-        rTable.on('change', ':radio', function() {
-
-            Kyzx.List.getChecked(rTableSel, uRolesSel);
-
-            roles = $(uRolesSel).val();
-            Kyzx.List.renderSelectCount(rTable.parent(), JSON.parse(roles).length);
-        });
-    } else {
-
-        dTable
-            .on('click', ':checkbox', function() {
-                Kyzx.List.checkboxClickEvent(this);
-            })
-            .on('change', ':checkbox', function() {
-
-                var deps;
-
-                Kyzx.List.checkboxChangeEvent(this);
-                Kyzx.List.getChecked(dTableSel, uDepartmentsSel);
-
-                deps = $(uDepartmentsSel).val();
-                Kyzx.List.renderSelectCount(dTable.parent(), JSON.parse(deps).length);
-            });
-        rTable
-            .on('click', ':checkbox', function() {
-                Kyzx.List.checkboxClickEvent(this);
-            })
-            .on('change', ':checkbox', function() {
-
-                var roles;
-
-                Kyzx.List.checkboxChangeEvent(this);
-                Kyzx.List.getChecked(rTableSel, uRolesSel);
-
-                roles = $(uRolesSel).val();
-                Kyzx.List.renderSelectCount(rTable.parent(), JSON.parse(roles).length);
-            });
-    }
+        roles = $(uRolesSel).val();
+        Kyzx.List.renderSelectCount(rTable.parent(), JSON.parse(roles).length);
+    });
 
     $('form').submit(function(e) {
 
@@ -118,7 +58,7 @@ $(function() {
             ps = '**********';
             psInput.val(ps);
             $('#U_RePassword').val(ps);
-        }else if(action == '/User/Create' && '**********' == ps){
+        } else if (action == '/User/Create' && '**********' == ps) {
 
             psInput.val('');
             $('#U_RePassword').val('');

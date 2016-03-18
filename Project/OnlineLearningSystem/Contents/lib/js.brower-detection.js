@@ -19,9 +19,14 @@ if (ieRegex.test(brower.userAgent)) {
 } else if (ieRegex11.test(brower.userAgent)) {
 
     brower.ieVersion = parseInt(RegExp["$1"]);
+} else if (brower.ieVersion && brower.ieVersion < 8) {
+
+    location.href = "/Contents/html/upgrade_brower.htm";
 }
 
-if (brower.ieVersion && brower.ieVersion < 8) {
-
-    location.href = "/Content/html/upgrade_brower.htm";
+if (typeof(console) != 'undefined') {
+    console.log(brower.userAgent);
+    console.log(brower.ieVersion);
+} else {
+    document.write('<div style="color:#FFF;background:#FFF;">Navigator User Agent: ' + brower.userAgent + '<br />IE Version: ' + brower.ieVersion + '</div>');
 }

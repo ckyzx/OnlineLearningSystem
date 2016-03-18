@@ -10,6 +10,8 @@ $(function () {
 
     table = table.DataTable({
         "ordering": false,
+        "pageLength": -1,
+        "lengthChange": false,
         "columns": [{
             "width": "10px"
         }, {

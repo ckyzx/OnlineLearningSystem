@@ -39,7 +39,7 @@ namespace OnlineLearningSystem.ViewModels
         [DisplayName("身份证号")]
         [Remote("DuplicateIdCardNumber", "User", ErrorMessage = "身份证号已存在", AdditionalFields = "U_Id")]
         [Required(ErrorMessage = "请输入{0}")]
-        [RegularExpression(@"(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)", ErrorMessage = "请输入正确格式的身份证号")]
+        [RegularExpression(@"(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)|admin", ErrorMessage = "请输入正确格式的身份证号")]
         public String U_IdCardNumber { get; set; }
 
         [DisplayName("用户名")]

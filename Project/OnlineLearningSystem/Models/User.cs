@@ -63,6 +63,9 @@ namespace OnlineLearningSystem.Models
         public Double U_Sort { get; set; }
 
         [NotMapped]
+        public Double D_Sort { get; set; }
+
+        [NotMapped]
         public String EP_Score { get; set; }
     }
 }
