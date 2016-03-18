@@ -82,6 +82,7 @@ namespace OnlineLearningSystem.Utilities
 
             var items = olsEni.Duties
                 .Where(m => m.Du_Status == (Byte)Status.Available)
+                .OrderBy(m => m.Du_Sort)
                 .Select(m => new { m.Du_Name, m.Du_Id });
 
             list = new List<SelectListItem>();

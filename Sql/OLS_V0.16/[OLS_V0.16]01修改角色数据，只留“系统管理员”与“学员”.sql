@@ -3,14 +3,13 @@ USE OLS;
 GO
 
 -- 添加存储过程“更新系统管理员角色数据”
-IF OBJECT_ID(N'dbo.UpdateAdminRole', 'P') IS NOT NULL
-	DROP PROCEDURE dbo.UpdateAdminRole;
+IF OBJECT_ID(N'dbo.UpdateAdminRole', 'P') IS NOT NULL 
+    DROP PROCEDURE dbo.UpdateAdminRole;
 
 GO
 
 CREATE PROCEDURE UpdateAdminRole
-AS 
-	-- 更新“系统管理员”角色记录
+AS -- 更新“系统管理员”角色记录
     DECLARE @table TABLE ( PC_Id INT );
     DECLARE @table1 TABLE ( P_Id INT );
     DECLARE @pcs VARCHAR(500) ,
@@ -65,13 +64,13 @@ AS
             R_PermissionCategories = @pcs
     WHERE   R_Id = 1
 
--- 更新关联记录
-DELETE  FROM dbo.Role_Permission
-WHERE   R_Id = 1;
-INSERT  [dbo].[Role_Permission]
-        SELECT  1 ,
-                P_Id
-        FROM    dbo.[Permissions]
+	-- 更新关联记录
+    DELETE  FROM dbo.Role_Permission
+    WHERE   R_Id = 1;
+    INSERT  [dbo].[Role_Permission]
+            SELECT  1 ,
+                    P_Id
+            FROM    dbo.[Permissions]
 
 GO
 
@@ -81,21 +80,18 @@ WHERE   R_Id <> 1;
 
 GO
 
--- 删除“非系统管理员”角色
-DELETE FROM dbo.User_Role;
+DELETE  FROM dbo.User_Role;
+DELETE  FROM dbo.Department_Role
 
+-- 删除“非系统管理员”角色
 DELETE  FROM dbo.Roles
 WHERE   R_Id <> 1;
 
 GO
 
 -- 清除部门角色值
-UPDATE dbo.Departments SET D_Roles = '[]'
-
-GO
-
--- 删除部门角色关联
-DELETE FROM dbo.Department_Role
+UPDATE  dbo.Departments
+SET     D_Roles = '[]'
 
 GO
 
@@ -134,18 +130,25 @@ EXEC dbo.UpdateAdminRole;
 GO
 
 -- 添加用户角色关联
-INSERT INTO dbo.User_Role
+INSERT  INTO dbo.User_Role
         ( U_Id, R_Id )
 VALUES  ( 1, -- U_Id - int
           1  -- R_Id - int
           )
-INSERT INTO dbo.User_Role
-        SELECT U_Id, 2 FROM Users WHERE U_Id <> 1
+INSERT  INTO dbo.User_Role
+        SELECT  U_Id ,
+                2
+        FROM    Users
+        WHERE   U_Id <> 1
 
 GO
 
 -- 添加“非系统管理员”角色权限关联
-INSERT INTO dbo.Role_Permission
-        SELECT 2, P_Id FROM dbo.[Permissions] WHERE PC_Id = 6 OR PC_Id = 11
+INSERT  INTO dbo.Role_Permission
+        SELECT  2 ,
+                P_Id
+        FROM    dbo.[Permissions]
+        WHERE   PC_Id = 6
+                OR PC_Id = 11
 
 GO

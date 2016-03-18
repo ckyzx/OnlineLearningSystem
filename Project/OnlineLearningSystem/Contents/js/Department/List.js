@@ -120,7 +120,7 @@ $(function() {
 
                 if (1 == data.status) {
 
-                    remoteDest = data.addition[1];
+                    /*remoteDest = data.addition[1];
                     remoteDestId = remoteDest['D_Id'];
 
                     if(destId == remoteDestId){
@@ -131,7 +131,8 @@ $(function() {
                     }
 
                     Kyzx.List.setId(list.dataTables, 'D_Id');
-                    refreshRowBackgroundColor('.table-sort');
+                    refreshRowBackgroundColor('.table-sort');*/
+                    list.dataTables.ajax.reload(null, false);
                 } else if (0 == data.status) {
 
                     alert(data.message);
@@ -170,7 +171,7 @@ $(function() {
 
                 if (1 == data.status) {
 
-                    if(destTr.length == 0){
+                    /*if(destTr.length == 0){
                         originTr.remove();
                     }
                     else{
@@ -178,7 +179,8 @@ $(function() {
                     }
 
                     Kyzx.List.setId(list.dataTables, 'D_Id');
-                    refreshRowBackgroundColor('.table-sort');
+                    refreshRowBackgroundColor('.table-sort');*/
+                    list.dataTables.ajax.reload(null, false);
                 } else if (0 == data.status) {
 
                     alert(data.message);
@@ -217,7 +219,7 @@ $(function() {
                 
                 if (1 == data.status) {
 
-                    if(destTr.length == 0){
+                    /*if(destTr.length == 0){
                         originTr.remove();
                     }
                     else{
@@ -225,7 +227,8 @@ $(function() {
                     }
 
                     Kyzx.List.setId(list.dataTables, 'D_Id');
-                    refreshRowBackgroundColor('.table-sort');
+                    refreshRowBackgroundColor('.table-sort');*/
+                    list.dataTables.ajax.reload(null, false);
                 } else if (0 == data.status) {
 
                     alert(data.message);

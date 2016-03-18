@@ -15,7 +15,7 @@ namespace OnlineLearningSystem.Utilities
 
         public List<Department> List()
         {
-            return olsEni.Departments.Where(m => m.D_Status == (Byte)Status.Available).ToList();
+            return olsEni.Departments.Where(m => m.D_Status == (Byte)Status.Available).OrderBy(m => m.D_Sort).ToList();
         }
 
         public DataTablesResponse ListDataTablesAjax(DataTablesRequest dtRequest)
@@ -205,7 +205,7 @@ namespace OnlineLearningSystem.Utilities
             List<Department> ds;
             StringBuilder zTreeJson;
 
-            ds = olsEni.Departments.Where(m => m.D_Status == (Byte)Status.Available).ToList();
+            ds = olsEni.Departments.Where(m => m.D_Status == (Byte)Status.Available).OrderBy(m => m.D_Sort).ToList();
 
             zTreeJson = new StringBuilder();
             zTreeJson.Append("[");
@@ -236,6 +236,7 @@ namespace OnlineLearningSystem.Utilities
             StringBuilder zTreeJson;
             User u;
             List<User_Department> uds;
+            List<User> us;
 
             zTreeJson = new StringBuilder();
 
@@ -245,6 +246,7 @@ namespace OnlineLearningSystem.Utilities
 
                 zTreeJson.Append(", \"children\":[ ");
 
+                us = new List<User>();
                 foreach (var ud in uds)
                 {
 
@@ -253,11 +255,15 @@ namespace OnlineLearningSystem.Utilities
                         && m.U_Status == (Byte)Status.Available);
                     if (null != u)
                     {
-                        zTreeJson.Append("{");
-                        zTreeJson.Append("\"userNode\": true, \"departmentId\":" + dId + ", \"userId\":" + u.U_Id + ", \"name\":\"" + u.U_Name + "\"");
-                        zTreeJson.Append("},");
+                        us.Add(u);
                     }
-
+                }
+                us = us.OrderBy(m => m.U_Sort).ToList();
+                foreach (var u1 in us)
+                {
+                    zTreeJson.Append("{");
+                    zTreeJson.Append("\"userNode\": true, \"departmentId\":" + dId + ", \"userId\":" + u1.U_Id + ", \"name\":\"" + u1.U_Name + "\"");
+                    zTreeJson.Append("},");
                 }
                 zTreeJson.Remove(zTreeJson.Length - 1, 1);
                 zTreeJson.Append("]");

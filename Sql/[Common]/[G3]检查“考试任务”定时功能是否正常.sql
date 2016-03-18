@@ -4,11 +4,7 @@ DECLARE @etName VARCHAR(50);
 DECLARE @etId INT ,
     @eptId INT;
 
---SET @etName = '每日自动任务1';
---SET @etName = '每周自动任务2';
---SET @etName = '每月自动任务1';
---SET @etName = '测试考试任务';
-SET @etName = '测试任务031604';
+SET @etName = '自动任务031701';
 
 --UPDATE  dbo.ExaminationTasks
 --SET     ET_StartTime = '1970-01-01 16:16:00.0000000' ,

@@ -79,7 +79,7 @@
                 return;
             }
 
-            __gradeEvent();
+            //__gradeEvent();
 
             $('#U_Id').val(uId);
 

@@ -128,7 +128,7 @@
 
                 if (1 == data.status) {
 
-                    remoteDest = data.addition[1];
+                    /*remoteDest = data.addition[1];
                     remoteDestId = remoteDest['U_Id'];
 
                     if (destId == remoteDestId) {
@@ -138,7 +138,8 @@
                     }
 
                     Kyzx.List.setId(list.dataTables, 'U_Id');
-                    refreshRowBackgroundColor('.table-sort');
+                    refreshRowBackgroundColor('.table-sort');*/
+                    list.dataTables.ajax.reload(null, false);
                 } else if (0 == data.status) {
 
                     alert(data.message);
@@ -177,14 +178,15 @@
 
                 if (1 == data.status) {
 
-                    if (destTr.length == 0) {
+                    /*if (destTr.length == 0) {
                         originTr.remove();
                     } else {
                         originTr.insertBefore(destTr);
                     }
 
                     Kyzx.List.setId(list.dataTables, 'U_Id');
-                    refreshRowBackgroundColor('.table-sort');
+                    refreshRowBackgroundColor('.table-sort');*/
+                    list.dataTables.ajax.reload(null, false);
                 } else if (0 == data.status) {
 
                     alert(data.message);
@@ -223,14 +225,15 @@
 
                 if (1 == data.status) {
 
-                    if (destTr.length == 0) {
+                    /*if (destTr.length == 0) {
                         originTr.remove();
                     } else {
                         originTr.insertAfter(destTr);
                     }
 
                     Kyzx.List.setId(list.dataTables, 'U_Id');
-                    refreshRowBackgroundColor('.table-sort');
+                    refreshRowBackgroundColor('.table-sort');*/
+                    list.dataTables.ajax.reload(null, false);
                 } else if (0 == data.status) {
 
                     alert(data.message);

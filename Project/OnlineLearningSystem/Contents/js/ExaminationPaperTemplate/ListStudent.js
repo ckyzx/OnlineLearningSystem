@@ -229,7 +229,7 @@ $(function() {
     if (2 == pageType) {
 
         params.columns.push({
-            "className": "text-r",
+            "className": "text-r nowrap",
             "name": "ESPT_PaperScore",
             "data": 'ESPT_PaperScore'
         });

@@ -14,7 +14,7 @@ namespace OnlineLearningSystem.Utilities
     {
         public List<Role> List()
         {
-            return olsEni.Roles.Where(m => m.R_Status == (Byte)Status.Available).ToList();
+            return olsEni.Roles.Where(m => m.R_Status == (Byte)Status.Available).OrderBy(m=>m.R_Id).ToList();
         }
 
         public DataTablesResponse ListDataTablesAjax(DataTablesRequest dtRequest)

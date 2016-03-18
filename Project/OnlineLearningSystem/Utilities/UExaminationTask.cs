@@ -214,6 +214,7 @@ namespace OnlineLearningSystem.Utilities
                 EPT_Id = id,
                 ET_Id = model.ET_Id,
                 ET_Type = model.ET_Type,
+                EPT_PaperTemplateStatus = (Byte)PaperTemplateStatus.Undone,
                 EPT_StartDate = now.Date,
                 EPT_StartTime = now,
                 EPT_EndTime = now.AddMinutes(model.ET_TimeSpan),

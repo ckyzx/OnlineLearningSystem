@@ -85,6 +85,12 @@ $(function() {
             qContent = qContent.replace(/^(\\r\\n)+/g, '').replace(/(\\r\\n)+$/g, '').replace(/\\r\\n/g, '[换行]').replace(/\s+/g, '');
             span.addClass('ellipsis').width(th.width()).html(qContent).attr('title', qContent);*/
             qContent = data['Q_Content'];
+            qContent = qContent
+                .replace(/^(\\r\\n)+/g, '')
+                .replace(/(\\r\\n)+$/g, '')
+                .replace(/\\r\\n/g, '[换行]')
+                .replace(/\s+/g, '')
+                .replace(/\<\/*\w+\>/g, '');
             Kyzx.List.columnContentEllipsis(jqTable, row, '.Q_Content', qContent);
 
             status = data['Q_Status'];

@@ -9,9 +9,7 @@ $(function () {
     }
 
     table = table.DataTable({
-        "sorting": [
-            [1, "asc"]
-        ],
+        "ordering": false,
         "columnDefs": [{
             "orderable": false,
             "targets": [0, 4]
@@ -19,9 +17,20 @@ $(function () {
         "columns": [{
             "width": "10px"
         }, {
+            "className": "D_Id",
             "width": "30px"
-        }, null, null, {
+        }, {
+            "className": "nowrap"
+        }, {
+            "className": "nowrap"
+        }, {
             "width": "40%"
-        }]
+        }],
+        "drawCallback": function(settings) {
+
+            var api;
+            api = this.api();
+            Kyzx.List.setId(api, 'D_Id');
+        }
     });
 });
