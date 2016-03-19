@@ -32,6 +32,9 @@
             "name": "U_AddTime",
             "defaultContent": '<span class="U_AddTime"></span>'
         }, {
+            "name": "D_Name",
+            "data": "D_Name"
+        }, {
             "name": "Du_Name",
             "data": "Du_Name"
         }, {

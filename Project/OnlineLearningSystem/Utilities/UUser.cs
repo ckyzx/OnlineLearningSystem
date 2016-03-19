@@ -10,43 +10,18 @@ using System.Text;
 using System.Security.Cryptography;
 using OnlineLearningSystem.ViewModels;
 using System.Data.SqlClient;
+using System.Transactions;
 
 namespace OnlineLearningSystem.Utilities
 {
     public class UUser : Utility
     {
 
-        public DataTablesResponse ListDataTablesAjax(DataTablesRequest dtRequest)
-        {
-
-            String dutyName;
-            DataTablesResponse dtResponse;
-            Duty d;
-            UModel<User> umodel;
-            List<User> ms;
-
-            umodel = new UModel<User>(dtRequest, "Users", "U_Id");
-            dtResponse = umodel.GetList("U_Status", "U_Sort", new String[] { "Du_Name" });
-
-            ms = (List<User>)dtResponse.data;
-            foreach (var m1 in ms)
-            {
-                d = olsEni.Duties.SingleOrDefault(m => m.Du_Id == m1.Du_Id);
-                dutyName = null == d ? "" : d.Du_Name;
-                m1.Du_Name = dutyName;
-                m1.U_Password = "**********";
-            }
-            dtResponse.data = ms;
-
-            return dtResponse;
-        }
-
         public DataTablesResponse ListDataTablesAjax(DataTablesRequest dtRequest, Int32 departmentId)
         {
 
-            String dutyName, sql;
+            String sql;
             DataTablesResponse dtResponse;
-            Duty d;
             List<SqlParameter> sps;
             UModel<User> umodel;
             List<User> ms;
@@ -59,17 +34,29 @@ namespace OnlineLearningSystem.Utilities
                 sps.Add(new SqlParameter("@D_Id", departmentId));
             }
 
-            sql = "SELECT * FROM (SELECT u.*, d.D_Id FROM Users u LEFT JOIN User_Department ud ON u.U_Id = ud.U_Id LEFT JOIN Departments d ON ud.D_Id = d.D_Id) t ";
-            dtResponse = umodel.GetList(sql, sps, "U_Status", "U_Sort", new String[] { "Du_Name" });
+            sql =
+                "SELECT * FROM " +
+                "    (" +
+                "        SELECT  u.U_Id U_Id, "+
+                "                u.U_Name U_Name, " +
+                "                u.U_IdCardNumber U_IdCardNumber, " +
+                "                u.U_AddTime U_AddTime, " +
+                "                '**********' U_Password, " +
+                "                u.U_Status U_Status, " +
+                "                u.U_Sort U_Sort, " +
+                "                d.D_Id D_Id, " +
+                "                d.D_Name D_Name, " +
+                "                D_Sort, " +
+                "                du.Du_Name " +
+                "        FROM    Users u " +
+                "                LEFT JOIN User_Department ud ON u.U_Id = ud.U_Id" +
+                "                LEFT JOIN Departments d ON d.D_Id = ud.D_Id " +
+                "                LEFT JOIN Duties du ON du.Du_Id = u.Du_Id " +
+                "    ) TmpTable ";
+            umodel = new UModel<User>(dtRequest, "Users", "U_Id");
+            dtResponse = umodel.GetList(sql, sps, "U_Status", new String[] { "D_Sort", "U_Sort" }, new String[] { "Du_Name" });
 
             ms = (List<User>)dtResponse.data;
-            foreach (var m1 in ms)
-            {
-                d = olsEni.Duties.SingleOrDefault(m => m.Du_Id == m1.Du_Id);
-                dutyName = null == d ? "" : d.Du_Name;
-                m1.Du_Name = dutyName;
-                m1.U_Password = "**********";
-            }
             dtResponse.data = ms;
 
             return dtResponse;
@@ -721,127 +708,35 @@ namespace OnlineLearningSystem.Utilities
             try
             {
 
-                Int32 originDepartmentId;
-                Double originSort, destSort;
-                User originUser, destUser, adjustUser;
+                Int32 departmentId;
+                User originUser;
                 User_Department ud;
-                User[] userAry;
-                List<User> us;
-                DataTable dataTable;
-                List<SqlParameter> sps;
-
-                userAry = new User[2];
 
                 originUser = olsEni.Users.Single(m => m.U_Id == originId);
-                originSort = originUser.U_Sort;
-
                 ud = olsEni.User_Department.Single(m => m.U_Id == originUser.U_Id);
-                originDepartmentId = ud.D_Id;
+                departmentId = ud.D_Id;
 
-                if (1 == sortFlag) // 置顶
+                if (sortFlag == 1) // 置顶
                 {
-
-                    destSort = olsEni.Users.Min(m => m.U_Sort);
-                    destUser = olsEni.Users.Single(m => m.U_Sort == destSort);
-
-                    if (destSort == originSort)
-                    {
-                        resJson.status = ResponseStatus.Error;
-                        resJson.message = "该用户已置顶。";
-                        return resJson;
-                    }
-
-                    originSort = destSort - 1;
-                    originUser.U_Sort = originSort;
-                }
-                else if (2 == sortFlag) // 上移
-                {
-
-                    //us = olsEni.Users
-                    //    .Where(m => m.U_Sort < originSort)
-                    //    .OrderByDescending(m => m.U_Sort).Take(2).ToList();
-
-                    sps = new List<SqlParameter>();
-                    sps.Add(new SqlParameter("@dId", originDepartmentId));
-                    sps.Add(new SqlParameter("@uSort", originSort));
-                    dataTable = olsDbo.GetDataTable("SELECT TOP 2 * FROM Users u LEFT JOIN User_Department ud ON u.U_Id = ud.U_Id LEFT JOIN Departments d ON d.D_Id = ud.D_Id WHERE d.D_Id = @dId AND u.U_Sort < @uSort ORDER BY u.U_Sort DESC", sps);
-                    us = (List<User>)ModelConvert<User>.ConvertToModel(dataTable);
-
-                    if (us.Count == 0)
-                    {
-                        resJson.status = ResponseStatus.Error;
-                        resJson.message = "该用户已处于顶部。";
-                        return resJson;
-                    }
-                    else if (us.Count == 1)
-                    {
-                        destUser = us[0];
-                        originSort = destUser.U_Sort - 1;
-                        originUser.U_Sort = originSort;
-                    }
-                    else
-                    {
-                        destUser = us[1];
-                        destSort = destUser.U_Sort;
-                        originSort = Math.Round(destSort + 0.00001, 5, MidpointRounding.AwayFromZero);
-                        originUser.U_Sort = originSort;
-                    }
-
-                }
-                else// if (3 == sortFlag) // 下移
-                {
-
-                    //us = olsEni.Users
-                    //    .Where(m => m.U_Sort > originSort)
-                    //    .OrderBy(m => m.U_Sort)
-                    //    .Take(1).ToList();
-
-                    sps = new List<SqlParameter>();
-                    sps.Add(new SqlParameter("@dId", originDepartmentId));
-                    sps.Add(new SqlParameter("@uSort", originSort));
-                    dataTable = olsDbo.GetDataTable("SELECT TOP 1 * FROM Users u LEFT JOIN User_Department ud ON u.U_Id = ud.U_Id LEFT JOIN Departments d ON d.D_Id = ud.D_Id WHERE d.D_Id = @dId AND u.U_Sort > @uSort ORDER BY u.U_Sort ASC", sps);
-                    us = (List<User>)ModelConvert<User>.ConvertToModel(dataTable);
-
-                    if (us.Count == 0)
-                    {
-                        resJson.status = ResponseStatus.Error;
-                        resJson.message = "该用户已处于底部。";
-                        return resJson;
-                    }
-                    else
-                    {
-
-                        destUser = us[0];
-                        destSort = destUser.U_Sort;
-                        originSort = Math.Round(destSort + 0.00001, 5, MidpointRounding.AwayFromZero);
-                        originUser.U_Sort = originSort;
-                    }
-                }
-
-                adjustUser = olsEni.Users.SingleOrDefault(m => m.U_Sort == originSort);
-                while (adjustUser != null)
-                {
-                    originSort = Math.Round(originSort + 0.00001, 5, MidpointRounding.AwayFromZero);
-                    originUser.U_Sort = originSort;
-                    adjustUser = olsEni.Users.SingleOrDefault(m => m.U_Sort == originSort);
-                }
-
-                if (0 == olsEni.SaveChanges())
-                {
-                    resJson.status = ResponseStatus.Error;
-                    resJson.message = ResponseMessage.SaveChangesError;
+                    resJson = SetSortTop(departmentId, originId);
                     return resJson;
                 }
-
-                originUser.U_Password = "**********";
-                destUser.U_Password = "**********";
-
-                userAry[0] = originUser;
-                userAry[1] = destUser;
-
-                resJson.addition = userAry;
-                resJson.status = ResponseStatus.Success;
-                return resJson;
+                else if (sortFlag == 2) // 上移
+                {
+                    resJson = SetSortUp(departmentId, originId);
+                    return resJson;
+                }
+                else if (sortFlag == 3) // 下移
+                {
+                    resJson = SetSortDown(departmentId, originId);
+                    return resJson;
+                }
+                else //if (sortFlag != 1 && sortFlag != 2 && sortFlag != 3)
+                {
+                    resJson.status = ResponseStatus.Error;
+                    resJson.message = "未设置排序类型。";
+                    return resJson;
+                }
             }
             catch (Exception ex)
             {
@@ -852,5 +747,251 @@ namespace OnlineLearningSystem.Utilities
             }
         }
 
+        private ResponseJson SetSortTop(Int32 departmentId, Int32 originId)
+        {
+
+            Int32 repeatCount;
+            ResponseJson resJson;
+            String sql;
+            Double originSort, destSort;
+            User originUser, destUser;
+            List<SqlParameter> sps;
+
+            resJson = new ResponseJson();
+
+            originUser = olsEni.Users.Single(m => m.U_Id == originId);
+            originSort = originUser.U_Sort;
+
+            sql =
+                "SELECT    Min(u.U_Sort) " +
+                "FROM      Users u " +
+                "          LEFT JOIN User_Department ud ON u.U_Id = ud.U_Id " +
+                "          LEFT JOIN Departments d ON d.D_Id = ud.D_Id " +
+                "WHERE     d.D_Id = @dId ";
+            sps = new List<SqlParameter>();
+            sps.Add(new SqlParameter("@dId", departmentId));
+            destSort = Convert.ToInt32(olsDbo.ExecuteSqlScalar(sql, sps));
+
+            destUser = olsEni.Users.Single(m => m.U_Sort == destSort);
+
+            if (destSort == originSort)
+            {
+                resJson.status = ResponseStatus.Error;
+                resJson.message = "该用户已位于部门顶部。";
+                return resJson;
+            }
+
+            originSort = destSort - 1;
+            originUser.U_Sort = originSort;
+
+            repeatCount = HandleRepeat(originSort);
+            if (-1 == repeatCount)
+            {
+
+                resJson.status = ResponseStatus.Error;
+                resJson.message = "处理排序重复时抛出错误。";
+                return resJson;
+            }
+            else if (-2 == repeatCount)
+            {
+
+                resJson.status = ResponseStatus.Error;
+                resJson.message = "处理排序重复时保存出错。";
+                return resJson;
+            }
+            else if (0 == repeatCount && olsEni.SaveChanges() == 0)
+            {
+
+                resJson.status = ResponseStatus.Error;
+                resJson.message = ResponseMessage.SaveChangesError;
+                return resJson;
+            }
+
+            resJson.status = ResponseStatus.Success;
+            return resJson;
+        }
+
+        private ResponseJson SetSortUp(Int32 departmentId, Int32 originId)
+        {
+
+            Int32 repeatCount;
+            ResponseJson resJson;
+            String sql;
+            Double originSort, destSort;
+            DataTable dt;
+            User originUser, destUser;
+            List<SqlParameter> sps;
+            List<User> us;
+
+            resJson = new ResponseJson();
+
+            originUser = olsEni.Users.Single(m => m.U_Id == originId);
+            originSort = originUser.U_Sort;
+
+            sql =
+                "SELECT    TOP 2 * " +
+                "FROM      Users u " +
+                "          LEFT JOIN User_Department ud ON u.U_Id = ud.U_Id " +
+                "          LEFT JOIN Departments d ON d.D_Id = ud.D_Id " +
+                "WHERE     d.D_Id = @dId " +
+                "          AND u.U_Sort < @uSort " +
+                "ORDER BY  u.U_Sort DESC";
+            sps = new List<SqlParameter>();
+            sps.Add(new SqlParameter("@dId", departmentId));
+            sps.Add(new SqlParameter("@uSort", originSort));
+            dt = olsDbo.GetDataTable(sql, sps);
+            us = (List<User>)ModelConvert<User>.ConvertToModel(dt);
+
+            if (us.Count == 0)
+            {
+                resJson.status = ResponseStatus.Error;
+                resJson.message = "该用户已位于部门顶部。";
+                return resJson;
+            }
+            else if (us.Count == 1)
+            {
+                destUser = us[0];
+                originSort = destUser.U_Sort - 1;
+                originUser.U_Sort = originSort;
+            }
+            else
+            {
+                destUser = us[1];
+                destSort = destUser.U_Sort;
+                originSort = Math.Round(destSort + 0.00001, 5, MidpointRounding.AwayFromZero);
+                originUser.U_Sort = originSort;
+            }
+
+            repeatCount = HandleRepeat(originSort);
+            if (-1 == repeatCount)
+            {
+
+                resJson.status = ResponseStatus.Error;
+                resJson.message = "处理排序重复时抛出错误。";
+                return resJson;
+            }
+            else if (-2 == repeatCount)
+            {
+
+                resJson.status = ResponseStatus.Error;
+                resJson.message = "处理排序重复时保存出错。";
+                return resJson;
+            }else if (0 == repeatCount && olsEni.SaveChanges() == 0)
+            {
+
+                resJson.status = ResponseStatus.Error;
+                resJson.message = ResponseMessage.SaveChangesError;
+                return resJson;
+            }
+
+            resJson.status = ResponseStatus.Success;
+            return resJson;
+        }
+
+        private ResponseJson SetSortDown(Int32 departmentId, Int32 originId)
+        {
+
+            Int32 repeatCount;
+            ResponseJson resJson;
+            String sql;
+            Double originSort, destSort;
+            DataTable dt;
+            User originUser, destUser;
+            List<SqlParameter> sps;
+            List<User> us;
+
+            resJson = new ResponseJson();
+
+            originUser = olsEni.Users.Single(m => m.U_Id == originId);
+            originSort = originUser.U_Sort;
+
+            sql =
+                "SELECT    TOP 1 * " +
+                "FROM      Users u " +
+                "          LEFT JOIN User_Department ud ON u.U_Id = ud.U_Id " +
+                "          LEFT JOIN Departments d ON d.D_Id = ud.D_Id " +
+                "WHERE     d.D_Id = @dId " +
+                "          AND u.U_Sort > @uSort " +
+                "ORDER BY  u.U_Sort ASC";
+            sps = new List<SqlParameter>();
+            sps.Add(new SqlParameter("@dId", departmentId));
+            sps.Add(new SqlParameter("@uSort", originSort));
+            dt = olsDbo.GetDataTable(sql, sps);
+            us = (List<User>)ModelConvert<User>.ConvertToModel(dt);
+
+            if (us.Count == 0)
+            {
+                resJson.status = ResponseStatus.Error;
+                resJson.message = "该用户已位于部门底部。";
+                return resJson;
+            }
+            else
+            {
+
+                destUser = us[0];
+                destSort = destUser.U_Sort;
+                originSort = Math.Round(destSort + 0.00001, 5, MidpointRounding.AwayFromZero);
+                originUser.U_Sort = originSort;
+            }
+
+            repeatCount = HandleRepeat(originSort);
+            if (-1 == repeatCount)
+            {
+
+                resJson.status = ResponseStatus.Error;
+                resJson.message = "处理排序重复时抛出错误。";
+                return resJson;
+            }
+            else if (-2 == repeatCount)
+            {
+
+                resJson.status = ResponseStatus.Error;
+                resJson.message = "处理排序重复时保存出错。";
+                return resJson;
+            }
+            else if (0 == repeatCount && olsEni.SaveChanges() == 0)
+            {
+
+                resJson.status = ResponseStatus.Error;
+                resJson.message = ResponseMessage.SaveChangesError;
+                return resJson;
+            }
+
+            resJson.status = ResponseStatus.Success;
+            return resJson;
+        }
+
+        private Int32 HandleRepeat(Double sort)
+        {
+
+            try
+            {
+                Int32 count;
+                User sortRepeatUser;
+
+                count = 0;
+
+                sortRepeatUser = olsEni.Users.SingleOrDefault(m => m.U_Sort == sort);
+                while (sortRepeatUser != null)
+                {
+
+                    sort = Math.Round(sort + 0.00001, 5, MidpointRounding.AwayFromZero);
+                    sortRepeatUser.U_Sort = sort;
+                    if (0 == olsEni.SaveChanges())
+                    {
+                        return -2;
+                    }
+
+                    sortRepeatUser = olsEni.Users.SingleOrDefault(m => m.U_Id != sortRepeatUser.U_Id && m.U_Sort == sort);
+                }
+
+                return count;
+            }
+            catch (Exception ex)
+            {
+                StaticHelper.GetExceptionMessageAndRecord(ex);
+                return -1;
+            }
+        }
     }
 }

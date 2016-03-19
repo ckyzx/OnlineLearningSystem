@@ -254,6 +254,7 @@ $(function() {
         id = data['ESPT_PaperTemplateId'];
 
         ShowPage('试卷', '/ExaminationPaperTemplate/Paper?id=' + id);
+        //location.href = '/ExaminationPaperTemplate/Paper?id=' + id;
     });
 
     $('.table-sort tbody').on('click', 'a.view-exam', function() {

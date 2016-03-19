@@ -204,7 +204,8 @@ $(function() {
         var swiper;
 
         swiper = new Swiper(elem, {
-            mode: 'vertical'
+            mode: 'vertical',
+            simulateTouch : false
         });
 
         return swiper;
