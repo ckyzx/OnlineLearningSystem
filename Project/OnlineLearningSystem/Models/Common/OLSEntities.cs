@@ -13,6 +13,7 @@ namespace OnlineLearningSystem
         public DbSet<QuestionClassify> QuestionClassifies { get; set; }
 
         public DbSet<User> Users { get; set; }
+        public DbSet<UserOnline> UserOnlines { get; set; }
         public DbSet<Duty> Duties { get; set; }
         public DbSet<Department> Departments { get; set; }
         public DbSet<Role> Roles { get; set; }

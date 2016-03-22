@@ -73,14 +73,16 @@
 		<li id="User" 
             user-name="@u.U_Name" 
             department-Names="@departmentNames" 
-            permissions="@permissions">@u.U_Name&nbsp;&nbsp;@departmentNames </li>
-		<li class="dropDown dropDown_hover"><a href="javascript:void(0);" class="dropDown_A">@u.U_LoginName <i class="Hui-iconfont">&#xe6d5;</i></a>
+            permissions="@permissions">@u.U_Name（@departmentNames）</li>
+		<li>已登录</li>
+		<li id="UserOnlineNumber"></li>
+		<!--li class="dropDown dropDown_hover"><a href="javascript:void(0);" class="dropDown_A">@u.U_LoginName <i class="Hui-iconfont">&#xe6d5;</i></a>
 			<ul class="dropDown-menu radius box-shadow">
 				<li><a href="javascript:void(0);" class="show-page" data-title="修改密码" data-url="/User/ModifyPassword" data-width="500" data-height="400">修改密码</a></li>
 				<li><a href="javascript:void(0);" class="show-page" data-title="个人统计" data-url="/ExaminationTaskStatistic/Personal" data-width="800" data-height="400">个人统计</a></li>
 				<li><a href="javascript:void(0);" id="Logout">退&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;出</a></li>
 			</ul>
-		</li>
+		</li-->
 		<!--li id="Hui-msg">
             <a href="javascript:void(0);" title="消息"><span class="badge badge-danger">1</span><i class="Hui-iconfont" style="font-size:18px">&#xe68a;</i></a>
         </li-->
@@ -95,6 +97,7 @@
 				<li><a href="javascript:void(0);" data-val="orange" title="绿色">橙色</a></li>
 			</ul>
 		</li-->
+		<li><a href="javascript:void(0);" id="Logout" style="border-top-right-radius:5px;">退出</a></li>
 	</ul>
 	<a aria-hidden="false" class="Hui-nav-toggle" href="javascript:void(0);"></a> </header>
     <aside class="Hui-aside">
@@ -126,6 +129,7 @@
     <script type="text/javascript" src="@Url.Content("~/Contents/lib/jquery/1.9.1/jquery.min.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/Contents/lib/layer/1.9.3/layer.js")"></script> 
     <script type="text/javascript" src="@Url.Content("~/Contents/lib/jquery.cookie.js")"></script> 
+<script type="text/javascript" src="@Url.Content("/Contents/lib/jquery.timers-1.2.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/Contents/js/H-ui.js")"></script> 
     <script type="text/javascript" src="@Url.Content("~/Contents/js/H-ui.admin.js")"></script>
     <script type="text/javascript" src="@Url.Content("~/Contents/js/H-ui.admin.ready.js")"></script>

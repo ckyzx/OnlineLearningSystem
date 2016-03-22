@@ -54,6 +54,43 @@ Kyzx.Common = {
         h += isNaN(tmp) ? 0 : tmp;
 
         return h;
+    },
+
+    refreshUserOnlineTime: function() {
+
+        $.post('/User/RefreshTime', {}, function(data) {
+
+                var undoNumber;
+
+                if (0 == data.status) {
+
+                    //alert(data.message);
+                }
+            }, 'json')
+            .error(function() {
+
+                alert('请求返回错误！');
+            });
+    },
+
+    setUserOnlineNumber: function(placeholder) {
+
+        $.post('/User/ListOnline', {}, function(data) {
+
+                var undoNumber;
+
+                if (1 == data.status) {
+
+                    $(placeholder).text(' | 在线人数 ' + data.data.length + ' | ');
+                } else if (0 == data.status) {
+
+                    //alert(data.message);
+                }
+            }, 'json')
+            .error(function() {
+
+                alert('请求返回错误！');
+            });
     }
 };
 
@@ -112,6 +149,7 @@ Kyzx.List = {
         self = this.self;
 
         self._addCreateBtn();
+        self._addControlBtn();
         self._addRecycleBtn();
         self._addTree();
 
@@ -146,7 +184,15 @@ Kyzx.List = {
             $('div.list-body').prepend(funcBtnContainer);
 
             createBtn.on('click', function() {
-                ShowPage('添加' + self.settings.modelCnName, '/' + self.settings.modelEnName + '/Create');
+
+                var url;
+
+                url = '/' + self.settings.modelEnName + '/Create';
+                if (self.settings.treeIdName) {
+                    url += '?' + self.settings.treeIdName + '=' + self.request.getValue(self.settings.treeIdName, 0);
+                }
+
+                ShowPage('添加' + self.settings.modelCnName, url);
             });
         }
     },
@@ -175,9 +221,11 @@ Kyzx.List = {
 
         self = this.self;
 
-        if (self.settings.hasRecycleBin) {
+        status = self.request.getValue('status', 1);
 
-            status = self.request.getValue('status', 1);
+        self._showControlBtn(status);
+
+        if (self.settings.hasRecycleBin) {
 
             recycleBin = $('<a id="RecycleBin" class="btn btn-success radius r mr-5" style="line-height:1.6em;margin-top:3px" href="javascript:void(0);">回收站</a>');
             $('nav.breadcrumb').append(recycleBin);
@@ -214,6 +262,8 @@ Kyzx.List = {
 
                 recycleBin.attr('data-status', status);
                 self.dataTables.ajax.reload(null, false);
+
+                self._showControlBtn(status);
             });
         } else {
 
@@ -243,11 +293,19 @@ Kyzx.List = {
 
             settings = {
                 check: {
-                    enable: true
+                    enable: false
                 },
                 data: {
                     simpleData: {
                         enable: true
+                    }
+                },
+                view: {
+                    fontCss: function(treeId, treeNode) {
+
+                        if (treeNode.ifChecked) {
+                            return { background: '#4185E0', color: '#FFF', 'border-radius': '2px' }
+                        }
                     }
                 }
             };
@@ -262,7 +320,7 @@ Kyzx.List = {
 
                 if (n[self.settings.treeIdName] == nodeId) {
 
-                    n.checked = true;
+                    n.ifChecked = true;
                 }
 
                 n.click = 'location.href = \'/' + self.settings.modelEnName + '/' +
@@ -288,6 +346,87 @@ Kyzx.List = {
 
             ztree = $.fn.zTree.init(ul, settings, nodes);
 
+        }
+    },
+
+    _addControlBtn: function() {
+
+        var funcBtnContainer, recycleBtn, resumeBtn, deleteBtn, editBtn;
+        var hasBtnContainer;
+        var self;
+        var btnClick;
+
+        self = this.self;
+
+        funcBtnContainer = $('.function-btn-container');
+        hasBtnContainer = funcBtnContainer.length != 0;
+        if (!hasBtnContainer) {
+
+            funcBtnContainer = $('<div class="function-btn-container cl pd-5 bg-1 bk-gray"><span class="l"></span></div>');
+            $('div.list-body').prepend(funcBtnContainer);
+        }
+
+        btnClick = function(btnClassName) {
+
+            var checkboxs, tr, btn;
+
+            checkboxs = $('.list-body table input:checked');
+            if (checkboxs.length == 0) {
+
+                alert('请选择数据项。');
+                return;
+            } else if (checkboxs.length > 1) {
+
+                alert('请选择单条数据项。');
+                return;
+            }
+
+            tr = checkboxs.parents('tr');
+            btn = tr.find('a.' + btnClassName);
+            if (btn.length == 1) {
+                btn.click();
+            }
+        };
+
+        recycleBtn = $('<a id="RecycleBtn" class="btn btn-warning ml-5 radius hide" href="javascript:void(0);">回收</a>');
+        funcBtnContainer.find('span.l').append(recycleBtn);
+        recycleBtn.on('click', function() {
+            btnClick('recycle');
+        });
+
+        resumeBtn = $('<a id="ResumeBtn" class="btn btn-warning ml-5 radius hide" href="javascript:void(0);">恢复</a>');
+        funcBtnContainer.find('span.l').append(resumeBtn);
+        resumeBtn.on('click', function() {
+            btnClick('resume');
+        });
+
+        deleteBtn = $('<a id="DeleteBtn" class="btn btn-warning ml-5 radius hide" href="javascript:void(0);">删除</a>');
+        funcBtnContainer.find('span.l').append(deleteBtn);
+        deleteBtn.on('click', function() {
+            btnClick('delete');
+        });
+
+        editBtn = $('<a id="EditBtn" class="btn btn-warning ml-5 radius hide" href="javascript:void(0);">编辑</a>');
+        funcBtnContainer.find('span.l').append(editBtn);
+        editBtn.on('click', function() {
+            btnClick('edit');
+        });
+    },
+
+    _showControlBtn: function(status) {
+
+        if (status == 1) {
+
+            $('#RecycleBtn').removeClass('hide');
+            $('#ResumeBtn').addClass('hide');
+            $('#DeleteBtn').addClass('hide');
+            $('#EditBtn').removeClass('hide');
+        } else if (status == 2) {
+
+            $('#RecycleBtn').addClass('hide');
+            $('#ResumeBtn').removeClass('hide');
+            $('#DeleteBtn').removeClass('hide');
+            $('#EditBtn').addClass('hide');
         }
     },
 
@@ -331,11 +470,12 @@ Kyzx.List = {
 
                     if (1 == data.status) {
 
-                        tr.fadeOut(function() {
+                        /*tr.fadeOut(function() {
 
                             tr.remove();
                             self.__refreshRowBackgroundColor();
-                        });
+                        });*/
+                        self.dataTables.ajax.reload(null, false);
                     } else if (0 == data.status) {
 
                         alert(data.message);
@@ -361,11 +501,12 @@ Kyzx.List = {
 
                     if (1 == data.status) {
 
-                        tr.fadeOut(function() {
+                        /*tr.fadeOut(function() {
 
                             tr.remove();
                             self.__refreshRowBackgroundColor();
-                        });
+                        });*/
+                        self.dataTables.ajax.reload(null, false);
                     } else if (0 == data.status) {
 
                         alert(data.message);
@@ -391,11 +532,12 @@ Kyzx.List = {
 
                     if (1 == data.status) {
 
-                        tr.fadeOut(function() {
+                        /*tr.fadeOut(function() {
 
                             tr.remove();
                             self.__refreshRowBackgroundColor();
-                        });
+                        });*/
+                        self.dataTables.ajax.reload(null, false);
                     } else if (0 == data.status) {
 
                         alert(data.message);
@@ -632,7 +774,7 @@ Kyzx.List = {
         });
     },
 
-    setId: function(dataTables, idClassName) {
+    resetId: function(dataTables, idClassName) {
 
         var pageInfo;
         var currentPageIndex, pages, length, recordsDisplay, id;

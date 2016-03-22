@@ -163,6 +163,9 @@ $(function() {
 
             recycleBin.attr('data-status', status);
             dataTables.ajax.reload(null, false);
+            
+            Kyzx.List._showControlBtn(status);
+
         });
 
         params.ajax.data = function(originData) {
@@ -187,7 +190,15 @@ $(function() {
     list._initListEvent();
 
     $('#CreateBtn').on('click', function() {
-        ShowPage('添加试题', '/Question/Create');
+
+        var url;
+
+        url = '/Question/Create';
+        if (qcId != 0) {
+            url += '?qcId=' + qcId;
+        }
+
+        ShowPage('添加试题', url);
     });
 
     $('#DocxUploadBtn').on('click', function() {
@@ -337,11 +348,19 @@ $(function() {
 
     settings = {
         check: {
-            enable: true
+            enable: false
         },
         data: {
             simpleData: {
                 enable: true
+            }
+        },
+        view: {
+            fontCss: function(treeId, treeNode) {
+
+                if (treeNode.ifChecked) {
+                    return { background: '#4185E0', color: '#FFF', 'border-radius': '2px' }
+                }
             }
         }
     };
@@ -356,7 +375,7 @@ $(function() {
 
         if (n.questionClassifyId == qcId) {
 
-            n.checked = true;
+            n.ifChecked = true;
         }
 
         n.click = 'location.href = \'/Question/List?status=' + status + '&qcId=' + n.questionClassifyId + '\';';
@@ -378,4 +397,7 @@ $(function() {
 
     ztree = $.fn.zTree.init(ul, settings, nodes);
 
+    // 添加控制按钮
+    Kyzx.List._addControlBtn();
+    Kyzx.List._showControlBtn(status)
 });

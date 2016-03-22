@@ -122,6 +122,7 @@ namespace OnlineLearningSystem.Utilities
             try
             {
                 Duty model;
+                List<User> us;
 
                 model = olsEni.Duties.SingleOrDefault(m => m.Du_Id == id);
 
@@ -129,6 +130,16 @@ namespace OnlineLearningSystem.Utilities
                 {
                     resJson.message = "数据不存在！";
                     return resJson;
+                }
+
+                // 处理职务中的用户状态
+                if (status != Status.Available)
+                {
+                    us = olsEni.Users.Where(m => m.Du_Id == model.Du_Id).ToList();
+                    foreach (var u in us)
+                    {
+                        u.U_Status = (Byte)status;
+                    }
                 }
 
                 model.Du_Status = (Byte)status;

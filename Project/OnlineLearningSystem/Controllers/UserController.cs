@@ -324,5 +324,34 @@ namespace OnlineLearningSystem.Controllers
 
             return Json(resJson, JsonRequestBehavior.AllowGet);
         }
+
+        //
+        // GET: /User/RefreshTime
+
+        [Description("刷新在线时间")]
+        public JsonResult RefreshTime()
+        {
+            User u;
+            ResponseJson resJson;
+
+            u = (User)Session["User"];
+            resJson = um.RefreshTime(u);
+
+            return Json(resJson, JsonRequestBehavior.AllowGet);
+        }
+
+        //
+        // GET: /User/ListOnline
+
+        [Description("在线用户列表")]
+        public JsonResult ListOnline()
+        {
+            ResponseJson resJson;
+
+            resJson = um.ListOnline();
+
+            return Json(resJson, JsonRequestBehavior.AllowGet);
+        }
+
     }
 }

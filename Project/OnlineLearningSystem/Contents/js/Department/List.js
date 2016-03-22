@@ -78,7 +78,7 @@ $(function() {
 
             var api;
             api = this.api();
-            Kyzx.List.setId(api, 'D_Id');
+            Kyzx.List.resetId(api, 'D_Id');
         }
     };
 
@@ -130,7 +130,7 @@ $(function() {
                         originTr.remove();
                     }
 
-                    Kyzx.List.setId(list.dataTables, 'D_Id');
+                    Kyzx.List.resetId(list.dataTables, 'D_Id');
                     refreshRowBackgroundColor('.table-sort');*/
                     list.dataTables.ajax.reload(null, false);
                 } else if (0 == data.status) {
@@ -178,7 +178,7 @@ $(function() {
                         originTr.insertBefore(destTr);
                     }
 
-                    Kyzx.List.setId(list.dataTables, 'D_Id');
+                    Kyzx.List.resetId(list.dataTables, 'D_Id');
                     refreshRowBackgroundColor('.table-sort');*/
                     list.dataTables.ajax.reload(null, false);
                 } else if (0 == data.status) {
@@ -226,7 +226,7 @@ $(function() {
                         originTr.insertAfter(destTr);
                     }
 
-                    Kyzx.List.setId(list.dataTables, 'D_Id');
+                    Kyzx.List.resetId(list.dataTables, 'D_Id');
                     refreshRowBackgroundColor('.table-sort');*/
                     list.dataTables.ajax.reload(null, false);
                 } else if (0 == data.status) {

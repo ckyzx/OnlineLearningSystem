@@ -86,7 +86,7 @@
 
             var api;
             api = this.api();
-            Kyzx.List.setId(api, 'U_Id');
+            Kyzx.List.resetId(api, 'U_Id');
         }
     };
 
@@ -140,7 +140,7 @@
                         originTr.remove();
                     }
 
-                    Kyzx.List.setId(list.dataTables, 'U_Id');
+                    Kyzx.List.resetId(list.dataTables, 'U_Id');
                     refreshRowBackgroundColor('.table-sort');*/
                     list.dataTables.ajax.reload(null, false);
                 } else if (0 == data.status) {
@@ -187,7 +187,7 @@
                         originTr.insertBefore(destTr);
                     }
 
-                    Kyzx.List.setId(list.dataTables, 'U_Id');
+                    Kyzx.List.resetId(list.dataTables, 'U_Id');
                     refreshRowBackgroundColor('.table-sort');*/
                     list.dataTables.ajax.reload(null, false);
                 } else if (0 == data.status) {
@@ -234,7 +234,7 @@
                         originTr.insertAfter(destTr);
                     }
 
-                    Kyzx.List.setId(list.dataTables, 'U_Id');
+                    Kyzx.List.resetId(list.dataTables, 'U_Id');
                     refreshRowBackgroundColor('.table-sort');*/
                     list.dataTables.ajax.reload(null, false);
                 } else if (0 == data.status) {

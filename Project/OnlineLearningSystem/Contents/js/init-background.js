@@ -1,8 +1,8 @@
-﻿$(function () {
+﻿$(function() {
 
     window.name = 'Background';
 
-    $('a.show-page').on('click', function () {
+    $('a.show-page').on('click', function() {
 
         var a, title, url;
 
@@ -15,10 +15,25 @@
         ShowPageWithSize(title, url, width, height);
     });
 
-    $('#Logout').on('click',function(){
+    $('#Logout').on('click', function() {
 
-        $.cookie('save_login_state', null, {path: '/'});
+        $.cookie('save_login_state', null, { path: '/' });
 
         location.href = '/User/Logout';
     });
+
+    // 定时刷新用户在线时间
+    $('body').everyTime('10s', 'RefreshUserOnlineTime', function() {
+        Kyzx.Common.refreshUserOnlineTime();
+    });
+
+    // 定时获取用户在线人数
+    if ($('#User').attr('permissions').indexOf('/User/ListOnline;') != -1) {
+        
+        Kyzx.Common.setUserOnlineNumber('#UserOnlineNumber');
+
+        $('body').everyTime('10s', 'SetUserOnlineNumber', function() {
+            Kyzx.Common.setUserOnlineNumber('#UserOnlineNumber');
+        });
+    }
 });

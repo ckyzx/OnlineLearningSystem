@@ -77,5 +77,21 @@ namespace OnlineLearningSystem.Controllers
 
             return Json(resJson, JsonRequestBehavior.AllowGet);
         }
+
+        //
+        // GET: /ExaminationPaper/Undo
+
+        [Description("获取未答题数量")]
+        public JsonResult GetUndoNumber(Int32 id)
+        {
+
+            User u;
+            ResponseJson resJson;
+
+            u = (User)Session["User"];
+            resJson = um.GetUndoNumber(id, u.U_Id);
+
+            return Json(resJson, JsonRequestBehavior.AllowGet);
+        }
     }
 }

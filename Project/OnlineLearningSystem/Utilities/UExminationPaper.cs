@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.Mvc;
 using OnlineLearningSystem.Models;
 using Newtonsoft.Json;
+using System.Data.SqlClient;
 
 namespace OnlineLearningSystem.Utilities
 {
@@ -376,6 +377,53 @@ namespace OnlineLearningSystem.Utilities
                 uept.GradePaper(ep);
                 uept.SaveChange();
 
+                resJson.status = ResponseStatus.Success;
+                return resJson;
+            }
+            catch (Exception ex)
+            {
+                resJson.status = ResponseStatus.Error;
+                resJson.message = ex.Message;
+                resJson.detail = StaticHelper.GetExceptionMessageAndRecord(ex);
+                return resJson;
+            }
+        }
+
+        internal ResponseJson GetUndoNumber(Int32 id, Int32 uId)
+        {
+            
+            ResponseJson resJson;
+
+            resJson = new ResponseJson();
+
+            try
+            {
+
+                Int32 undoNumber;
+                String sql;
+                ExaminationPaper ep;
+                List<SqlParameter> sps;
+
+                ep = olsEni.ExaminationPapers.SingleOrDefault(m => m.EP_Id == id && m.EP_UserId == uId);
+
+                if (ep == null)
+                {
+                    resJson.status = ResponseStatus.Error;
+                    resJson.message = "试卷不存在";
+                    return resJson;
+                }
+
+                sql = 
+                    "SELECT   COUNT(EPQ_Id) "+
+                    "FROM     ExaminationPaperQuestions " +
+                    "WHERE    EP_Id = @epId " +
+                    "         AND (CAST(EPQ_Answer AS NVARCHAR(5)) = '' " +
+                    "              OR CAST(EPQ_Answer AS NVARCHAR(5)) = '[]')";
+                sps = new List<SqlParameter>();
+                sps.Add(new SqlParameter("@epId", id));
+                undoNumber = Convert.ToInt32(olsDbo.ExecuteSqlScalar(sql, sps));
+
+                resJson.data = undoNumber;
                 resJson.status = ResponseStatus.Success;
                 return resJson;
             }

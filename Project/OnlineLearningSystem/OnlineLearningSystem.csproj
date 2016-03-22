@@ -116,6 +116,7 @@
     <Compile Include="Controllers\ExaminationPaperTemplateController.cs" />
     <Compile Include="Controllers\QuestionClassifyController.cs" />
     <Compile Include="Controllers\UserScoreController.cs" />
+    <Compile Include="Models\UserOnline.cs" />
     <Compile Include="Utilities\Helpers\OpenXmlExcel.cs" />
     <Compile Include="Utilities\Helpers\OpenXmlExcelStaticHelper.cs" />
     <Compile Include="Utilities\UUserScore.cs" />
@@ -813,14 +814,14 @@
     <Content Include="Contents\lib\webuploader\0.1.5\webuploader.nolog.min.js" />
     <Content Include="Contents\lib\webuploader\0.1.5\webuploader.withoutimage.js" />
     <Content Include="Contents\lib\webuploader\0.1.5\webuploader.withoutimage.min.js" />
-    <Content Include="Contents\lib\zTree_v3\css\awesomeStyle\awesome.css" />
+    <Content Include="Contents\lib\zTree_v3\css\awesomeStyle\style.css" />
     <Content Include="Contents\lib\zTree_v3\css\awesomeStyle\img\loading.gif" />
     <Content Include="Contents\lib\zTree_v3\css\demo.css" />
     <Content Include="Contents\lib\zTree_v3\css\metroStyle\img\line_conn.png" />
     <Content Include="Contents\lib\zTree_v3\css\metroStyle\img\loading.gif" />
     <Content Include="Contents\lib\zTree_v3\css\metroStyle\img\metro.gif" />
     <Content Include="Contents\lib\zTree_v3\css\metroStyle\img\metro.png" />
-    <Content Include="Contents\lib\zTree_v3\css\metroStyle\metroStyle.css" />
+    <Content Include="Contents\lib\zTree_v3\css\metroStyle\style.css" />
     <Content Include="Contents\lib\zTree_v3\css\zTreeStyle\img\diy\1_close.png" />
     <Content Include="Contents\lib\zTree_v3\css\zTreeStyle\img\diy\1_open.png" />
     <Content Include="Contents\lib\zTree_v3\css\zTreeStyle\img\diy\2.png" />
@@ -835,7 +836,7 @@
     <Content Include="Contents\lib\zTree_v3\css\zTreeStyle\img\loading.gif" />
     <Content Include="Contents\lib\zTree_v3\css\zTreeStyle\img\zTreeStandard.gif" />
     <Content Include="Contents\lib\zTree_v3\css\zTreeStyle\img\zTreeStandard.png" />
-    <Content Include="Contents\lib\zTree_v3\css\zTreeStyle\zTreeStyle.css" />
+    <Content Include="Contents\lib\zTree_v3\css\zTreeStyle\style.css" />
     <Content Include="Contents\lib\zTree_v3\js\jquery-1.4.4.min.js" />
     <Content Include="Contents\lib\zTree_v3\js\jquery.ztree.all-3.5.js" />
     <Content Include="Contents\lib\zTree_v3\js\jquery.ztree.all-3.5.min.js" />

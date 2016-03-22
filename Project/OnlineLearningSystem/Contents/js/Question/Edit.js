@@ -1,8 +1,10 @@
 $(function() {
 
     var ueContent;
-    var typeInput, contentInput, optionalAnswerInput, modelAnswerInput;
+    var typeInput, contentInput, optionalAnswerInput, modelAnswerInput, qcIdSelect;
     var cacheFlag = true; // 用于指定是否需要缓存原数据
+    var request;
+    var qcId, originQcId;
 
     typeInput = $('#Q_Type');
     contentInput = $('#Q_Content');
@@ -101,6 +103,17 @@ $(function() {
 
             typeInput.attr('data-last-value', typeInput.val());
         });
+
+    // 设置分类
+    request = Request.init();
+    qcId = request.getValue('qcId', 0);
+    qcIdSelect = $('#QC_Id');
+    originQcId = qcIdSelect.val();
+
+    if (originQcId == 0 && qcId != 0) {
+
+        qcIdSelect.find('option[value=' + qcId + ']').attr('selected', true);
+    }
 
     // 提交前修改数据
     $('form').submit(function(e) {

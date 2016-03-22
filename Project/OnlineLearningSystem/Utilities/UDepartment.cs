@@ -168,6 +168,8 @@ namespace OnlineLearningSystem.Utilities
             try
             {
                 Department model;
+                List<User_Department> uds;
+                List<User> us;
 
                 model = olsEni.Departments.SingleOrDefault(m => m.D_Id == id);
 
@@ -175,6 +177,20 @@ namespace OnlineLearningSystem.Utilities
                 {
                     resJson.message = "数据不存在！";
                     return resJson;
+                }
+
+                // 处理部门中的用户状态
+                if (status != Status.Available)
+                {
+                    uds = olsEni.User_Department.Where(m => m.D_Id == id).ToList();
+                    foreach (var ud in uds)
+                    {
+                        us = olsEni.Users.Where(m => m.U_Id == ud.U_Id).ToList();
+                        foreach (var u in us)
+                        {
+                            u.U_Status = (Byte)status;
+                        }
+                    }
                 }
 
                 model.D_Status = (Byte)status;

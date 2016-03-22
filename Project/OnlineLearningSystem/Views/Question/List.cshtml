@@ -3,12 +3,12 @@
     Layout = "~/Views/Shared/_Page.cshtml";
 }
 <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 系统 <span class="c-gray en">&gt;</span> 试题管理 <a class="btn btn-success radius r mr-20" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
-<div class="question-container">
+<div class="question-container list-body">
     <div class="question-classify-list-container">
         <ul class="ztree" data-value="@ViewBag.QuestionClassifies"></ul>
     </div>
     <div class="question-list-container">
-        <div id="FunctionPanel" class="cl pd-5 bg-1 bk-gray hide">
+        <div id="FunctionPanel" class="function-btn-container cl pd-5 bg-1 bk-gray hide">
             <span class="l">
                 <a id="CreateBtn" class="btn btn-primary radius" href="javascript:void(0);">
                    <i class="Hui-iconfont">&#xe600;</i> 添加试题 
@@ -65,7 +65,7 @@
 </div>
 </div>
 <script type="text/javascript" src="@Url.Content("~/Contents/lib/js.datetime.js")"></script>
-<link type="text/css" rel="Stylesheet" href="@Url.Content("/Contents/lib/zTree_v3/css/metroStyle/metroStyle.css")" />
+<link type="text/css" rel="Stylesheet" href="@Url.Content("/Contents/lib/zTree_v3/css/metroStyle/style.css")" />
 <script type="text/javascript" src="@Url.Content("/Contents/lib/zTree_v3/js/jquery.ztree.core-3.5.min.js")"></script>
 <script type="text/javascript" src="@Url.Content("/Contents/lib/zTree_v3/js/jquery.ztree.excheck-3.5.min.js")"></script>
 <script type="text/javascript" src="@Url.Content("~/Contents/lib/My97DatePicker/WdatePicker.js")"></script>

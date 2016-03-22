@@ -51,5 +51,10 @@ namespace OnlineLearningSystem.Utilities
             resJson = cpts.Change();
 
         }
+
+        public static void ClearUserOnline(object source, ElapsedEventArgs e)
+        {
+            new UUser().ClearUserOnline();
+        }
     }
 }

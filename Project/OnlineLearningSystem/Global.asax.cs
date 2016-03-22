@@ -44,6 +44,7 @@ namespace OnlineLearningSystem
             TimerTask.Run(1 * 60 * 1000, TimerTask.GeneratePaperTemplate);
             TimerTask.Run(1 * 60 * 1000, TimerTask.ChangePaperStatus);
             TimerTask.Run(1 * 60 * 1000, TimerTask.ChangePaperTemplateStatus);
+            TimerTask.Run(1 * 60 * 1000, TimerTask.ClearUserOnline);
         }
 
         /*protected void Application_BeginRequest()

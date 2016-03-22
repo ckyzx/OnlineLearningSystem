@@ -19,7 +19,7 @@ if (ieRegex.test(brower.userAgent)) {
 } else if (ieRegex11.test(brower.userAgent)) {
 
     brower.ieVersion = parseInt(RegExp["$1"]);
-} else if (brower.ieVersion && brower.ieVersion < 8) {
+} else if (brower.ieVersion && brower.ieVersion < 7) {
 
     location.href = "/Contents/html/upgrade_brower.htm";
 }

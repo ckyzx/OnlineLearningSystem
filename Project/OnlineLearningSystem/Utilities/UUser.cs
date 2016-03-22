@@ -993,5 +993,103 @@ namespace OnlineLearningSystem.Utilities
                 return -1;
             }
         }
+
+        internal ResponseJson RefreshTime(User u)
+        {
+
+            ResponseJson resJson;
+
+            resJson = new ResponseJson(ResponseStatus.Error, now);
+
+            try
+            {
+
+                UserOnline uo;
+
+                uo = olsEni.UserOnlines.SingleOrDefault(m => m.U_Id == u.U_Id);
+
+                if (uo == null)
+                {
+                    uo = new UserOnline
+                    {
+                        U_Id = u.U_Id,
+                        UO_Name = u.U_Name,
+                        UO_IdCardNumber = u.U_IdCardNumber,
+                        UO_RefreshTime = now
+                    };
+                    olsEni.Entry(uo).State = EntityState.Added;
+                }
+                else
+                {
+                    uo.UO_RefreshTime = now;
+                }
+
+                if (0 == olsEni.SaveChanges())
+                {
+                    resJson.message = ResponseMessage.SaveChangesError;
+                    return resJson;
+                }
+
+                resJson.status = ResponseStatus.Success;
+                return resJson;
+            }
+            catch (Exception ex)
+            {
+                resJson.message = ex.Message;
+                resJson.detail = StaticHelper.GetExceptionMessageAndRecord(ex);
+                return resJson;
+            }
+        }
+
+        internal ResponseJson ListOnline()
+        {
+
+            ResponseJson resJson;
+
+            resJson = new ResponseJson(ResponseStatus.Error, now);
+
+            try
+            {
+
+                List<UserOnline> uos;
+
+                uos = olsEni.UserOnlines.ToList();
+
+                resJson.status = ResponseStatus.Success;
+                resJson.data = uos;
+                return resJson;
+            }
+            catch (Exception ex)
+            {
+                resJson.message = ex.Message;
+                resJson.detail = StaticHelper.GetExceptionMessageAndRecord(ex);
+                return resJson;
+            }
+        }
+
+        internal void ClearUserOnline()
+        {
+
+            try
+            {
+
+                List<UserOnline> uos;
+
+                uos = olsEni.UserOnlines.ToList();
+                foreach (var uo in uos)
+                {
+                    if (uo.UO_RefreshTime.AddSeconds(20) < now)
+                    {
+                        olsEni.Entry(uo).State = EntityState.Deleted;
+                    }
+                }
+
+                olsEni.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                StaticHelper.RecordSystemLog(ex);
+            }
+        }
     }
 }

@@ -1,14 +1,18 @@
-$(function () {
+$(function() {
 
-    var table;
+    var jqTable, dataTable;
+    var request, departmentId;
 
-    table = $('.department-table');
+    request = Request.init();
+    departmentId = Request.getValue('departmentId', -1);
 
-    if(undefined == table.attr('id')){
-        table.attr('id', 'DepartmentTable');
+    jqTable = $('.department-table');
+
+    if (undefined == jqTable.attr('id')) {
+        jqTable.attr('id', 'DepartmentTable');
     }
 
-    table = table.DataTable({
+    dataTable = jqTable.DataTable({
         "ordering": false,
         "pageLength": -1,
         "lengthChange": false,
@@ -31,8 +35,17 @@ $(function () {
         "drawCallback": function(settings) {
 
             var api;
+            var radios, container, countSpan;
+
             api = this.api();
-            Kyzx.List.setId(api, 'D_Id');
+            Kyzx.List.resetId(api, 'D_Id');
+
+            radios = jqTable.find(':checked[name=departments]');
+            if (radios.length == 0 && departmentId != -1) {
+
+                jqTable.find(':radio[value=' + departmentId + ']').get(0).checked = true;
+                $(jqTable.attr('data-value-selector')).val('[' + departmentId + ']');
+            }
         }
     });
 });

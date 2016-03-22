@@ -25,7 +25,7 @@ namespace OnlineLearningSystem.Controllers
         //
         // GET: /LearningData/List
 
-        [Description("资料列表")]
+        [Description("资料管理")]
         public ActionResult List()
         {
 

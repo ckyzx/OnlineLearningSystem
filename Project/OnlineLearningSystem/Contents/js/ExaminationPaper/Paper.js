@@ -43,7 +43,7 @@ $(function() {
 
             alert(data.message);
 
-            if(data.message == '考试已结束。'){
+            if (data.message == '考试已结束。') {
                 layer_close();
             }
         }
@@ -97,9 +97,14 @@ $(function() {
             if (confirm('确定结束考试吗？')) {
 
                 saveLocalAnswers();
+                
                 submitAnswers(function() {
-                    handIn(function() {
-                        location.href = '/Contents/html/parent_reload.htm';
+
+                    undoPrompt(function() {
+
+                        handIn(function() {
+                            location.href = '/Contents/html/parent_reload.htm';
+                        });
                     });
                 });
 
@@ -205,7 +210,7 @@ $(function() {
 
         swiper = new Swiper(elem, {
             mode: 'vertical',
-            simulateTouch : false
+            simulateTouch: false
         });
 
         return swiper;
@@ -410,4 +415,35 @@ $(function() {
             });
     }
 
+    function undoPrompt(successCallback) {
+
+        $.post('/ExaminationPaper/GetUndoNumber', {
+                id: epId
+            }, function(data) {
+
+                var undoNumber;
+
+                if (1 == data.status) {
+
+                    undoNumber = data.data;
+                    if (undoNumber != 0) {
+
+                        if (!confirm('还有 ' + undoNumber + ' 条题目未回答，确定要交卷吗？')) {
+                            return;
+                        }
+                    }
+
+                    if ('function' == typeof(successCallback)) {
+                        successCallback();
+                    }
+                } else if (0 == data.status) {
+
+                    alert(data.message);
+                }
+            }, 'json')
+            .error(function() {
+
+                alert('请求返回错误！');
+            });
+    }
 });
