@@ -81,39 +81,29 @@
 
         etMode.on('change', function() {
 
-            var modeSelect, tmpSelect;
+            var etMode, etAutoType;
             var mode;
 
-            modeSelect = $(this);
-            mode = parseInt(modeSelect.val());
+            etAutoType = $('#ETT_AutoType');
 
-            tmpSelect = $('#ETT_AutoType');
+            etMode = $(this);
+            mode = parseInt(etMode.val());
 
             switch (mode) {
                 case 0:
 
-                    tmpSelect.parentsUntil('form').last().hide();
-                    tmpSelect.find('option[selected]').attr('selected', false);
-                    tmpSelect.find('option[value=0]').attr('selected', true);
-                    $('#ETT_AutoOffsetDay').parentsUntil('form').last().hide();
-                    $('#ETT_DifficultyCoefficient').parentsUntil('form').last().hide();
-                    $('#ETT_AutoClassifies').parentsUntil('form').last().hide();
-                    $('#ETT_AutoRatio').parentsUntil('form').last().hide();
-                    $('#ETT_StartTime').parentsUntil('form').last().hide();
-                    $('#ETT_EndTime').parentsUntil('form').last().hide();
+                    etAutoType.find('option[value=0]').get(0).selected = true;
+                    etAutoType.change();
                     break;
                 case 1:
 
-                    tmpSelect.parentsUntil('form').last().show();
-                    tmpSelect.find('option[selected]').attr('selected', false);
-                    tmpSelect.find('option[value=1]').attr('selected', true);
-                    tmpSelect.change();
-                    $('#ETT_AutoOffsetDay').parentsUntil('form').last().hide();
-                    $('#ETT_DifficultyCoefficient').parentsUntil('form').last().show();
-                    $('#ETT_AutoClassifies').parentsUntil('form').last().show();
-                    $('#ETT_AutoRatio').parentsUntil('form').last().show();
-                    $('#ETT_StartTime').parentsUntil('form').last().show();
-                    $('#ETT_EndTime').parentsUntil('form').last().show();
+                    etAutoType.find('option[value=1]').get(0).selected = true;
+                    etAutoType.change();
+                    break;
+                case 2:
+
+                    etAutoType.find('option[value=4]').get(0).selected = true;
+                    etAutoType.change();
                     break;
                 default:
                     break;
@@ -129,32 +119,65 @@
 
     function initAutoTypeEvent() {
 
-        var etAutoType, etAutoOffsetDay;
+        var etAutoType, etAutoOffsetDay, etMode;
 
         etAutoType = $('#ETT_AutoType');
         etAutoOffsetDay = $('#ETT_AutoOffsetDay');
 
         etAutoType.on('change', function() {
 
-            var etAutoType, etAutoOffsetDay, offsetDayNum, aodContainer, etaodContainer;
+            var qList, etAutoType, etAutoOffsetDay, offsetDayNum, aodContainer,
+                etaodContainer, atContainer;
             var autoType;
+            var hideFunc, showFunc, onfocus;
 
             etAutoType = $('#ETT_AutoType');
+            atContainer = etAutoType.parentsUntil('form').last()
+            etAutoOffsetDay = $('#ETT_AutoOffsetDay');
+
+            qList = $('#QuestionListSelectContainer');
             autoType = parseInt(etAutoType.val());
 
             aodContainer = $('#AutoOffsetDayContainer');
-            etAutoOffsetDay = $('#ETT_AutoOffsetDay');
             etaodContainer = etAutoOffsetDay.parentsUntil('form').last();
+
+            hideFunc = function() {
+
+                $('#ETT_AutoType').parentsUntil('form').last().hide();
+                $('#ETT_AutoOffsetDay').parentsUntil('form').last().hide();
+                $('#ETT_DifficultyCoefficient').parentsUntil('form').last().hide();
+                $('#ETT_AutoClassifies').parentsUntil('form').last().hide();
+                $('#ETT_AutoRatio').parentsUntil('form').last().hide();
+                $('#ETT_StartTime').parentsUntil('form').last().hide();
+                $('#ETT_EndTime').parentsUntil('form').last().hide();
+                $('#ETT_ContinuedDays').parentsUntil('form').last().hide();
+            };
+
+            showFunc = function() {
+
+                $('#ETT_AutoType').parentsUntil('form').last().show();
+                $('#ETT_AutoOffsetDay').parentsUntil('form').last().show();
+                $('#ETT_DifficultyCoefficient').parentsUntil('form').last().show();
+                $('#ETT_AutoClassifies').parentsUntil('form').last().show();
+                $('#ETT_AutoRatio').parentsUntil('form').last().show();
+                $('#ETT_StartTime').parentsUntil('form').last().show();
+                $('#ETT_EndTime').parentsUntil('form').last().show();
+            };
 
             switch (autoType) {
                 case 0:
 
-                    etAutoOffsetDay = $('#ETT_Mode');
-                    etAutoOffsetDay.find('option[value=0]').attr('selected', true);
-                    etAutoOffsetDay.change();
+                    qList.show();
+
+                    etMode = $('#ETT_Mode');
+                    etMode.find('option[value=0]').get(0).selected = true;
+
+                    hideFunc();
                     break;
                 case 1:
 
+                    qList.hide();
+                    showFunc();
                     etaodContainer.hide();
 
                     etAutoOffsetDay.val(0);
@@ -162,6 +185,8 @@
                     break;
                 case 2:
 
+                    qList.hide();
+                    showFunc();
                     etaodContainer.show();
 
                     aodContainer.html('');
@@ -184,6 +209,8 @@
                     break;
                 case 3:
 
+                    qList.hide();
+                    showFunc();
                     etaodContainer.show();
 
                     aodContainer.html('');
@@ -203,6 +230,19 @@
                     }
 
                     etAutoOffsetDay.val(1);
+                    break;
+                case 4:
+
+                    qList.show();
+
+                    etMode = $('#ETT_Mode');
+                    etMode.find('option[value=2]').get(0).selected = true;
+
+                    hideFunc();
+
+                    $('#ETT_StartTime').parentsUntil('form').last().show();
+                    $('#ETT_EndTime').parentsUntil('form').last().show();
+                    $('#ETT_ContinuedDays').val(1).parentsUntil('form').last().show();
                     break;
                 default:
                     break;
@@ -270,7 +310,7 @@
                         ztree.checkNode(nodes[i], true, true);
                         nodes[i].now = now;
                         checkedCount += 1;
-                    }else if(nodes[i].now != now){
+                    } else if (nodes[i].now != now) {
 
                         ztree.checkNode(nodes[i], false, true);
                     }
@@ -365,7 +405,7 @@
                     ztree.checkNode(nodes[i], true, true);
                     nodes[i].now = now;
                     checkedCount += 1;
-                }else if(nodes[i].now != now){
+                } else if (nodes[i].now != now) {
 
                     ztree.checkNode(nodes[i], false, true);
                 }
@@ -612,6 +652,8 @@
         $('form').submit(function(e) {
 
             var nodes, autoClassifies;
+            var etStartTime, etEndTime;
+            var mode;
 
             // 设置参与部门/用户
             userIds = [];
@@ -639,36 +681,46 @@
                 return;
             }
 
+            etStartTime = $('#ETT_StartTime');
+            etEndTime = $('#ETT_EndTime');
+            mode = $('#ETT_Mode').val();
+            if (0 == mode) {
+
+                etStartTime.val('1970/1/1 00:00:00');
+                etEndTime.val('1970/1/1 00:00:00');
+            }
+
             if (!confirm('确定提交吗？')) {
-                
+
                 e.preventDefault();
             }
+
         });
     }
 
     function validateData() {
 
-        var errorSpan, etAutoType, container, etAutoClassifies, etAutoRatio,
-            etQuestions, sdiContainer, etStartTime, etEndTime, etTotalScore, 
-            etStatisticType, etTotalNumber;
-        var autoType, autoClassifies, autoRatio, questions, qAry, 
-            startTime, endTime, totalScore, ratioNumber, statisticType, 
-            totalNumber;
-        var acRegex, arRegex, qsRegex, stRegex, stRegex1;
         var valid;
+        var errorSpan, etMode, container, etAutoClassifies, etAutoRatio,
+            etQuestions, sdiContainer, etTotalScore,
+            etStatisticType, etTotalNumber, etTimeSpan;
+        var mode, autoClassifies, autoRatio, questions, qAry,
+            totalScore, ratioNumber, statisticType,
+            totalNumber, timeSpan;
+        var acRegex, arRegex, qsRegex;
+
+        valid = true;
 
         $('.custom-validation-error').remove();
 
-        etAutoType = $('#ETT_AutoType');
-        autoType = etAutoType.val();
-
-        valid = true;
+        etMode = $('#ETT_Mode');
+        mode = etMode.val();
 
         etTotalScore = $('#ETT_TotalScore');
         totalScore = parseInt(etTotalScore.val());
 
         // 自动任务
-        if (0 != autoType) {
+        if (mode == 1) {
 
             // 出题分类数据验证
             // 数据格式：['分类名1', '分类名2', ...]
@@ -710,150 +762,94 @@
                 valid = false;
             }
 
-            // 限制出题比例 <= 100%
+            // 限制出题比例 >= 50% 与 <= 100%
             ratioNumber = 0;
             autoRatio = JSON.parse(autoRatio);
             for (var i = 0; i < autoRatio.length; i++) {
                 ratioNumber += autoRatio[i].percent;
             }
 
-            if (ratioNumber > 1) {
+            if (ratioNumber < 0.5 || ratioNumber > 1) {
 
                 $('<div class="custom-validation-error">' +
                     '<div class="cl"></div>' +
                     '<span class="field-validation-error">' +
-                    '<span htmlfor="ETT_AutoRatio" generated="true" class="">出题比例必须小于 100%</span>' +
+                    '<span htmlfor="ETT_AutoRatio" generated="true" class="">出题比例必须大于 50% 、小于 100%</span>' +
                     '</span>' +
                     '<div>').appendTo(container);
 
                 valid = false;
             }
 
-            // 开始时间验证
-            // 数据格式：1970/1/1 8:00:00
-            stRegex = /^1970\/1\/1 (([0-9]{1})|(1{1}[0-9]{1})|(2{1}[0-3]{1})):[0-5]{1}[0-9]{0,1}:[0-5]{0,1}[0-9]{1}$/g;
-            stRegex1 = /^1970\/1\/1 0{1,2}:0{1,2}:0{1,2}$/g;
+            valid = validateStartTime(valid);
+            valid = validateEndTime(valid);
+        }else if(mode == 2){
 
-            etStartTime = $('#ETT_StartTime');
-            container = etStartTime.parent();
-            startTime = etStartTime.val();
-
-            if (stRegex1.test(startTime) || !stRegex.test(startTime)) {
-
-                $('<div class="custom-validation-error">' +
-                    '<div class="cl"></div>' +
-                    '<span class="field-validation-error">' +
-                    '<span htmlfor="ETT_StartTime" generated="true" class="">请选择开始时间</span>' +
-                    '</span>' +
-                    '<div>').appendTo(container);
-
-                valid = false;
-            }
-
-            // 结束时间验证
-            // 数据格式：1970/1/1 8:00:00
-            stRegex = /^1970\/1\/1 (([0-9]{1})|(1{1}[0-9]{1})|(2{1}[0-3]{1})):[0-5]{1}[0-9]{0,1}:[0-5]{0,1}[0-9]{1}$/g;
-            stRegex1 = /^1970\/1\/1 0{1,2}:0{1,2}:0{1,2}$/g;
-
-            etEndTime = $('#ETT_EndTime');
-            container = etEndTime.parent();
-            endTime = etEndTime.val();
-
-            if (stRegex1.test(endTime) || !stRegex.test(endTime)) {
-
-                $('<div class="custom-validation-error">' +
-                    '<div class="cl"></div>' +
-                    '<span class="field-validation-error">' +
-                    '<span htmlfor="ETT_EndTime" generated="true" class="">请选择结束时间</span>' +
-                    '</span>' +
-                    '<div>').appendTo(container);
-
-                valid = false;
-            }
+            valid = validateStartTime(valid);
+            valid = validateEndTime(valid);
         }
 
-        // 手动任务
-        etQuestions = $('#ETT_Questions');
-        if (0 == autoType && etQuestions.length != 0) {
+        return valid;
+    }
 
-            // 试题选择数据验证
-            // 数据格式：[1, 2, ...]
-            qsRegex = /^\[((\d+)|("{1}\d+"{1}),?\s*)+\]$/g;
+    function validateStartTime(valid) {
 
+        var stRegex, stRegex1;
+        var etStartTime, container;
+        var startTime;
 
-            sdiContainer = $('.select-data-item');
-            questions = etQuestions.val();
-            qAry = JSON.parse(questions);
+        // 开始时间验证
+        // 数据格式：1970/1/1 8:00:00
+        stRegex = /^1970\/1\/1 (([0-9]{1})|(1{1}[0-9]{1})|(2{1}[0-3]{1})):[0-5]{1}[0-9]{0,1}:[0-5]{0,1}[0-9]{1}$/g;
+        stRegex1 = /^1970\/1\/1 0{1,2}:0{1,2}:0{1,2}$/g;
 
-            if (!qsRegex.test(questions)) {
+        etStartTime = $('#ETT_StartTime');
+        container = etStartTime.parent();
+        startTime = etStartTime.val();
 
-                $('<div class="custom-validation-error">' +
-                    '<div class="cl"></div>' +
-                    '<span class="field-validation-error">' +
-                    '<span htmlfor="ETT_Questions" generated="true" class="">请选择试题</span>' +
-                    '</span>' +
-                    '<div>').appendTo(sdiContainer);
-
-                valid = false;
-            } else {
-
-                // 检查“已选试题数量”与“出题数量”是否一致
-                if ($('#ETT_StatisticType').val() == 2 && qAry.length != $('#ETT_TotalNumber').val()) {
-
-                    $('<div class="custom-validation-error">' +
-                        '<div class="cl"></div>' +
-                        '<span class="field-validation-error">' +
-                        '<span htmlfor="ETT_Questions" generated="true" class="">已选试题数量与出题数量不一致</span>' +
-                        '</span>' +
-                        '<div>').appendTo(sdiContainer);
-
-                    valid = false;
-                }
-            }
-
-            // 限制选题数量
-            if (qAry.length < totalScore / 10 || qAry.length > totalScore) {
-
-                $('<div class="custom-validation-error">' +
-                    '<div class="cl"></div>' +
-                    '<span class="field-validation-error">' +
-                    '<span htmlfor="ETT_TotalScore" generated="true" class="">已选试题数量与出题分数不合理</span>' +
-                    '</span>' +
-                    '<div>').appendTo(sdiContainer);
-
-                valid = false;
-            }
-        }
-
-        // 限制出题总分/出题总数为 10 的倍数
-        etStatisticType = $('#ETT_StatisticType');
-        etTotalNumber = $('#ETT_TotalNumber');
-
-        statisticType = etStatisticType.val();
-        totalNumber = parseInt(etTotalNumber.val());
-
-        if (1 == statisticType && totalScore % 10 != 0) {
+        if (stRegex1.test(startTime) || !stRegex.test(startTime)) {
 
             $('<div class="custom-validation-error">' +
                 '<div class="cl"></div>' +
                 '<span class="field-validation-error">' +
-                '<span htmlfor="ETT_TotalScore" generated="true" class="">出题总分必须为 10 的倍数</span>' +
+                '<span htmlfor="ETT_StartTime" generated="true" class="">请选择开始时间</span>' +
                 '</span>' +
-                '<div>').appendTo(etTotalScore.parent());
-
-            valid = false;
-        } else if (2 == statisticType && totalNumber % 10 != 0) {
-
-            $('<div class="custom-validation-error">' +
-                '<div class="cl"></div>' +
-                '<span class="field-validation-error">' +
-                '<span htmlfor="ETT_TotalNumber" generated="true" class="">出题总数必须为 10 的倍数</span>' +
-                '</span>' +
-                '<div>').appendTo(etTotalNumber.parent());
+                '<div>').appendTo(container);
 
             valid = false;
         }
 
         return valid;
     }
+
+    function validateEndTime(valid) {
+
+        var stRegex, stRegex1;
+        var etEndTime, container;
+        var endTime;
+
+        // 结束时间验证
+        // 数据格式：1970/1/1 8:00:00
+        stRegex = /^1970\/1\/1 (([0-9]{1})|(1{1}[0-9]{1})|(2{1}[0-3]{1})):[0-5]{1}[0-9]{0,1}:[0-5]{0,1}[0-9]{1}$/g;
+        stRegex1 = /^1970\/1\/1 0{1,2}:0{1,2}:0{1,2}$/g;
+
+        etEndTime = $('#ETT_EndTime');
+        container = etEndTime.parent();
+        endTime = etEndTime.val();
+
+        if (stRegex1.test(endTime) || !stRegex.test(endTime)) {
+
+            $('<div class="custom-validation-error">' +
+                '<div class="cl"></div>' +
+                '<span class="field-validation-error">' +
+                '<span htmlfor="ETT_StartTime" generated="true" class="">请选择结束时间</span>' +
+                '</span>' +
+                '<div>').appendTo(container);
+
+            valid = false;
+        }
+        
+        return valid;
+    }
+
 });

@@ -2,7 +2,7 @@ $(function() {
 
     var jqTable, dtParams;
 
-    $('body').append('<input type="hidden" id="ET_Mode" value="2" />')
+    $('body').append('<input type="hidden" id="ET_Mode" value="-1" />')
 
     jqTable = $('.table-sort');
 
@@ -57,20 +57,25 @@ $(function() {
         "createdRow": function(row, data, dataIndex) {
 
             var span, timeSpan, startTask, stopTask;
-            var strDate, date, autoType, status, enabled, remark;
+            var strDate, startTime, autoType, status, enabled, remark;
 
             row = $(row);
 
+            autoType = data['ET_AutoType'];
+
             // 设置考试时间
             span = row.find('span.ET_StartTime');
-            strDate = data['ET_StartTime'];
-            date = strDate.jsonDateToDate();
-            if (date.getHours() == 0 && date.getMinutes() == 0 && date.getSeconds() == 0) {
+            startTime = data['ET_StartTime'];
+            startTime = startTime.jsonDateToDate();
+            if (autoType == 0) { // 手动
 
                 span.text('[手动开始]');
-            } else {
+            }else if(autoType == 4){ // 预定
 
-                strDate = date.format('hh时mm分');
+                span.text(startTime.format('yyyy年MM月dd日hh时mm分'));
+            } else { // 自动
+
+                strDate = startTime.format('hh时mm分');
                 strDate += ' - ' + data['ET_EndTime'].jsonDateToDate().format('hh时mm分');
                 span.text(strDate);
             }
@@ -86,7 +91,6 @@ $(function() {
 
             // 设置类型
             span = row.find('span.ET_AutoType');
-            autoType = data['ET_AutoType'];
             span.text(AutoType[autoType]);
             if(autoType == 2){ // 每周
                 span.text(span.text() + Week[data['ET_AutoOffsetDay']]);
@@ -216,6 +220,8 @@ $(function() {
 
                     var stopTask;
 
+                    layer.closeAll();
+
                     if (1 == data.status) {
 
                         tr.find('a.start-task').addClass('hide');
@@ -246,7 +252,6 @@ $(function() {
         }, function() {
             return;
         });
-
     });
 
     $('.table-sort tbody').on('click', 'a.stop-task', function() {
@@ -280,6 +285,8 @@ $(function() {
                     }, function(data) {
 
                         var startTask;
+
+                        layer.closeAll();
 
                         if (1 == data.status) {
 
@@ -354,12 +361,13 @@ $(function() {
             return;
         }
 
-        if (0 == mode || 1 == mode) {
+        if (-1 == mode) {
+
+            list.dataTables.ajax.url('/ExaminationTask/ListDataTablesAjax');
+        } else {
 
             etModeInput.val(mode);
             list.dataTables.ajax.url('/ExaminationTask/ListDataTablesAjaxByMode');
-        } else {
-            list.dataTables.ajax.url('/ExaminationTask/ListDataTablesAjax');
         }
 
         btnIndex = btn.index();

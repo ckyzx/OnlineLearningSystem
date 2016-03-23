@@ -8,6 +8,7 @@ namespace OnlineLearningSystem.Utilities
     public enum ExaminationTaskMode
     {
         Manual = 0,
-        Auto = 1
+        Auto = 1,
+        Custom = 2
     }
 }

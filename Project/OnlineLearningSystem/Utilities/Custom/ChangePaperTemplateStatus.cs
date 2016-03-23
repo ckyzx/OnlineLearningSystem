@@ -47,12 +47,11 @@ namespace OnlineLearningSystem.Utilities
 
                     et = olsEni.ExaminationTasks.Single(m => m.ET_Id == ept.ET_Id);
                     if ((Byte)ExaminationTaskStatus.Enabled != et.ET_Enabled
-                        && et.ET_AutoType == (Byte)AutoType.Manual
+                        && et.ET_Mode != (Byte)ExaminationTaskMode.Auto
                         && ept.EPT_PaperTemplateStatus == (Byte)PaperTemplateStatus.Undone)
                     {
                         continue;
-                    }else if ((Byte)ExaminationTaskStatus.Enabled != et.ET_Enabled
-                        /*&& ept.EPT_PaperTemplateStatus == (Byte)PaperTemplateStatus.Doing*/)
+                    }else if ((Byte)ExaminationTaskStatus.Enabled != et.ET_Enabled)
                     {
                         ept.EPT_PaperTemplateStatus = (Byte)PaperTemplateStatus.Done;
                         changed = true;

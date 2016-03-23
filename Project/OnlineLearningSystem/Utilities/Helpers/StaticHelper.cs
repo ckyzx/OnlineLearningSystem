@@ -45,6 +45,7 @@ namespace OnlineLearningSystem.Utilities
             items.Add(new SelectListItem() { Text = "每日", Value = "1" });
             items.Add(new SelectListItem() { Text = "每周", Value = "2" });
             items.Add(new SelectListItem() { Text = "每月", Value = "3" });
+            items.Add(new SelectListItem() { Text = "预定", Value = "4" });
 
             foreach (var i in items)
             {
@@ -106,6 +107,7 @@ namespace OnlineLearningSystem.Utilities
             items = new List<SelectListItem>();
             items.Add(new SelectListItem() { Text = "手动", Value = "0" });
             items.Add(new SelectListItem() { Text = "自动", Value = "1" });
+            items.Add(new SelectListItem() { Text = "预定", Value = "2" });
 
             foreach (var i in items)
             {

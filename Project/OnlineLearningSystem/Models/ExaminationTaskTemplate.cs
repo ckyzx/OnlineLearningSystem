@@ -81,6 +81,9 @@ namespace OnlineLearningSystem.Models
         [DataType(DataType.DateTime)]
         public DateTime ETT_EndTime { get; set; }
 
+        [DisplayName("持续天数")]
+        public Byte ETT_ContinuedDays { get; set; }
+
         [DisplayName("考试时长")]
         [Required(ErrorMessage = "请输入{0}")]
         [Range(0, 360, ErrorMessage = "请输入 {1} 至 {2} 之间的整数。")]

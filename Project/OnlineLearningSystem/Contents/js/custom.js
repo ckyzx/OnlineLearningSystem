@@ -383,7 +383,11 @@ Kyzx.List = {
 
             tr = checkboxs.parents('tr');
             btn = tr.find('a.' + btnClassName);
-            if (btn.length == 1) {
+            if (btn.length == 1 && (btn.hasClass('hide') || btn.css('display') == 'none')) {
+
+                alert('不允许的操作。');
+                return;
+            }else if(btn.length == 1){
                 btn.click();
             }
         };

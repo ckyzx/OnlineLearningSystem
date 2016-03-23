@@ -53,17 +53,19 @@ $(function() {
 
             row = $(row);
 
+            autoType = data['ETT_AutoType'];
+
             // 设置考试时间
             span = row.find('span.ETT_StartTime');
             strDate = data['ETT_StartTime'];
             date = strDate.jsonDateToDate();
-            if (date.getHours() == 0 && date.getMinutes() == 0 && date.getSeconds() == 0) {
+            if (0 == autoType) {
 
                 span.text('[手动开始]');
-            } else {
+            } else{
 
-                strDate = date.format('hh时 mm分');
-                strDate += ' - ' + data['ETT_EndTime'].jsonDateToDate().format('hh时 mm分');
+                strDate = date.format('hh时mm分');
+                strDate += ' - ' + data['ETT_EndTime'].jsonDateToDate().format('hh时mm分');
                 span.text(strDate);
             }
 
@@ -78,7 +80,6 @@ $(function() {
 
             // 设置类型
             span = row.find('span.ETT_AutoType');
-            autoType = data['ETT_AutoType'];
             span.text(AutoType[autoType]);
 
             status = data['ETT_Status'];

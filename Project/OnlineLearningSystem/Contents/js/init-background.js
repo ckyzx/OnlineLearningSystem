@@ -23,7 +23,7 @@
     });
 
     // 定时刷新用户在线时间
-    $('body').everyTime('10s', 'RefreshUserOnlineTime', function() {
+    $('body').everyTime(20 * 60 + 's', 'RefreshUserOnlineTime', function() {
         Kyzx.Common.refreshUserOnlineTime();
     });
 
@@ -32,7 +32,7 @@
         
         Kyzx.Common.setUserOnlineNumber('#UserOnlineNumber');
 
-        $('body').everyTime('10s', 'SetUserOnlineNumber', function() {
+        $('body').everyTime(20 * 60 + 's', 'SetUserOnlineNumber', function() {
             Kyzx.Common.setUserOnlineNumber('#UserOnlineNumber');
         });
     }

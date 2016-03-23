@@ -38,13 +38,10 @@ namespace OnlineLearningSystem
             RegisterRoutes(RouteTable.Routes);
 
             // 运行定时任务
-            /*TimerTask.Run(10 * 60 * 1000, TimerTask.GeneratePaperTemplate);
-            TimerTask.Run(5 * 60 * 1000, TimerTask.ChangePaperStatus);
-            TimerTask.Run(5 * 60 * 1000, TimerTask.ChangePaperTemplateStatus);*/
             TimerTask.Run(1 * 60 * 1000, TimerTask.GeneratePaperTemplate);
             TimerTask.Run(1 * 60 * 1000, TimerTask.ChangePaperStatus);
             TimerTask.Run(1 * 60 * 1000, TimerTask.ChangePaperTemplateStatus);
-            TimerTask.Run(1 * 60 * 1000, TimerTask.ClearUserOnline);
+            TimerTask.Run(30 * 60 * 1000, TimerTask.ClearUserOnline);
         }
 
         /*protected void Application_BeginRequest()

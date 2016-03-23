@@ -175,17 +175,26 @@
             <label class="form-label col-2">
                 @Html.LabelFor(m => m.ET_EndTime)
             </label>
-            <div class="formControls col-10">
+            <div class="formControls col-2">
                 <div id="EndTime" class="time-picker"></div>
                 @Html.HiddenFor(m => m.ET_EndTime)
                 @Html.ValidationMessageFor(m => m.ET_EndTime)
+            </div>
+        </div>
+        <div class="row cl" style="display:none;">
+            <label class="form-label col-2">
+                @Html.LabelFor(m => m.ET_ContinuedDays)
+            </label>
+            <div class="formControls col-1">
+                @Html.TextBoxFor(m => m.ET_ContinuedDays, new { @class = "input-text" })
+                @Html.ValidationMessageFor(m => m.ET_ContinuedDays)
             </div>
         </div>
         <div class="row cl">
             <label class="form-label col-2">
                 @Html.LabelFor(m => m.ET_TimeSpan)
             </label>
-            <div class="formControls col-2">
+            <div class="formControls col-1">
                 @Html.TextBoxFor(m => m.ET_TimeSpan, new { @class = "input-text" }) <div>（单位：分钟）</div>
                 @Html.ValidationMessageFor(m => m.ET_TimeSpan)
             </div>
@@ -260,5 +269,6 @@
 <link rel="stylesheet" type="text/css" href="@Url.Content("~/Contents/lib/jtimepicker/css/ui/base/ui.slider.css")" />
 <link rel="stylesheet" type="text/css" href="@Url.Content("~/Contents/lib/jtimepicker/css/jquery.timepicker.css")" />
 <script type="text/javascript" src="@Url.Content("~/Contents/lib/jtimepicker/lib/jquery.jtimepicker.bundle.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Contents/lib/My97DatePicker/WdatePicker.js")"></script>
 <script type="text/javascript" src="@Url.Content("/Contents/js/Question/ListSelect.js")"></script>
 <script type="text/javascript" src="@Url.Content("/Contents/js/ExaminationTask/Edit.js")"></script>

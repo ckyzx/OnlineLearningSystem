@@ -4,7 +4,8 @@ AutoType = {
     0: '手动',
     1: '每日',
     2: '每周',
-    3: '每月'
+    3: '每月',
+    4: '预定'
 };
 
 var DifficultyCoefficient;
