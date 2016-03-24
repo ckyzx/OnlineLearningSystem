@@ -91,6 +91,7 @@ $(function() {
         dtSelector: '.table-sort',
         hasCreateBtn: false,
         hasRecycleBin: false,
+        hasControlBtn: false,
         dtParams: dtParams,
         modelCnName: '系统日志',
         modelEnName: 'SystemLog',

@@ -43,7 +43,13 @@ $(function() {
             radios = jqTable.find(':checked[name=departments]');
             if (radios.length == 0 && departmentId != -1) {
 
-                jqTable.find(':radio[value=' + departmentId + ']').get(0).checked = true;
+                radios = jqTable.find(':radio[value=' + departmentId + ']');
+                if(radios.length != 0){
+                    radios.get(0).checked = true;
+                }else{
+                    departmentId = '';
+                }
+
                 $(jqTable.attr('data-value-selector')).val('[' + departmentId + ']');
             }
         }

@@ -195,10 +195,11 @@
                 @Html.LabelFor(m => m.ET_TimeSpan)
             </label>
             <div class="formControls col-1">
-                @Html.TextBoxFor(m => m.ET_TimeSpan, new { @class = "input-text" }) <div>（单位：分钟）</div>
+                @Html.TextBoxFor(m => m.ET_TimeSpan, new { @class = "input-text" })
                 @Html.ValidationMessageFor(m => m.ET_TimeSpan)
             </div>
         </div>
+        <div class="col-offset-2 col-10" style="clear:both;">（单位：分钟）</div>
         <div id="QuestionListSelectContainer" class="row cl" style="display:none;">
             <label class="form-label col-2">
                 @Html.LabelFor(m => m.ET_Questions)

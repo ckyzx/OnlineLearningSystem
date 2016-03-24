@@ -767,10 +767,13 @@ namespace OnlineLearningSystem.Utilities
                 "FROM      Users u " +
                 "          LEFT JOIN User_Department ud ON u.U_Id = ud.U_Id " +
                 "          LEFT JOIN Departments d ON d.D_Id = ud.D_Id " +
-                "WHERE     d.D_Id = @dId ";
+                "WHERE     d.D_Id = @dId " +
+                "          AND d.D_Status = 1 " +
+                "          AND u.U_Status = 1 ";
             sps = new List<SqlParameter>();
             sps.Add(new SqlParameter("@dId", departmentId));
-            destSort = Convert.ToInt32(olsDbo.ExecuteSqlScalar(sql, sps));
+            destSort = Convert.ToDouble(olsDbo.ExecuteSqlScalar(sql, sps));
+            destSort = Math.Round(destSort, 5);
 
             destUser = olsEni.Users.Single(m => m.U_Sort == destSort);
 
@@ -835,6 +838,8 @@ namespace OnlineLearningSystem.Utilities
                 "          LEFT JOIN Departments d ON d.D_Id = ud.D_Id " +
                 "WHERE     d.D_Id = @dId " +
                 "          AND u.U_Sort < @uSort " +
+                "          AND d.D_Status = 1 " +
+                "          AND u.U_Status = 1 " +
                 "ORDER BY  u.U_Sort DESC";
             sps = new List<SqlParameter>();
             sps.Add(new SqlParameter("@dId", departmentId));
@@ -912,6 +917,8 @@ namespace OnlineLearningSystem.Utilities
                 "          LEFT JOIN Departments d ON d.D_Id = ud.D_Id " +
                 "WHERE     d.D_Id = @dId " +
                 "          AND u.U_Sort > @uSort " +
+                "          AND d.D_Status = 1 " +
+                "          AND u.U_Status = 1 " +
                 "ORDER BY  u.U_Sort ASC";
             sps = new List<SqlParameter>();
             sps.Add(new SqlParameter("@dId", departmentId));
@@ -981,6 +988,8 @@ namespace OnlineLearningSystem.Utilities
                     {
                         return -2;
                     }
+
+                    count += 1;
 
                     sortRepeatUser = olsEni.Users.SingleOrDefault(m => m.U_Id != sortRepeatUser.U_Id && m.U_Sort == sort);
                 }

@@ -135,6 +135,7 @@ Kyzx.List = {
     settings: {
         hasCreateBtn: true,
         hasRecycleBin: true,
+        hasControlBtn: true,
         hasTree: false,
         dtSelector: null,
         dtParams: {},
@@ -393,6 +394,10 @@ Kyzx.List = {
         var btnClick;
 
         self = this.self;
+
+        if(!self.settings.hasControlBtn){
+            return;
+        }
 
         funcBtnContainer = $('.function-btn-container');
         hasBtnContainer = funcBtnContainer.length != 0;
