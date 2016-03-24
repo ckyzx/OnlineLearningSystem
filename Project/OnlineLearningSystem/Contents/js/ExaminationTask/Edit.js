@@ -3,6 +3,11 @@ $(function() {
 
     var ztree, qcZtree;
     var userIds, userNames, departmentIds, departmentNames;
+    var et;
+
+    et = OLS.ExaminationTask.init({
+        idPrefix: 'ET_'
+    });
 
     // 初始化任务模板事件
     initTemplateEvent();
@@ -30,7 +35,8 @@ $(function() {
     initEndTimeEvent();
 
     // 初始化提交事件
-    initSubmitEvent();
+    //initSubmitEvent();
+    olsCustomSubmitHandler = submitHandler;
 
     // 初始化控件
     initControls();
@@ -189,8 +195,8 @@ $(function() {
         etAutoType.on('change', function() {
 
             var qList, etAutoType, etAutoOffsetDay, offsetDayNum, aodContainer,
-                etaodContainer, atContainer, etStartDateContainer;
-            var autoType;
+                etaodContainer, atContainer, etStartDateContainer, etContinuedDays, etStartTime;
+            var autoType, startDate;
             var hideFunc, showFunc, onfocus;
 
             etAutoType = $('#ET_AutoType');
@@ -309,6 +315,15 @@ $(function() {
 
                     hideFunc();
 
+                    etStartTime = $('#ET_StartTime');
+                    startDate = etStartTime.val();
+                    startDate = startDate.toDate();
+                    if(startDate.getFullYear() == 1970){
+                        startDate = (new Date()).add('d', 1).format('yyyy-MM-dd');
+                    }else{
+                        startDate = startDate.format('yyyy-MM-dd');
+                    }
+
                     if (etStartDateContainer.length == 0) {
                         atContainer.after(
                             '<div id="ETStartDateContainer" class="row cl">' +
@@ -316,14 +331,19 @@ $(function() {
                             '       考试日期' +
                             '   </label>' +
                             '   <div class="formControls col-2">' +
-                            '       <input type="text" id="ETStartDate" class="input-text Wdate" onfocus="WdatePicker({minDate: \'%y-%M-%d\'});" />' +
+                            '       <input type="text" id="ETStartDate" value="' + startDate + '" class="input-text Wdate" onfocus="WdatePicker({minDate: \'%y-%M-%d\'});" />' +
                             '   </div>' +
                             '</div>');
                     }
 
-                    $('#ET_StartTime').parentsUntil('form').last().show();
+                    etStartTime.parentsUntil('form').last().show();
                     $('#ET_EndTime').parentsUntil('form').last().show();
-                    $('#ET_ContinuedDays').val(1).parentsUntil('form').last().show();
+
+                    etContinuedDays = $('#ET_ContinuedDays');
+                    if (etContinuedDays.val() == 0) {
+                        etContinuedDays.val(1);
+                    }
+                    etContinuedDays.parentsUntil('form').last().show();
                     break;
                 default:
                     break;
@@ -758,65 +778,70 @@ $(function() {
     function initSubmitEvent() {
 
         $('form').submit(function(e) {
-
-            var nodes, autoClassifies;
-            var etStartTime, etEndTime;
-            var mode, startDate, startTime;
-
-            // 设置参与部门/用户
-            userIds = [];
-            userNames = [];
-            departmentIds = [];
-            departmentNames = [];
-            nodes = ztree.getNodes();
-
-            getDepartmentsAndUsersNodeChecked(nodes);
-
-            $('#ET_ParticipatingDepartment').val(JSON.stringify(departmentIds));
-            $('#ET_Attendee').val(JSON.stringify(userIds));
-
-            // 设置自动出题分类
-            nodes = qcZtree.getNodes();
-            autoClassifies = getQuestionClassifiesNodeChecked(nodes);
-            $('#ET_AutoClassifies').val(JSON.stringify(autoClassifies)); // 数据格式：['分类名1', '分类名2', ...]
-
-            // 设置自动出题比例
-            $('#ET_AutoRatio').val(JSON.stringify(getRatios()));
-
-            if (!validateData()) {
-
-                e.preventDefault();
-                return;
-            }
-
-            etStartTime = $('#ET_StartTime');
-            etEndTime = $('#ET_EndTime');
-            mode = $('#ET_Mode').val();
-            if (0 == mode) {
-
-                etStartTime.val('1970/1/1 00:00:00');
-                etEndTime.val('1970/1/1 00:00:00');
-            } else if (2 == mode) {
-
-                // 设置开始日期
-                startDate = $('#ETStartDate').val();
-                startDate = startDate.toDate();
-                startTime = $('#ET_StartTime').val();
-                startTime = startTime.toDate();
-
-                startTime =
-                    startDate.getFullYear() + '/' + (startDate.getMonth() + 1) + '/' + startDate.getDate() + ' ' +
-                    startTime.getHours() + ':' + startTime.getMinutes() + ':' + startTime.getSeconds();
-
-                etStartTime.val(startTime);
-            }
-
-            if (!confirm('确定提交吗？')) {
-
-                e.preventDefault();
-            }
-
+            submitHandler(e);
         });
+    }
+
+    function submitHandler(form) {
+
+        var nodes, autoClassifies;
+        var etStartTime, etEndTime;
+        var mode, startDate, startTime;
+
+        // 设置参与部门/用户
+        userIds = [];
+        userNames = [];
+        departmentIds = [];
+        departmentNames = [];
+        nodes = ztree.getNodes();
+
+        getDepartmentsAndUsersNodeChecked(nodes);
+
+        $('#ET_ParticipatingDepartment').val(JSON.stringify(departmentIds));
+        $('#ET_Attendee').val(JSON.stringify(userIds));
+
+        // 设置自动出题分类
+        nodes = qcZtree.getNodes();
+        autoClassifies = getQuestionClassifiesNodeChecked(nodes);
+        // 数据格式：['分类名1', '分类名2', ...]
+        $('#ET_AutoClassifies').val(JSON.stringify(autoClassifies));
+
+        // 设置自动出题比例
+        $('#ET_AutoRatio').val(JSON.stringify(getRatios()));
+
+        if (!validateData()) {
+            //e.preventDefault();
+            return false;
+        }
+
+        etStartTime = $('#ET_StartTime');
+        etEndTime = $('#ET_EndTime');
+        mode = $('#ET_Mode').val();
+        if (0 == mode) {
+
+            etStartTime.val('1970/1/1 00:00:00');
+            etEndTime.val('1970/1/1 00:00:00');
+        } else if (2 == mode) {
+
+            // 设置开始日期
+            startDate = $('#ETStartDate').val();
+            startDate = startDate.toDate();
+            startTime = $('#ET_StartTime').val();
+            startTime = startTime.toDate();
+
+            startTime =
+                startDate.getFullYear() + '/' + (startDate.getMonth() + 1) + '/' + startDate.getDate() + ' ' +
+                startTime.getHours() + ':' + startTime.getMinutes() + ':' + startTime.getSeconds();
+
+            etStartTime.val(startTime);
+        }
+
+        if (!confirm('确定提交吗？')) {
+            //e.preventDefault();
+            return false;
+        } else {
+            $(form).submit();
+        }
     }
 
     function validateData() {
@@ -997,106 +1022,21 @@ $(function() {
         }
 
         if (2 == mode) {
-            valid = validateCustomAutoTypeData(valid);
+            valid = et.validateCustomAutoTypeData(valid);
+            valid = et.validateContinuedDays(valid);
         }
 
-        return valid;
-    }
-
-    function validateCustomAutoTypeData(valid) {
-
-        var etStartDate, container;
-        var startDate;
-
-        etStartDate = $('#ETStartDate');
-        container = etStartDate.parent();
-        startDate = etStartDate.val();
-
-        if (startDate == '') {
-
-            $('<div class="custom-validation-error">' +
-                '<div class="cl"></div>' +
-                '<span class="field-validation-error">' +
-                '<span htmlfor="ETStartDate" generated="true" class="">请选择考试日期</span>' +
-                '</span>' +
-                '<div>').appendTo(container);
-
-            valid = false;
-        }
-
-        valid = validateStartTime(valid);
-        valid = validateEndTime(valid);
-
-        return valid;
-    }
-
-    function validateStartTime(valid) {
-
-        var stRegex, stRegex1;
-        var etStartTime, container;
-        var startTime;
-
-        // 开始时间验证
-        // 数据格式：2016/1/1 8:00:00
-        stRegex = /^\d{4}\/\d{1,2}\/\d{1,2} (([0-9]{1})|(1{1}[0-9]{1})|(2{1}[0-3]{1})):[0-5]{1}[0-9]{0,1}:[0-5]{0,1}[0-9]{1}$/g;
-        stRegex1 = /^\d{4}\/\d{1,2}\/\d{1,2} 0{1,2}:0{1,2}:0{1,2}$/g;
-
-        etStartTime = $('#ET_StartTime');
-        container = etStartTime.parent();
-        startTime = etStartTime.val();
-
-        if (stRegex1.test(startTime) || !stRegex.test(startTime)) {
-
-            $('<div class="custom-validation-error">' +
-                '<div class="cl"></div>' +
-                '<span class="field-validation-error">' +
-                '<span htmlfor="ETT_StartTime" generated="true" class="">请选择开始时间</span>' +
-                '</span>' +
-                '<div>').appendTo(container);
-
-            valid = false;
-        }
-
-        return valid;
-    }
-
-    function validateEndTime(valid) {
-
-        var stRegex, stRegex1;
-        var etEndTime, container;
-        var endTime;
-
-        // 结束时间验证
-        // 数据格式：1970/1/1 8:00:00
-        stRegex = /^1970\/1\/1 (([0-9]{1})|(1{1}[0-9]{1})|(2{1}[0-3]{1})):[0-5]{1}[0-9]{0,1}:[0-5]{0,1}[0-9]{1}$/g;
-        stRegex1 = /^1970\/1\/1 0{1,2}:0{1,2}:0{1,2}$/g;
-
-        etEndTime = $('#ET_EndTime');
-        container = etEndTime.parent();
-        endTime = etEndTime.val();
-
-        if (stRegex1.test(endTime) || !stRegex.test(endTime)) {
-
-            $('<div class="custom-validation-error">' +
-                '<div class="cl"></div>' +
-                '<span class="field-validation-error">' +
-                '<span htmlfor="ETT_StartTime" generated="true" class="">请选择结束时间</span>' +
-                '</span>' +
-                '<div>').appendTo(container);
-
-            valid = false;
-        }
-        
         return valid;
     }
 
     function initControls() {
 
-        var etTimeSpan;
+        var etTimeSpan, etContinuedDays;
 
         if (!brower.ieVersion) {
 
             etTimeSpan = $('#ET_TimeSpan');
+            etContinuedDays = $('#ET_ContinuedDays');
 
             $('script[src$="jquery.min.js"]').after('<script type="text/javascript" src="/Contents/lib/jquery-ui/jquery-ui.min.js"></script>');
             $('head').prepend('<link href="/Contents/lib/jquery-ui/jquery-ui.min.css" rel="stylesheet" type="text/css" />');
@@ -1107,7 +1047,14 @@ $(function() {
                 step: 10
             });
 
+            etContinuedDays.spinner({
+                min: 1,
+                max: 30,
+                step: 1
+            });
+
             etTimeSpan.parents('div').addClass('custom-spinner');
+            etContinuedDays.parents('div').addClass('custom-spinner');
         }
     }
 });

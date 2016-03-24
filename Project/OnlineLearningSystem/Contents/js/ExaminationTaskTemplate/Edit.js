@@ -3,6 +3,11 @@
 
     var ztree, qcZtree;
     var userIds, userNames, departmentIds, departmentNames;
+    var et;
+
+    et = OLS.ExaminationTask.init({
+        idPrefix: 'ETT_'
+    });
 
     // 初始化成绩统计方式控件事件
     initStatisticTypeEvent();
@@ -27,7 +32,8 @@
     initEndTimeEvent();
 
     // 初始化提交事件
-    initSubmitEvent();
+    //initSubmitEvent();
+    olsCustomSubmitHandler = submitHandler;
 
     function initStatisticTypeEvent() {
 
@@ -127,7 +133,7 @@
         etAutoType.on('change', function() {
 
             var qList, etAutoType, etAutoOffsetDay, offsetDayNum, aodContainer,
-                etaodContainer, atContainer;
+                etaodContainer, atContainer, etContinuedDays;
             var autoType;
             var hideFunc, showFunc, onfocus;
 
@@ -242,7 +248,12 @@
 
                     $('#ETT_StartTime').parentsUntil('form').last().show();
                     $('#ETT_EndTime').parentsUntil('form').last().show();
-                    $('#ETT_ContinuedDays').val(1).parentsUntil('form').last().show();
+
+                    etContinuedDays = $('#ETT_ContinuedDays');
+                    if(etContinuedDays.val() == 0){
+                        etContinuedDays.val(1);
+                    }
+                    etContinuedDays.parentsUntil('form').last().show();
                     break;
                 default:
                     break;
@@ -650,52 +661,57 @@
     function initSubmitEvent() {
 
         $('form').submit(function(e) {
-
-            var nodes, autoClassifies;
-            var etStartTime, etEndTime;
-            var mode;
-
-            // 设置参与部门/用户
-            userIds = [];
-            userNames = [];
-            departmentIds = [];
-            departmentNames = [];
-            nodes = ztree.getNodes();
-
-            getDepartmentsAndUsersNodeChecked(nodes);
-
-            $('#ETT_ParticipatingDepartment').val(JSON.stringify(departmentIds));
-            $('#ETT_Attendee').val(JSON.stringify(userIds));
-
-            // 设置自动出题分类
-            nodes = qcZtree.getNodes();
-            autoClassifies = getQuestionClassifiesNodeChecked(nodes);
-            $('#ETT_AutoClassifies').val(JSON.stringify(autoClassifies)); // 数据格式：['分类名1', '分类名2', ...]
-
-            // 设置自动出题比例
-            $('#ETT_AutoRatio').val(JSON.stringify(getRatios()));
-
-            if (!validateData()) {
-
-                e.preventDefault();
-                return;
-            }
-
-            etStartTime = $('#ETT_StartTime');
-            etEndTime = $('#ETT_EndTime');
-            mode = $('#ETT_Mode').val();
-            if (0 == mode) {
-
-                etStartTime.val('1970/1/1 00:00:00');
-                etEndTime.val('1970/1/1 00:00:00');
-            }
-
-            if (!confirm('确定提交吗？')) {
-
-                e.preventDefault();
-            }
-
+            submitHandler(e);
         });
+    }
+
+    function submitHandler(form) {
+
+        var nodes, autoClassifies;
+        var etStartTime, etEndTime;
+        var mode, startDate, startTime;
+
+        // 设置参与部门/用户
+        userIds = [];
+        userNames = [];
+        departmentIds = [];
+        departmentNames = [];
+        nodes = ztree.getNodes();
+
+        getDepartmentsAndUsersNodeChecked(nodes);
+
+        $('#ETT_ParticipatingDepartment').val(JSON.stringify(departmentIds));
+        $('#ETT_Attendee').val(JSON.stringify(userIds));
+
+        // 设置自动出题分类
+        nodes = qcZtree.getNodes();
+        autoClassifies = getQuestionClassifiesNodeChecked(nodes);
+        // 数据格式：['分类名1', '分类名2', ...]
+        $('#ETT_AutoClassifies').val(JSON.stringify(autoClassifies));
+
+        // 设置自动出题比例
+        $('#ETT_AutoRatio').val(JSON.stringify(getRatios()));
+
+        if (!validateData()) {
+            //e.preventDefault();
+            return false;
+        }
+
+        etStartTime = $('#ETT_StartTime');
+        etEndTime = $('#ETT_EndTime');
+        mode = $('#ETT_Mode').val();
+        if (0 == mode) {
+
+            etStartTime.val('1970/1/1 00:00:00');
+            etEndTime.val('1970/1/1 00:00:00');
+        }
+
+        if (!confirm('确定提交吗？')) {
+            //e.preventDefault();
+            return false;
+        } else {
+            $(form).submit();
+        }
     }
 
     function validateData() {
@@ -783,72 +799,13 @@
 
             valid = validateStartTime(valid);
             valid = validateEndTime(valid);
-        }else if(mode == 2){
+        } else if (mode == 2) {
 
-            valid = validateStartTime(valid);
-            valid = validateEndTime(valid);
+            valid = et.validateStartTime(valid);
+            valid = et.validateEndTime(valid);
+            valid = et.validateContinuedDays(valid);
         }
 
-        return valid;
-    }
-
-    function validateStartTime(valid) {
-
-        var stRegex, stRegex1;
-        var etStartTime, container;
-        var startTime;
-
-        // 开始时间验证
-        // 数据格式：1970/1/1 8:00:00
-        stRegex = /^1970\/1\/1 (([0-9]{1})|(1{1}[0-9]{1})|(2{1}[0-3]{1})):[0-5]{1}[0-9]{0,1}:[0-5]{0,1}[0-9]{1}$/g;
-        stRegex1 = /^1970\/1\/1 0{1,2}:0{1,2}:0{1,2}$/g;
-
-        etStartTime = $('#ETT_StartTime');
-        container = etStartTime.parent();
-        startTime = etStartTime.val();
-
-        if (stRegex1.test(startTime) || !stRegex.test(startTime)) {
-
-            $('<div class="custom-validation-error">' +
-                '<div class="cl"></div>' +
-                '<span class="field-validation-error">' +
-                '<span htmlfor="ETT_StartTime" generated="true" class="">请选择开始时间</span>' +
-                '</span>' +
-                '<div>').appendTo(container);
-
-            valid = false;
-        }
-
-        return valid;
-    }
-
-    function validateEndTime(valid) {
-
-        var stRegex, stRegex1;
-        var etEndTime, container;
-        var endTime;
-
-        // 结束时间验证
-        // 数据格式：1970/1/1 8:00:00
-        stRegex = /^1970\/1\/1 (([0-9]{1})|(1{1}[0-9]{1})|(2{1}[0-3]{1})):[0-5]{1}[0-9]{0,1}:[0-5]{0,1}[0-9]{1}$/g;
-        stRegex1 = /^1970\/1\/1 0{1,2}:0{1,2}:0{1,2}$/g;
-
-        etEndTime = $('#ETT_EndTime');
-        container = etEndTime.parent();
-        endTime = etEndTime.val();
-
-        if (stRegex1.test(endTime) || !stRegex.test(endTime)) {
-
-            $('<div class="custom-validation-error">' +
-                '<div class="cl"></div>' +
-                '<span class="field-validation-error">' +
-                '<span htmlfor="ETT_StartTime" generated="true" class="">请选择结束时间</span>' +
-                '</span>' +
-                '<div>').appendTo(container);
-
-            valid = false;
-        }
-        
         return valid;
     }
 

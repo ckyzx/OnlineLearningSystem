@@ -666,6 +666,7 @@ namespace OnlineLearningSystem.Utilities
                 epts[0].EPT_StartTime = startTime;
                 epts[0].EPT_StartDate = startTime.Date;
 
+                startTime = startTime.AddDays(model.ET_ContinuedDays == 0 ? 0 : model.ET_ContinuedDays - 1);
                 endTime = model.ET_EndTime;
                 endTime = new DateTime(startTime.Year, startTime.Month, startTime.Day, endTime.Hour, endTime.Minute, endTime.Second);
                 epts[0].EPT_EndTime = endTime;

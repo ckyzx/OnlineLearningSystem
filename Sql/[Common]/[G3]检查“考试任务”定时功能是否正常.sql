@@ -4,7 +4,7 @@ DECLARE @etName VARCHAR(50);
 DECLARE @etId INT ,
     @eptId INT;
 
-SET @etName = '考试任务032301';
+SET @etName = '考试任务032404';
 
 --UPDATE  dbo.ExaminationTasks
 --SET     ET_StartTime = '1970-01-01 16:16:00.0000000' ,
@@ -19,6 +19,7 @@ SELECT  ET_Name ,
         ET_Enabled ,
         ET_StartTime ,
         ET_EndTime,
+        ET_ContinuedDays,
         ET_TimeSpan ,
         ET_Attendee
 FROM    ExaminationTasks

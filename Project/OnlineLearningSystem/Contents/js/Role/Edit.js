@@ -43,9 +43,9 @@ $(function() {
                 }
             }
 
-            if (nodes[i].children != undefined) {
+            if (nodes[i].children != undefined && setNodeChecked(nodes[i].children)) {
 
-                nodes[i].checked = setNodeChecked(nodes[i].children);
+                nodes[i].checked = true;
             }
         }
 
@@ -60,6 +60,8 @@ $(function() {
 
     getNodeId = function(nodes) {
 
+        var tmpStr, pcId;
+
         for (var i = 0; i < nodes.length; i++) {
 
             if (nodes[i].checked) {
@@ -68,10 +70,17 @@ $(function() {
 
                     permissionIds.push(nodes[i].permissionId);
                     permissionNames.push(nodes[i].name);
-                } else {
+
+                    tmpStr = '.'+permissionCategoryIds.join('.')+'.';
+                    pcId = nodes[i].getParentNode().permissionCategoryId;
+                    if(tmpStr.indexOf('.'+pcId+'.') == -1){
+                        permissionCategoryIds.push(pcId);
+                        permissionCategoryNames.push(nodes[i].getParentNode().name);
+                    }
+                /*} else {
 
                     permissionCategoryIds.push(nodes[i].permissionCategoryId);
-                    permissionCategoryNames.push(nodes[i].name);
+                    permissionCategoryNames.push(nodes[i].name);*/
                 }
             }
 

@@ -23,6 +23,8 @@
     });
 
     // 定时刷新用户在线时间
+    Kyzx.Common.refreshUserOnlineTime();
+    
     $('body').everyTime(20 * 60 + 's', 'RefreshUserOnlineTime', function() {
         Kyzx.Common.refreshUserOnlineTime();
     });

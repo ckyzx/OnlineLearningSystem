@@ -14,6 +14,8 @@
 * Copyright (c) 2006 - 2011 Jörn Zaefferer
 */
 
+var olsCustomSubmitHandler;
+
 (function () {
 
 
@@ -75,12 +77,6 @@
                                     hidden.remove();
                                 }
                                 return false;
-                            }
-
-                            if(typeof(submitCallback) == 'function'){
-
-                				event.preventDefault();
-                            	submitCallback();
                             }
 
                             return true;
@@ -1262,7 +1258,8 @@
                         invalidHandler: $.proxy(onErrors, form),
                         messages: {},
                         rules: {},
-                        success: $.proxy(onSuccess, form)
+                        success: $.proxy(onSuccess, form),
+                        submitHandler: olsCustomSubmitHandler
                     },
                     attachValidation: function () {
                         $form.validate(this.options);

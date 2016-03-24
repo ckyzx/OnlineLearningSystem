@@ -37,6 +37,42 @@ function ShowPageWithSize(title, url, w, h) {
     });
 }
 
+Kyzx.Utility = {
+    ShowPage: function(title, url) {
+        var index = layer.open({
+            type: 2,
+            title: title,
+            content: url,
+            // 初始化为小区域，可避免展现错位的控件
+            //area: ['180px', '36px']
+            area: ['800px', '600px'],
+            shade: 0
+        });
+        layer.full(index);
+    },
+
+    ShowPageWithSize: function(title, url, w, h) {
+
+        if (w == undefined)
+            w = 800;
+
+        if (h == undefined) {
+            h = 600;
+        }
+
+        layer.open({
+            type: 2,
+            area: [w + 'px', h + 'px'],
+            fix: false, //不固定
+            shade: 0.4,
+            title: title,
+            content: url,
+            shade: 0,
+            offset: '0'
+        });
+    }
+};
+
 Kyzx.Common = {
     getElemHeight: function(elem) {
 
@@ -69,7 +105,7 @@ Kyzx.Common = {
             }, 'json')
             .error(function() {
 
-                alert('请求返回错误！');
+                //alert('请求返回错误！');
             });
     },
 
@@ -89,7 +125,7 @@ Kyzx.Common = {
             }, 'json')
             .error(function() {
 
-                alert('请求返回错误！');
+                //alert('请求返回错误！');
             });
     }
 };
@@ -387,7 +423,7 @@ Kyzx.List = {
 
                 alert('不允许的操作。');
                 return;
-            }else if(btn.length == 1){
+            } else if (btn.length == 1) {
                 btn.click();
             }
         };
@@ -839,6 +875,162 @@ OLS = {
 
         $('.menu_dropdown').fadeIn();
     }
+};
+
+OLS.ExaminationTask = {
+    settings: {
+        idPrefix: ''
+    },
+    s: null,
+
+    init: function(settings){
+
+        $.extend(this.settings, settings);
+        
+        this.s = this.settings;
+
+        return this;
+    },
+
+    validateCustomAutoTypeData: function (valid) {
+
+        var etStartDate, container;
+        var startDate;
+
+        etStartDate = $('#ETStartDate');
+        container = etStartDate.parent();
+        startDate = etStartDate.val();
+
+        if (startDate == '') {
+
+            $('<div class="custom-validation-error">' +
+                '<div class="cl"></div>' +
+                '<span class="field-validation-error">' +
+                '<span htmlfor="ETStartDate" generated="true" class="">请选择考试日期</span>' +
+                '</span>' +
+                '<div>').appendTo(container);
+
+            valid = false;
+        }
+
+        valid = this.validateStartTime(valid);
+        valid = this.validateEndTime(valid);
+
+        return valid;
+    },
+
+    validateStartTime: function(valid) {
+
+        var stRegex, stRegex1;
+        var etStartTime, container;
+        var startTime;
+        var me;
+
+        me = this;
+
+        // 开始时间验证
+        // 数据格式：2016/1/1 8:00:00
+        stRegex = /^\d{4}\/\d{1,2}\/\d{1,2} (([0-9]{1})|(1{1}[0-9]{1})|(2{1}[0-3]{1})):[0-5]{1}[0-9]{0,1}:[0-5]{0,1}[0-9]{1}$/g;
+        stRegex1 = /^\d{4}\/\d{1,2}\/\d{1,2} 0{1,2}:0{1,2}:0{1,2}$/g;
+
+        etStartTime = $('#' + me.s.idPrefix + 'StartTime');
+        container = etStartTime.parent();
+        startTime = etStartTime.val();
+
+        if (stRegex1.test(startTime) || !stRegex.test(startTime)) {
+
+            $('<div class="custom-validation-error">' +
+                '<div class="cl"></div>' +
+                '<span class="field-validation-error">' +
+                '<span htmlfor="' + me.s.idPrefix + 'StartTime" generated="true" class="">请选择开始时间</span>' +
+                '</span>' +
+                '<div>').appendTo(container);
+
+            valid = false;
+        }
+
+        return valid;
+    },
+
+    validateEndTime: function(valid) {
+
+        var stRegex, stRegex1;
+        var etEndTime, container;
+        var endTime;
+        var me;
+
+        me = this;
+
+        // 结束时间验证
+        // 数据格式：2016/1/1 8:00:00
+        stRegex = /^\d{4}\/\d{1,2}\/\d{1,2} (([0-9]{1})|(1{1}[0-9]{1})|(2{1}[0-3]{1})):[0-5]{1}[0-9]{0,1}:[0-5]{0,1}[0-9]{1}$/g;
+        stRegex1 = /^\d{4}\/\d{1,2}\/\d{1,2} 0{1,2}:0{1,2}:0{1,2}$/g;
+
+        etEndTime = $('#' + me.s.idPrefix + 'EndTime');
+        container = etEndTime.parent();
+        endTime = etEndTime.val();
+
+        if (stRegex1.test(endTime) || !stRegex.test(endTime)) {
+
+            $('<div class="custom-validation-error">' +
+                '<div class="cl"></div>' +
+                '<span class="field-validation-error">' +
+                '<span htmlfor="' + me.s.idPrefix + 'StartTime" generated="true" class="">请选择结束时间</span>' +
+                '</span>' +
+                '<div>').appendTo(container);
+
+            valid = false;
+        }
+
+        return valid;
+    },
+
+    validateContinuedDays: function(valid) {
+
+        var etAutoType, etContinuedDays, container;
+        var autoType, continuedDays;
+        var me;
+
+        me = this;
+
+        etAutoType = $('#' + me.s.idPrefix + 'AutoType');
+        etContinuedDays = $('#' + me.s.idPrefix + 'ContinuedDays');
+
+        autoType = Number(etAutoType.val());
+        continuedDays = Number(etContinuedDays.val());
+
+        if (!isNaN(autoType) && autoType == 4) {
+
+
+            container = etContinuedDays.parentsUntil('form').last();
+            if (isNaN(continuedDays) || continuedDays == 0) {
+
+                me.appendError(me.s.idPrefix + 'ContinuedDays', '请输入 0 至 30 之间的天数', container);
+                valid = false;
+            } else if (continuedDays > 30) {
+
+                me.appendError(me.s.idPrefix + 'ContinuedDays', '请输入 0 至 30 之间的天数', container);
+                valid = false;
+            } else {
+                etContinuedDays.val(continuedDays);
+            }
+        }
+
+        return valid;
+    },
+
+    appendError: function(idValue, tip, container) {
+
+        container.find('.custom-validation-error').remove();
+
+        $('<div class="custom-validation-error col-offset-2" style="clear:both;">' +
+            '<div class="cl"></div>' +
+            '<span class="field-validation-error">' +
+            '<span htmlfor="' + idValue + '" generated="true" class="">' + tip + '</span>' +
+            '</span>' +
+            '<div>').appendTo(container);
+    }
+
 };
 
 WebUploaderHelper = {
