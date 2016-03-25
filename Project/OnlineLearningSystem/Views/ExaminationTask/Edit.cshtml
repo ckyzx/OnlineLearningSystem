@@ -158,9 +158,9 @@
             <div class="formControls col-10">
                 <div id="RatioContainer"></div>
                 @Html.HiddenFor(m => m.ET_AutoRatio)
-                @Html.ValidationMessageFor(m => m.ET_AutoRatio)
             </div>
         </div>
+        @Html.ValidationMessageFor(m => m.ET_AutoRatio, null, new { @class = "col-offset-2 col-10 mb-15" })
         <div class="row cl" style="display:none;">
             <label class="form-label col-2">
                 @Html.LabelFor(m => m.ET_StartTime)
