@@ -1324,13 +1324,13 @@ OLS.ExaminationTask = {
 
         var me;
         var etStartTime;
-        var mode, startTime, startDate;
+        var autoType, startTime, startDate;
 
         me = this;
 
-        mode = Number($('#' + me.s.idPrefix + 'Mode').val());
+        autoType = Number($('#' + me.s.idPrefix + 'AutoType').val());
 
-        if (mode != 4) {
+        if (autoType != 4) {
             return;
         }
 
@@ -1625,28 +1625,28 @@ OLS.ExaminationTask = {
         qsRegex = /^\[((\d+)|("{1}\d+"{1}),?\s*)+\]$/g;
         if (1 != mode && !qsRegex.test(questions)) {
 
-            me.appendErrorBefore('Questions', '请选择试题', sdiContainer);
+            me.appendErrorAfter('Questions', '请选择试题', sdiContainer);
             return false;
         }
 
         qAry = JSON.parse(questions);
         if (1 != mode && qAry.length == 0) {
 
-            me.appendErrorBefore('Questions', '请选择试题', sdiContainer);
+            me.appendErrorAfter('Questions', '请选择试题', sdiContainer);
             return false;
         }
 
         // 检查“已选试题数量”与“出题数量”是否一致
         if (1 != mode && qAry.length != 0 && statisticType == 2 && qAry.length != totalNumber) {
 
-            me.appendErrorBefore('Questions', '已选试题数量与出题数量不一致', sdiContainer);
+            me.appendErrorAfter('Questions', '已选试题数量与出题数量不一致', sdiContainer);
             return false;
         }
 
         // 限制选题数量
         if (1 != mode && qAry.length != 0 && statisticType == 1 && (totalScore * 0.1 > qAry.length || qAry.length > totalScore)) {
 
-            me.appendErrorBefore('Questions', '选题总数不合理。选题数量最低应占总分的 10% ，最高不超过出题总分。', sdiContainer);
+            me.appendErrorAfter('Questions', '选题总数不合理。选题数量最低应占总分的 10% ，最高不超过出题总分。', sdiContainer);
             return false;
         }
 
@@ -1707,6 +1707,18 @@ OLS.ExaminationTask = {
         jqElem.parents('div.row').find('.custom-validation-error').remove();
 
         jqElem.before($('<div class="custom-validation-error">' +
+            '<div class="cl"></div>' +
+            '<span class="field-validation-error">' +
+            '<span htmlfor="' + idValue + '" generated="true" class="">' + tip + '</span>' +
+            '</span>' +
+            '<div>'));
+    },
+
+    appendErrorAfter: function(idValue, tip, jqElem) {
+
+        jqElem.parents('div.row').find('.custom-validation-error').remove();
+
+        jqElem.after($('<div class="custom-validation-error">' +
             '<div class="cl"></div>' +
             '<span class="field-validation-error">' +
             '<span htmlfor="' + idValue + '" generated="true" class="">' + tip + '</span>' +
@@ -1784,14 +1796,14 @@ OLS.ExaminationTask = {
     setDepartmentsAndUsersNodeChecked: function(ztree, nodes, departmentIds, userIds) {
 
         var checkedCount, checked;
-        var now;
+        var depNode, userNode, now;
         var me;
 
         me = this;
 
         checkedCount = 0;
         now = undefined == now ? (new Date()).format('yyyy-MM-dd hh:mm:ss.S') : now;
-        for (var i = 0; i < nodes.length; i++) {
+        /*for (var i = 0; i < nodes.length; i++) {
 
             for (var i1 = 0; i1 < userIds.length; i1++) {
 
@@ -1816,14 +1828,31 @@ OLS.ExaminationTask = {
                     ztree.checkNode(nodes[i], true, true);
                 }
             }
-        }
+        }*/
+        for (var i1 = 0; i1 < userIds.length; i1++) {
 
-        // 是否复选父节点
+                for (var i2 = 0; i2 < departmentIds.length; i2++) {
+
+                    depNode = ztree.getNodeByParam('departmentId', departmentIds[i2]);
+                    userNode = ztree.getNodeByParam('userId', userIds[i1], depNode);
+
+                    if(depNode != null && userNode != null){
+
+                        ztree.checkNode(userNode, true, true);
+                        userNode.now = now;
+                        checkedCount += 1;
+                    }else if(userNode != null && userNode.now != now){
+                        ztree.checkNode(nodes[i], false, true);
+                    }
+                }
+            }
+
+        /*// 是否复选父节点
         if (nodes.length == checkedCount) {
             return true;
         }
 
-        return false;
+        return false;*/
     },
 
     setAttendees: function() {

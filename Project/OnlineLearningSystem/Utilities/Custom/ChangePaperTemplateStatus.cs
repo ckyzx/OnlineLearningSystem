@@ -46,13 +46,18 @@ namespace OnlineLearningSystem.Utilities
                 {
 
                     et = olsEni.ExaminationTasks.Single(m => m.ET_Id == ept.ET_Id);
+
                     if ((Byte)ExaminationTaskStatus.Enabled != et.ET_Enabled
                         && et.ET_Mode != (Byte)ExaminationTaskMode.Auto
                         && ept.EPT_PaperTemplateStatus == (Byte)PaperTemplateStatus.Undone)
                     {
+                        // 当任务状态为“关闭”，出题类型为“手动”、“预定”，模板状态为“未开始”。
+                        // 符合条件时，不处理。
                         continue;
                     }else if ((Byte)ExaminationTaskStatus.Enabled != et.ET_Enabled)
                     {
+                        // 当任务状态为“关闭”，出题类型为“自动”。
+                        // 符合条件时，关闭考试（将模板设为“关闭”）。
                         ept.EPT_PaperTemplateStatus = (Byte)PaperTemplateStatus.Done;
                         changed = true;
                         success += 1;
@@ -61,6 +66,8 @@ namespace OnlineLearningSystem.Utilities
                     else if (ept.EPT_PaperTemplateStatus == (Byte)PaperTemplateStatus.Undone
                        && now > ept.EPT_StartTime)
                     {
+                        // 当模板状态为“未开始”，已到“考试开始时间”。
+                        // 符合条件时，开始考试（将模板设为“进行中”）。
                         ept.EPT_PaperTemplateStatus = (Byte)PaperTemplateStatus.Doing;
                         changed = true;
                         success += 1;
@@ -69,10 +76,12 @@ namespace OnlineLearningSystem.Utilities
                         && ept.EPT_TimeSpan != 0
                         && now > ept.EPT_EndTime)
                     {
-
+                        // 当模板状态为“进行中”，考试时长非零，已到“考试结束时间”。
+                        // 符合条件时，关闭考试（将模板设为“关闭”）。
                         ept.EPT_PaperTemplateStatus = (Byte)PaperTemplateStatus.Done;
 
-                        if ((Byte)AutoType.Manual == et.ET_AutoType)
+                        // 当出题方式为“手动”、“预定”时，同时将任务设为“关闭”。
+                        if (et.ET_AutoType != (Byte)ExaminationTaskMode.Auto)
                         {
                             et.ET_Enabled = (Byte)ExaminationTaskStatus.Disabled;
                         }

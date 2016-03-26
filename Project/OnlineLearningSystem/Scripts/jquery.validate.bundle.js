@@ -51,6 +51,9 @@ var olsCustomSubmitHandler;
                         validator.cancelSubmit = true;
                     });
 
+                    if(!validator.settings.submitHandler && olsCustomSubmitHandler != undefined){
+                    	validator.settings.submitHandler = olsCustomSubmitHandler;
+                    }
                     // when a submitHandler is used, capture the submitting button
                     if (validator.settings.submitHandler) {
                         this.find("input, button").filter(":submit").click(function () {
@@ -66,6 +69,9 @@ var olsCustomSubmitHandler;
                             event.preventDefault();
 
                         function handle() {
+		                    if(!validator.settings.submitHandler && olsCustomSubmitHandler != undefined){
+		                    	validator.settings.submitHandler = olsCustomSubmitHandler;
+		                    }
                             if (validator.settings.submitHandler) {
                                 if (validator.submitButton) {
                                     // insert a hidden input as a replacement for the missing submit button

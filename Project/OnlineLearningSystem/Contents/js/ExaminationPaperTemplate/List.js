@@ -90,7 +90,7 @@ $(function() {
 
                     if(1 == ptStatus){
                         row.find('a.terminate').removeClass('hide');
-                    }else if(2 == ptStatus){
+                    }else {
                         row.find('a.list-grade').removeClass('hide');
                     }
                     break;

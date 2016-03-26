@@ -29,18 +29,16 @@ $(function() {
             "name": "ET_Name",
             "data": "ET_Name"
         }, {
-            "className": "nowrap",
             "name": "ET_StartTime",
             "defaultContent": '<span class="ET_StartTime"></span>'
         }, {
-            "className": "nowrap",
             "name": "ET_TimeSpan",
             "defaultContent": '<span class="ET_TimeSpan"></span>'
         }, {
             "name": "ET_AutoType",
             "defaultContent": '<span class="ET_AutoType"></span>'
         }, {
-            "width": "40%",
+            "width": "250px",
             "name": "ET_Remark",
             "className": "ET_Remark",
             "defaultContent": '<span class="ET_Remark"></span>'
@@ -57,20 +55,21 @@ $(function() {
         "createdRow": function(row, data, dataIndex) {
 
             var span, timeSpan, startTask, stopTask;
-            var strDate, startTime, autoType, status, enabled, remark;
+            var strDate, startTime, autoType, status, enabled, remark, mode;
 
             row = $(row);
 
             autoType = data['ET_AutoType'];
+            mode = data['ET_Mode'];
 
             // 设置考试时间
             span = row.find('span.ET_StartTime');
             startTime = data['ET_StartTime'];
             startTime = startTime.jsonDateToDate();
-            if (autoType == 0) { // 手动
+            if (mode == 0) { // 手动
 
                 span.text('[手动开始]');
-            }else if(autoType == 4){ // 预定
+            }else if(mode == 2){ // 预定
 
                 span.text(startTime.format('yyyy年MM月dd日hh时mm分'));
             } else { // 自动
@@ -107,19 +106,8 @@ $(function() {
             if (1 == status) {
 
                 // 呈现任务控制按钮
-                switch (autoType) {
-                    case 0:
-
-                        // 手动任务呈现按钮“开始/结束”
-                        if (0 == enabled) {
-                            startTask.text('开始').removeClass('hide');
-                        } else if (1 == enabled) {
-                            stopTask.text('结束').removeClass('hide');
-                        } else if (2 == enabled) {
-                            // 不呈现按钮
-                        }
-                        break;
-                    default:
+                switch (mode) {
+                    case 1:
 
                         // 自动任务呈现按钮“开启/关闭”
                         if (1 == enabled) {
@@ -129,6 +117,17 @@ $(function() {
                         }
 
                         break;
+                    default:
+
+                        // 手动、预定任务呈现按钮“开始/结束”
+                        if (0 == enabled) {
+                            startTask.text('开始').removeClass('hide');
+                        } else if (1 == enabled) {
+                            stopTask.text('结束').removeClass('hide');
+                        } else if (2 == enabled) {
+                            // 不呈现按钮
+                        }
+                        break;
                 }
 
                 // 呈现“试卷模板/试题”按钮
@@ -136,7 +135,7 @@ $(function() {
             }
 
             // “未开始/未结束”的任务才显示常规按钮
-            if (0 == enabled || (2 == enabled && autoType != 0)) {
+            if (0 == enabled || (2 == enabled && mode == 1)) {
 
                 // 呈现常规按钮
                 switch (status) {
@@ -276,9 +275,9 @@ $(function() {
                 btn: ['是', '否']
             }, function() {
 
-                var autoType;
+                var mode;
 
-                autoType = data['ET_AutoType'];
+                mode = data['ET_Mode'];
 
                 $.post('/ExaminationTask/StopTask', {
                         id: id
@@ -293,7 +292,7 @@ $(function() {
                             tr.find('a.stop-task').addClass('hide');
 
                             // 自动任务切换按钮
-                            if (0 != autoType) {
+                            if (1 == mode) {
 
                                 startTask = tr.find('a.start-task');
                                 startTask.text('开启');

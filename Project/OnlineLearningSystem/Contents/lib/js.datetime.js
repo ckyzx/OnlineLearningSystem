@@ -1,20 +1,21 @@
-﻿String.prototype.toDate = function () {
+String.prototype.toDate = function() {
 
-    var strDate,
-	date;
+    var ary, date;
 
-    strDate = this.replace(/\d+(?=-[^-]+$)/, function (a) {
+    /*strDate = this.replace(/\d+(?=-[^-]+$)/, function (a) {
         return parseInt(a, 10) - 1;
-    }).match(/\d+/g);
-    date = eval('new Date(' + strDate + ')');
+    }).match(/\d+/g);*/
+    ary = this.replace(/-/g, '/').replace(/\d+(?=-[^-]+$)/).match(/\d+/g);
+    ary[1] = parseInt(ary[1]) - 1;
+    date = eval('new Date(' + ary + ')');
 
     return date;
 };
 
-String.prototype.jsonDateToDate = function () {
+String.prototype.jsonDateToDate = function() {
 
     var strDate,
-	date;
+        date;
 
     strDate = this.replace('/Date(', '').replace(')/', '');
     date = eval('new Date(' + strDate + ')');
@@ -22,7 +23,7 @@ String.prototype.jsonDateToDate = function () {
     return date;
 };
 
-Date.prototype.format = function (fmt) {
+Date.prototype.format = function(fmt) {
     var o = {
         "M+": this.getMonth() + 1, //月份
         "d+": this.getDate(), //日
@@ -41,7 +42,7 @@ Date.prototype.format = function (fmt) {
 };
 
 /* 得到日期年月日等加数字后的日期 */
-Date.prototype.add = function (interval, number) {
+Date.prototype.add = function(interval, number) {
     var d = this;
     var k = {
         'y': 'FullYear',
@@ -63,11 +64,11 @@ Date.prototype.add = function (interval, number) {
 };
 
 /* 计算两日期相差的日期年月日等 */
-Date.prototype.diff = function (interval, objDate2) {
+Date.prototype.diff = function(interval, objDate2) {
     var d = this,
-	i = {},
-	t = d.getTime(),
-	t2 = objDate2.getTime();
+        i = {},
+        t = d.getTime(),
+        t2 = objDate2.getTime();
     i['y'] = objDate2.getFullYear() - d.getFullYear();
     i['q'] = i['y'] * 4 + Math.floor(objDate2.getMonth() / 4) - Math.floor(d.getMonth() / 4);
     i['m'] = i['y'] * 12 + objDate2.getMonth() - d.getMonth();
@@ -80,6 +81,6 @@ Date.prototype.diff = function (interval, objDate2) {
     return i[interval];
 };
 
-Date.now = function(){
+Date.now = function() {
     return new Date();
 };

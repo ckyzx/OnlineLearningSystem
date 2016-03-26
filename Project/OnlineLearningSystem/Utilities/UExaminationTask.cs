@@ -108,12 +108,7 @@ namespace OnlineLearningSystem.Utilities
         {
             ExaminationTask model;
 
-            model = olsEni.ExaminationTasks.SingleOrDefault(m => m.ET_Id == id);
-
-            if (null == model)
-            {
-                throw new NotImplementedException();
-            }
+            model = olsEni.ExaminationTasks.Single(m => m.ET_Id == id);
 
             return model;
         }

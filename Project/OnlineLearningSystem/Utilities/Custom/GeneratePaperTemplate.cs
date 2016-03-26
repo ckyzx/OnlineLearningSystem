@@ -33,7 +33,7 @@ namespace OnlineLearningSystem.Utilities
                     olsEni
                     .ExaminationTasks
                     .Where(m =>
-                        m.ET_AutoType != (Byte)AutoType.Manual
+                        m.ET_Mode == (Byte)ExaminationTaskMode.Auto
                         && m.ET_Enabled == (Byte)ExaminationTaskStatus.Enabled
                         && m.ET_Status == (Byte)Status.Available)
                     .ToList();
