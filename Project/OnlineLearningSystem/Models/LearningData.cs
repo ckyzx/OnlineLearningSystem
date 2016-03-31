@@ -19,7 +19,7 @@ namespace OnlineLearningSystem.Models
         [DisplayName("标题")]
         [Remote("DuplicateName", "LearningData", ErrorMessage = "标题已存在", AdditionalFields = "LD_Id")]
         [Required(ErrorMessage = "请输入{0}")]
-        [RegularExpression(@"^[\u4E00-\u9FA5\uF900-\uFA2D]{1}[\u4E00-\u9FA5\uF900-\uFA2D0-9]{1,199}$", ErrorMessage = "请输入2至200位，中文开头的字符，可带数字")]
+        [RegularExpression(@"^[\u4E00-\u9FA5\uF900-\uFA2D0-9、，。：“”（）【】~\!\@\#\$\%\^\&\*\(\)_\+\-\=\[\]\{\};'\\\:""\|\,\.\/\<\>\?]{2,200}$", ErrorMessage = "请输入 2 至 200 位，包含中文、数字和标点的字符。")]
         public String LD_Title { get; set; }
 
         [DisplayName("目录")]

@@ -88,8 +88,8 @@ namespace TimeTaskTestProject
         ///</summary>
         [TestMethod()]
         [HostType("ASP.NET")]
-        [AspNetDevelopmentServerHost("D:\\Cheng\\Workspace\\OnlineLearningSystem\\OnlineLearningSystem\\OnlineLearningSystem", "/")]
-        [UrlToTest("http://localhost:7128/Aspxs/Default.aspx")]
+        [AspNetDevelopmentServerHost("D:\\Cheng\\Workspace\\OLS\\Project\\OnlineLearningSystem", "/")]
+        [UrlToTest("http://localhost:8090/Aspxs/Default.aspx")]
         public void ChangeTest1()
         {
             int id;
@@ -113,7 +113,7 @@ namespace TimeTaskTestProject
             et = new ExaminationTask
             {
                 ET_Id = id,
-                ET_Name = "单元测试每日自动任务" + id,
+                ET_Name = "单元测试每日任务" + id,
                 ET_Enabled = (Byte)ExaminationTaskStatus.Enabled,
                 ET_Type = (Byte)ExaminationTaskType.Examination,
                 ET_ParticipatingDepartment = "[6,9]",
@@ -143,7 +143,7 @@ namespace TimeTaskTestProject
             et = new ExaminationTask
             {
                 ET_Id = id,
-                ET_Name = "单元测试每日自动任务" + id,
+                ET_Name = "单元测试每日任务" + id,
                 ET_Enabled = (Byte)ExaminationTaskStatus.Enabled,
                 ET_Type = (Byte)ExaminationTaskType.Examination,
                 ET_ParticipatingDepartment = "[6,9]",
@@ -211,8 +211,8 @@ namespace TimeTaskTestProject
         ///</summary>
         [TestMethod()]
         [HostType("ASP.NET")]
-        [AspNetDevelopmentServerHost("D:\\Cheng\\Workspace\\OnlineLearningSystem\\OnlineLearningSystem\\OnlineLearningSystem", "/")]
-        [UrlToTest("http://localhost:7128/Aspxs/Default.aspx")]
+        [AspNetDevelopmentServerHost("D:\\Cheng\\Workspace\\OLS\\Project\\OnlineLearningSystem", "/")]
+        [UrlToTest("http://localhost:8090/Aspxs/Default.aspx")]
         public void ChangeTest2()
         {
 
@@ -236,7 +236,7 @@ namespace TimeTaskTestProject
             et = new ExaminationTask
             {
                 ET_Id = id,
-                ET_Name = "单元测试每日自动任务" + id,
+                ET_Name = "单元测试每日任务" + id,
                 ET_Enabled = (Byte)ExaminationTaskStatus.Enabled,
                 ET_Type = (Byte)ExaminationTaskType.Examination,
                 ET_ParticipatingDepartment = "[6,9]",
@@ -295,8 +295,8 @@ namespace TimeTaskTestProject
         ///</summary>
         [TestMethod()]
         [HostType("ASP.NET")]
-        [AspNetDevelopmentServerHost("D:\\Cheng\\Workspace\\OnlineLearningSystem\\OnlineLearningSystem\\OnlineLearningSystem", "/")]
-        [UrlToTest("http://localhost:7128/Aspxs/Default.aspx")]
+        [AspNetDevelopmentServerHost("D:\\Cheng\\Workspace\\OLS\\Project\\OnlineLearningSystem", "/")]
+        [UrlToTest("http://localhost:8090/Aspxs/Default.aspx")]
         public void ChangeTest3()
         {
 
@@ -320,7 +320,7 @@ namespace TimeTaskTestProject
             et = new ExaminationTask
             {
                 ET_Id = id,
-                ET_Name = "单元测试每日自动任务" + id,
+                ET_Name = "单元测试每日任务" + id,
                 ET_Enabled = (Byte)ExaminationTaskStatus.Enabled,
                 ET_Type = (Byte)ExaminationTaskType.Examination,
                 ET_ParticipatingDepartment = "[6,9]",

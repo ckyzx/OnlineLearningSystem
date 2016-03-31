@@ -71,8 +71,8 @@ namespace TimeTaskTestProject
         ///</summary>
         [TestMethod()]
         [HostType("ASP.NET")]
-        [AspNetDevelopmentServerHost("D:\\Cheng\\Workspace\\OnlineLearningSystem\\OnlineLearningSystem\\OnlineLearningSystem", "/")]
-        [UrlToTest("http://localhost:7128/Aspxs/Default.aspx")]
+        [AspNetDevelopmentServerHost("D:\\Cheng\\Workspace\\OLS\\Project\\OnlineLearningSystem", "/")]
+        [UrlToTest("http://localhost:8090/Aspxs/Default.aspx")]
         public void GetExceptionMessageTest()
         {
             Exception ex;
