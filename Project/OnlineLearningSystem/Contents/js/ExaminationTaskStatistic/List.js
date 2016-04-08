@@ -123,7 +123,7 @@
         requestString = '';
 
         if (taskName != '')
-            requestString += '&taskName=' + taskName;
+            requestString += '&taskName=' + encodeURIComponent(taskName);
 
         if (beginTime != '')
             requestString += '&beginTime=' + beginTime;

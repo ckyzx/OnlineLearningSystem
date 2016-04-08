@@ -12,8 +12,8 @@ using System.Data.SqlClient;
 
 namespace TimeTaskTestProject
 {
-    
-    
+
+
     /// <summary>
     ///这是 ChangePaperTemplateStatusTest 的测试类，旨在
     ///包含所有 ChangePaperTemplateStatusTest 单元测试
@@ -68,7 +68,7 @@ namespace TimeTaskTestProject
 
             Debug.WriteLine("“清除考试任务”操作返回 " + result + " 。");
         }
-        
+
         //使用 TestCleanup 在运行完每个测试后运行代码
         [TestCleanup()]
         public void MyTestCleanup()
@@ -80,7 +80,7 @@ namespace TimeTaskTestProject
 
             Debug.WriteLine("“清除考试任务”操作返回 " + result + " 。");
         }
-        
+
         #endregion
 
         /// <summary>
@@ -202,7 +202,7 @@ namespace TimeTaskTestProject
             target = new ChangePaperTemplateStatus();
             actual = target.Change();
 
-            Assert.AreEqual(expected, ((Dictionary<String,String>)(((ResponseJson)actual).data))["RecordInfo"]);
+            Assert.AreEqual(expected, ((Dictionary<String, String>)(((ResponseJson)actual).data))["RecordInfo"]);
 
         }
 
@@ -357,7 +357,7 @@ namespace TimeTaskTestProject
             {
                 Assert.Fail("部署测试数据失败3。" + resJson.message);
             }
-            
+
             Thread.Sleep(10 * 1000);
 
             target = new ChangePaperTemplateStatus();
@@ -377,5 +377,6 @@ namespace TimeTaskTestProject
             Assert.AreEqual(expected2, ((Dictionary<String, String>)(((ResponseJson)actual).data))["SuccessInfo"]);
             Assert.AreEqual(expected3, ((Dictionary<String, String>)(((ResponseJson)actual).data))["RecordInfo"]);
         }
+
     }
 }

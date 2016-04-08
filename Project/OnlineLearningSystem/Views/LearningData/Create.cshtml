@@ -4,7 +4,7 @@
     Layout = "~/Views/Shared/_PageEdit.cshtml";
 }
 <div class="pd-20">
-    @using (Html.BeginForm("Create", "LearningData", FormMethod.Post, new { name = "create", @class = "form form-horizontal" }))
+    @using (Html.BeginForm("Create", "LearningData", FormMethod.Post, new { name = "create", @class = "form form-horizontal", encType = "multipart/form-data" }))
     {
         @Html.ValidationSummary(true)
         @Html.HiddenFor(m => m.LD_Id)

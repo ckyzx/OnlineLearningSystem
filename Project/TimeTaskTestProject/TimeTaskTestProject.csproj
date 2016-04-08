@@ -93,6 +93,7 @@
   <ItemGroup>
     <Compile Include="ChangePaperStatusTest.cs" />
     <Compile Include="ChangePaperTemplateStatusTest.cs" />
+    <Compile Include="CustomTaskTest.cs" />
     <Compile Include="GeneratePaperTemplateTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StaticHelperTest.cs" />

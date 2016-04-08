@@ -149,8 +149,8 @@
                     if (data.Message != '') {
 
                         message += '但含有以下问题：\r\n';
-                        message += '    ' + data.Message + '\r\n';
-                        message += '    请手工检查试题缓存列表。';
+                        message += data.Message + '\r\n';
+                        message += '请手工检查试题缓存列表。';
                     }
                     alert(message);
 

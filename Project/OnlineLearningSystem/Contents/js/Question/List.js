@@ -30,6 +30,7 @@ $(function() {
         }, {
             "width": "30px",
             "name": "Q_Id",
+            "className": 'Q_Id',
             "data": "Q_Id"
         }, {
             "width": "100px",
@@ -121,6 +122,15 @@ $(function() {
             input = row.find('input.score');
             input.val(score);
 
+            // 添加复选框的值为试题编号
+            row.find(':checkbox').val(data['Q_Id']);
+
+        },
+        "drawCallback": function(){
+
+            var api;
+            api = this.api();
+            Kyzx.List.resetId(api, 'Q_Id');
         }
     };
 
@@ -391,13 +401,18 @@ $(function() {
     }];
 
     if (0 == qcId) {
-
         nodes[0].checked = true;
     }
 
     ztree = $.fn.zTree.init(ul, settings, nodes);
 
     // 添加控制按钮
-    Kyzx.List._addControlBtn();
+    Kyzx.List._addBatchControlBtn();
     Kyzx.List._showControlBtn(status)
+
+    /*$('body').append('<button id="reload" style="position:absolute;">刷新</button>');
+    $('#reload').on('click',function(){
+        $('.question-table').dataTable().api().ajax.reload(null, false);    
+    });*/
+    
 });

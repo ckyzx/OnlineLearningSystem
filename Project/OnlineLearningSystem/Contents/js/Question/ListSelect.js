@@ -75,13 +75,11 @@ function initQuestionSelectTable() {
 
     'use strict';
 
-    var jqTable, table;
+    var params;
+    var jqTable, dataTableObj;
     var valueSelector;
 
-    jqTable = $('.question-table');
-    valueSelector = jqTable.attr('value-selector');
-
-    table = jqTable.DataTable({
+    params = {
         "processing": true,
         "serverSide": true,
         "ajax": {
@@ -98,6 +96,7 @@ function initQuestionSelectTable() {
         }, {
             "width": "30px",
             "name": "Q_Id",
+            "className": "Q_Id",
             "data": "Q_Id"
         }, {
             "width": "100px",
@@ -161,6 +160,101 @@ function initQuestionSelectTable() {
         'drawCallback': function(settings){
 
             SetDataTablesChecked('.question-table', valueSelector);
+            Kyzx.List.resetId(this.api(), 'Q_Id');
         }
-    });
+    };
+
+    jqTable = $('.question-table');
+    valueSelector = jqTable.attr('value-selector');
+
+    dataTableObj = jqTable.DataTable(params);
+
+    initQuestionClassifyTree(dataTableObj);
+}
+
+function initQuestionClassifyTree(dataTableObj){
+
+    var ul, inputSelected;
+    var settings, nodes, n, qcId;
+    var ztree;
+
+    inputSelected = $('.question-classify-list-container input[data-value=QuestionClassifySelected]');
+    qcId = inputSelected.val();
+    qcId = qcId == undefined ? 0 : qcId;
+
+    /*dataTableObj.settings().ajax.data = function(originData){
+        return $.extend({}, originData, {qcId: inputSelected.val()});
+    };*/
+
+    settings = {
+        check: {
+            enable: false
+        },
+        data: {
+            simpleData: {
+                enable: true
+            }
+        },
+        view: {
+            fontCss: function(treeId, treeNode) {
+                if (treeNode.ifChecked) {
+                    return { background: '#4185E0', color: '#FFF', 'border-radius': '2px' }
+                }
+            }
+        },
+        callback: {
+            onClick: function(event, treeId, treeNode, clickFlag){
+
+                var qcId, nodes, n;
+
+                qcId = treeNode.questionClassifyId;
+                dataTableObj.ajax.url('/Question/ListDataTablesAjax?qcId=' + qcId).load(null, true);
+
+                nodes = $.fn.zTree.getZTreeObj(treeId).getNodes();
+                if(qcId == 0){
+                    nodes[0].ifChecked = true;
+                }else{
+                    nodes[0].ifChecked = false;
+                }
+
+                for (var i = 0; i < nodes[0].children.length; i++) {
+                    n = nodes[0].children[i];
+                    if (n.questionClassifyId == qcId) {
+                        n.ifChecked = true;
+                    }else{
+                        n.ifChecked = false;
+                    }
+                };
+
+                $.fn.zTree.destroy(treeId)
+                ztree = $.fn.zTree.init(ul, settings, nodes);
+            }
+        }
+    };
+
+    ul = $('.question-classify-list-container ul');
+    ul.attr('id', 'ZTree_' + (new Date()).getTime());
+    nodes = ul.attr('data-value');
+    nodes = $.parseJSON(nodes);
+
+    for (var i = 0; i < nodes.length; i++) {
+        n = nodes[i];
+        if (n.questionClassifyId == qcId) {
+            n.ifChecked = true;
+        }
+    };
+
+    // 添加根节点“全部”
+    nodes = [{
+        name: '全部',
+        questionClassifyId: 0,
+        open: true,
+        children: nodes
+    }];
+
+    if(0 == qcId){
+        nodes[0].ifChecked = true;
+    }
+
+    ztree = $.fn.zTree.init(ul, settings, nodes);
 }

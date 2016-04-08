@@ -122,6 +122,7 @@ namespace OnlineLearningSystem.Utilities
             try
             {
                 QuestionClassify model;
+                List<Question> qs;
 
                 model = olsEni.QuestionClassifies.SingleOrDefault(m => m.QC_Id == id);
 
@@ -133,6 +134,20 @@ namespace OnlineLearningSystem.Utilities
 
                 model.QC_Status = (Byte)status;
                 olsEni.Entry(model).State = EntityState.Modified;
+
+                if (status != Status.Available)
+                {
+                    qs = olsEni.Questions.Where(m => m.QC_Id == model.QC_Id).ToList();
+                    foreach (var q in qs)
+                    {
+                        if (q.Q_Status != (Byte)Status.Cache 
+                            || (q.Q_Status == (Byte)Status.Cache && status == Status.Delete))
+                        {
+                            q.Q_Status = (Byte)status;
+                        }
+                    }
+                }
+
                 olsEni.SaveChanges();
 
                 resJson.status = ResponseStatus.Success;
@@ -184,12 +199,17 @@ namespace OnlineLearningSystem.Utilities
 
             if (status == (Byte)Status.Unset)
             {
-                // 显示状态为“正常”与“缓存”的分类
+                //// 显示状态为“正常”与“缓存”的分类
+                //qcs = olsEni
+                //    .QuestionClassifies
+                //    .Where(m =>
+                //        m.QC_Status != (Byte)Status.Recycle
+                //        && m.QC_Status != (Byte)Status.Delete)
+                //    .ToList();
+                // 显示除“删除”以外分类
                 qcs = olsEni
                     .QuestionClassifies
-                    .Where(m =>
-                        m.QC_Status != (Byte)Status.Recycle
-                        && m.QC_Status != (Byte)Status.Delete)
+                    .Where(m => m.QC_Status != (Byte)Status.Delete)
                     .ToList();
             }
             else

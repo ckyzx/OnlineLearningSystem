@@ -8,6 +8,12 @@
   <TestList name="测试列表" id="8c43106b-9dc1-4907-a29f-aa66a61bf5b6">
     <RunConfiguration id="fb35cadf-f513-4997-8927-662f65f1d0dd" name="本地" storage="local.testsettings" type="Microsoft.VisualStudio.TestTools.Common.TestRunConfiguration, Microsoft.VisualStudio.QualityTools.Common, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   </TestList>
+  <TestList name="CustomTaskTest" id="901c0a84-82df-40af-8e52-d92e8b1852a2" parentListId="8c43106b-9dc1-4907-a29f-aa66a61bf5b6">
+    <TestLinks>
+      <TestLink id="40895e96-6668-ad4f-21b1-ea37aae639a3" name="Test2" storage="timetasktestproject\bin\debug\timetasktestproject.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+      <TestLink id="bc87524b-f99d-44b3-a94f-de5440cb9c2b" name="Test1" storage="timetasktestproject\bin\debug\timetasktestproject.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    </TestLinks>
+  </TestList>
   <TestList name="StaticHelperTest" id="c99f4df9-b38b-4b4c-b0b6-807319378754" parentListId="8c43106b-9dc1-4907-a29f-aa66a61bf5b6">
     <TestLinks>
       <TestLink id="0ee2da42-0c4f-06ee-3740-45387acc80af" name="GetExceptionMessageTest" storage="timetasktestproject\bin\debug\timetasktestproject.dll" type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />

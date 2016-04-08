@@ -198,6 +198,48 @@ namespace OnlineLearningSystem.Controllers
         }
 
         //
+        // GET: /Question/Recycles
+
+        [Description("批量回收试题")]
+        public JsonResult Recycles(String ids)
+        {
+
+            ResponseJson resJson;
+
+            resJson = um.Recycle(ids);
+
+            return Json(resJson, JsonRequestBehavior.AllowGet);
+        }
+
+        //
+        // GET: /Question/Resumes
+
+        [Description("批量恢复试题")]
+        public JsonResult Resumes(String ids)
+        {
+
+            ResponseJson resJson;
+
+            resJson = um.Resume(ids);
+
+            return Json(resJson, JsonRequestBehavior.AllowGet);
+        }
+
+        //
+        // GET: /Question/Deletes
+
+        [Description("批量删除试题")]
+        public JsonResult Deletes(String ids)
+        {
+
+            ResponseJson resJson;
+
+            resJson = um.Delete(ids);
+
+            return Json(resJson, JsonRequestBehavior.AllowGet);
+        }
+
+        //
         // GET: /Question/SetDifficultyCoefficient
 
         [Description("设置难度系数")]

@@ -19,7 +19,7 @@ namespace OnlineLearningSystem.Models
         [DisplayName("名称")]
         [Required(ErrorMessage = "请输入{0}")]
         [Remote("DuplicateName", "ExaminationTask", ErrorMessage = "名称已存在", AdditionalFields = "ET_Id")]
-        [RegularExpression(@"^[\u4E00-\u9FA5\uF900-\uFA2D]{1}[\u4E00-\u9FA5\uF900-\uFA2D0-9]{1,11}$", ErrorMessage = "请输入2至12位，中文开头的字符，可带数字")]
+        [RegularExpression(@"^[\u4E00-\u9FA5\uF900-\uFA2D]{1}[\u4E00-\u9FA5\uF900-\uFA2D0-9]{1,19}$", ErrorMessage = "请输入2至20位，中文开头的字符，可带数字")]
         public String ET_Name { get; set; }
 
         [DisplayName("启用状态")]

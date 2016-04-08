@@ -145,7 +145,7 @@ Kyzx.List = {
         actionName: null,
         treeIdName: null,
         treeIdDefaultValue: null,
-        additionRequestParams: null
+        additionRequestParams: null // 格式：[{ name: '[paramName]', input: '[paramInputSelector]' }]
     },
     request: null,
     jqTable: null,
@@ -298,7 +298,7 @@ Kyzx.List = {
                 }
 
                 recycleBin.attr('data-status', status);
-                self.dataTables.ajax.reload(null, false);
+                self.dataTables.ajax.reload((null, true));
 
                 self._showControlBtn(status);
             });
@@ -458,6 +458,120 @@ Kyzx.List = {
         });
     },
 
+    _addBatchControlBtn: function(){
+
+        var funcBtnContainer, recycleBtn, resumeBtn, deleteBtn, editBtn;
+        var hasBtnContainer;
+        var self;
+        var btnClick, batchBtnClick;
+
+        self = this.self;
+
+        if (!self.settings.hasControlBtn) {
+            return;
+        }
+
+        funcBtnContainer = $('.function-btn-container');
+        hasBtnContainer = funcBtnContainer.length != 0;
+        if (!hasBtnContainer) {
+
+            funcBtnContainer = $('<div class="function-btn-container cl pd-5 bg-1 bk-gray"><span class="l"></span></div>');
+            $('div.list-body').prepend(funcBtnContainer);
+        }
+
+        btnClick = function(btnClassName) {
+
+            var checkboxs, tr, btn;
+
+            checkboxs = $('.list-body table input:checked');
+            if (checkboxs.length == 0) {
+
+                alert('请选择数据项。');
+                return;
+            } else if (checkboxs.length > 1) {
+
+                alert('请选择单条数据项。');
+                return;
+            }
+
+            tr = checkboxs.parents('tr');
+            btn = tr.find('a.' + btnClassName);
+            if (btn.length == 1 && (btn.hasClass('hide') || btn.css('display') == 'none')) {
+
+                alert('不允许的操作。');
+                return;
+            } else if (btn.length == 1) {
+                btn.click();
+            }
+        };
+
+        batchBtnClick = function(operate){
+
+            var checkboxs;
+            var ids;
+            var url;
+
+            checkboxs = $('.list-body tbody input:checked');
+            if (checkboxs.length == 0) {
+
+                alert('请选择数据项。');
+                return;
+            }
+
+            ids = '';
+            checkboxs.each(function(){
+                ids += this.value + ',';
+            });
+            ids = ids != '' ? ids.substring(0, ids.length - 1) : 0;
+
+            if(ids == 0){
+                return;
+            }
+
+            url = location.pathname;
+            url = url.substring(0, url.lastIndexOf('/') + 1);
+            url += operate;
+
+            if(!confirm('确定执行批量操作吗？')){
+                return;
+            }
+
+            $.post(url, {ids: ids}, function(data){
+
+                if(data.status == 1){
+                    self.dataTables.ajax.reload(null, false);
+                }
+                else if(data.status == 0){
+                    alert(data.message);
+                }
+            }, 'json');
+        };
+
+        recycleBtn = $('<a id="RecycleBtn" class="btn btn-warning ml-5 radius hide" href="javascript:void(0);">回收</a>');
+        funcBtnContainer.find('span.l').append(recycleBtn);
+        recycleBtn.on('click', function() {
+            batchBtnClick('Recycles');
+        });
+
+        resumeBtn = $('<a id="ResumeBtn" class="btn btn-warning ml-5 radius hide" href="javascript:void(0);">恢复</a>');
+        funcBtnContainer.find('span.l').append(resumeBtn);
+        resumeBtn.on('click', function() {
+            batchBtnClick('Resumes');
+        });
+
+        deleteBtn = $('<a id="DeleteBtn" class="btn btn-warning ml-5 radius hide" href="javascript:void(0);">删除</a>');
+        funcBtnContainer.find('span.l').append(deleteBtn);
+        deleteBtn.on('click', function() {
+            batchBtnClick('Deletes');
+        });
+
+        editBtn = $('<a id="EditBtn" class="btn btn-warning ml-5 radius hide" href="javascript:void(0);">编辑</a>');
+        funcBtnContainer.find('span.l').append(editBtn);
+        editBtn.on('click', function() {
+            btnClick('edit');
+        });
+    },
+
     _showControlBtn: function(status) {
 
         if (status == 1) {
@@ -566,6 +680,10 @@ Kyzx.List = {
         self.jqTable.on('click', 'tbody a.delete', function() {
 
             var tr, data, id;
+
+            if(!confirm('是否确定执行删除操作？')){
+                return;
+            }
 
             tr = $(this).parents('tr');
             data = self.dataTables.row(tr).data();
@@ -1140,7 +1258,7 @@ OLS.ExaminationTask = {
         etAutoType.on('change', function() {
 
             var questionsList, etAutoType, etAutoOffsetDay, etaodContainer, atContainer,
-                etContinuedDays, etMode, etStartDateContainer;
+                etContinuedDays, etMode, etStartDateContainer, etQuestions;
             var autoType;
 
             etAutoType = $('#' + me.s.idPrefix + 'AutoType');
@@ -1155,6 +1273,8 @@ OLS.ExaminationTask = {
             etAutoOffsetDay = $('#' + me.s.idPrefix + 'AutoOffsetDay');
             etaodContainer = etAutoOffsetDay.parentsUntil('form').last();
 
+            etQuestions = $('#' + me.s.idPrefix + 'Questions');
+
             switch (autoType) {
                 case 0:
 
@@ -1166,6 +1286,8 @@ OLS.ExaminationTask = {
                     break;
                 case 1:
 
+                    questionsList.find(':checkbox').attr('checked', false);
+                    etQuestions.val('[]');
                     questionsList.hide();
                     etaodContainer.hide();
                     me._showAutoTaskControls();
@@ -1173,6 +1295,8 @@ OLS.ExaminationTask = {
                     break;
                 case 2:
 
+                    questionsList.find(':checkbox').attr('checked', false);
+                    etQuestions.val('[]');
                     questionsList.hide();
                     etaodContainer.show();
                     me._showAutoTaskControls();
@@ -1180,6 +1304,8 @@ OLS.ExaminationTask = {
                     break;
                 case 3:
 
+                    questionsList.find(':checkbox').attr('checked', false);
+                    etQuestions.val('[]');
                     questionsList.hide();
                     etaodContainer.show();
                     me._showAutoTaskControls();
@@ -1536,7 +1662,7 @@ OLS.ExaminationTask = {
 
         if (stRegex1.test(startTime) || !stRegex.test(startTime)) {
 
-            me.appendError(me.s.idPrefix + 'EndTime', '请选择开始时间', etStartTime);
+            me.appendError(me.s.idPrefix + 'StartTime', '请选择开始时间', etStartTime);
             valid = false;
         }
 

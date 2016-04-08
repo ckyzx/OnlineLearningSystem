@@ -2,7 +2,7 @@ USE OLS;
 
 GO
 
-/*-- 添加存储过程“更新系统管理员角色数据”
+-- 添加存储过程“更新系统管理员角色数据”
 IF OBJECT_ID(N'dbo.UpdateAdminRole', 'P') IS NOT NULL 
     DROP PROCEDURE dbo.UpdateAdminRole;
 
@@ -111,7 +111,7 @@ GO
 
 EXEC dbo.UpdateAdminRole;
 
-GO*/
+GO
 
 -- 更新“学员”角色权限
 UPDATE  dbo.Roles
