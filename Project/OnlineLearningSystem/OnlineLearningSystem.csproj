@@ -988,6 +988,7 @@
     <None Include="Contents\skin\orange\Thumbs.db" />
     <None Include="Contents\skin\red\Thumbs.db" />
     <None Include="Contents\skin\yellow\Thumbs.db" />
+    <Content Include="Views\Shared\_Common.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

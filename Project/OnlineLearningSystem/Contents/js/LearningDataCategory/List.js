@@ -60,9 +60,9 @@ $(function() {
                     row.find('a.recycle').removeClass('hide');
                     row.find('a.edit').removeClass('hide');
 
-                    row.find('a.sort-top').removeClass('hide');
+                    /*row.find('a.sort-top').removeClass('hide');
                     row.find('a.sort-up').removeClass('hide');
-                    row.find('a.sort-down').removeClass('hide');
+                    row.find('a.sort-down').removeClass('hide');*/
                     break;
                 case 2:
                     row.find('a.resume').removeClass('hide');
@@ -85,7 +85,7 @@ $(function() {
     });
     list.initList();
 
-    $('.table-sort tbody').on('click', 'a.sort-top', function() {
+    /*$('.table-sort tbody').on('click', 'a.sort-top', function() {
 
         var originTr, destTr;
         var data, originId, destId;
@@ -225,6 +225,6 @@ $(function() {
                 layer.close(layerIndex);
                 alert('请求返回错误！');
             });
-    });
+    });*/
 
 });

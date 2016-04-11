@@ -12,14 +12,15 @@
         if (winName.indexOf('List') != -1) {
 
             parent.location.reload();
-        } else if (undefined != parent.$) {
+        } else if (undefined != parent.$) { // 拥有父窗口对象
 
             selfLi = parent.$('#min_title_list li.active');
             selfSpan = selfLi.find('span');
             selfI = selfLi.find('i');
             selfHref = selfSpan.attr('data-href');
 
-            if (selfHref.indexOf('Create') != -1) { // 当前标签为“添加页”，则打开列表页
+            // 当前标签为“添加页”，则打开列表页
+            if (selfHref.indexOf('Create') != -1) {
 
                 selfHref = selfHref.replace('Create', 'List');
                 a = parent.$('.Hui-aside').find('a[_href="' + selfHref + '"]');
@@ -27,11 +28,16 @@
                     a.click();
                 }
 
+                // 关闭当前标签
                 selfI.click();
-            } else { // 关闭标签
 
-                selfI.click();
+            }else{ // 否则，重新打开标签链接
+
+                if(selfHref.indexOf('/') != -1){
+                    location.href = selfHref;
+                }
             }
+
         }
     </script>
 </head>

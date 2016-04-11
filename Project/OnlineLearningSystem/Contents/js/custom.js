@@ -1,44 +1,8 @@
 var Kyzx = {};
 var OLS = {};
-var WebUploaderHelper = {};
-
-/* 在模态框中显示页面 */
-function ShowPage(title, url) {
-    var index = layer.open({
-        type: 2,
-        title: title,
-        content: url,
-        // 初始化为小区域，可避免展现错位的控件
-        //area: ['180px', '36px']
-        area: ['800px', '600px'],
-        shade: 0
-    });
-    layer.full(index);
-}
-
-function ShowPageWithSize(title, url, w, h) {
-
-    if (w == undefined)
-        w = 800;
-
-    if (h == undefined) {
-        h = 600;
-    }
-
-    layer.open({
-        type: 2,
-        area: [w + 'px', h + 'px'],
-        fix: false, //不固定
-        shade: 0.4,
-        title: title,
-        content: url,
-        shade: 0,
-        offset: '0'
-    });
-}
 
 Kyzx.Utility = {
-    ShowPage: function(title, url) {
+    showPage: function(title, url) {
         var index = layer.open({
             type: 2,
             title: title,
@@ -51,7 +15,7 @@ Kyzx.Utility = {
         layer.full(index);
     },
 
-    ShowPageWithSize: function(title, url, w, h) {
+    showPageWithSize: function(title, url, w, h) {
 
         if (w == undefined)
             w = 800;
@@ -70,6 +34,20 @@ Kyzx.Utility = {
             shade: 0,
             offset: '0'
         });
+    },
+
+    redirect: function(title, url){
+
+        var search;
+
+        search = location.search;
+        if(search != ''){
+            search = search.substring(1);
+            search = 'p_' + search.replace(/&/g, '&p_');
+        }
+
+        url = url.indexOf('?') != -1 ? (url + '&' + search) : (url + '?' + search);
+        location.href = url;
     }
 };
 
@@ -229,7 +207,7 @@ Kyzx.List = {
                     url += '?' + self.settings.treeIdName + '=' + self.request.getValue(self.settings.treeIdName, 0);
                 }
 
-                ShowPage('添加' + self.settings.modelCnName, url);
+                Kyzx.Utility.redirect('添加' + self.settings.modelCnName, url);
             });
         }
     },
@@ -378,7 +356,7 @@ Kyzx.List = {
 
             if (0 == nodeId) {
 
-                nodes[0].checked = true;
+                nodes[0].ifChecked = true;
             }
 
             ztree = $.fn.zTree.init(ul, settings, nodes);
@@ -602,7 +580,7 @@ Kyzx.List = {
             data = self.dataTables.row($(this).parents('tr')).data();
             id = data[self.settings.modelPrefix + 'Id'];
 
-            ShowPage('查看' + self.settings.modelCnName, '/' + self.settings.modelEnName + '/View?id=' + id);
+            Kyzx.Utility.redirect('查看' + self.settings.modelCnName, '/' + self.settings.modelEnName + '/View?id=' + id);
         });
 
         self.jqTable.on('click', 'tbody a.edit', function() {
@@ -612,7 +590,7 @@ Kyzx.List = {
             data = self.dataTables.row($(this).parents('tr')).data();
             id = data[self.settings.modelPrefix + 'Id'];
 
-            ShowPage('修改' + self.settings.modelCnName, '/' + self.settings.modelEnName + '/Edit?id=' + id);
+            Kyzx.Utility.redirect('修改' + self.settings.modelCnName, '/' + self.settings.modelEnName + '/Edit?id=' + id);
         });
 
         self.jqTable.on('click', 'tbody a.recycle', function() {
@@ -2246,7 +2224,7 @@ OLS.ExaminationTask = {
         /* --------------------------------------------------------------------------------- */
 };
 
-WebUploaderHelper = {
+OLS.WebUploaderHelper = {
     self: null,
     settings: {
         action: 'uploadfile',
@@ -2392,3 +2370,5 @@ WebUploaderHelper = {
         });
     }
 };
+
+OLS.Question = {};

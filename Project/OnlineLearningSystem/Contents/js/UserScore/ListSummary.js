@@ -96,7 +96,7 @@
         data = table.row($(this).parents('tr')).data();
         id = data['USS_UserId'];
 
-        ShowPage('成绩详情', '/UserScore/ListDetail?uId=' + id);
+        Kyzx.Utility.redirect('成绩详情', '/UserScore/ListDetail?uId=' + id);
     });
 
     getDepartmentId = function(){

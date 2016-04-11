@@ -12,7 +12,7 @@
         width = a.attr('data-width');
         height = a.attr('data-height');
 
-        ShowPageWithSize(title, url, width, height);
+        Kyzx.Utility.showPageWithSize(title, url, width, height);
     });
 
     $('#Logout').on('click', function() {

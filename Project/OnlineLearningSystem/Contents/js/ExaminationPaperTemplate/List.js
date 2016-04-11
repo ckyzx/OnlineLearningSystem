@@ -113,7 +113,7 @@ $(function() {
         data = table.row($(this).parents('tr')).data();
         id = data['EPT_Id'];
 
-        ShowPage('试卷', '/ExaminationPaperTemplate/ListGrade?eptId=' + id);
+        Kyzx.Utility.redirect('试卷', '/ExaminationPaperTemplate/ListGrade?eptId=' + id);
     });
 
     $('.table-sort tbody').on('click', 'a.terminate', function() {

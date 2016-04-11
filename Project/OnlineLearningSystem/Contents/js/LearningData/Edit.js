@@ -12,7 +12,7 @@ $(function() {
     ueContent = UE.getEditor('LD_Content');
 
     // 视频上传
-    WebUploaderHelper.init({
+    OLS.WebUploaderHelper.init({
         action: 'uploadvideo',
         accept: {
             title: 'Video',

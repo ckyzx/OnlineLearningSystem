@@ -61,6 +61,7 @@ $(function() {
         actionName: 'ListStudent',
         hasCreateBtn: false,
         hasRecycleBin: false,
+        hasControlBtn: false,
         treeIdName: 'ldcId',
         treeIdDefaultValue: 0
     });

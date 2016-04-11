@@ -20,4 +20,12 @@ function rowResponse() {
         .on('mouseleave', 'tbody tr', function() {
             $(this).removeClass('hover');
         });
+    /*$('.table-sort')
+        .on('mouseenter', 'tbody tr', function() {
+            var tr, table;
+            tr = $(this);
+            table = tr.parentsUntil('table');
+            table.find('tr').removeClass('hover');
+            tr.addClass('hover');
+        })*/;
 }

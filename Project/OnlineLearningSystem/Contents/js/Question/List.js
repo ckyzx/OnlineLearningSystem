@@ -208,11 +208,11 @@ $(function() {
             url += '?qcId=' + qcId;
         }
 
-        ShowPage('添加试题', url);
+        Kyzx.Utility.redirect('添加试题', url);
     });
 
     $('#DocxUploadBtn').on('click', function() {
-        ShowPage('导入试题', '/Question/DocxUploadAndImport');
+        Kyzx.Utility.redirect('导入试题', '/Question/DocxUploadAndImport');
     });
 
     $('#CacheClearBtn').on('click', function() {
@@ -401,7 +401,7 @@ $(function() {
     }];
 
     if (0 == qcId) {
-        nodes[0].checked = true;
+        nodes[0].ifChecked = true;
     }
 
     ztree = $.fn.zTree.init(ul, settings, nodes);

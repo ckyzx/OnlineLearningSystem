@@ -75,7 +75,7 @@ $(function() {
         data = table.row($(this).parents('tr')).data();
         id = data['PC_Id'];
 
-        ShowPage('修改权限目录', '/PermissionCategory/Edit?id=' + id);
+        Kyzx.Utility.redirect('修改权限目录', '/PermissionCategory/Edit?id=' + id);
     });
 
     $('.table-sort tbody').on('click', 'a.recycle', function() {
@@ -195,7 +195,7 @@ $(function() {
     });
 
     $('#CreateBtn').on('click', function() {
-        ShowPage('添加权限目录', '/PermissionCategory/Create');
+        Kyzx.Utility.redirect('添加权限目录', '/PermissionCategory/Create');
     });
 
 });

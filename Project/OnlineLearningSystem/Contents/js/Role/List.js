@@ -75,7 +75,7 @@ $(function() {
         data = table.row($(this).parents('tr')).data();
         id = data['R_Id'];
 
-        ShowPage('修改角色', '/Role/Edit?id=' + id);
+        Kyzx.Utility.redirect('修改角色', '/Role/Edit?id=' + id);
     });
 
     $('.table-sort tbody').on('click', 'a.recycle', function() {
@@ -195,7 +195,7 @@ $(function() {
     });
 
     $('#CreateBtn').on('click', function() {
-        ShowPage('添加角色', '/Role/Create');
+        Kyzx.Utility.redirect('添加角色', '/Role/Create');
     });
 
 });

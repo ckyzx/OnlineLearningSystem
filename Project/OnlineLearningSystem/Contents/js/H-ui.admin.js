@@ -72,6 +72,41 @@ function layer_show(title, url, w, h) {
 }
 /*关闭弹出框口*/
 function layer_close() {
-    var index = parent.layer.getFrameIndex(window.name);
-    parent.layer.close(index);
+
+    var iframeName, search, path;
+    var redirect, close;
+
+    iframeName = window.name;
+    path = location.pathname;
+
+    redirect = function(href) {
+        search = location.search;
+        if (search != "") {
+            search = search.substring(search.indexOf('p_'));
+            search = '?' + search.replace(/p_/g, '');
+        }
+        location.href = href + search;
+    };
+
+    close = function(layerName) {
+        var index;
+        index = parent.layer.getFrameIndex(layerName);
+        parent.layer.close(index);
+    };
+
+    if (iframeName == '') {
+
+        if (path.indexOf('Create') != -1) {
+            redirect(path.replace('Create', 'List'));
+        } else if (path.indexOf('Edit') != -1) {
+            redirect(path.replace('Edit', 'List'));
+        } else {
+            close(iframeName);
+        }
+    } else if (path != iframeName && iframeName.indexOf('/') != -1) {
+
+        redirect(iframeName);
+    } else {
+        close(iframeName);
+    }
 }

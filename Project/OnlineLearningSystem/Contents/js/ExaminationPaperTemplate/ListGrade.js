@@ -1,4 +1,4 @@
-﻿$(function() {
+$(function() {
 
     var eptId;
     var container, eptIdInput, uIdInput, epIdInput, etStatisticTypeInput;
@@ -171,7 +171,7 @@
                         offset: '100px'
                     });
 
-                    if (undefined != callback) {
+                    if ('function' == typeof(callback)) {
                         callback();
                     }
                 } else if (0 == data.status) {

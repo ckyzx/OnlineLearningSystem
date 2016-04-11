@@ -120,9 +120,7 @@ namespace OnlineLearningSystem.Utilities
             {
 
                 Int32 id;
-                ExaminationTask et;
                 ResponseJson resJson;
-                List<ExaminationTaskAttendee> etas;
 
                 resJson = new ResponseJson(ResponseStatus.Success, now);
 
@@ -147,28 +145,6 @@ namespace OnlineLearningSystem.Utilities
                     }
                     catch (Exception ex1)
                     {
-
-                        /*// 如果已添加任务，则删除之
-                        et = olsEni.ExaminationTasks.SingleOrDefault(m => m.ET_Id == id);
-                        if (et != null)
-                        {
-                            olsEni.Entry(et).State = EntityState.Deleted;
-                            olsEni.SaveChanges();
-                        }
-
-                        // 删除任务用户关联
-                        etas = olsEni.ExaminationTaskAttendees.Where(m => m.ET_Id == model.ET_Id).ToList();
-                        foreach (var eta1 in etas)
-                        {
-                            olsEni.Entry(eta1).State = EntityState.Deleted;
-                        }
-                        olsEni.SaveChanges();
-
-                        if (0 == olsEni.SaveChanges())
-                        {
-                            throw new Exception(ResponseMessage.SaveChangesError);
-                        }*/
-
                         throw ex1;
                     }
 
@@ -389,34 +365,83 @@ namespace OnlineLearningSystem.Utilities
 
         public Boolean Edit(ExaminationTask model)
         {
-            try
+
+            using (TransactionScope scope = new TransactionScope())
             {
-
-                ExaminationTask et;
-
-                et = olsEni.ExaminationTasks.SingleOrDefault(m => m.ET_Id == model.ET_Id);
-                // 已开始/已结束的手动任务不允许编辑；已开始的自动任务不允许编辑
-                if ((et.ET_AutoType == 0 && et.ET_Enabled != 0) || (et.ET_AutoType > 0 && et.ET_Enabled == 1))
+                try
                 {
+
+                    ExaminationTask et;
+
+                    et = olsEni.ExaminationTasks.SingleOrDefault(m => m.ET_Id == model.ET_Id);
+                    // 已开始/已结束的手动任务不允许编辑；已开始的自动任务不允许编辑
+                    if ((et.ET_AutoType == 0 && et.ET_Enabled != 0) || (et.ET_AutoType > 0 && et.ET_Enabled == 1))
+                    {
+                        return false;
+                    }
+                    olsEni.Entry(et).State = EntityState.Detached;
+                    olsEni.Entry(model).State = EntityState.Modified;
+                    if (0 == olsEni.SaveChanges())
+                    {
+                        throw new Exception(ResponseMessage.SaveChangesError);
+                    }
+
+                    try
+                    {
+
+                        // 删除试卷模板与试题模板
+                        DeletePaperTemplateAndQuestionTemplate(model);
+
+                        // 添加参与人员
+                        AddAttendees(model);
+
+                        // 添加试卷模板与试题模板
+                        AddPaperTemplateAndQuestionTemplate(model);
+
+                    }
+                    catch (Exception ex1)
+                    {
+                        throw ex1;
+                    }
+
+                    scope.Complete();
+
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    StaticHelper.RecordSystemLog(ex);
                     return false;
                 }
-                olsEni.Entry(et).State = EntityState.Detached;
-                olsEni.Entry(model).State = EntityState.Modified;
-                if (0 == olsEni.SaveChanges())
-                {
-                    throw new Exception(ResponseMessage.SaveChangesError);
-                }
-
-                // 添加参与人员
-                AddAttendees(model);
-
-                return true;
             }
-            catch (Exception ex)
+        }
+
+        private void DeletePaperTemplateAndQuestionTemplate(ExaminationTask model)
+        {
+
+            ExaminationPaperTemplate ept;
+            List<ExaminationPaperTemplateQuestion> eptqs;
+
+            ept = olsEni.ExaminationPaperTemplates.Single(m => m.ET_Id == model.ET_Id);
+            eptqs = olsEni.ExaminationPaperTemplateQuestions.Where(m => m.EPT_Id == ept.EPT_Id).ToList();
+
+            foreach (var eptq in eptqs)
             {
-                StaticHelper.RecordSystemLog(ex);
-                return false;
+                olsEni.Entry(eptq).State = EntityState.Deleted;
             }
+
+            if (0 == olsEni.SaveChanges())
+            {
+                throw new Exception(ResponseMessage.SaveChangesError);
+            }
+
+            olsEni.Entry(ept).State = EntityState.Deleted;
+
+            if (0 == olsEni.SaveChanges())
+            {
+                throw new Exception(ResponseMessage.SaveChangesError);
+            }
+
         }
 
         public ResponseJson Recycle(Int32 id)

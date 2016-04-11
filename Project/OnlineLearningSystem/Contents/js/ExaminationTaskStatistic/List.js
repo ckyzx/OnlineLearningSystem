@@ -82,7 +82,7 @@
         data = table.row($(this).parents('tr')).data();
         id = data['ETS_PaperTemplateId'];
 
-        ShowPageWithSize('统计详情', '/ExaminationTaskStatistic/ListUser?eptId=' + id, 800, 600);
+        Kyzx.Utility.showPageWithSize('统计详情', '/ExaminationTaskStatistic/ListUser?eptId=' + id, 800, 600);
     });
 
     getRequestString = function() {

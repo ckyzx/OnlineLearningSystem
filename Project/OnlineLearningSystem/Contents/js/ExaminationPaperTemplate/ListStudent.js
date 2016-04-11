@@ -253,8 +253,7 @@ $(function() {
         data = table.row($(this).parents('tr')).data();
         id = data['ESPT_PaperTemplateId'];
 
-        ShowPage('试卷', '/ExaminationPaperTemplate/Paper?id=' + id);
-        //location.href = '/ExaminationPaperTemplate/Paper?id=' + id;
+        Kyzx.Utility.redirect('试卷', '/ExaminationPaperTemplate/Paper?id=' + id);
     });
 
     $('.table-sort tbody').on('click', 'a.view-exam', function() {
@@ -264,7 +263,7 @@ $(function() {
         data = table.row($(this).parents('tr')).data();
         id = data['ESPT_PaperTemplateId'];
 
-        ShowPage('试卷', '/ExaminationPaperTemplate/PaperView?id=' + id);
+        Kyzx.Utility.redirect('试卷', '/ExaminationPaperTemplate/PaperView?id=' + id);
     });
 
 });

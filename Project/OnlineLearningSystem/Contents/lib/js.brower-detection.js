@@ -30,5 +30,5 @@ if (typeof(console) != 'undefined') {
     console.log(brower.userAgent);
     console.log(brower.ieVersion);
 } else {
-    document.write('<div style="color:#FFF;background:#FFF;">Navigator User Agent: ' + brower.userAgent + '<br />IE Version: ' + brower.ieVersion + '</div>');
+    //document.write('<div style="color:#FFF;background:#FFF;">Navigator User Agent: ' + brower.userAgent + '<br />IE Version: ' + brower.ieVersion + '</div>');
 }
