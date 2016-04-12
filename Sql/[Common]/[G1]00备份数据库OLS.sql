@@ -8,3 +8,5 @@ SET @fileName = 'OLS_' + @now + '.sqlserver2k8'
 SET @filePath = 'D:\' + @fileName; -- АэИз: МоИл 'D:\' + @fileName
 
 BACKUP DATABASE OLS TO DISK = @filePath
+
+GO

@@ -115,5 +115,6 @@ namespace OnlineLearningSystem.Models
         [Required(ErrorMessage = "请选择{0}")]
         public Byte ET_Status { get; set; }
 
+        public String ET_ErrorMessage { get; set; }
     }
 }

@@ -1,7 +1,23 @@
+DECLARE @now VARCHAR(100)
+DECLARE @fileName VARCHAR(100)
+DECLARE @filePath VARCHAR(500)
+
+SET @now = REPLACE(REPLACE(REPLACE(CONVERT(VARCHAR(100), GETDATE(), 20), '-', ''), ' ', ''), ':', '');
+SET @fileName = 'OLS_V0.17_' + @now + '.sqlserver2k8'
+-- 下面填入保存数据库备份文件的路径
+SET @filePath = 'D:\' + @fileName; -- 例如: 填入 'D:\' + @fileName
+
+BACKUP DATABASE OLS TO DISK = @filePath
+
+GO
+
 USE OLS;
 
 GO
 
+/***************************************************
+** [OLS_V0.19]1添加批量操作试题的权限.sql
+****************************************************/
 BEGIN
 DECLARE @pcId INT ,
     @pId INT;
@@ -80,4 +96,11 @@ GO
 BEGIN
 EXEC dbo.UpdateAdminRole;
 END
+GO
+
+/***************************************************
+** [OLS_V0.19]2修改用户密码为 123456.sql
+****************************************************/
+UPDATE Users SET U_Password = 'E10ADC3949BA59ABBE56E057F20F883E' WHERE LOWER(U_LoginName) <> 'admin'
+
 GO

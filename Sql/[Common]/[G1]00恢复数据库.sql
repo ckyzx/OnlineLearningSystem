@@ -1,4 +1,13 @@
-USE master
+DECLARE @now VARCHAR(100)
+DECLARE @fileName VARCHAR(100)
+DECLARE @filePath VARCHAR(500)
+
+SET @now = REPLACE(REPLACE(REPLACE(CONVERT(VARCHAR(100), GETDATE(), 20), '-', ''), ' ', ''), ':', '');
+SET @fileName = 'OLS_' + @now + '.sqlserver2k8'
+-- 下面填入保存数据库备份文件的路径
+SET @filePath = 'D:\' + @fileName; -- 例如: 填入 'D:\' + @fileName
+
+BACKUP DATABASE OLS TO DISK = @filePath
 
 GO
 
@@ -32,11 +41,9 @@ EXEC p_killspid 'OLS'
 
 RESTORE DATABASE OLS
 -- 下面填入数据库备份文件的路径
---FROM DISK= 'F:\工作目录\OLS\OnlineLearningSystem_V0.13.0.2_20160226\Db\OLSV0.8_Database\ols.sqlserver2k8'
---FROM DISK= 'D:\Cheng\Workspace\OnlineLearningSystem\Db\OLSV0.8_Database\ols.sqlserver2k8'
-FROM DISK = 'D:\OLS_20160316201151.sqlserver2k8'
+FROM DISK = 'D:\OLS_V0.15_Dev.sqlserver2k8'
 WITH REPLACE,
-     MOVE 'OLS_Data' TO 'F:\SQLSERVER2008DATA\OLS.mdf', 
-     MOVE 'OLS_log'  TO 'F:\SQLSERVER2008DATA\OLS_log.ldf'
-     --MOVE 'OLS_Data' TO 'D:\SQL Server 2008 Data\OLS.mdf', 
-     --MOVE 'OLS_log'  TO 'D:\SQL Server 2008 Data\OLS_log.ldf'
+     --MOVE 'OLS_Data' TO 'F:\SQLSERVER2008DATA\OLS.mdf', 
+     --MOVE 'OLS_log'  TO 'F:\SQLSERVER2008DATA\OLS_log.ldf'
+     MOVE 'OLS_Data' TO 'D:\SQL Server 2008 Data\OLS.mdf', 
+     MOVE 'OLS_log'  TO 'D:\SQL Server 2008 Data\OLS_log.ldf'

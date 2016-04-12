@@ -109,6 +109,11 @@ namespace OnlineLearningSystem.Utilities
             ExaminationTask model;
 
             model = olsEni.ExaminationTasks.Single(m => m.ET_Id == id);
+            if (model.ET_ErrorMessage != null)
+            {
+                model.ET_ErrorMessage = null;
+                olsEni.SaveChanges();
+            }
 
             return model;
         }

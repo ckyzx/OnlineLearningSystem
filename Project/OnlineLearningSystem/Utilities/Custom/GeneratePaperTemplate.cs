@@ -24,6 +24,7 @@ namespace OnlineLearningSystem.Utilities
             {
 
                 Int32 success;
+                String tmpMessage;
                 List<ExaminationTask> ets;
                 List<Question> readyQs;
 
@@ -63,19 +64,27 @@ namespace OnlineLearningSystem.Utilities
                         et.ET_Enabled = (Byte)ExaminationTaskStatus.Disabled;
 
                         resJson.status = ResponseStatus.Error;
-                        resJson.message += et.ET_Name + "：" + ex.Message + "\\r\\n";
+                        tmpMessage = et.ET_Name + "：" + ex.Message + "\\r\\n";
 
                         if (ex.Data != null && ex.Data["Info"] != null)
                         {
-                            resJson.message += "\\r\\n" + ex.Data["Info"];
+                            tmpMessage += "\\r\\n" + ex.Data["Info"];
+                        }
+
+                        et.ET_ErrorMessage = ex.Message;
+                        if (et.ET_ErrorMessage.Length > 1000)
+                        {
+                            et.ET_ErrorMessage = et.ET_ErrorMessage.Substring(0, 1000);
                         }
 
                         if (0 == olsEni.SaveChanges())
                         {
-                            resJson.message += ResponseMessage.SaveChangesError + "\\r\\n";
+                            tmpMessage += ResponseMessage.SaveChangesError + "\\r\\n";
                         }
 
-                        StaticHelper.RecordSystemLog(SystemLogType.Exception, ex.Message, resJson.message);
+                        resJson.message += tmpMessage;
+
+                        StaticHelper.RecordSystemLog(SystemLogType.Exception, ex.Message, tmpMessage);
                     }
 
                 }
@@ -582,7 +591,7 @@ namespace OnlineLearningSystem.Utilities
             increment = 0;
             random = new Random((Int32)DateTime.Now.Ticks);
 
-            
+
 
             while (increment < typeNumber)
             {

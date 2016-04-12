@@ -2146,14 +2146,14 @@ OLS.ExaminationTask = {
 
             input = $(this);
             ratio = input.val();
-
-            if ('' == ratio || isNaN(ratio) || /[-.+]+/.test(ratio)) {
+            //[TestEnabled]
+            /*if ('' == ratio || isNaN(ratio) || /[-.+]+/.test(ratio)) {
 
                 alert('请输入整数。');
                 ratio = input.attr('data-origin-val');
             }
 
-            ratio = parseInt(ratio);
+            ratio = parseInt(ratio);*/
             input.val(ratio);
 
             input.attr('data-origin-val', ratio);

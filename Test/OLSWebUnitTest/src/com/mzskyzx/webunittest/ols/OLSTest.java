@@ -3,6 +3,7 @@ package com.mzskyzx.webunittest.ols;
 import static org.junit.Assert.*;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -23,7 +24,8 @@ public class OLSTest extends WebUnitTest {
 	public OLSTest() {
 		// init("chrome");
 		// init("edge");
-		init("ie");
+		//init("ie");
+		init("ie", false, 10);
 		wd.get(url);
 	}
 
@@ -59,6 +61,7 @@ public class OLSTest extends WebUnitTest {
 			$("#UserName").sendKeys(name);
 			$("#Password").sendKeys(password);
 			$("#Submit").click();
+			Thread.sleep(1000);
 			cnName = $("#User").getAttribute("user-name");
 
 			return cnName;
@@ -222,7 +225,7 @@ public class OLSTest extends WebUnitTest {
 			submit(true, true);
 			Assert.assertTrue(wd.findElement(By.xpath("//nav[@class='breadcrumb']")).getText().contains("考试任务"));
 
-			if(start){
+			if (start) {
 				startTask(taskName);
 			}
 		} catch (Exception e) {
@@ -232,13 +235,18 @@ public class OLSTest extends WebUnitTest {
 		return taskName;
 	}
 
-	protected String addAutoTaskDay(Boolean start) throws Exception {
+	protected String addAutoTask(String department, String type, int autoOffset, Boolean start) throws Exception {
+		return addAutoTask(department, type, autoOffset, null, start, start);
+	}
+
+	protected String addAutoTask(String department, String type, int autoOffset, List<Integer> autoRatios, Boolean start, Boolean waitStart) throws Exception{
 
 		int startHour, endHour, startMinute, wait;
 		String taskName, date, id;
 		WebElement we;
 		Select select;
 		SimpleDateFormat simpleDateFormat;
+		List<WebElement> wes;
 
 		taskName = null;
 
@@ -248,11 +256,24 @@ public class OLSTest extends WebUnitTest {
 
 			// 任务名称
 			simpleDateFormat = new SimpleDateFormat("MMddhhmmss");
-			taskName = "自动任务每日" + simpleDateFormat.format(now);
+			taskName = "自动任务";
+			switch (type) {
+			case "day":
+				taskName += "每日";
+				break;
+			case "week":
+				taskName += "每周";
+				break;
+			case "month":
+				taskName += "每月";
+			default:
+				break;
+			}
+			taskName += simpleDateFormat.format(now);
 			$("#ET_Name").sendKeys(taskName);
 
 			// 参与人员
-			we = $x("//ul[@id='DepartmentsAndUsers']/li[.//span[text()='技术部']]");
+			we = $x("//ul[@id='DepartmentsAndUsers']/li[.//span[text()='" + department + "']]");
 			id = we.getAttribute("id");
 			we = $x("//span[@id='" + id + "_check']");
 			we.click();
@@ -267,12 +288,39 @@ public class OLSTest extends WebUnitTest {
 			select = new Select(we);
 			select.selectByVisibleText("自动");
 
+			if (type != "day") {
+
+				// 自动类型
+				we = $("#ET_AutoType");
+				select = new Select(we);
+				if (type == "week") {
+					select.selectByVisibleText("每周");
+				} else if (type == "month") {
+					select.selectByVisibleText("每月");
+				}
+
+				// 考试日期
+				we = $x("//*[@id='AutoOffsetDayContainer']/span/span/select[contains(@class, 'offset-day-num')]");
+				select = new Select(we);
+				select.selectByValue(String.valueOf(autoOffset));
+			}
+
 			// 出题分类
 			we = $x("//ul[@id='QuestionClassifies']/li[.//span[text()='全部']]");
 			id = we.getAttribute("id");
 			we = $x("//span[@id='" + id + "_check']");
 			we.click();
 
+			// 出题比例
+			if(autoRatios != null){
+				wes = $xs("//input[contains(@class,'ratio-percent')]");
+				for(int i = 0; i< wes.size(); i++){
+					we = wes.get(i);
+					we.clear();
+					we.sendKeys(String.valueOf(autoRatios.get(i)));
+				}
+			}
+			
 			// 开始时间
 			startMinute = getStartMinute();
 			startHour = getStartHour(startMinute);
@@ -306,11 +354,21 @@ public class OLSTest extends WebUnitTest {
 			submit(true, true);
 
 			Assert.assertTrue($wex("//nav[@class='breadcrumb']").text().contains("考试任务"));
-			
-			if(start){
+
+			if (start) {
 				startTask(taskName);
-				wait = (startHour * 60 + startMinute) - (calendar.get(Calendar.HOUR_OF_DAY) * 60 + calendar.get(Calendar.MINUTE));
-				Thread.sleep(wait * 60 * 1000);
+			}
+			
+			if(waitStart){
+				wait = (startHour * 60 + startMinute)
+						- (calendar.get(Calendar.HOUR_OF_DAY) * 60 + calendar.get(Calendar.MINUTE));
+				//Thread.sleep(wait * 60 * 1000);
+				wait = wait * 60;
+				while(wait > 0){
+					Thread.sleep(1000);
+					wait -= 1;
+					System.out.println(wait + " seconds left.");
+				}
 			}
 		} catch (Exception e) {
 			throw e;
@@ -318,7 +376,7 @@ public class OLSTest extends WebUnitTest {
 
 		return taskName;
 	}
-
+	
 	private int getStartMinute() {
 		int minute;
 
@@ -338,7 +396,7 @@ public class OLSTest extends WebUnitTest {
 		int hour;
 
 		hour = calendar.get(Calendar.HOUR_OF_DAY);
-		if (startMinute < 6) {
+		if (startMinute == 0) {
 			hour += 1;
 		}
 		return hour;
@@ -375,13 +433,13 @@ public class OLSTest extends WebUnitTest {
 		}
 	}
 
-	protected Boolean checkExaminationScore(String taskName) {
+	protected Boolean checkExaminationScore(String taskName, String pattern) {
 
 		String score;
 		Pattern p;
 		WebElement we;
 
-		p = Pattern.compile("[0-9]+\\s*分");
+		p = Pattern.compile(pattern);
 
 		// 打开已考完页面，查看成绩
 		openExaminationCenter("已考完");
@@ -396,13 +454,14 @@ public class OLSTest extends WebUnitTest {
 		return true;
 	}
 
-	protected Boolean checkStatisticScore(String taskName, String userName) {
+	protected Boolean checkStatisticScore(String taskName, String userName, String statePattern, String scorePattern) {
 
-		String score;
-		Pattern p;
+		String state, score;
+		Pattern pState, pScore;
 		WebElement we;
 
-		p = Pattern.compile("[0-9]+\\s*分");
+		pState = Pattern.compile(statePattern);
+		pScore = Pattern.compile(scorePattern);
 
 		// 打开考试统计，查看成绩
 		openMenu("数据统计");
@@ -411,9 +470,14 @@ public class OLSTest extends WebUnitTest {
 		we.click();
 		we = $x("//div[@class='layui-layer-content']/iframe");
 		wd.switchTo().frame(we);
+
+		we = $x("//tr[.//td[text()='" + userName + "']]/td[6]");
+		state = we.getText();
+		assertTrue(pState.matcher(state).matches());
+
 		we = $x("//tr[.//td[text()='" + userName + "']]/td[5]");
 		score = we.getText();
-		assertTrue(p.matcher(score).matches());
+		assertTrue(pScore.matcher(score).matches());
 
 		return true;
 	}

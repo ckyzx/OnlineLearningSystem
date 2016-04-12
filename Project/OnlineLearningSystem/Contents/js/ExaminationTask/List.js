@@ -55,7 +55,8 @@ $(function() {
         "createdRow": function(row, data, dataIndex) {
 
             var span, timeSpan, startTask, stopTask;
-            var strDate, startTime, autoType, status, enabled, remark, mode;
+            var strDate, startTime, autoType, status, enabled, 
+                remark, mode, errorMessage;
 
             row = $(row);
 
@@ -157,6 +158,22 @@ $(function() {
             remark = data['ET_Remark'];
             remark = remark == null ? '' : remark;
             Kyzx.List.columnContentEllipsis(jqTable, row, '.ET_Remark', remark);
+
+            // 添加错误提示
+            errorMessage = data['ET_ErrorMessage'];
+            if(errorMessage != null){
+                row.addClass('has-error');
+                row.qtip({
+                    content: {
+                        text: errorMessage.replace(/\\r\\n/g, '<br />')
+                    },
+                    position: {
+                        my: 'bottom left',
+                        at: 'top left'
+                    },
+                    style: 'qtip-red'
+                });
+            }
         },
         "drawCallback": function(settings) {
 

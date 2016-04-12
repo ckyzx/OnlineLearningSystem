@@ -33,6 +33,10 @@ public class WebUnitTest {
 	}
 
 	protected void init(String driver) {
+		init(driver, true, 10);
+	}
+
+	protected void init(String driver, Boolean ifMax, int loadWait) {
 
 		now = new Date();
 		calendar = Calendar.getInstance();
@@ -47,9 +51,10 @@ public class WebUnitTest {
 			System.setProperty("webdriver.chrome.driver", "Resources\\chromedriver.exe");
 			wd = new ChromeDriver();
 		}
-		wd.manage().window().maximize();
-		wd.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-
+		if(ifMax){
+			wd.manage().window().maximize();
+		}
+		wd.manage().timeouts().implicitlyWait(loadWait, TimeUnit.SECONDS);
 	}
 
 	public static WebDriver getWd() {

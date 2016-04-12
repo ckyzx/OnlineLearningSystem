@@ -458,6 +458,8 @@
     <Content Include="Contents\lib\My97DatePicker\skin\whyGreen\img.gif" />
     <Content Include="Contents\lib\My97DatePicker\WdatePicker.js" />
     <Content Include="Contents\lib\PIE_IE678.js" />
+    <Content Include="Contents\lib\qTip3\jquery.qtip.min.css" />
+    <Content Include="Contents\lib\qTip3\jquery.qtip.min.js" />
     <Content Include="Contents\lib\respond.min.js" />
     <Content Include="Contents\lib\swiper_2.7.0\idangerous.swiper.css" />
     <Content Include="Contents\lib\swiper_2.7.0\idangerous.swiper.js" />
@@ -941,8 +943,6 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Contents\images\gq\Thumbs.db" />
-    <None Include="Contents\images\Thumbs.db" />
     <None Include="Contents\lib\Hui-iconfont\1.0.1\iconfont.eot" />
     <None Include="Contents\lib\Hui-iconfont\1.0.1\iconfont.ttf" />
     <None Include="Contents\lib\Hui-iconfont\1.0.1\iconfont.woff" />

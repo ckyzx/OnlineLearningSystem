@@ -86,7 +86,7 @@ body.prompt{ }
 
 .dataTable tr.even td{ background-color: #EEE; }
 .dataTable tr td.nowrap{ white-space:nowrap; }
-.dataTable tr.question-has-error td{ background-color:#FFCCCC; }
+.dataTable tr.question-has-error td, .dataTable tr.has-error td{ background-color:#FFCCCC; }
 .dataTable tr.question-has-error .select-box{ border:solid 1px #FFCCCC; }
 .dataTable tr.hover td{ background-color: #DDD; }
 .dataTable tr td a:hover{ text-decoration:none; }

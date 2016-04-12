@@ -2,7 +2,6 @@ USE OLS;
 
 GO
 
-
 IF EXISTS ( SELECT  1
             FROM    sysobjects
             WHERE   id = OBJECT_ID('UserOnlines')
