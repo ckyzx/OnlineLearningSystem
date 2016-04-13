@@ -85,18 +85,13 @@ $(function() {
             switch (status) {
                 case 1:
 
-                    /*row.find('a.recycle').removeClass('hide');
-                    row.find('a.edit').removeClass('hide');*/
-
                     if(1 == ptStatus){
                         row.find('a.terminate').removeClass('hide');
-                    }else {
+                    }else if(2 == ptStatus) {
                         row.find('a.list-grade').removeClass('hide');
                     }
                     break;
                 case 2:
-                    /*row.find('a.resume').removeClass('hide');
-                    row.find('a.delete').removeClass('hide');*/
                     break;
                 case 3:
                     break;

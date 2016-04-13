@@ -3,10 +3,10 @@ package com.mzskyzx.webunittest;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -90,12 +90,11 @@ public class WebUnitTest {
 					tag = selector.substring(0, poundIndex);
 				}
 				id = selector.substring(poundIndex + 1);
-				we = wd.findElement(By.xpath("//" + tag + "[@id='" + id + "']"));
+				we = $x("//" + tag + "[@id='" + id + "']");
 			}
-			return we;
 		} catch (NoSuchElementException e) {
-			return we;
 		}
+		return we;
 	}
 
 	public List<WebElement> $xs(String xpath) {

@@ -9,8 +9,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 import org.testng.Assert;
@@ -24,7 +27,7 @@ public class OLSTest extends WebUnitTest {
 	public OLSTest() {
 		// init("chrome");
 		// init("edge");
-		//init("ie");
+		// init("ie");
 		init("ie", false, 10);
 		wd.get(url);
 	}
@@ -53,7 +56,8 @@ public class OLSTest extends WebUnitTest {
 		// 登录系统
 		try {
 
-			if (!wd.getCurrentUrl().equals(url)) {
+			// if (!wd.getCurrentUrl().equals(url)) {
+			if ($("#UserName") == null) {
 				logout();
 			} else {
 				wd.get(url);
@@ -86,18 +90,22 @@ public class OLSTest extends WebUnitTest {
 
 	protected void openTaskList() {
 
-		WebElement frame;
+		WebElement we, frame;
 
 		// 打开任务列表页面
 		try {
 
 			wd.switchTo().window(wd.getWindowHandle());
-			$x("//dl[@id='menu-examination-task']/dt").click();
-			$x("//a[@_href='/ExaminationTask/List']").click();
+
+			// 检查“任务管理”按钮是否存在
+			we = $x("//a[@_href='/ExaminationTask/List']");
+			if (!we.isDisplayed()) {
+				$x("//dl[@id='menu-examination-task']/dt").click();
+			}
+			we.click();
 			frame = $x("//iframe[@src='/ExaminationTask/List']");
 			wd.switchTo().frame(frame);
 		} catch (Exception e) {
-			// System.out.println(e.getMessage());
 			e.printStackTrace();
 		}
 	}
@@ -110,7 +118,6 @@ public class OLSTest extends WebUnitTest {
 			openTaskList();
 			$("#CreateBtn").click();
 		} catch (Exception e) {
-			// System.out.println(e.getMessage());
 			e.printStackTrace();
 		}
 	}
@@ -197,7 +204,7 @@ public class OLSTest extends WebUnitTest {
 			$("#ET_Name").sendKeys(taskName);
 
 			// 参与人员
-			$x("//ul[@id='DepartmentsAndUsers']/li[.//span[text()='人教股']]/span[contains(@class,'chk')]").click();
+			setAttendees("人教股");
 
 			// 成绩计算
 			we = $("#ET_StatisticType");
@@ -235,13 +242,92 @@ public class OLSTest extends WebUnitTest {
 		return taskName;
 	}
 
+	protected String addCustomTask(String department, Boolean start, Boolean waitStart) throws Exception {
+
+		int startTime;
+		String taskName, date;
+		WebElement we;
+		Select select;
+		SimpleDateFormat simpleDateFormat;
+
+		try {
+
+			openTaskCreate();
+
+			// 任务名称
+			simpleDateFormat = new SimpleDateFormat("MMddhhmmss");
+			taskName = "预定任务" + simpleDateFormat.format(now);
+			$("#ET_Name").sendKeys(taskName);
+
+			// 参与人员
+			setAttendees(department);
+
+			// 成绩计算
+			we = $x("//select[@id='ET_StatisticType']");
+			select = new Select(we);
+			select.selectByVisibleText("得分");
+
+			// 出题方式
+			we = $x("//select[@id='ET_Mode']");
+			select = new Select(we);
+			select.selectByVisibleText("预定");
+
+			// 考试日期
+			simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+			we = $x("//input[@id='ETStartDate']");
+			we.clear();
+			Assert.assertTrue(validate("ETStartDate", "请选择考试日期"));
+			we.sendKeys(simpleDateFormat.format(now));
+
+			// 开始时间和结束时间
+			startTime = setTaskTime();
+
+			// 持续天数
+			we = $x("//input[@id='ET_ContinuedDays']");
+			we.clear();
+			Assert.assertTrue(validate("ET_ContinuedDays", "持续天数 字段是必需的。"));
+			we.sendKeys("2");
+
+			// 考试时长
+			we = $x("//input[@id='ET_TimeSpan']");
+			we.clear();
+			we.sendKeys("10");
+
+			// 选择试题
+			Assert.assertTrue(validate("Questions", "请选择试题"));
+			$x("//input[@type='checkbox'][@value='all']").click();
+
+			// 备注
+			simpleDateFormat = new SimpleDateFormat("yyyyMMddhhmm");
+			date = simpleDateFormat.format(now);
+			$("textarea#ET_Remark").sendKeys("[前端测试][DATE" + date + "]");
+
+			// 提交
+			submit(true, true);
+			Assert.assertTrue(wd.findElement(By.xpath("//nav[@class='breadcrumb']")).getText().contains("考试任务"));
+
+			if (start) {
+				startTask(taskName);
+			}
+
+			if (waitStart) {
+				waitStart(startTime);
+			}
+
+			return taskName;
+		} catch (Exception e) {
+			throw e;
+		}
+	}
+
 	protected String addAutoTask(String department, String type, int autoOffset, Boolean start) throws Exception {
 		return addAutoTask(department, type, autoOffset, null, start, start);
 	}
 
-	protected String addAutoTask(String department, String type, int autoOffset, List<Integer> autoRatios, Boolean start, Boolean waitStart) throws Exception{
+	protected String addAutoTask(String department, String type, int autoOffset, List<Integer> autoRatios,
+			Boolean start, Boolean waitStart) throws Exception {
 
-		int startHour, endHour, startMinute, wait;
+		int startTime, totalRatios;
 		String taskName, date, id;
 		WebElement we;
 		Select select;
@@ -271,12 +357,10 @@ public class OLSTest extends WebUnitTest {
 			}
 			taskName += simpleDateFormat.format(now);
 			$("#ET_Name").sendKeys(taskName);
+			System.out.println("Task Name is " + taskName + ".");
 
 			// 参与人员
-			we = $x("//ul[@id='DepartmentsAndUsers']/li[.//span[text()='" + department + "']]");
-			id = we.getAttribute("id");
-			we = $x("//span[@id='" + id + "_check']");
-			we.click();
+			setAttendees(department);
 
 			// 成绩计算
 			we = $("#ET_StatisticType");
@@ -312,35 +396,28 @@ public class OLSTest extends WebUnitTest {
 			we.click();
 
 			// 出题比例
-			if(autoRatios != null){
+			if (autoRatios != null) {
+
+				totalRatios = 0;
 				wes = $xs("//input[contains(@class,'ratio-percent')]");
-				for(int i = 0; i< wes.size(); i++){
+
+				for (int i = 0; i < wes.size(); i++) {
 					we = wes.get(i);
 					we.clear();
 					we.sendKeys(String.valueOf(autoRatios.get(i)));
+					totalRatios += autoRatios.get(i);
+				}
+
+				submit();
+
+				if (totalRatios < 50 || totalRatios > 100) {
+					assertTrue($x("//span[@htmlfor='ET_AutoRatio']").getText().equals("出题比例必须大于 50% 、小于 100%"));
+					return null;
 				}
 			}
-			
-			// 开始时间
-			startMinute = getStartMinute();
-			startHour = getStartHour(startMinute);
-			endHour = getEndHour(startHour);
-			Assert.assertTrue(validate("ET_StartTime", "请选择开始时间"));
-			we = $x("//div[@id='StartTime']/select[contains(@class,'hourcombo')]");
-			select = new Select(we);
-			select.selectByValue(String.valueOf(startHour));
-			we = $x("//div[@id='StartTime']/select[contains(@class,'mincombo')]");
-			select = new Select(we);
-			select.selectByValue(String.valueOf(startMinute));
 
-			// 结束时间
-			Assert.assertTrue(validate("ET_EndTime", "请选择结束时间"));
-			we = $x("//div[@id='EndTime']/select[contains(@class,'hourcombo')]");
-			select = new Select(we);
-			select.selectByValue(String.valueOf(endHour));
-			we = $x("//div[@id='EndTime']/select[contains(@class,'mincombo')]");
-			select = new Select(we);
-			select.selectByValue(String.valueOf(startMinute));
+			// 开始时间和结束时间
+			startTime = setTaskTime();
 
 			// 考试时长
 			$wex("#ET_TimeSpan").val("10");
@@ -358,17 +435,9 @@ public class OLSTest extends WebUnitTest {
 			if (start) {
 				startTask(taskName);
 			}
-			
-			if(waitStart){
-				wait = (startHour * 60 + startMinute)
-						- (calendar.get(Calendar.HOUR_OF_DAY) * 60 + calendar.get(Calendar.MINUTE));
-				//Thread.sleep(wait * 60 * 1000);
-				wait = wait * 60;
-				while(wait > 0){
-					Thread.sleep(1000);
-					wait -= 1;
-					System.out.println(wait + " seconds left.");
-				}
+
+			if (waitStart) {
+				waitStart(startTime);
 			}
 		} catch (Exception e) {
 			throw e;
@@ -376,7 +445,67 @@ public class OLSTest extends WebUnitTest {
 
 		return taskName;
 	}
-	
+
+	private Boolean setAttendees(String department) {
+
+		/*
+		 * String id; WebElement we;
+		 * 
+		 * we = $x("//ul[@id='DepartmentsAndUsers']/li[.//span[text()='" +
+		 * department + "']]"); id = we.getAttribute("id"); we =
+		 * $x("//span[@id='" + id + "_check']"); we.click()
+		 */;
+
+		$x("//ul[@id='DepartmentsAndUsers']/li[.//span[text()='人教股']]/span[contains(@class,'chk')]").click();
+
+		return true;
+	}
+
+	private Boolean waitStart(int startTime) throws InterruptedException {
+
+		int wait;
+
+		wait = startTime - (calendar.get(Calendar.HOUR_OF_DAY) * 60 + calendar.get(Calendar.MINUTE));
+		wait = wait * 60;
+		while (wait > 0) {
+			Thread.sleep(1000);
+			wait -= 1;
+			System.out.println(wait / 60 + " minutes " + wait % 60 + " seconds left.");
+		}
+
+		return true;
+	}
+
+	private int setTaskTime() throws Exception {
+
+		int startHour, endHour, startMinute;
+		WebElement we;
+		Select select;
+
+		// 开始时间
+		startMinute = getStartMinute();
+		startHour = getStartHour(startMinute);
+		endHour = getEndHour(startHour);
+		Assert.assertTrue(validate("ET_StartTime", "请选择开始时间"));
+		we = $x("//div[@id='StartTime']/select[contains(@class,'hourcombo')]");
+		select = new Select(we);
+		select.selectByValue(String.valueOf(startHour));
+		we = $x("//div[@id='StartTime']/select[contains(@class,'mincombo')]");
+		select = new Select(we);
+		select.selectByValue(String.valueOf(startMinute));
+
+		// 结束时间
+		Assert.assertTrue(validate("ET_EndTime", "请选择结束时间"));
+		we = $x("//div[@id='EndTime']/select[contains(@class,'hourcombo')]");
+		select = new Select(we);
+		select.selectByValue(String.valueOf(endHour));
+		we = $x("//div[@id='EndTime']/select[contains(@class,'mincombo')]");
+		select = new Select(we);
+		select.selectByValue(String.valueOf(startMinute));
+
+		return startHour * 60 + startMinute;
+	}
+
 	private int getStartMinute() {
 		int minute;
 
@@ -420,6 +549,7 @@ public class OLSTest extends WebUnitTest {
 			assertTrue(!we.getAttribute("class").contains("hide"));
 
 			we.click();
+			Thread.sleep(1000);
 			$x("//div[@class='layui-layer-btn']/a[text()='是']").click();
 
 			Thread.sleep(1000);
@@ -445,6 +575,7 @@ public class OLSTest extends WebUnitTest {
 		openExaminationCenter("已考完");
 		we = $x("//tr[.//td[text()='" + taskName + "']]/td[8]");
 		score = we.getText();
+		System.out.println(score);
 		assertTrue(p.matcher(score).matches());
 
 		// 查看考卷
@@ -454,7 +585,7 @@ public class OLSTest extends WebUnitTest {
 		return true;
 	}
 
-	protected Boolean checkStatisticScore(String taskName, String userName, String statePattern, String scorePattern) {
+	protected Boolean checkStatisticScore(String taskName, String userName, String statePattern, String scorePattern) throws InterruptedException {
 
 		String state, score;
 		Pattern pState, pScore;
@@ -468,15 +599,18 @@ public class OLSTest extends WebUnitTest {
 		openIframe("考试统计", "_href");
 		we = $x("//tr[.//td[text()='" + taskName + "']]/td/a[text()='详情']");
 		we.click();
+		Thread.sleep(1000);
 		we = $x("//div[@class='layui-layer-content']/iframe");
 		wd.switchTo().frame(we);
 
 		we = $x("//tr[.//td[text()='" + userName + "']]/td[6]");
 		state = we.getText();
+		System.out.println(state);
 		assertTrue(pState.matcher(state).matches());
 
 		we = $x("//tr[.//td[text()='" + userName + "']]/td[5]");
 		score = we.getText();
+		System.out.println(score);
 		assertTrue(pScore.matcher(score).matches());
 
 		return true;

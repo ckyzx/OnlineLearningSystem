@@ -61,6 +61,19 @@ $(function() {
         $('#TypeItemTmpl').tmpl(questionAry).appendTo('#TypeList ul');
         $('#QuestionListTmpl').tmpl(questionAry).appendTo('#QuestionList');
 
+        $('div.question-answer').each(function(){
+
+            var div, type;
+
+            div = $(this);
+            type = div.parentsUntil('.swiper-slide').attr('data-question-type');
+
+            if((type == '单选题' || type == '多选题') && div.text().length > 40){
+                div.find('span.optional-answer').before('<br />')
+            }
+
+        });
+
         // 在本地保存考题数据
         initLocalQuestions('#QuestionList', questions, answers);
 
