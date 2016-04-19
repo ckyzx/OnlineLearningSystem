@@ -368,7 +368,7 @@ namespace OnlineLearningSystem.Utilities
             }
         }
 
-        public Boolean Edit(ExaminationTask model)
+        public String Edit(ExaminationTask model)
         {
 
             using (TransactionScope scope = new TransactionScope())
@@ -379,11 +379,22 @@ namespace OnlineLearningSystem.Utilities
                     ExaminationTask et;
 
                     et = olsEni.ExaminationTasks.SingleOrDefault(m => m.ET_Id == model.ET_Id);
-                    // 已开始/已结束的手动任务不允许编辑；已开始的自动任务不允许编辑
-                    if ((et.ET_AutoType == 0 && et.ET_Enabled != 0) || (et.ET_AutoType > 0 && et.ET_Enabled == 1))
+                    // 已开始/已结束的手动任务不允许编辑
+                    if (et.ET_Mode == 0 && et.ET_Enabled != 0)
                     {
-                        return false;
+                        return "不允许修改进行中或已结束的手动任务。";
                     }
+                    // 已开始的自动任务不允许编辑
+                    else if (et.ET_Mode == 1 && et.ET_Enabled == 1)
+                    {
+                        return "不允许修改进行中自动任务。";
+                    }
+                    // 已开始/已结束的预定任务不允许编辑
+                    else if (et.ET_Mode == 2 && et.ET_Enabled != 0)
+                    {
+                        return "不允许修改进行中或已结束的预定任务。";
+                    }
+
                     olsEni.Entry(et).State = EntityState.Detached;
                     olsEni.Entry(model).State = EntityState.Modified;
                     if (0 == olsEni.SaveChanges())
@@ -394,14 +405,19 @@ namespace OnlineLearningSystem.Utilities
                     try
                     {
 
-                        // 删除试卷模板与试题模板
-                        DeletePaperTemplateAndQuestionTemplate(model);
+                        // 对于自动任务，不处理
+                        if (et.ET_Mode != (Byte)ExaminationTaskMode.Auto)
+                        {
+
+                            // 删除试卷模板与试题模板
+                            DeletePaperTemplateAndQuestionTemplate(model);
+
+                            // 添加试卷模板与试题模板
+                            AddPaperTemplateAndQuestionTemplate(model);
+                        }
 
                         // 添加参与人员
                         AddAttendees(model);
-
-                        // 添加试卷模板与试题模板
-                        AddPaperTemplateAndQuestionTemplate(model);
 
                     }
                     catch (Exception ex1)
@@ -411,12 +427,12 @@ namespace OnlineLearningSystem.Utilities
 
                     scope.Complete();
 
-                    return true;
+                    return null;
                 }
                 catch (Exception ex)
                 {
                     StaticHelper.RecordSystemLog(ex);
-                    return false;
+                    return ex.Message;
                 }
             }
         }

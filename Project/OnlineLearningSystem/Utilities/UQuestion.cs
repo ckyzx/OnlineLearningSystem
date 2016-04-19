@@ -35,7 +35,7 @@ namespace OnlineLearningSystem.Utilities
                 Regex typeRegex, contentRegex1, contentRegex2, optionalAnswerRegex, modelAnswerRegex,
                     difficultyCoefficientRegex, scoreRegex, digitRegex;
                 String text, qType, qClassify, qContent, qOptionalAnswer, qModelAnswer;
-                Int32 i1, i2, len, qId, qcId, score, duplicate;
+                Int32 i1, i2, len, qId, qcId, currentQCId, score, duplicate;
                 Byte difficultyCoefficient;
                 Boolean isContent, existsFlag;
                 List<Question> qs, tmpQs;
@@ -70,6 +70,7 @@ namespace OnlineLearningSystem.Utilities
 
                 // 获取数据编号
                 qcId = GetQCId();
+                currentQCId = qcId;
 
                 difficultyCoefficient = 0;
                 score = 0;
@@ -106,7 +107,7 @@ namespace OnlineLearningSystem.Utilities
                                 {
                                     Q_Id = 0,
                                     Q_Type = qType,
-                                    QC_Id = qcId,
+                                    QC_Id = currentQCId,
                                     Q_DifficultyCoefficient = difficultyCoefficient,
                                     Q_Score = SetDefaultScore(qType, score),
                                     Q_Content = qContent,
@@ -136,7 +137,7 @@ namespace OnlineLearningSystem.Utilities
                                 {
                                     Q_Id = 0,
                                     Q_Type = qType,
-                                    QC_Id = qcId,
+                                    QC_Id = currentQCId,
                                     Q_DifficultyCoefficient = difficultyCoefficient,
                                     Q_Score = SetDefaultScore(qType, score),
                                     Q_Content = qContent,
@@ -166,21 +167,20 @@ namespace OnlineLearningSystem.Utilities
                     // 此行为分类行
                     if (text.IndexOf("分类：") == 0)
                     {
-                        //TODO:添加分类数据，记录分类编号
+                        // 添加分类数据，记录分类编号
                         qClassify = text.Substring(3);
 
                         // 判断分类是否存在
-                        qc = 
+                        qc =
                             olsEni.QuestionClassifies
-                            .SingleOrDefault(m => 
-                                m.QC_Name == qClassify 
-                                && m.QC_Status != (Byte)Status.Delete);
+                            .SingleOrDefault(m =>
+                                m.QC_Name == qClassify);
 
                         // 如果不存在，则新增
                         if (null == qc)
                         {
 
-                            qcId += 1;
+                            currentQCId = qcId;
 
                             qcs.Add(new QuestionClassify()
                             {
@@ -190,16 +190,28 @@ namespace OnlineLearningSystem.Utilities
                                 QC_AddTime = now,
                                 QC_Status = (Byte)Status.Cache
                             });
+                            qcId += 1;
                         }
+                        // 如果存在，但状态非“正常”，则新增同名分类加编号后缀
+                        else if (qc.QC_Status != (Byte)Status.Available)
+                        {
+
+                            currentQCId = qcId;
+
+                            qcs.Add(new QuestionClassify()
+                            {
+                                QC_Id = qcId,
+                                QC_Name = qClassify + qcId,
+                                QC_Level = "000" + qcId.ToString(),
+                                QC_AddTime = now,
+                                QC_Status = (Byte)Status.Cache
+                            });
+                            qcId += 1;
+                        }
+                        // 如果存在，设置当前分类编号
                         else
                         {
-                            // 如果状态为“回收”，表明没有“正常”的试题
-                            // 如果需要重新使用此分类，则需要设为“缓存”
-                            if (qc.QC_Status == (Byte)Status.Recycle)
-                            {
-                                qc.QC_Status = (Byte)Status.Cache;
-                            }
-                            qcId = qc.QC_Id;
+                            currentQCId = qc.QC_Id;
                         }
 
                         continue;
@@ -387,7 +399,7 @@ namespace OnlineLearningSystem.Utilities
                     {
                         Q_Id = 0,
                         Q_Type = qType,
-                        QC_Id = qcId,
+                        QC_Id = currentQCId,
                         Q_DifficultyCoefficient = difficultyCoefficient,
                         Q_Score = SetDefaultScore(qType, score),
                         Q_Content = qContent,
@@ -418,11 +430,12 @@ namespace OnlineLearningSystem.Utilities
                 foreach (var m1 in qs)
                 {
 
-                    tmpQs = 
+                    tmpQs =
                         olsEni.Questions
-                        .Where(m => 
-                            m.Q_Content.Contains(m1.Q_Content) 
-                            && m.Q_Status == (Byte)Status.Available)
+                        .Where(m =>
+                            m.Q_Content.Contains(m1.Q_Content)
+                            && (m.Q_Status == (Byte)Status.Available 
+                                || m.Q_Status == (Byte)Status.Cache))
                         .ToList();
 
                     existsFlag = false;
@@ -701,8 +714,6 @@ namespace OnlineLearningSystem.Utilities
                         if (null == classify)
                         {
 
-                            qcId += 1;
-
                             qcs.Add(new QuestionClassify()
                             {
                                 QC_Id = qcId,
@@ -711,6 +722,7 @@ namespace OnlineLearningSystem.Utilities
                                 QC_AddTime = now,
                                 QC_Status = 4
                             });
+                            qcId += 1;
                         }
                         else
                         {
@@ -1025,8 +1037,33 @@ namespace OnlineLearningSystem.Utilities
 
             // 不能只获取正常状态的记录，因为编辑试题时，其分类可能为“缓存”状态。
             var items = olsEni.QuestionClassifies
-                //.Where(m=>m.QC_Status == (Byte)Status.Available)
                 .Select(model => new { model.QC_Name, model.QC_Id });
+
+            list = new List<SelectListItem>();
+            list.Add(new SelectListItem() { Text = "[未设置]", Value = "" });
+
+            foreach (var i in items)
+            {
+                list.Add(new SelectListItem
+                {
+                    Text = i.QC_Name,
+                    Value = i.QC_Id.ToString(),
+                    Selected = i.QC_Id == currentValue ? true : false
+                });
+            }
+
+            return list;
+        }
+
+        public List<SelectListItem> GetClassifyList(Byte status, Int32 currentValue)
+        {
+
+            List<SelectListItem> list;
+
+            // 获取相应状态的分类
+            var items = olsEni.QuestionClassifies
+                .Where(m=>m.QC_Status == status)
+                .Select(m => new { m.QC_Name, m.QC_Id });
 
             list = new List<SelectListItem>();
             list.Add(new SelectListItem() { Text = "[未设置]", Value = "" });
@@ -1156,11 +1193,11 @@ namespace OnlineLearningSystem.Utilities
                     return resJson;
                 }
 
+                ResumeClassify(q.QC_Id, status);
+
                 q.Q_Status = (Byte)status;
                 olsEni.Entry(q).State = EntityState.Modified;
                 olsEni.SaveChanges();
-
-                ResumeClassify(q.QC_Id, status);
 
                 resJson.status = ResponseStatus.Success;
                 return resJson;
@@ -1180,13 +1217,16 @@ namespace OnlineLearningSystem.Utilities
             QuestionClassify qc;
 
             // 恢复试题时，如果分类状态为“回收”，则设为“正常”
-            if (status == Status.Available)
+            if (Status.Available == status)
             {
-                qc = olsEni.QuestionClassifies.SingleOrDefault(m => m.QC_Id == qcId && m.QC_Status == (Byte)Status.Recycle);
-                if (qc != null)
+                qc = 
+                    olsEni.QuestionClassifies
+                    .SingleOrDefault(m => 
+                        m.QC_Id == qcId 
+                        && m.QC_Status == (Byte)Status.Recycle);
+                if (qc != null && qc.QC_Status != (Byte)status)
                 {
                     qc.QC_Status = (Byte)status;
-                    olsEni.SaveChanges();
                 }
             }
         }

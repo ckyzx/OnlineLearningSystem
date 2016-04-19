@@ -25,7 +25,6 @@ public class ManualTaskTest extends OLSTest {
 	public void test() {
 
 		String url, date;
-		WebDriver wd;
 		WebElement frame, we;
 		Select select;
 		SimpleDateFormat simpleDateFormat;
@@ -36,13 +35,12 @@ public class ManualTaskTest extends OLSTest {
 		
 		try {
 
-			wd = getWd();
 			frame = wd.findElement(By.xpath("//iframe[@src='/ExaminationTask/Create']"));
 			wd.switchTo().frame(frame);
 
 			// 任务名称
 			simpleDateFormat = new SimpleDateFormat("MMddhhmmss");
-			$("#ET_Name").sendKeys("手动任务" + simpleDateFormat.format(getNow()));
+			$("#ET_Name").sendKeys("手动任务" + simpleDateFormat.format(now));
 
 			// 参与人员
 			we = $("#DepartmentsAndUsers");

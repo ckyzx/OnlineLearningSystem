@@ -63,3 +63,8 @@ Week = {
     6: '六',
     7: '日',
 };
+
+var ExaminationTaskType = {
+    0: '考试',
+    1: '练习'
+};

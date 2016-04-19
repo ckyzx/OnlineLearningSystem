@@ -26,10 +26,10 @@ namespace OnlineLearningSystem.Controllers
         // GET: /LearningData/List
 
         [Description("资料管理")]
-        public ActionResult List()
+        public ActionResult List(Byte status = 1)
         {
 
-            ViewBag.LearningDataCategoryZTreeJson = new ULearningDataCategory().GetZTreeJson();
+            ViewBag.LearningDataCategoryZTreeJson = new ULearningDataCategory().GetZTreeJson(status);
 
             return View();
         }
@@ -38,10 +38,10 @@ namespace OnlineLearningSystem.Controllers
         // GET: /LearningData/ListStudent
 
         [Description("资料列表，学员后台")]
-        public ActionResult ListStudent()
+        public ActionResult ListStudent(Byte status = 1)
         {
 
-            ViewBag.LearningDataCategoryZTreeJson = new ULearningDataCategory().GetZTreeJson();
+            ViewBag.LearningDataCategoryZTreeJson = new ULearningDataCategory().GetZTreeJson(status);
 
             return View();
         }

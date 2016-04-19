@@ -24,7 +24,6 @@ public class AutoTaskWeekTest extends OLSTest {
 	public void test() {
 
 		String url, date, id;
-		WebDriver wd;
 		WebElement frame, we;
 		Select select;
 		SimpleDateFormat simpleDateFormat;
@@ -35,13 +34,12 @@ public class AutoTaskWeekTest extends OLSTest {
 		
 		try {
 
-			wd = getWd();
 			frame = $x("//iframe[@src='/ExaminationTask/Create']");
 			wd.switchTo().frame(frame);
 
 			// 任务名称
 			simpleDateFormat = new SimpleDateFormat("MMddhhmmss");
-			$("#ET_Name").sendKeys("自动任务每周" + simpleDateFormat.format(getNow()));
+			$("#ET_Name").sendKeys("自动任务每周" + simpleDateFormat.format(now));
 
 			// 参与人员
 			we = $x("//ul[@id='DepartmentsAndUsers']/li[.//span[text()='技术部']]");

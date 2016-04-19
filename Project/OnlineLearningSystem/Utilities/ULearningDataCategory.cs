@@ -125,6 +125,9 @@ namespace OnlineLearningSystem.Utilities
                     return resJson;
                 }
 
+                // 处理目录中的资料状态
+                setDataStatus(id, status);
+
                 model.LDC_Status = (Byte)status;
                 olsEni.Entry(model).State = EntityState.Modified;
                 olsEni.SaveChanges();
@@ -138,6 +141,23 @@ namespace OnlineLearningSystem.Utilities
                 resJson.message = ex.Message;
                 resJson.detail = StaticHelper.GetExceptionMessageAndRecord(ex);
                 return resJson;
+            }
+        }
+
+        private void setDataStatus(int ldcId, Status status)
+        {
+            List<LearningData> lds;
+
+            if (status != Status.Available)
+            {
+                lds = olsEni.LearningDatas.Where(m => m.LDC_Id == ldcId).ToList();
+                foreach (var ld in lds)
+                {
+                    if (ld.LD_Status != (Byte)status)
+                    {
+                        ld.LD_Status = (Byte)status;
+                    }
+                }
             }
         }
 
@@ -284,13 +304,32 @@ namespace OnlineLearningSystem.Utilities
             }
         }
 
-        internal String GetZTreeJson()
+        public String GetZTreeJson(Byte status)
         {
 
             List<LearningDataCategory> ldcs;
             StringBuilder zTreeJson;
 
-            ldcs = olsEni.LearningDataCategories.Where(m => m.LDC_Status == (Byte)Status.Available).ToList();
+            if (status == (Byte)Status.Unset)
+            {
+                // 当状态为“[未设置]”，显示除“删除”以外目录
+                ldcs = olsEni.LearningDataCategories.Where(m => m.LDC_Status != (Byte)Status.Delete).ToList();
+            }
+            // 当状态为“缓存”或“回收”，需同时获取“正常”目录
+            // 因为“缓存”或“回收”资料的目录可能是“正常”的
+            else if (status != (Byte)Status.Delete)
+            {
+                ldcs =
+                    olsEni.LearningDataCategories
+                    .Where(m =>
+                        m.LDC_Status == status
+                        || m.LDC_Status == (Byte)Status.Available)
+                    .ToList();
+            }
+            else
+            {
+                ldcs = olsEni.LearningDataCategories.Where(m => m.LDC_Status == status).ToList();
+            }
 
             zTreeJson = new StringBuilder();
             zTreeJson.Append("[");
@@ -303,11 +342,22 @@ namespace OnlineLearningSystem.Utilities
                 zTreeJson.Append("},");
             }
 
-            if(zTreeJson.ToString() != "[")
+            if (zTreeJson.ToString() != "[")
                 zTreeJson.Remove(zTreeJson.Length - 1, 1);
             zTreeJson.Append("]");
 
             return zTreeJson.ToString();
+        }
+
+        public ResponseJson GetZTreeResJson(Byte status)
+        {
+
+            ResponseJson resJson;
+
+            resJson = new ResponseJson(ResponseStatus.Success, now);
+            resJson.data = GetZTreeJson(status);
+
+            return resJson;
         }
     }
 }

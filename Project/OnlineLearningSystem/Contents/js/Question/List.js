@@ -4,13 +4,87 @@ $(function() {
 
     var status, qcId;
     var params;
-    var recycleBin;
+    var qcIdInput, recycleBin;
     var jqTable, dataTables;
     var list;
+    var addTree, reloadTreeData;
+
+    addTree = function() {
+
+        var ul;
+        var settings, nodes, n;
+        var ztree;
+
+        settings = {
+            check: {
+                enable: false
+            },
+            data: {
+                simpleData: {
+                    enable: true
+                }
+            },
+            callback: {
+                onClick: function(event, treeId, treeNode) {
+                    $('a[id!=' + treeNode.tId + '_a]').removeClass('curSelectedNode');
+                    $('#QCId').val(treeNode['questionClassifyId']);
+                    list.dataTables.ajax.reload(null, true);
+                }
+            }
+        };
+
+        ul = $('.question-classify-list-container ul');
+        ul.attr('id', 'ZTree_' + (new Date()).getTime());
+        nodes = ul.attr('data-ztree-json');
+        nodes = $.parseJSON(nodes);
+
+        for (var i = 0; i < nodes.length; i++) {
+
+            n = nodes[i];
+
+            if (n.questionClassifyId == qcId) {
+
+                n.ifChecked = true;
+            }
+        };
+
+        // 添加根节点“全部”
+        nodes = [{
+            name: '全部',
+            questionClassifyId: 0,
+            open: true,
+            children: nodes
+        }];
+
+        if (0 == qcId) {
+            nodes[0].ifChecked = true;
+        }
+
+        ztree = $.fn.zTree.init(ul, settings, nodes);
+        Kyzx.List._setZTreeCheck(ztree);
+    };
+    reloadTreeData = function(url, status) {
+
+        $.post(url, { status: status }, function(data) {
+
+            var ul;
+
+            if (data.status == 1) {
+                $('ul.ztree').attr('data-ztree-json', data.data);
+                addTree();
+            } else if (data.status == 0) {
+                alert(data.message);
+            }
+
+        }, 'json');
+    };
 
     Request.init();
     status = Request.getValue('status', 1);
     qcId = Request.getValue('qcId', 0);
+
+    qcIdInput = $('<input type="hidden" id="QCId" value="' + qcId + '" />');
+    $('nav.breadcrumb').append(qcIdInput);
 
     params = {
         "processing": true,
@@ -126,7 +200,7 @@ $(function() {
             row.find(':checkbox').val(data['Q_Id']);
 
         },
-        "drawCallback": function(){
+        "drawCallback": function() {
 
             var api;
             api = this.api();
@@ -172,8 +246,10 @@ $(function() {
             }
 
             recycleBin.attr('data-status', status);
-            dataTables.ajax.reload(null, false);
-            
+            qcIdInput.attr('value', 0);
+            dataTables.ajax.reload(null, true);
+
+            reloadTreeData('/QuestionClassify/GetZTreeResJson', status);
             Kyzx.List._showControlBtn(status);
 
         });
@@ -182,7 +258,7 @@ $(function() {
 
             return $.extend({}, originData, {
                 status: recycleBin.attr('data-status'),
-                qcId: qcId
+                qcId: qcIdInput.attr('value')
             });
         }
     }
@@ -352,59 +428,7 @@ $(function() {
 
 
     // 初始化分类列表
-    var ul;
-    var settings, nodes, n;
-    var ztree;
-
-    settings = {
-        check: {
-            enable: false
-        },
-        data: {
-            simpleData: {
-                enable: true
-            }
-        },
-        view: {
-            fontCss: function(treeId, treeNode) {
-
-                if (treeNode.ifChecked) {
-                    return { background: '#4185E0', color: '#FFF', 'border-radius': '2px' }
-                }
-            }
-        }
-    };
-
-    ul = $('.question-classify-list-container ul');
-    nodes = ul.attr('data-value');
-    nodes = $.parseJSON(nodes);
-
-    for (var i = 0; i < nodes.length; i++) {
-
-        n = nodes[i];
-
-        if (n.questionClassifyId == qcId) {
-
-            n.ifChecked = true;
-        }
-
-        n.click = 'location.href = \'/Question/List?status=' + status + '&qcId=' + n.questionClassifyId + '\';';
-    };
-
-    // 添加根节点“全部”
-    nodes = [{
-        name: '全部',
-        questionClassifyId: 0,
-        open: true,
-        click: 'location.href = \'/Question/List?status=' + status + '&qcId=0\';',
-        children: nodes
-    }];
-
-    if (0 == qcId) {
-        nodes[0].ifChecked = true;
-    }
-
-    ztree = $.fn.zTree.init(ul, settings, nodes);
+    addTree();
 
     // 添加控制按钮
     Kyzx.List._addBatchControlBtn();
@@ -414,5 +438,4 @@ $(function() {
     $('#reload').on('click',function(){
         $('.question-table').dataTable().api().ajax.reload(null, false);    
     });*/
-    
 });

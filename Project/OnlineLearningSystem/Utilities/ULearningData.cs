@@ -133,6 +133,8 @@ namespace OnlineLearningSystem.Utilities
                     return resJson;
                 }
 
+                ResumeCategory(model.LDC_Id, status);
+
                 model.LD_Status = (Byte)status;
                 olsEni.Entry(model).State = EntityState.Modified;
                 olsEni.SaveChanges();
@@ -146,6 +148,20 @@ namespace OnlineLearningSystem.Utilities
                 resJson.message = ex.Message;
                 resJson.detail = StaticHelper.GetExceptionMessageAndRecord(ex);
                 return resJson;
+            }
+        }
+
+        private void ResumeCategory(int ldcId, Status status)
+        {
+            LearningDataCategory ldc;
+
+            if (Status.Available == status)
+            {
+                ldc = olsEni.LearningDataCategories.Single(m => m.LDC_Id == ldcId);
+                if (ldc.LDC_Status != (Byte)status)
+                {
+                    ldc.LDC_Status = (Byte)status;
+                }
             }
         }
 

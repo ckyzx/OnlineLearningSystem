@@ -4,8 +4,8 @@
 }
 <nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 系统 <span class="c-gray en">&gt;</span> 试题管理 <a class="btn btn-success radius r mr-20" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
 <div class="question-container list-body">
-    <div class="question-classify-list-container">
-        <ul class="ztree" data-value="@ViewBag.QuestionClassifies"></ul>
+    <div class="question-classify-list-container tree-container">
+        <ul class="ztree" data-ztree-json="@ViewBag.QuestionClassifies"></ul>
     </div>
     <div class="question-list-container">
         <div id="FunctionPanel" class="function-btn-container cl pd-5 bg-1 bk-gray hide">

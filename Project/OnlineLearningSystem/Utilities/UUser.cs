@@ -350,6 +350,8 @@ namespace OnlineLearningSystem.Utilities
                     return resJson;
                 }
 
+                ResumeDepartment(id, status);
+
                 model.U_Status = (Byte)status;
                 olsEni.Entry(model).State = EntityState.Modified;
                 olsEni.SaveChanges();
@@ -363,6 +365,25 @@ namespace OnlineLearningSystem.Utilities
                 resJson.message = ex.Message;
                 resJson.detail = StaticHelper.GetExceptionMessageAndRecord(ex);
                 return resJson;
+            }
+        }
+
+        private void ResumeDepartment(int id, Status status)
+        {
+
+            int dId;
+            User_Department ud;
+            Department d;
+
+            if (Status.Available == status)
+            {
+                ud = olsEni.User_Department.Single(m => m.U_Id == id);
+                dId = ud.D_Id;
+                d = olsEni.Departments.Single(m => m.D_Id == dId);
+                if (d.D_Status != (Byte)status)
+                {
+                    d.D_Status = (Byte)status;
+                }
             }
         }
 

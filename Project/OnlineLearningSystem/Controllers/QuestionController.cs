@@ -29,7 +29,7 @@ namespace OnlineLearningSystem.Controllers
         public ActionResult List(Byte status = 1)
         {
 
-            ViewBag.QuestionClassifies = new UQuestionClassify().GetZTreeJson(Status.Unset);
+            ViewBag.QuestionClassifies = new UQuestionClassify().GetZTreeJson(status);
 
             return View();
         }
@@ -126,7 +126,7 @@ namespace OnlineLearningSystem.Controllers
             m = um.Get(id);
 
             ViewBag.Types = um.GetTypeList(m.Q_Type);
-            ViewBag.Classifies = um.GetClassifyList(m.QC_Id);
+            ViewBag.Classifies = um.GetClassifyList(m.Q_Status, m.QC_Id);
 
             return View(m);
         }
@@ -150,7 +150,7 @@ namespace OnlineLearningSystem.Controllers
             }
 
             ViewBag.Types = um.GetTypeList(m.Q_Type);
-            ViewBag.Classifies = um.GetClassifyList(m.QC_Id);
+            ViewBag.Classifies = um.GetClassifyList(m.Q_Status, m.QC_Id);
 
             return View(m);
         }

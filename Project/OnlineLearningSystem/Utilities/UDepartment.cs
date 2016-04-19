@@ -168,8 +168,6 @@ namespace OnlineLearningSystem.Utilities
             try
             {
                 Department model;
-                List<User_Department> uds;
-                List<User> us;
 
                 model = olsEni.Departments.SingleOrDefault(m => m.D_Id == id);
 
@@ -180,18 +178,7 @@ namespace OnlineLearningSystem.Utilities
                 }
 
                 // 处理部门中的用户状态
-                if (status != Status.Available)
-                {
-                    uds = olsEni.User_Department.Where(m => m.D_Id == id).ToList();
-                    foreach (var ud in uds)
-                    {
-                        us = olsEni.Users.Where(m => m.U_Id == ud.U_Id).ToList();
-                        foreach (var u in us)
-                        {
-                            u.U_Status = (Byte)status;
-                        }
-                    }
-                }
+                setUserStatus(id, status);
 
                 model.D_Status = (Byte)status;
                 olsEni.Entry(model).State = EntityState.Modified;
@@ -206,6 +193,28 @@ namespace OnlineLearningSystem.Utilities
                 resJson.message = ex.Message;
                 resJson.detail = StaticHelper.GetExceptionMessageAndRecord(ex);
                 return resJson;
+            }
+        }
+
+        private void setUserStatus(int dId, Status status)
+        {
+            List<User_Department> uds;
+            List<User> us;
+
+            if (status != Status.Available)
+            {
+                uds = olsEni.User_Department.Where(m => m.D_Id == dId).ToList();
+                foreach (var ud in uds)
+                {
+                    us = olsEni.Users.Where(m => m.U_Id == ud.U_Id).ToList();
+                    foreach (var u in us)
+                    {
+                        if (u.U_Status != (Byte)status)
+                        {
+                            u.U_Status = (Byte)status;
+                        }
+                    }
+                }
             }
         }
 
@@ -284,6 +293,64 @@ namespace OnlineLearningSystem.Utilities
                 zTreeJson.Remove(zTreeJson.Length - 1, 1);
                 zTreeJson.Append("]");
             }
+
+            return zTreeJson.ToString();
+        }
+
+        public ResponseJson GetZTreeResJson(Byte status)
+        {
+
+            ResponseJson resJson;
+
+            resJson = new ResponseJson(ResponseStatus.Success, now);
+            resJson.data = GetZTreeJson(status);
+
+            return resJson;
+        }
+
+        public String GetZTreeJson(Byte status)
+        {
+
+            List<Department> ds;
+            StringBuilder zTreeJson;
+
+            ds = olsEni.Departments.Where(m => m.D_Status == (Byte)Status.Available).OrderBy(m => m.D_Sort).ToList();
+
+            if (status == (Byte)Status.Unset)
+            {
+                // 当状态为“[未设置]”，显示除“删除”以外部门
+                ds = olsEni.Departments.Where(m => m.D_Status != (Byte)Status.Delete).OrderBy(m => m.D_Sort).ToList();
+            }
+            // 当状态为“缓存”或“回收”，需同时获取“正常”部门
+            // 因为“缓存”或“回收”用户的部门可能是“正常”的
+            else if (status != (Byte)Status.Delete)
+            {
+                ds =
+                    olsEni.Departments
+                    .Where(m =>
+                        m.D_Status == status
+                        || m.D_Status == (Byte)Status.Available)
+                    .OrderBy(m => m.D_Sort)
+                    .ToList();
+            }
+            else
+            {
+                ds = olsEni.Departments.Where(m => m.D_Status == status).OrderBy(m => m.D_Sort).ToList();
+            }
+
+            zTreeJson = new StringBuilder();
+            zTreeJson.Append("[");
+
+            foreach (var d in ds)
+            {
+
+                zTreeJson.Append("{");
+                zTreeJson.Append("\"departmentId\":" + d.D_Id + ", \"name\":\"" + d.D_Name + "\"");
+                zTreeJson.Append("},");
+            }
+
+            zTreeJson.Remove(zTreeJson.Length - 1, 1);
+            zTreeJson.Append("]");
 
             return zTreeJson.ToString();
         }

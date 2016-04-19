@@ -122,7 +122,6 @@ namespace OnlineLearningSystem.Utilities
             try
             {
                 QuestionClassify model;
-                List<Question> qs;
 
                 model = olsEni.QuestionClassifies.SingleOrDefault(m => m.QC_Id == id);
 
@@ -135,18 +134,9 @@ namespace OnlineLearningSystem.Utilities
                 model.QC_Status = (Byte)status;
                 olsEni.Entry(model).State = EntityState.Modified;
 
-                if (status != Status.Available)
-                {
-                    qs = olsEni.Questions.Where(m => m.QC_Id == model.QC_Id).ToList();
-                    foreach (var q in qs)
-                    {
-                        if (q.Q_Status != (Byte)Status.Cache 
-                            || (q.Q_Status == (Byte)Status.Cache && status == Status.Delete))
-                        {
-                            q.Q_Status = (Byte)status;
-                        }
-                    }
-                }
+                // 批量处理分类所属试题
+                // 只处理“回收”或“删除”操作
+                setQuestionStatus(id, status);
 
                 olsEni.SaveChanges();
 
@@ -159,6 +149,39 @@ namespace OnlineLearningSystem.Utilities
                 resJson.message = ex.Message;
                 resJson.detail = StaticHelper.GetExceptionMessageAndRecord(ex);
                 return resJson;
+            }
+        }
+
+        private void setQuestionStatus(int qcId, Status status)
+        {
+            List<Question> qs;
+
+            if (status == Status.Recycle || status == Status.Delete)
+            {
+                qs = olsEni.Questions.Where(m => m.QC_Id == qcId).ToList();
+                foreach (var q in qs)
+                {
+                    if (q.Q_Status != (Byte)status)
+                    {
+                        q.Q_Status = (Byte)status;
+                        DeleteErrorQuestion(q);
+                    }
+                }
+            }
+        }
+
+        private void DeleteErrorQuestion(Question q)
+        {
+            if (q.Q_Type == "判断题" || q.Q_Type == "公文改错题" || q.Q_Type == "计算题" 
+                || q.Q_Type == "案例分析题" || q.Q_Type == "问答题")
+            {
+                return;
+            }
+
+            if (q.Q_OptionalAnswer == "" || q.Q_OptionalAnswer == "{}" || q.Q_OptionalAnswer == "[]"
+                || q.Q_ModelAnswer == "" || q.Q_ModelAnswer == "{}" || q.Q_ModelAnswer == "[]")
+            {
+                q.Q_Status = (Byte)Status.Delete;
             }
         }
 
@@ -199,17 +222,18 @@ namespace OnlineLearningSystem.Utilities
 
             if (status == (Byte)Status.Unset)
             {
-                //// 显示状态为“正常”与“缓存”的分类
-                //qcs = olsEni
-                //    .QuestionClassifies
-                //    .Where(m =>
-                //        m.QC_Status != (Byte)Status.Recycle
-                //        && m.QC_Status != (Byte)Status.Delete)
-                //    .ToList();
-                // 显示除“删除”以外分类
-                qcs = olsEni
-                    .QuestionClassifies
-                    .Where(m => m.QC_Status != (Byte)Status.Delete)
+                // 当状态为“[未设置]”，显示除“删除”以外分类
+                qcs = olsEni.QuestionClassifies.Where(m => m.QC_Status != (Byte)Status.Delete).ToList();
+            }
+            // 当状态为“缓存”或“回收”，需同时获取“正常”分类
+            // 因为“缓存”或“回收”试题的分类可能是“正常”的
+            else if (status != (Byte)Status.Delete)
+            {
+                qcs =
+                    olsEni.QuestionClassifies
+                    .Where(m =>
+                        m.QC_Status == status
+                        || m.QC_Status == (Byte)Status.Available)
                     .ToList();
             }
             else
@@ -237,6 +261,17 @@ namespace OnlineLearningSystem.Utilities
             zTreeJson.Append("]");
 
             return zTreeJson.ToString();
+        }
+
+        public ResponseJson GetZTreeResJson(Byte status)
+        {
+
+            ResponseJson resJson;
+
+            resJson = new ResponseJson(ResponseStatus.Success, now);
+            resJson.data = GetZTreeJson(status);
+
+            return resJson;
         }
     }
 }

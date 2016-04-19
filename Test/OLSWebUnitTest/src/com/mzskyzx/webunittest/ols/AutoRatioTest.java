@@ -50,7 +50,7 @@ public class AutoRatioTest extends OLSTest {
 			autoRatios.add(10);
 
 			// 添加自动任务
-			taskName = addAutoTask("人教股","day", 0, autoRatios, true, true);
+			taskName = addAutoTask("人教股","day", autoRatios, true, true);
 			
 			$x("//a[@title='刷新']").click();
 			we = $x("//tr[.//td[text()='" + taskName + "']]/td/a[text()='结束' or text() = '关闭']");
@@ -69,7 +69,7 @@ public class AutoRatioTest extends OLSTest {
 			// 添加自动任务
 			calendar = Calendar.getInstance();
 			now = new Date();
-			taskName = addAutoTask("人教股","day", 0, autoRatios, false, false);
+			taskName = addAutoTask("人教股","day", autoRatios, false, false);
 			assertTrue(taskName == null);
 
 			close();

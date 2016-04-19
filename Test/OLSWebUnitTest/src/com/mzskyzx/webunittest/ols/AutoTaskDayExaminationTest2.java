@@ -43,7 +43,7 @@ public class AutoTaskDayExaminationTest2 extends OLSTest {
 			login();
 
 			// 添加自动任务
-			taskName = addAutoTask("人教股","day", 0, autoRatios, true, true);
+			taskName = addAutoTask("人教股","day", autoRatios, true, true);
 
 			// 登录学员
 			userName = loginStudent();
@@ -87,7 +87,7 @@ public class AutoTaskDayExaminationTest2 extends OLSTest {
 			login();
 
 			// 添加自动任务
-			taskName = addAutoTask("人教股","day", 0, autoRatios, true, true);
+			taskName = addAutoTask("人教股","day", autoRatios, true, true);
 
 			// 登录学员
 			userName = loginStudent();

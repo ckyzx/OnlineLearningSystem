@@ -36,17 +36,18 @@ Kyzx.Utility = {
         });
     },
 
-    redirect: function(title, url){
+    redirect: function(title, url) {
 
         var search;
 
         search = location.search;
-        if(search != ''){
+        
+        if (search != '') {
             search = search.substring(1);
             search = 'p_' + search.replace(/&/g, '&p_');
+            url = url.indexOf('?') != -1 ? (url + '&' + search) : (url + '?' + search);
         }
 
-        url = url.indexOf('?') != -1 ? (url + '&' + search) : (url + '?' + search);
         location.href = url;
     }
 };
@@ -123,11 +124,14 @@ Kyzx.List = {
         actionName: null,
         treeIdName: null,
         treeIdDefaultValue: null,
-        additionRequestParams: null // 格式：[{ name: '[paramName]', input: '[paramInputSelector]' }]
+        treeDataModelEnName: null,
+        additionRequestParams: null // 格式：[{ name: '[paramName]', input: '[paramInputSelector]', value: '[value]' }]
     },
     request: null,
     jqTable: null,
     dataTables: null,
+    zTree: null,
+    zTreeId: null,
 
     init: function(settings) {
 
@@ -140,6 +144,7 @@ Kyzx.List = {
 
         self.request = Request.init();
 
+        //[Obsolete]使用 additionRequestParams参数代替
         if (null != self.settings.treeIdName) {
 
             self.settings.dtParams.ajax.url +=
@@ -154,7 +159,38 @@ Kyzx.List = {
             };
         }
 
+        self._initAdditionRequestParams();
+
         return self;
+    },
+
+    _initAdditionRequestParams: function() {
+
+        var self;
+        var additionParams, input, selector;
+
+        self = this;
+
+        if (self.settings.additionRequestParams != null) {
+
+            additionParams = self.settings.additionRequestParams;
+            for (var i = 0; i < additionParams.length; i++) {
+
+                selector = additionParams[i]['input'];
+                if ($(selector).length > 0) {
+                    continue;
+                }
+
+                input = $('<input type="hidden" value="' + additionParams[i]['value'] + '" />');
+                if (selector.indexOf('#') == 0) {
+                    input.attr('id', selector.substring(1));
+                } else if (selector.indexOf('.') == 0) {
+                    input.attr('class', selector.substring(1));
+                }
+
+                $('body').append(input);
+            }
+        }
     },
 
     initList: function() {
@@ -200,11 +236,17 @@ Kyzx.List = {
 
             createBtn.on('click', function() {
 
-                var url;
+                var url, search;
 
                 url = '/' + self.settings.modelEnName + '/Create';
-                if (self.settings.treeIdName) {
+
+                /*if (self.settings.treeIdName) {
                     url += '?' + self.settings.treeIdName + '=' + self.request.getValue(self.settings.treeIdName, 0);
+                }*/
+
+                search = self._getAdditionRequestSearch();
+                if(search != ''){
+                    url += '?' + search;
                 }
 
                 Kyzx.Utility.redirect('添加' + self.settings.modelCnName, url);
@@ -275,8 +317,12 @@ Kyzx.List = {
                     recycleBin.addClass('btn-success');
                 }
 
+                // 刷新列表
                 recycleBin.attr('data-status', status);
-                self.dataTables.ajax.reload((null, true));
+                self.dataTables.ajax.reload(null, true);
+
+                // 刷新树表
+                self._reloadTreeData('/' + self.settings.treeDataModelEnName + '/GetZTreeResJson', status);
 
                 self._showControlBtn(status);
             });
@@ -291,17 +337,48 @@ Kyzx.List = {
         }
     },
 
-    _addTree: function() {
+    _reloadTreeData: function(url, status) {
 
-        var status, nodeId;
-        var ul;
-        var settings, nodes, n;
-        var ztree;
         var self;
 
         self = this.self;
 
         if (self.settings.hasTree) {
+
+            $.post(url, { status: status }, function(data) {
+
+                var ul;
+
+                if (data.status == 1) {
+                    $('ul.ztree').attr('data-ztree-json', data.data);
+                    self._addTree();
+                } else if (data.status == 0) {
+                    alert(data.message);
+                }
+
+            }, 'json');
+        }
+    },
+
+    _addTree: function() {
+
+        var status, nodeId;
+        var ul;
+        var settings, nodes, n;
+        var ztree, treeId;
+        var self;
+
+        self = this.self;
+
+        if (self.settings.hasTree) {
+
+            ul = $('ul.ztree');
+
+            // 销毁原树表
+            treeId = ul.attr('id');
+            if (treeId != undefined) {
+                $.fn.zTree.destroy(treeId);
+            }
 
             status = self.request.getValue('status', 1);
             nodeId = self.request.getValue(self.settings.treeIdName, 0);
@@ -315,17 +392,17 @@ Kyzx.List = {
                         enable: true
                     }
                 },
-                view: {
-                    fontCss: function(treeId, treeNode) {
-
-                        if (treeNode.ifChecked) {
-                            return { background: '#4185E0', color: '#FFF', 'border-radius': '2px' }
-                        }
+                callback: {
+                    onClick: function(event, treeId, treeNode) {
+                        $('a[id!=' + treeNode.tId + '_a]').removeClass('curSelectedNode');
+                        self._setAdditionRequestParams(treeNode);
+                        self.dataTables.ajax.reload(null, true);
                     }
                 }
             };
 
-            ul = $('.tree-container ul');
+            self.zTreeId = 'ZTree_' + (new Date()).getTime();
+            ul.attr('id', self.zTreeId);
             nodes = ul.attr('data-ztree-json');
             nodes = $.parseJSON(nodes);
 
@@ -337,19 +414,12 @@ Kyzx.List = {
 
                     n.ifChecked = true;
                 }
-
-                n.click = 'location.href = \'/' + self.settings.modelEnName + '/' +
-                    (self.settings.actionName == null ? 'List' : self.settings.actionName) +
-                    '?status=' + status + '&' + self.settings.treeIdName + '=' + n[self.settings.treeIdName] + '\';';
             };
 
             // 添加根节点“全部”
             nodes = [{
                 name: '全部',
                 open: true,
-                click: 'location.href = \'/' + self.settings.modelEnName + '/' +
-                    (self.settings.actionName == null ? 'List' : self.settings.actionName) +
-                    '?status=' + status + '&' + self.settings.treeIdName + '=0\';',
                 children: nodes
             }];
             nodes[0][self.settings.treeIdName] = 0;
@@ -360,8 +430,81 @@ Kyzx.List = {
             }
 
             ztree = $.fn.zTree.init(ul, settings, nodes);
-
+            self._setZTreeCheck(ztree);
         }
+    },
+
+    _setZTreeCheck: function(ztree) {
+        var n;
+        $('a.curSelectedNode').removeClass('curSelectedNode');
+        n = ztree.getNodeByParam('ifChecked', true);
+        $('#' + n.tId + '_a').addClass('curSelectedNode');
+    },
+
+    _setAdditionRequestParams: function(node) {
+
+        var self;
+        var additionParams, p, input, selector;
+
+        self = this;
+
+        if (self.settings.additionRequestParams != null) {
+
+            additionParams = self.settings.additionRequestParams;
+            for (var i = 0; i < additionParams.length; i++) {
+
+                p = additionParams[i];
+                selector = p['input'];
+                input = $(selector);
+                if (input.length > 0 && node[p['name']] != undefined) {
+                    input.val(node[p['name']]);
+                }
+            }
+        }
+    },
+
+    _getAdditionRequestParams: function() {
+
+        var self;
+        var additionParams, p;
+
+        self = this;
+
+        additionParams = self.settings.additionRequestParams;
+        if (null != additionParams) {
+
+            for (var i = 0; i < additionParams.length; i++) {
+
+                p = additionParams[i];
+                p['value'] = $(p['input']).val();
+            }
+        }
+
+        return additionParams;
+    },
+
+    _getAdditionRequestSearch: function(){
+
+        var self;
+        var additionParams, p, search;
+
+        self = this;
+
+        additionParams = self.settings.additionRequestParams;
+        search = '';
+
+        if (null != additionParams) {
+
+            for (var i = 0; i < additionParams.length; i++) {
+
+                p = additionParams[i];
+                search += p['name'] + '=' + $(p['input']).val() + '&';
+            }
+        }
+
+        search = search != '' ? search.substring(0, search.length - 1) : '';
+
+        return search;
     },
 
     _addControlBtn: function() {
@@ -436,7 +579,7 @@ Kyzx.List = {
         });
     },
 
-    _addBatchControlBtn: function(){
+    _addBatchControlBtn: function() {
 
         var funcBtnContainer, recycleBtn, resumeBtn, deleteBtn, editBtn;
         var hasBtnContainer;
@@ -483,7 +626,7 @@ Kyzx.List = {
             }
         };
 
-        batchBtnClick = function(operate){
+        batchBtnClick = function(operate) {
 
             var checkboxs;
             var ids;
@@ -497,12 +640,12 @@ Kyzx.List = {
             }
 
             ids = '';
-            checkboxs.each(function(){
+            checkboxs.each(function() {
                 ids += this.value + ',';
             });
             ids = ids != '' ? ids.substring(0, ids.length - 1) : 0;
 
-            if(ids == 0){
+            if (ids == 0) {
                 return;
             }
 
@@ -510,16 +653,15 @@ Kyzx.List = {
             url = url.substring(0, url.lastIndexOf('/') + 1);
             url += operate;
 
-            if(!confirm('确定执行批量操作吗？')){
+            if (!confirm('确定执行批量操作吗？')) {
                 return;
             }
 
-            $.post(url, {ids: ids}, function(data){
+            $.post(url, { ids: ids }, function(data) {
 
-                if(data.status == 1){
+                if (data.status == 1) {
                     self.dataTables.ajax.reload(null, false);
-                }
-                else if(data.status == 0){
+                } else if (data.status == 0) {
                     alert(data.message);
                 }
             }, 'json');
@@ -659,7 +801,7 @@ Kyzx.List = {
 
             var tr, data, id;
 
-            if(!confirm('是否确定执行删除操作？')){
+            if (!confirm('是否确定执行删除操作？')) {
                 return;
             }
 
@@ -1935,21 +2077,21 @@ OLS.ExaminationTask = {
         }*/
         for (var i1 = 0; i1 < userIds.length; i1++) {
 
-                for (var i2 = 0; i2 < departmentIds.length; i2++) {
+            for (var i2 = 0; i2 < departmentIds.length; i2++) {
 
-                    depNode = ztree.getNodeByParam('departmentId', departmentIds[i2]);
-                    userNode = ztree.getNodeByParam('userId', userIds[i1], depNode);
+                depNode = ztree.getNodeByParam('departmentId', departmentIds[i2]);
+                userNode = ztree.getNodeByParam('userId', userIds[i1], depNode);
 
-                    if(depNode != null && userNode != null){
+                if (depNode != null && userNode != null) {
 
-                        ztree.checkNode(userNode, true, true);
-                        userNode.now = now;
-                        checkedCount += 1;
-                    }else if(userNode != null && userNode.now != now){
-                        ztree.checkNode(nodes[i], false, true);
-                    }
+                    ztree.checkNode(userNode, true, true);
+                    userNode.now = now;
+                    checkedCount += 1;
+                } else if (userNode != null && userNode.now != now) {
+                    ztree.checkNode(nodes[i], false, true);
                 }
             }
+        }
 
         /*// 是否复选父节点
         if (nodes.length == checkedCount) {
@@ -2146,14 +2288,14 @@ OLS.ExaminationTask = {
 
             input = $(this);
             ratio = input.val();
-            //[TestEnabled]
-            /*if ('' == ratio || isNaN(ratio) || /[-.+]+/.test(ratio)) {
+
+            if ('' == ratio || isNaN(ratio) || /[-.+]+/.test(ratio)) {
 
                 alert('请输入整数。');
                 ratio = input.attr('data-origin-val');
             }
 
-            ratio = parseInt(ratio);*/
+            ratio = parseInt(ratio);
             input.val(ratio);
 
             input.attr('data-origin-val', ratio);

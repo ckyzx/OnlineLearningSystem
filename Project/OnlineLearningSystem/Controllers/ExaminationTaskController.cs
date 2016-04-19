@@ -136,13 +136,18 @@ namespace OnlineLearningSystem.Controllers
         public ActionResult Edit(ExaminationTask m)
         {
 
+            String returnMessage;
+
             if (ModelState.IsValid)
             {
 
-                if (um.Edit(m))
+                returnMessage = um.Edit(m);
+                if (returnMessage == null)
                 {
                     return Redirect("/Contents/html/parent_reload.htm");
                 }
+
+                ModelState.AddModelError("", returnMessage);
             }
 
             ViewBag.DepartmentsAndUsers = new UDepartment().GetZTreeJsonWithUsers();

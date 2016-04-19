@@ -97,8 +97,10 @@
         modelCnName: '用户',
         modelEnName: 'User',
         modelPrefix: 'U_',
-        treeIdName: 'departmentId',
-        treeIdDefaultValue: 0
+        /*treeIdName: 'departmentId',
+        treeIdDefaultValue: 0,*/
+        treeDataModelEnName: 'Department',
+        additionRequestParams: [{name:'departmentId', input: '#DepartmentId', value: 0}]
     });
     list.initList();
 

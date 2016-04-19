@@ -29,6 +29,9 @@ $(function() {
             "name": "ET_Name",
             "data": "ET_Name"
         }, {
+            "name": "ET_Type",
+            "defaultContent": '<span class="ET_Type"></span>'
+        }, {
             "name": "ET_StartTime",
             "defaultContent": '<span class="ET_StartTime"></span>'
         }, {
@@ -55,13 +58,17 @@ $(function() {
         "createdRow": function(row, data, dataIndex) {
 
             var span, timeSpan, startTask, stopTask;
-            var strDate, startTime, autoType, status, enabled, 
-                remark, mode, errorMessage;
+            var strDate, startTime, autoType, status, enabled,
+                remark, mode, errorMessage, etType;
 
             row = $(row);
 
             autoType = data['ET_AutoType'];
             mode = data['ET_Mode'];
+
+            // 设置任务类型
+            etType = data['ET_Type'];
+            row.find('span.ET_Type').text(ExaminationTaskType[etType]);
 
             // 设置考试时间
             span = row.find('span.ET_StartTime');
@@ -70,7 +77,7 @@ $(function() {
             if (mode == 0) { // 手动
 
                 span.text('[手动开始]');
-            }else if(mode == 2){ // 预定
+            } else if (mode == 2) { // 预定
 
                 span.text(startTime.format('yyyy年MM月dd日hh时mm分'));
             } else { // 自动
@@ -92,9 +99,9 @@ $(function() {
             // 设置类型
             span = row.find('span.ET_AutoType');
             span.text(AutoType[autoType]);
-            if(autoType == 2){ // 每周
+            if (autoType == 2) { // 每周
                 span.text(span.text() + Week[data['ET_AutoOffsetDay']]);
-            }else if(autoType == 3){ // 每月
+            } else if (autoType == 3) { // 每月
                 span.text(span.text() + data['ET_AutoOffsetDay'] + '号');
             }
 
@@ -161,7 +168,7 @@ $(function() {
 
             // 添加错误提示
             errorMessage = data['ET_ErrorMessage'];
-            if(errorMessage != null){
+            if (errorMessage != null) {
                 row.addClass('has-error');
                 row.qtip({
                     content: {
@@ -211,22 +218,20 @@ $(function() {
 
     $('.table-sort tbody').on('click', 'a.start-task', function() {
 
-        var tr;
+        var tr, data, etType;
 
         tr = $(this).parents('tr');
+        data = list.dataTables.row(tr).data();
 
-        /*if (!confirm('是否开始考试任务？')) {
-            return;
-        }*/
+        etType = data['ET_Type'];
 
-        layer.confirm('是否开始考试任务？', {
+        layer.confirm('是否开始' + ExaminationTaskType[etType] + '任务？', {
             title: '',
             btn: ['是', '否']
         }, function() {
 
-            var data, id, autoType;
+            var id, autoType;
 
-            data = list.dataTables.row(tr).data();
             id = data['ET_Id'];
             autoType = data['ET_AutoType'];
 
@@ -273,7 +278,7 @@ $(function() {
     $('.table-sort tbody').on('click', 'a.stop-task', function() {
 
         var tr;
-        var layerIndex, data, id;
+        var layerIndex, data, id, etType;
         var closeEvent;
 
         layerIndex = layer.load(0, {
@@ -284,6 +289,7 @@ $(function() {
 
         data = list.dataTables.row(tr).data();
         id = data['ET_Id'];
+        etType = data['ET_Type'];
 
         closeEvent = function(tip) {
 
@@ -337,12 +343,16 @@ $(function() {
 
         $.post('/ExaminationTask/GetDoingUserNumber', { id: id }, function(data) {
 
+                var etTypeText;
+
+                etTypeText = ExaminationTaskType[etType];
+
                 if (1 == data.status && 0 == data.data) {
 
-                    closeEvent('是否关闭考试任务？');
+                    closeEvent('是否关闭' + etTypeText + '任务？');
                 } else if (1 == data.status && 0 != data.data) {
 
-                    closeEvent('当前有 ' + data.data + ' 人正在进行考试，确定要关闭考试任务？');
+                    closeEvent('当前有 ' + data.data + ' 人正在进行' + etTypeText + '，确定要关闭' + etTypeText + '任务？');
                 } else {
 
                     alert(data.message);

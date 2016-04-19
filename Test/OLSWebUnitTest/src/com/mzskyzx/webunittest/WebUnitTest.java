@@ -1,5 +1,7 @@
 package com.mzskyzx.webunittest;
 
+import static org.junit.Assert.assertFalse;
+
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -54,23 +56,7 @@ public class WebUnitTest {
 		if(ifMax){
 			wd.manage().window().maximize();
 		}
-		wd.manage().timeouts().implicitlyWait(loadWait, TimeUnit.SECONDS);
-	}
-
-	public static WebDriver getWd() {
-		return wd;
-	}
-
-	public static void setWd(WebDriver wd) {
-		WebUnitTest.wd = wd;
-	}
-
-	public Date getNow() {
-		return now;
-	}
-
-	public void setNow(Date now) {
-		this.now = now;
+		setLoadWait(loadWait);
 	}
 
 	public WebElement $(String selector) {
@@ -121,7 +107,37 @@ public class WebUnitTest {
 		}
 	}
 
+	public WebElement $xl(String xpath) throws InterruptedException{
+		
+		WebElement we = null;
+		int timeout = 0;
+		
+		while(we == null && timeout < 5){
+			Thread.sleep(1000);
+			we = $x(xpath);
+			timeout += 1;
+		}
+		assertFalse(we == null);
+		
+		return we;
+	}
+	
 	public void close() {
 		wd.close();
+	}
+
+	public void setLoadWait(int timeout){
+		setLoadWait(timeout, TimeUnit.SECONDS);
+	}
+
+	public void setLoadWait(int timeout, TimeUnit timeUnit){
+		wd.manage().timeouts().implicitlyWait(timeout, TimeUnit.SECONDS);
+	}
+
+	public void printException(Exception e){
+		System.out.println("-------------------------EXCEPTIONSTART-------------------------");
+		e.printStackTrace();
+		System.out.println();
+		System.out.println("--------------------------EXCEPTIONEND--------------------------");
 	}
 }

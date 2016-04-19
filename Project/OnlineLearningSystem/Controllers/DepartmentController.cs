@@ -192,5 +192,15 @@ namespace OnlineLearningSystem.Controllers
             return Json(resJson, JsonRequestBehavior.AllowGet);
         }
 
+        //
+        // GET: /Department/GetZTreeResJson
+
+        [Description("获取部门树表数据")]
+        public JsonResult GetZTreeResJson(Byte status)
+        {
+            ResponseJson resJson;
+            resJson = new UDepartment().GetZTreeResJson(status);
+            return Json(resJson, JsonRequestBehavior.AllowGet);
+        }
     }
 }

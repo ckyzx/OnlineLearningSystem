@@ -836,9 +836,11 @@ namespace OnlineLearningSystem.Utilities
                     if (et.ET_StatisticType == (Byte)StatisticType.Score)
                     {
                         // 计算分数
-
-                        epqs = olsEni.ExaminationPaperQuestions.Where(m => m.EP_Id == ep1.EP_Id).ToList();
-                        eptqs = olsEni.ExaminationPaperTemplateQuestions
+                        epqs = 
+                            olsEni.ExaminationPaperQuestions
+                            .Where(m => m.EP_Id == ep1.EP_Id).ToList();
+                        eptqs = 
+                            olsEni.ExaminationPaperTemplateQuestions
                             .Where(m => 
                                 m.EPT_Id == ep1.EPT_Id
                                 && m.EPTQ_Status == (Byte)Status.Available)
@@ -856,13 +858,24 @@ namespace OnlineLearningSystem.Utilities
                     else if (et.ET_StatisticType == (Byte)StatisticType.Number)
                     {
                         // 计算正确率
-
-                        exactnessNumber = olsEni.ExaminationPaperQuestions.Where(m => m.EP_Id == ep1.EP_Id && m.EPQ_Exactness == (Byte)AnswerStatus.Exactness).Count();
-                        totalNumber = olsEni.ExaminationPaperTemplateQuestions
-                            .Where(m => 
+                        epqs =
+                            olsEni.ExaminationPaperQuestions
+                            .Where(m => m.EP_Id == ep1.EP_Id).ToList();
+                        exactnessNumber = 0;
+                        totalNumber =
+                            olsEni.ExaminationPaperTemplateQuestions
+                            .Where(m =>
                                 m.EPT_Id == ep1.EPT_Id
                                 && m.EPTQ_Status == (Byte)Status.Available)
                             .Count();
+
+                        foreach (var epq in epqs)
+                        {
+                            if (epq.EPQ_Exactness == (Byte)AnswerStatus.Exactness)
+                            {
+                                exactnessNumber += 1;
+                            }
+                        }
 
                         score = (Int32)Math.Round((double)exactnessNumber / (double)totalNumber * 100, MidpointRounding.AwayFromZero);
                     }

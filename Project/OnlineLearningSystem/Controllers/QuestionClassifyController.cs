@@ -173,5 +173,15 @@ namespace OnlineLearningSystem.Controllers
             return Json(!matching, JsonRequestBehavior.AllowGet);
         }
 
+        //
+        // GET: /QuestionClassify/GetZTreeResJson
+
+        [Description("获取试题分类树表数据")]
+        public JsonResult GetZTreeResJson(Byte status)
+        {
+            ResponseJson resJson;
+            resJson = new UQuestionClassify().GetZTreeResJson(status);
+            return Json(resJson, JsonRequestBehavior.AllowGet);
+        }
     }
 }

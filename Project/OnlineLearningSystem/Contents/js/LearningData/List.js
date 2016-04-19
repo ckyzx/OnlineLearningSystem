@@ -85,8 +85,10 @@ $(function() {
         modelCnName: '资料',
         modelEnName: 'LearningData',
         modelPrefix: 'LD_',
-        treeIdName: 'ldcId',
-        treeIdDefaultValue: 0
+        /*treeIdName: 'ldcId',
+        treeIdDefaultValue: 0,*/
+        treeDataModelEnName: 'LearningDataCategory',
+        additionRequestParams: [{name:'ldcId', input: '#LDCId', value: 0}]
     });
     list.initList();
 
