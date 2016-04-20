@@ -258,12 +258,12 @@ $(function() {
 
     $('.table-sort tbody').on('click', 'a.view-exam', function() {
 
-        var data, id;
+        var data, eptId, epId;
 
         data = table.row($(this).parents('tr')).data();
-        id = data['ESPT_PaperTemplateId'];
-
-        Kyzx.Utility.redirect('试卷', '/ExaminationPaperTemplate/PaperView?id=' + id);
+        eptId = data['ESPT_PaperTemplateId'];
+        epId = data['ESPT_PaperId'];
+        Kyzx.Utility.redirect('试卷', '/ExaminationPaperTemplate/PaperView?eptId=' + eptId + '&epId=' + epId);
     });
 
 });

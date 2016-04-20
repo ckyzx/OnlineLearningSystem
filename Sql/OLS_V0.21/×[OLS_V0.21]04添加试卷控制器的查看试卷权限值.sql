@@ -6,7 +6,7 @@ BEGIN
 DECLARE @pcId INT ,
     @pId INT;
 
-SELECT  @pcId = 3;
+SELECT  @pcId = 11;
 SELECT  @pId = MAX(P_Id) + 1
 FROM    dbo.[Permissions]
 
@@ -26,9 +26,9 @@ INSERT  [dbo].[Permissions]
 VALUES  ( @pId ,
           @pId ,
           @pcId ,
-          N'获取部门树表数据' ,
-          N'Department' ,
-          N'GetZTreeResJson' ,
+          N'查看试卷' ,
+          N'ExaminationPaper' ,
+          N'View' ,
           NULL ,
           CAST(0x079DAEB04D8BAB3A0B AS DATETIME2)
         )
@@ -36,6 +36,7 @@ VALUES  ( @pId ,
 SET IDENTITY_INSERT [dbo].[Permissions] OFF
 END
 
+BEGIN
 EXEC dbo.UpdateAdminRole;
-
+END
 GO

@@ -651,6 +651,7 @@ namespace OnlineLearningSystem.Utilities
                         continue;
                     }
 
+                    u.EP_Id = ep.EP_Id;
                     u.EP_Score = GetScoreString(et.ET_StatisticType, ep.EP_Score);
 
                 }
@@ -703,7 +704,7 @@ namespace OnlineLearningSystem.Utilities
             return scoreString;
         }
 
-        public ResponseJson GetQuestions(Int32 id, Int32 uId)
+        /*public ResponseJson GetQuestions(Int32 id, Int32 uId)
         {
 
             ResponseJson resJson;
@@ -740,6 +741,58 @@ namespace OnlineLearningSystem.Utilities
                     olsEni
                     .ExaminationPaperTemplateQuestions
                     .Where(m => 
+                        m.EPT_Id == id
+                        && m.EPTQ_Status == (Byte)Status.Available)
+                    .ToList();
+                epqs = olsEni.ExaminationPaperQuestions.Where(m => m.EP_Id == epId).ToList();
+
+                resJson.status = ResponseStatus.Success;
+                resJson.data = JsonConvert.SerializeObject(new Object[] { eptqs, epqs, epId });
+                return resJson;
+            }
+            catch (Exception ex)
+            {
+                resJson.status = ResponseStatus.Error;
+                resJson.message = ex.Message;
+                resJson.detail = StaticHelper.GetExceptionMessageAndRecord(ex);
+                return resJson;
+            }
+        }*/
+
+        public ResponseJson GetQuestions(Int32 id, Int32 epId, Int32 uId)
+        {
+
+            ResponseJson resJson;
+
+            resJson = new ResponseJson();
+
+            try
+            {
+
+                ExaminationPaper ep;
+                List<ExaminationPaperQuestion> epqs;
+                List<ExaminationPaperTemplateQuestion> eptqs;
+
+                ep = olsEni.ExaminationPapers.SingleOrDefault(m => m.EP_Id == epId && m.EP_UserId == uId);
+
+                if (null == ep)
+                {
+                    resJson.status = ResponseStatus.Error;
+                    resJson.message = "未考试";
+                    return resJson;
+                }
+
+                if (ep.EP_PaperStatus != (Byte)PaperStatus.Done)
+                {
+                    resJson.status = ResponseStatus.Error;
+                    resJson.message = "考试未结束";
+                    return resJson;
+                }
+
+                eptqs =
+                    olsEni
+                    .ExaminationPaperTemplateQuestions
+                    .Where(m =>
                         m.EPT_Id == id
                         && m.EPTQ_Status == (Byte)Status.Available)
                     .ToList();

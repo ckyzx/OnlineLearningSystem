@@ -2,6 +2,35 @@ $(function() {
 
     var videoJson;
 
+    // 调整图片尺寸
+    $('img').css({
+        position: 'absolute',
+        left: $('body').width() + 100 + 'px'
+    })
+
+    $('img').on('load', function(){
+        var img, content;
+        var imgW, imgH, w, h;
+
+        content = $('.ld-content');
+        w = content.width();
+
+        img = $(this);
+        imgW = img.width();
+        imgH = img.height();
+
+        if(imgW > w){
+            imgH = parseInt(w / imgW * imgH);
+            imgW = w;
+        }
+
+        img.css({
+            'position': 'static',
+            'width': imgW + 'px',
+            'height': imgH + 'px'
+        });
+    });
+
     videoJson = $('#LD_Video').val();
 
     if (videoJson != '') {

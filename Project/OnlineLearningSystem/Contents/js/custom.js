@@ -41,7 +41,7 @@ Kyzx.Utility = {
         var search;
 
         search = location.search;
-        
+
         if (search != '') {
             search = search.substring(1);
             search = 'p_' + search.replace(/&/g, '&p_');
@@ -245,7 +245,7 @@ Kyzx.List = {
                 }*/
 
                 search = self._getAdditionRequestSearch();
-                if(search != ''){
+                if (search != '') {
                     url += '?' + search;
                 }
 
@@ -483,7 +483,7 @@ Kyzx.List = {
         return additionParams;
     },
 
-    _getAdditionRequestSearch: function(){
+    _getAdditionRequestSearch: function() {
 
         var self;
         var additionParams, p, search;
@@ -1221,7 +1221,8 @@ OLS.ExaminationTask = {
             me.setQuestionClassifiesNodeChecked(ztree, nodes, autoClassifies);
 
             // 设置出题比例
-            me.setAutoRatio($('#RatioContainer'), JSON.parse(template.ETT_AutoRatio));
+            me.setRatios(template.ETT_AutoRatio);
+            me.renderAutoRatio();
 
             // 设置开始时间、结束时间
             me._setTime('StartTime');
@@ -2260,7 +2261,6 @@ OLS.ExaminationTask = {
         etAutoRatio = $('#' + me.s.idPrefix + 'AutoRatio');
         rs = etAutoRatio.val();
         if (undefined == rs || '[]' == rs) {
-
             rs = me.getOriginRatios();
             etAutoRatio.val(JSON.stringify(rs));
         } else {
@@ -2268,6 +2268,7 @@ OLS.ExaminationTask = {
         }
 
         container = $('#RatioContainer');
+        container.children().remove();
 
         for (var i = 0; i < rs.length; i++) {
 
@@ -2354,14 +2355,20 @@ OLS.ExaminationTask = {
         return ratios;
     },
 
-    setRatios: function() {
+    setRatios: function(ratios) {
 
             var me;
 
             me = this;
 
+            if (ratios == undefined) {
+                ratios = JSON.stringify(me.getRatios());
+            } else if (typeof(ratios) == 'object') {
+                ratios = JSON.stringify(ratios);
+            }
+
             // 设置自动出题比例
-            $('#' + me.s.idPrefix + 'AutoRatio').val(JSON.stringify(me.getRatios()));
+            $('#' + me.s.idPrefix + 'AutoRatio').val(ratios);
         }
         /* --------------------------------------------------------------------------------- */
 };
@@ -2514,3 +2521,63 @@ OLS.WebUploaderHelper = {
 };
 
 OLS.Question = {};
+
+function renderPaper(eptId, epId) {
+
+    $.post('/ExaminationPaperTemplate/GetQuestionsForUser', {
+            eptId: eptId,
+            epId: epId
+        }, function(data) {
+
+            var paperContainer;
+            var questions, answers, paperData;
+            var epId, uId;
+
+            paperContainer = $('#PaperContainer');
+            paperContainer.html('');
+
+            if (1 == data.status) {
+
+                data.data = JSON.parse(data.data);
+                questions = data.data[0];
+                answers = data.data[1];
+                epId = data.data[2];
+
+                paperData = adjustQuestions(questions, answers);
+                paperData = {
+                    epId: epId,
+                    uId: uId,
+                    types: paperData
+                };
+
+                paperContainer.addClass('bg-f')
+                $('#PaperTmpl').tmpl(paperData).appendTo(paperContainer);
+
+                // 在本地保存考题数据
+                initLocalQuestions('#PaperContainer', questions, answers);
+
+                // 清除未选评分项
+                $('span.grade i.active').each(function() {
+                    $(this).parentsUntil('div').last().attr('data-active', 1);
+                });
+                $('span.grade:not([data-active])').hide();
+
+            } else {
+
+                paperContainer
+                    .removeClass('bg-f')
+                    .html('<div class="prompt">' + data.message.replace(/。/g, '') + '</div>');
+            }
+        }, 'json')
+        .error(function() {
+
+            alert('请求返回错误！');
+        });
+}
+
+function initButtonEvent() {
+
+    $('#ExaminationPaperGradeContainer').on('click', '#Close', function() {
+        layer_close();
+    });
+}

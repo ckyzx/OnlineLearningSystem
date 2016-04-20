@@ -135,16 +135,16 @@ namespace OnlineLearningSystem.Controllers
         // GET: /ExaminationPaperTemplate/GetQuestions
 
         [Description("获取改卷试题数据")]
-        public JsonResult GetQuestions(Int32 id, Int32 uId)
+        public JsonResult GetQuestions(Int32 id, Int32 epId, Int32 uId)
         {
-            return Json(um.GetQuestions(id, uId), JsonRequestBehavior.AllowGet);
+            return Json(um.GetQuestions(id, epId, uId), JsonRequestBehavior.AllowGet);
         }
 
         //
         // GET: /ExaminationPaperTemplate/GetQuestionsForUser
 
         [Description("获取用户试题数据")]
-        public JsonResult GetQuestionsForUser(Int32 id)
+        public JsonResult GetQuestionsForUser(Int32 eptId, Int32 epId)
         {
 
             Int32 uId;
@@ -153,7 +153,7 @@ namespace OnlineLearningSystem.Controllers
             u = (User)Session["User"];
             uId = u.U_Id;
 
-            return Json(um.GetQuestions(id, uId), JsonRequestBehavior.AllowGet);
+            return Json(um.GetQuestions(eptId, epId, uId), JsonRequestBehavior.AllowGet);
         }
 
         //
@@ -296,7 +296,7 @@ namespace OnlineLearningSystem.Controllers
         // GET: /ExaminationPaperTemplate/PaperView
 
         [Description("查看试卷")]
-        public ActionResult PaperView(Int32 id)
+        public ActionResult PaperView()
         {
             return View();
         }

@@ -66,7 +66,7 @@ $(function() {
         list.on('click', 'li h4', function() {
 
             var h4, li, uIdInput;
-            var uId, currentUId;
+            var uId, currentUId, epId;
 
             h4 = $(this);
             li = h4.parent();
@@ -82,6 +82,10 @@ $(function() {
             //__gradeEvent();
 
             $('#U_Id').val(uId);
+
+            // 获取试卷编号
+            epId = li.attr('data-paper-id');
+            $('#EP_Id').val(epId);
 
             list.find('li h4.active').removeClass('active');
             h4.addClass('active');
@@ -195,8 +199,16 @@ $(function() {
         epId = $('#EP_Id').val();
         uId = $('#U_Id').val();
 
+        if(epId == 0){
+            $('#PaperContainer')
+                .removeClass('bg-f')
+                .html('<div class="prompt">未考试</div>')
+            return;
+        }
+
         $.post('/ExaminationPaperTemplate/GetQuestions', {
                 id: eptId,
+                epId: epId,
                 uId: uId
             }, function(data) {
 

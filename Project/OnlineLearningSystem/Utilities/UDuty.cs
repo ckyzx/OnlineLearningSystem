@@ -56,7 +56,7 @@ namespace OnlineLearningSystem.Utilities
 
             try
             {
-                throw new NotImplementedException();
+                
                 Int32 id;
 
                 id = GetDuId();
