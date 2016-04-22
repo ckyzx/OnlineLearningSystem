@@ -1151,6 +1151,9 @@ OLS.ExaminationTask = {
         // 初始化出题方式控件事件
         this.initAutoTypeEvent();
 
+        // 初始化任务类型控件事件
+        this.initTypeEvent();
+
         // 初始化部门/用户选择控件
         this.renderDepartmentsAndUsers();
 
@@ -1276,6 +1279,67 @@ OLS.ExaminationTask = {
         $('#' + me.s.idPrefix + 'StatisticType').change();
     },
 
+    initTypeEvent: function() {
+
+        var me;
+        var etType;
+
+        me = this;
+
+        etType = $('#' + me.s.idPrefix + 'Type');
+
+        etType.on('change', function() {
+
+            var etType;
+            var type;
+
+            etType = $(this);
+            type = parseInt(etType.val());
+
+            switch (type) {
+                case 0: // 考试
+
+                    // 隐藏任务模板
+                    me._toggleElementContainer('#' + me.s.idPrefix + 'Template', true);
+
+                    // 设置成绩计算类型
+                    $('#' + me.s.idPrefix + 'StatisticType').val(1).change();
+                    me._toggleElementContainer('#' + me.s.idPrefix + 'StatisticType', true);
+
+                    // 设置自动类型
+                    me._toggleElementContainer('#' + me.s.idPrefix + 'Mode', true);
+                    $('#' + me.s.idPrefix + 'Mode').val(0).change();
+
+                    break;
+                case 1: // 练习
+
+                    // 隐藏任务模板
+                    me._toggleElementContainer('#' + me.s.idPrefix + 'Template', false);
+
+                    // 设置成绩计算类型
+                    $('#' + me.s.idPrefix + 'StatisticType').val(2).change();
+                    me._toggleElementContainer('#' + me.s.idPrefix + 'StatisticType', false);
+
+                    // 设置自动类型
+                    $('#' + me.s.idPrefix + 'Mode').val(2).change();
+                    me._toggleElementContainer('#' + me.s.idPrefix + 'Mode', false);
+                    me._toggleElementContainer('#' + me.s.idPrefix + 'AutoType', false);
+
+                    // 隐藏试题列表
+                    $('#QuestionListSelectContainer').hide();
+
+                    // 显示出题分类
+                    me._toggleElementContainer('#' + me.s.idPrefix + 'AutoClassifies', true);
+
+                    break;
+                default:
+                    break;
+            }
+        });
+
+        etType.change();
+    },
+
     initModeEvent: function() {
 
         var etMode, etAutoType;
@@ -1323,6 +1387,21 @@ OLS.ExaminationTask = {
         etMode.change();
 
         etAutoType.val(etAutoType.attr('data-origin-value'));
+    },
+
+    _toggleElementContainer: function(selector, show) {
+
+        var container;
+
+        container = $(selector).parentsUntil('form').last();
+
+        if (show) {
+            container.show();
+        } else if (show === false) {
+            container.hide();
+        } else {
+            container.toggle();
+        }
     },
 
     initStartTimeEvent: function() {

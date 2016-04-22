@@ -429,13 +429,13 @@ namespace OnlineLearningSystem.Utilities
             try
             {
 
-                Int32 epId, epqId;
+                ExaminationTask et;
                 ExaminationPaperTemplate ept;
                 ExaminationPaper ep;
-                List<ExaminationPaperTemplateQuestion> eptqs;
-
+                ResponseJson addResJson;
 
                 ept = Get(id);
+                et = olsEni.ExaminationTasks.Single(m => m.ET_Id == ept.ET_Id);
 
                 switch (ept.EPT_PaperTemplateStatus)
                 {
@@ -449,61 +449,37 @@ namespace OnlineLearningSystem.Utilities
                             olsEni
                             .ExaminationPapers
                             .SingleOrDefault(m =>
-                            m.EPT_Id == ept.EPT_Id
-                            && m.EP_UserId == userId);
+                                m.EPT_Id == ept.EPT_Id
+                                && m.EP_UserId == userId);
 
-                        // 试卷不存在
-                        if (null == ep)
+                        // 试卷不存在，任务类型为“考试”
+                        if (null == ep && et.ET_Type == (Byte)ExaminationTaskType.Examination)
                         {
-
-                            // 添加试卷
-                            epId = GetEPId();
-
-                            ep = new ExaminationPaper
+                            addResJson = addExaminationPaper(ept, userId);
+                            if (addResJson.status == ResponseStatus.Error)
                             {
-                                EP_Id = epId,
-                                ET_Id = ept.ET_Id,
-                                EPT_Id = ept.EPT_Id,
-                                EP_PaperStatus = (Byte)PaperStatus.Doing,
-                                EP_EndTime = now.AddMinutes(ept.EPT_TimeSpan), // 进入考试时开始计算考试时间
-                                EP_TimeSpan = ept.EPT_TimeSpan,
-                                EP_UserId = userId,
-                                EP_UserName = "",
-                                EP_Score = -1,
-                                EP_Remark = "",
-                                EP_AddTime = now,
-                                EP_Status = (Byte)Status.Available
-                            };
-
-                            // 添加试卷试题数据
-                            eptqs = olsEni.ExaminationPaperTemplateQuestions.Where(m => m.EPT_Id == ept.EPT_Id && m.EPTQ_Status == (Byte)Status.Available).ToList();
-                            epqId = GetEPQId();
-                            foreach (var eptq in eptqs)
-                            {
-                                var epq = new ExaminationPaperQuestion {
-                                     EPQ_Id = epqId,
-                                     EP_Id = epId,
-                                     EPTQ_Id = eptq.EPTQ_Id,
-                                     EPQ_Answer = "",
-                                     EPQ_Exactness = 0,
-                                     EPQ_Critique = "",
-                                     EPQ_AddTime = now
-                                };
-                                olsEni.Entry(epq).State = EntityState.Added;
-                                epqId += 1;
+                                return addResJson;
                             }
-                            
-                            olsEni.Entry(ep).State = EntityState.Added;
-                            olsEni.SaveChanges();
 
                             resJson.status = ResponseStatus.Success;
-                            resJson.addition = epId;
+                            resJson.addition = addResJson.data;
                             break;
                         }
+                        else if (null == ep && et.ET_Type == (Byte)ExaminationTaskType.Exercise)
+                        {
+                            addResJson = addExercisePaper(ept, userId);
+                            if (addResJson.status == ResponseStatus.Error)
+                            {
+                                return addResJson;
+                            }
 
+                            resJson.status = ResponseStatus.Success;
+                            resJson.addition = addResJson.data;
+                            break;
+                        }
                         // 试卷已存在
                         // 考试未结束
-                        if (ep.EP_PaperStatus != (Byte)PaperStatus.Done)
+                        else if (ep.EP_PaperStatus != (Byte)PaperStatus.Done)
                         {
                             resJson.status = ResponseStatus.Success;
                             resJson.addition = ep.EP_Id;
@@ -526,7 +502,6 @@ namespace OnlineLearningSystem.Utilities
 
                         if (null != ep)
                         {
-
                             resJson.status = ResponseStatus.Success;
                             resJson.addition = ep.EP_Id;
                             break;
@@ -546,6 +521,76 @@ namespace OnlineLearningSystem.Utilities
                 resJson.detail = StaticHelper.GetExceptionMessageAndRecord(ex);
                 return resJson;
             }
+        }
+
+        private ResponseJson addExercisePaper(ExaminationPaperTemplate ept, int userId)
+        {
+            throw new NotImplementedException();
+        }
+
+        private ResponseJson addExaminationPaper(ExaminationPaperTemplate ept, int userId)
+        {
+
+            Int32 epId, epqId;
+            ExaminationPaper ep;
+            ResponseJson resJson;
+            List<ExaminationPaperTemplateQuestion> eptqs;
+
+            resJson = new ResponseJson(ResponseStatus.Error, now);
+
+            // 添加试卷
+            epId = GetEPId();
+
+            ep = new ExaminationPaper
+            {
+                EP_Id = epId,
+                ET_Id = ept.ET_Id,
+                EPT_Id = ept.EPT_Id,
+                EP_PaperStatus = (Byte)PaperStatus.Doing,
+                EP_EndTime = now.AddMinutes(ept.EPT_TimeSpan), // 进入考试时开始计算考试时间
+                EP_TimeSpan = ept.EPT_TimeSpan,
+                EP_UserId = userId,
+                EP_UserName = "",
+                EP_Score = -1,
+                EP_Remark = "",
+                EP_AddTime = now,
+                EP_Status = (Byte)Status.Available
+            };
+
+            // 添加试卷试题数据
+            eptqs =
+                olsEni.ExaminationPaperTemplateQuestions
+                .Where(m =>
+                    m.EPT_Id == ept.EPT_Id
+                    && m.EPTQ_Status == (Byte)Status.Available)
+                .ToList();
+            epqId = GetEPQId();
+            foreach (var eptq in eptqs)
+            {
+                var epq = new ExaminationPaperQuestion
+                {
+                    EPQ_Id = epqId,
+                    EP_Id = epId,
+                    EPTQ_Id = eptq.EPTQ_Id,
+                    EPQ_Answer = "",
+                    EPQ_Exactness = 0,
+                    EPQ_Critique = "",
+                    EPQ_AddTime = now
+                };
+                olsEni.Entry(epq).State = EntityState.Added;
+                epqId += 1;
+            }
+
+            olsEni.Entry(ep).State = EntityState.Added;
+            if (0 == olsEni.SaveChanges())
+            {
+                resJson.message = ResponseMessage.SaveChangesError;
+                return resJson;
+            }
+
+            resJson.status = ResponseStatus.Success;
+            resJson.data = epId;
+            return resJson;
         }
 
         /// <summary>

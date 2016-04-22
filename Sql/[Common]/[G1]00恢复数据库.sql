@@ -45,7 +45,7 @@ EXEC p_killspid 'OLS'
 
 RESTORE DATABASE OLS
 -- 下面填入数据库备份文件的路径
-FROM DISK = 'D:\OLS_V0.20.0.2_Dev.sqlserver2k8'
+FROM DISK = 'D:\OLS_V0.21.2.0_Dev.sqlserver2k8'
 WITH REPLACE,
      --MOVE 'OLS_Data' TO 'F:\SQLSERVER2008DATA\OLS.mdf', 
      --MOVE 'OLS_log'  TO 'F:\SQLSERVER2008DATA\OLS_log.ldf'

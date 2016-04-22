@@ -53,32 +53,42 @@ $(function() {
     function validateData() {
 
         var valid;
-        var mode;
+        var type, mode;
 
         $('.custom-validation-error').remove();
 
         valid = true;
 
+        type = Number($('#ET_Type').val());
         mode = Number($('#ET_Mode').val());
 
-        // 手动任务
-        if(0 == mode){
-            valid = et.validateQuestions(valid);
-        }
-
-        // 自动任务
-        if (1 == mode) {
+        // 练习
+        if(type == 1){
             valid= et.validateAutoClassifies(valid);
-            valid = et.validateAutoRatios(valid);
-            valid = et.validateStartTime(valid);
-            valid = et.validateEndTime(valid);
-        }
-
-        // 预定任务
-        if (2 == mode) {
-            valid = et.validateQuestions(valid);
             valid = et.validateCustomAutoTypeData(valid);
             valid = et.validateContinuedDays(valid);
+        // 考试
+        }else{
+
+            // 手动任务
+            if(0 == mode){
+                valid = et.validateQuestions(valid);
+            }
+
+            // 自动任务
+            if (1 == mode) {
+                valid= et.validateAutoClassifies(valid);
+                valid = et.validateAutoRatios(valid);
+                valid = et.validateStartTime(valid);
+                valid = et.validateEndTime(valid);
+            }
+
+            // 预定任务
+            if (2 == mode) {
+                valid = et.validateQuestions(valid);
+                valid = et.validateCustomAutoTypeData(valid);
+                valid = et.validateContinuedDays(valid);
+            }
         }
         
         valid = et.validateTotal(valid);

@@ -60,8 +60,8 @@ namespace OnlineLearningSystem.Controllers
         //
         // POST: /ExaminationPaperTemplate/ListDataTablesAjaxStudent
 
-        [Description("查询试卷模板，学员后台")]
-        /*public JsonResult ListDataTablesAjaxStudent(Byte type, Byte ptStatus)
+        /*[Description("查询试卷模板，学员后台")]
+        public JsonResult ListDataTablesAjaxStudent(Byte type, Byte ptStatus)
         {
 
             Int32 uId;
@@ -75,6 +75,7 @@ namespace OnlineLearningSystem.Controllers
 
             return Json(dtResponse, JsonRequestBehavior.DenyGet);
         }*/
+        [Description("查询试卷模板，学员后台")]
         public JsonResult ListDataTablesAjaxStudent(Byte etType, Byte pageType)
         {
 

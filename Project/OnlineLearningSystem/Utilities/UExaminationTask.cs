@@ -159,7 +159,6 @@ namespace OnlineLearningSystem.Utilities
                 }
                 catch (Exception ex)
                 {
-
                     resJson.status = ResponseStatus.Error;
                     resJson.message = ex.Message;
                     resJson.detail = StaticHelper.GetExceptionMessageAndRecord(ex);
@@ -178,7 +177,9 @@ namespace OnlineLearningSystem.Utilities
             List<ExaminationPaperTemplateQuestion> eptqs;
             Int32[] qs;
 
-            if ((Byte)ExaminationTaskMode.Auto == model.ET_Mode)
+            // 任务类型为“练习”或自动类型为“自动”，则不添加手动试卷模板
+            if ((Byte)ExaminationTaskType.Exercise == model.ET_Type
+                || (Byte)ExaminationTaskMode.Auto == model.ET_Mode)
             {
                 return;
             }
@@ -405,16 +406,11 @@ namespace OnlineLearningSystem.Utilities
                     try
                     {
 
-                        // 对于自动任务，不处理
-                        if (et.ET_Mode != (Byte)ExaminationTaskMode.Auto)
-                        {
+                        // 删除试卷模板与试题模板
+                        DeletePaperTemplateAndQuestionTemplate(model);
 
-                            // 删除试卷模板与试题模板
-                            DeletePaperTemplateAndQuestionTemplate(model);
-
-                            // 添加试卷模板与试题模板
-                            AddPaperTemplateAndQuestionTemplate(model);
-                        }
+                        // 添加试卷模板与试题模板
+                        AddPaperTemplateAndQuestionTemplate(model);
 
                         // 添加参与人员
                         AddAttendees(model);
@@ -442,6 +438,13 @@ namespace OnlineLearningSystem.Utilities
 
             ExaminationPaperTemplate ept;
             List<ExaminationPaperTemplateQuestion> eptqs;
+
+            // 任务类型为“练习”或自动类型为“自动”，则不删除试卷模板
+            if ((Byte)ExaminationTaskType.Exercise == model.ET_Type
+                || (Byte)ExaminationTaskMode.Auto == model.ET_Mode)
+            {
+                return;
+            }
 
             ept = olsEni.ExaminationPaperTemplates.Single(m => m.ET_Id == model.ET_Id);
             eptqs = olsEni.ExaminationPaperTemplateQuestions.Where(m => m.EPT_Id == ept.EPT_Id).ToList();
@@ -565,7 +568,7 @@ namespace OnlineLearningSystem.Utilities
                     if ((Byte)AutoType.Manual == model.ET_AutoType)
                     {
                         resJson = SetManualTypeStatus(model, etStatus);
-                        
+
                     }
                     // 预定任务处理
                     else if ((Byte)AutoType.Custom == model.ET_AutoType)
