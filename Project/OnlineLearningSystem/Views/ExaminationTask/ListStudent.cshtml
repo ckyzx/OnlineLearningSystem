@@ -1,21 +1,9 @@
 ﻿@{
-    ViewBag.Title = "试卷模板";
+    ViewBag.Title = "练习列表";
     Layout = "~/Views/Shared/_Page.cshtml";
 }
-<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 系统 <span class="c-gray en">&gt;</span> 试卷模板 <a class="btn btn-success radius r mr-20" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
-<div class="pd-20">
-    <div class="cl pd-5 bg-1 bk-gray">
-        <!--span class="l">
-            <a id="CreateBtn" class="btn btn-primary radius" href="javascript:void(0);">
-               <i class="Hui-iconfont">&#xe600;</i> 添加模板 
-            </a>
-        </span-->
-        <span class="l">
-            <a id="GotoTaskListBtn" class="btn btn-success radius" href="javascript:void(0);">
-               <i class="Hui-iconfont">&#xe66b;</i> 返回 
-            </a>
-        </span>
-    </div>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> 系统 <span class="c-gray en">&gt;</span> 练习列表 <a class="btn btn-success radius r mr-20" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<div class="list-body pd-20">
     <div class="mt-20">
         <table class="table table-border table-bordered table-bg table-hover table-sort">
             <thead>
@@ -30,13 +18,16 @@
                         名称
                     </th>
                     <th>
-                        开始时间
+                        类型
+                    </th>
+                    <th>
+                        时间
                     </th>
                     <th>
                         时长
                     </th>
                     <th>
-                        添加时间
+                        自动类型
                     </th>
                     <th>
                         备注
@@ -55,4 +46,8 @@
 <script type="text/javascript" src="@Url.Content("~/Contents/lib/js.datetime.js")"></script>
 <script type="text/javascript" src="@Url.Content("~/Contents/lib/My97DatePicker/WdatePicker.js")"></script>
 <script type="text/javascript" src="@Url.Content("~/Contents/lib/datatables/1.10.9/jquery.dataTables.min.js")"></script>
-<script type="text/javascript" src="@Url.Content("~/Contents/js/ExaminationPaperTemplate/List.js")"></script>
+<!--script type="text/javascript" src="http://cdn.bootcss.com/datatables/1.10.9/js/jquery.dataTables.js"></script-->
+<link rel="Stylesheet" type="text/css" href="@Url.Content("~/Contents/lib/qTip3/jquery.qtip.min.css")" />
+<script type="text/javascript" src="@Url.Content("~/Contents/lib/qTip3/jquery.qtip.min.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Contents/js/custom-enum.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Contents/js/ExaminationTask/ListStudent.js")"></script>

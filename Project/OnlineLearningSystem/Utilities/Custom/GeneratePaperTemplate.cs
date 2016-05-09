@@ -471,7 +471,7 @@ namespace OnlineLearningSystem.Utilities
             return readyQs;
         }
 
-        private List<Question> GenerateWithNumber(ExaminationTask et)
+        public List<Question> GenerateWithNumber(ExaminationTask et)
         {
 
             Int32 diffCoef, optionTotalNumber, totalNumber;
@@ -695,6 +695,74 @@ namespace OnlineLearningSystem.Utilities
             }
 
             return true;
+        }
+
+        public Int32 CreatePaperTemplateOfExercise(ExaminationTask et, List<Question> readyQs)
+        {
+
+            Int32 eptId, eptqId;
+            String eptQs;
+            Int32[] eptQsAry;
+            ExaminationPaperTemplate ept;
+            ExaminationPaperTemplateQuestion eptq;
+
+            eptId = GetEPTId();
+
+            eptQsAry = readyQs.Select(m => m.Q_Id).ToArray();
+            eptQs = JsonConvert.SerializeObject(eptQsAry);
+
+            ept = new ExaminationPaperTemplate
+            {
+                EPT_Id = eptId,
+                ET_Id = et.ET_Id,
+                ET_Type = et.ET_Type,
+                EPT_PaperTemplateStatus = (Byte)PaperTemplateStatus.Undone,
+                EPT_StartDate = et.ET_StartTime.Date,
+                EPT_StartTime = et.ET_StartTime, // 练习试卷模板，无需开启，故“开始时间”设置为任务定义的“开始时间”。
+                EPT_EndTime = et.ET_StartTime, // 同上
+                EPT_TimeSpan = et.ET_TimeSpan,
+                EPT_Questions = eptQs,
+                EPT_Remark = "本试卷模板由系统于" + now.ToString("yyyy年MM月dd日") + "自动生成。",
+                EPT_AddTime = now,
+                EPT_Status = 1
+            };
+            olsEni.Entry(ept).State = EntityState.Added;
+
+            if (0 == olsEni.SaveChanges())
+            {
+                throw new Exception(ResponseMessage.SaveChangesError);
+            }
+
+            eptqId = GetEPTQId();
+
+            foreach (var q in readyQs)
+            {
+
+                eptq = new ExaminationPaperTemplateQuestion
+                {
+                    EPTQ_Id = eptqId,
+                    EPT_Id = eptId,
+                    EPTQ_Type = q.Q_Type,
+                    EPTQ_Classify = q.QC_Id,
+                    EPTQ_Score = q.Q_Score,
+                    EPTQ_Content = q.Q_Content,
+                    EPTQ_OptionalAnswer = q.Q_OptionalAnswer,
+                    EPTQ_ModelAnswer = q.Q_ModelAnswer,
+                    EPTQ_Remark = q.Q_Remark,
+                    EPTQ_AddTime = now,
+                    EPTQ_Status = 1
+                };
+                olsEni.Entry(eptq).State = EntityState.Added;
+
+                eptqId += 1;
+            }
+
+            if (0 == olsEni.SaveChanges())
+            {
+                throw new Exception(ResponseMessage.SaveChangesError);
+            }
+
+            return eptId;
         }
     }
 }

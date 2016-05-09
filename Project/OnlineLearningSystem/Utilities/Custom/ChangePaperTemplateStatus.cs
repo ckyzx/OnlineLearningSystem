@@ -47,6 +47,10 @@ namespace OnlineLearningSystem.Utilities
 
                     et = olsEni.ExaminationTasks.Single(m => m.ET_Id == ept.ET_Id);
 
+                    // 不处理练习任务
+                    if (et.ET_Type == (Byte)ExaminationTaskType.Exercise)
+                        continue;
+
                     if ((Byte)ExaminationTaskStatus.Enabled != et.ET_Enabled
                         && et.ET_Mode != (Byte)ExaminationTaskMode.Auto
                         && ept.EPT_PaperTemplateStatus == (Byte)PaperTemplateStatus.Undone)

@@ -1331,6 +1331,9 @@ OLS.ExaminationTask = {
                     // 显示出题分类
                     me._toggleElementContainer('#' + me.s.idPrefix + 'AutoClassifies', true);
 
+                    // 显示出题比例
+                    me._toggleElementContainer('#' + me.s.idPrefix + 'AutoRatio', true);
+
                     break;
                 default:
                     break;

@@ -56,5 +56,10 @@ namespace OnlineLearningSystem.Utilities
         {
             new UUser().ClearUserOnline();
         }
+
+        public static void ChangeExerciseTaskEnabled(object source, ElapsedEventArgs e)
+        {
+            new ExaminationTaskTimer().ChangeExerciseTaskEnabled();
+        }
     }
 }

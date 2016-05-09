@@ -41,5 +41,15 @@ namespace OnlineLearningSystem.Utilities
             this.time = time;
             remark = "";
         }
+
+        public ResponseJson(ResponseStatus status, String message)
+        {
+            this.status = status;
+            data = "{}";
+            this.message = message;
+            time = DateTime.Now;
+            remark = "";
+        }
+
     }
 }

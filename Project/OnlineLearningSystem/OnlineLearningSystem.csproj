@@ -117,6 +117,7 @@
     <Compile Include="Controllers\QuestionClassifyController.cs" />
     <Compile Include="Controllers\UserScoreController.cs" />
     <Compile Include="Models\UserOnline.cs" />
+    <Compile Include="Utilities\Custom\ExaminationTaskTimer.cs" />
     <Compile Include="Utilities\Helpers\OpenXmlExcel.cs" />
     <Compile Include="Utilities\Helpers\OpenXmlExcelStaticHelper.cs" />
     <Compile Include="Utilities\UUserScore.cs" />
@@ -989,6 +990,7 @@
     <None Include="Contents\skin\red\Thumbs.db" />
     <None Include="Contents\skin\yellow\Thumbs.db" />
     <Content Include="Views\Shared\_Common.cshtml" />
+    <Content Include="Views\ExaminationTask\ListStudent.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

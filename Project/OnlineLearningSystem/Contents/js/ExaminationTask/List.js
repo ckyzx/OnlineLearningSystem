@@ -230,10 +230,10 @@ $(function() {
             btn: ['是', '否']
         }, function() {
 
-            var id, autoType;
+            var id, mode;
 
             id = data['ET_Id'];
-            autoType = data['ET_AutoType'];
+            mode = data['ET_Mode'];
 
             $.post('/ExaminationTask/StartTask', {
                     id: id
@@ -248,10 +248,10 @@ $(function() {
                         tr.find('a.start-task').addClass('hide');
                         stopTask = tr.find('a.stop-task');
 
-                        if (0 == autoType) {
-                            stopTask.text('结束');
+                        if (1 == mode) {
+                            stopTask.text('关闭'); // 自动
                         } else {
-                            stopTask.text('关闭');
+                            stopTask.text('结束'); // 手动
                         }
                         stopTask.removeClass('hide');
 

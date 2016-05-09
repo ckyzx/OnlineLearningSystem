@@ -15,7 +15,7 @@ $(function() {
     function submitHandler(form) {
 
         var etStartTime, etEndTime;
-        var mode, startDate, startTime;
+        var mode, startDate, startTime, continuedDays, endTime;
 
         if (!validateData()) {
             return false;
@@ -24,23 +24,30 @@ $(function() {
         etStartTime = $('#ET_StartTime');
         etEndTime = $('#ET_EndTime');
         mode = $('#ET_Mode').val();
-        if (0 == mode) {
+        if (0 == mode) { // 手动
 
             etStartTime.val('1970/1/1 00:00:00');
             etEndTime.val('1970/1/1 00:00:00');
-        } else if (2 == mode) {
+        } else if (2 == mode) { // 预定
 
             // 设置开始日期
             startDate = $('#ETStartDate').val();
             startDate = startDate.toDate();
             startTime = $('#ET_StartTime').val();
             startTime = startTime.toDate();
-
-            startTime =
+            etStartTime.val(
                 startDate.getFullYear() + '/' + (startDate.getMonth() + 1) + '/' + startDate.getDate() + ' ' +
-                startTime.getHours() + ':' + startTime.getMinutes() + ':' + startTime.getSeconds();
+                startTime.getHours() + ':' + startTime.getMinutes() + ':' + startTime.getSeconds());
 
-            etStartTime.val(startTime);
+
+            endTime = $('#ET_EndTime').val();
+            endTime = endTime.toDate();
+            continuedDays = $('#ET_ContinuedDays').val();
+            continuedDays = continuedDays > 1 ? (continuedDays - 1) : 0;
+            startTime = startTime.add('d', continuedDays);
+            etEndTime.val(
+                startDate.getFullYear() + '/' + (startDate.getMonth() + 1) + '/' + startDate.getDate() + ' ' +
+                endTime.getHours() + ':' + endTime.getMinutes() + ':' + endTime.getSeconds());
         }
 
         if (!confirm('确定提交吗？')) {

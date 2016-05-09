@@ -20,6 +20,7 @@ namespace OnlineLearningSystem.Utilities
 
                 Boolean unsaved;
                 ExaminationPaperTemplate ept;
+                ExaminationTask et;
                 UExaminationPaperTemplate uept;
                 List<ExaminationPaper> eps;
 
@@ -37,6 +38,12 @@ namespace OnlineLearningSystem.Utilities
                 foreach (var ep in eps)
                 {
 
+                    et = olsEni.ExaminationTasks.Single(m => m.ET_Id == ep.ET_Id);
+
+                    // 不处理练习任务
+                    if (et.ET_Type == (Byte)ExaminationTaskType.Exercise)
+                        continue;
+
                     // 考试时长无限制、试卷模板已终止，则关闭试卷、计算成绩
                     if (ep.EP_TimeSpan == 0)
                     {
@@ -49,7 +56,7 @@ namespace OnlineLearningSystem.Utilities
                                 unsaved = true;
                             }
                             uept.GradePaper(ep);
-                            uept.SaveChange();
+                            uept.SaveChanges();
                         }
                     }
                     else if (now > ep.EP_EndTime)
@@ -60,7 +67,7 @@ namespace OnlineLearningSystem.Utilities
                             unsaved = true;
                         }
                         uept.GradePaper(ep);
-                        uept.SaveChange();
+                        uept.SaveChanges();
                     }
                 }
 
@@ -80,6 +87,5 @@ namespace OnlineLearningSystem.Utilities
                 return resJson;
             }
         }
-
     }
 }

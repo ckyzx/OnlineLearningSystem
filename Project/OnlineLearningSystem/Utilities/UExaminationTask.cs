@@ -40,6 +40,22 @@ namespace OnlineLearningSystem.Utilities
             return dtResponse;
         }
 
+        public DataTablesResponse ListDataTablesAjax(DataTablesRequest dtRequest, Byte type, Byte enabled)
+        {
+
+            DataTablesResponse dtResponse;
+            List<SqlParameter> sps;
+            UModel<ExaminationTask> umodel;
+
+            sps = new List<SqlParameter>();
+            sps.Add(new SqlParameter("@ET_Type", type));
+            sps.Add(new SqlParameter("@ET_Enabled", enabled));
+            umodel = new UModel<ExaminationTask>(dtRequest, "ExaminationTasks", "ET_Id");
+            dtResponse = umodel.GetList(sps, "ET_Status");
+
+            return dtResponse;
+        }
+
         public List<SelectListItem> GetTemplateList()
         {
 
@@ -661,7 +677,7 @@ namespace OnlineLearningSystem.Utilities
                 {
                     ep.EP_PaperStatus = (Byte)PaperStatus.Done;
                     uept.GradePaper(ep);
-                    uept.SaveChange();
+                    uept.SaveChanges();
                 }
             }
 
@@ -685,10 +701,16 @@ namespace OnlineLearningSystem.Utilities
                 .ExaminationPaperTemplates
                 .Where(m => m.ET_Id == et.ET_Id)
                 .ToList();
-            if (epts.Count != 1)
+            // 验证类型为“考试”的任务
+            if (epts.Count != 1 && et.ET_Type == (Byte)ExaminationTaskType.Examination)
             {
                 resJson.status = ResponseStatus.Error;
                 resJson.message = "试卷模板不匹配。";
+                return resJson;
+            }
+            else if (et.ET_Type == (Byte)ExaminationTaskType.Exercise)
+            {
+                resJson.status = ResponseStatus.Success;
                 return resJson;
             }
 
@@ -724,7 +746,7 @@ namespace OnlineLearningSystem.Utilities
                 {
                     ep.EP_PaperStatus = (Byte)PaperStatus.Done;
                     uept.GradePaper(ep);
-                    uept.SaveChange();
+                    uept.SaveChanges();
                 }
             }
 
@@ -766,7 +788,7 @@ namespace OnlineLearningSystem.Utilities
                     {
                         ep.EP_PaperStatus = (Byte)PaperStatus.Done;
                         uept.GradePaper(ep);
-                        uept.SaveChange();
+                        uept.SaveChanges();
                     }
                 }
             }
@@ -861,6 +883,12 @@ namespace OnlineLearningSystem.Utilities
                 return resJson;
             }
 
+        }
+
+        internal ResponseJson EnterExercise(Int32 id, Int32 userId)
+        {
+            ExaminationTask et = Get(id);
+            return new UExaminationPaperTemplate().EnterExercise(et, userId);
         }
     }
 }
