@@ -1,7 +1,5 @@
 package com.mzskyzx.webunittest.ols;
 
-import static org.junit.Assert.*;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -36,7 +34,7 @@ public class AutoTaskDayExaminationTest3 extends OLSTest {
 		autoRatios.add(10);
 		testLoop("01 默认出题总分 100分 ", null, 0, autoRatios, "\\[未评分\\]", "未打分", "", "100分");
 
-		autoRatios = new ArrayList<Integer>();
+		/*autoRatios = new ArrayList<Integer>();
 		autoRatios.add(30);
 		autoRatios.add(20);
 		autoRatios.add(20);
@@ -74,7 +72,7 @@ public class AutoTaskDayExaminationTest3 extends OLSTest {
 		autoRatios.add(10);
 		autoRatios.add(1);
 		autoRatios.add(1);
-		testLoop("05 设置出题总数为 200", "正确率", 200, autoRatios, "\\[未评分\\]", "未打分", "", "100%");
+		testLoop("05 设置出题总数为 200", "正确率", 200, autoRatios, "\\[未评分\\]", "未打分", "", "100%");*/
 
 		close();
 	}

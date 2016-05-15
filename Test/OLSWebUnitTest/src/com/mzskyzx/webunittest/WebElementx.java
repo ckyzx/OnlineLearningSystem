@@ -18,6 +18,11 @@ public class WebElementx {
 		we.clear();
 		we.sendKeys(value);
 	}
+
+	public void val(int value){
+		we.clear();
+		we.sendKeys(String.valueOf(value));
+	}
 	
 	public String text(){
 		return we.getText();

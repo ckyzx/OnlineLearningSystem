@@ -72,6 +72,7 @@ $(function() {
         // 练习
         if(type == 1){
             valid= et.validateAutoClassifies(valid);
+            valid = et.validateAutoRatios(valid);
             valid = et.validateCustomAutoTypeData(valid);
             valid = et.validateContinuedDays(valid);
         // 考试

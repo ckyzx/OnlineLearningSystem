@@ -16,9 +16,11 @@ public class Test extends OLSTest {
 	}
 
 	@org.junit.Test
-	public void test() {
+	public void test() throws InterruptedException {
 		login();
-		login();
+		//openExerciseCenter("已");
+		//openExaminationCenter("已");
+		grade("自动任务每日0515043934", "陈佳伟", "100分");
 	}
 
 }

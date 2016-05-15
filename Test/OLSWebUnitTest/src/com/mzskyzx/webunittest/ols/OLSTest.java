@@ -35,7 +35,7 @@ public class OLSTest extends WebUnitTest {
 		// init("chrome");
 		// init("edge");
 		// init("ie");
-		init("ie", false, 10);
+		init("ie", true, 10);
 		wd.get(url);
 	}
 
@@ -172,7 +172,13 @@ public class OLSTest extends WebUnitTest {
 	protected void openExaminationCenter(String text) {
 		wd.switchTo().window(wd.getWindowHandle());
 		$("#menu-examination-center").click();
-		openIframe(text, "_href");
+		openIframe("menu-examination-center", text, "_href");
+	}
+	
+	protected void openExerciseCenter(String text){
+		wd.switchTo().window(wd.getWindowHandle());
+		$("#menu-exercise-center").click();
+		openIframe("menu-exercise-center", text, "_href");
 	}
 
 	protected void openIframe(String text, String srcAttr) {
@@ -181,6 +187,21 @@ public class OLSTest extends WebUnitTest {
 		WebElement we;
 
 		we = $x("//a[text()='" + text + "']");
+		we.click();
+		src = we.getAttribute(srcAttr);
+		we = $x("//iframe[@src='" + src + "']");
+		wd.switchTo().frame(we);
+	}
+
+	protected void openIframe(String menuId, String text, String srcAttr) {
+
+		String src;
+		WebElement we;
+
+		we = $x("//dl[@id='"+menuId+"']/dd/ul/li/a[text()='" + text + "']");
+		if(we == null){
+			we = $x("//dl[@id='"+menuId+"']/dd/ul/li/a/span[text()='" + text + "']/..");
+		}
 		we.click();
 		src = we.getAttribute(srcAttr);
 		we = $x("//iframe[@src='" + src + "']");
@@ -292,62 +313,42 @@ public class OLSTest extends WebUnitTest {
 	protected String addCustomTask(String department, Boolean start, Boolean waitStart) throws Exception {
 
 		int startTime;
-		String taskName, date;
-		WebElement we;
-		Select select;
-		SimpleDateFormat simpleDateFormat;
+		String taskName;
 
 		try {
 
 			openTaskCreate();
 
 			// 任务名称
-			simpleDateFormat = new SimpleDateFormat("MMddhhmmss");
-			taskName = "预定任务" + simpleDateFormat.format(now);
-			$("#ET_Name").sendKeys(taskName);
+			taskName = setTaskName("预定任务");
 
 			// 参与人员
 			setAttendees(department);
 
 			// 成绩计算
-			we = $x("//select[@id='ET_StatisticType']");
-			select = new Select(we);
-			select.selectByVisibleText("得分");
+			setSelect("ET_StatisticType", "得分");
 
 			// 出题方式
-			we = $x("//select[@id='ET_Mode']");
-			select = new Select(we);
-			select.selectByVisibleText("预定");
+			setSelect("ET_Mode", "预定");
 
 			// 考试日期
-			simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-			we = $x("//input[@id='ETStartDate']");
-			we.clear();
-			Assert.assertTrue(validate("ETStartDate", "请选择考试日期"));
-			we.sendKeys(simpleDateFormat.format(now));
+			setStartDate(now);
 
 			// 开始时间和结束时间
 			startTime = setTaskTime();
 
 			// 持续天数
-			we = $x("//input[@id='ET_ContinuedDays']");
-			we.clear();
-			Assert.assertTrue(validate("ET_ContinuedDays", "持续天数 字段是必需的。"));
-			we.sendKeys("2");
+			setContinuedDays(2);
 
 			// 考试时长
-			we = $x("//input[@id='ET_TimeSpan']");
-			we.clear();
-			we.sendKeys("10");
+			setTimeSpan(10);
 
 			// 选择试题
 			Assert.assertTrue(validate("Questions", "请选择试题"));
 			$x("//input[@type='checkbox'][@value='all']").click();
 
 			// 备注
-			simpleDateFormat = new SimpleDateFormat("yyyyMMddhhmm");
-			date = simpleDateFormat.format(now);
-			$("textarea#ET_Remark").sendKeys("[前端测试][DATE" + date + "]");
+			setRemark("");
 
 			// 提交
 			submit(true, true);
@@ -365,6 +366,44 @@ public class OLSTest extends WebUnitTest {
 		} catch (Exception e) {
 			throw e;
 		}
+	}
+	
+	protected String setTaskName(String name){
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMddhhmmss");
+		String taskName = name + simpleDateFormat.format(now);
+		$("#ET_Name").sendKeys(taskName);
+		return taskName;
+	}
+	
+	protected void setSelect(String id, String text){
+		WebElement we = $x("//select[@id='"+id+"']");
+		Select select = new Select(we);
+		select.selectByVisibleText(text);
+	}
+	
+	protected void setStartDate(Date date){
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		WebElement we = $x("//input[@id='ETStartDate']");
+		we.clear();
+		Assert.assertTrue(validate("ETStartDate", "请选择考试日期"));
+		we.sendKeys(simpleDateFormat.format(now));
+	}
+	
+	protected void setContinuedDays(int num){
+		WebElement we = $x("//input[@id='ET_ContinuedDays']");
+		we.clear();
+		Assert.assertTrue(validate("ET_ContinuedDays", "持续天数 字段是必需的。"));
+		we.sendKeys(String.valueOf(num));
+	}
+	
+	protected void setTimeSpan(int num){
+		$wex("#ET_TimeSpan").val(String.valueOf(num));
+	}
+	
+	protected void setRemark(String remark){
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMddhhmm");
+		String date = simpleDateFormat.format(now);
+		$("textarea#ET_Remark").sendKeys("[前端测试][DATE" + date + "]" + remark);
 	}
 
 	protected String addAutoTask(String department, String type, int autoOffset, Boolean start) throws Exception {
@@ -389,12 +428,11 @@ public class OLSTest extends WebUnitTest {
 	protected String addAutoTask(String department, String type, int autoOffset, List<Integer> autoRatios,
 			String statisticType, int totalScoreOrNumber, Boolean start, Boolean waitStart) throws Exception {
 
-		int startTime, totalRatios;
-		String taskName, date, id;
+		int startTime;
+		String taskName;
 		WebElement we;
 		Select select;
 		SimpleDateFormat simpleDateFormat;
-		List<WebElement> wes;
 
 		taskName = null;
 
@@ -450,44 +488,21 @@ public class OLSTest extends WebUnitTest {
 			}
 
 			// 出题分类
-			we = $x("//ul[@id='QuestionClassifies']/li[.//span[text()='全部']]");
-			id = we.getAttribute("id");
-			we = $x("//span[@id='" + id + "_check']");
-			we.click();
+			setClassifies();
 
 			// 出题比例
-			if (autoRatios != null) {
-
-				changeAutoRatioEvent();
-
-				totalRatios = 0;
-				wes = $xs("//input[contains(@class,'ratio-percent')]");
-
-				for (int i = 0; i < wes.size(); i++) {
-					we = wes.get(i);
-					we.clear();
-					we.sendKeys(String.valueOf(autoRatios.get(i)));
-					totalRatios += autoRatios.get(i);
-				}
-
-				submit();
-
-				if (totalRatios < 50 || totalRatios > 100) {
-					assertTrue($x("//span[@htmlfor='ET_AutoRatio']").getText().equals("出题比例必须大于 50% 、小于 100%"));
-					return null;
-				}
+			if(!setAutoRatios(autoRatios)){
+				return null;
 			}
 
 			// 开始时间和结束时间
 			startTime = setTaskTime();
 
 			// 考试时长
-			$wex("#ET_TimeSpan").val("10");
+			setTimeSpan(10);
 
 			// 备注
-			simpleDateFormat = new SimpleDateFormat("yyyyMMddhhmm");
-			date = simpleDateFormat.format(now);
-			$wex("textarea#ET_Remark").val("[前端测试][DATE" + date + "]");
+			setRemark("");
 
 			// 提交
 			submit(true, true);
@@ -507,7 +522,109 @@ public class OLSTest extends WebUnitTest {
 
 		return taskName;
 	}
+	
+	protected void setClassifies(){
+		WebElement we = $x("//ul[@id='QuestionClassifies']/li[.//span[text()='全部']]");
+		String id = we.getAttribute("id");
+		we = $x("//span[@id='" + id + "_check']");
+		we.click();
+	}
+	
+	protected Boolean setAutoRatios(List<Integer> autoRatios){
 
+		int totalRatios;
+		WebElement we;
+		List<WebElement> wes;
+		
+		if (autoRatios != null) {
+
+			changeAutoRatioEvent();
+
+			totalRatios = 0;
+			wes = $xs("//input[contains(@class,'ratio-percent')]");
+
+			for (int i = 0; i < wes.size(); i++) {
+				we = wes.get(i);
+				we.clear();
+				we.sendKeys(String.valueOf(autoRatios.get(i)));
+				totalRatios += autoRatios.get(i);
+			}
+
+			submit();
+
+			if (totalRatios < 50 || totalRatios > 100) {
+				assertTrue($x("//span[@htmlfor='ET_AutoRatio']").getText().equals("出题比例必须大于 50% 、小于 100%"));
+				return false;
+			}
+			
+			return true;
+		}
+		
+		return false;
+	}
+
+	protected String addExercise(String department, int totalNumber, List<Integer> autoRatios, Boolean waitStart) throws Exception{
+		int startTime;
+		String taskName;
+
+		taskName = null;
+
+		try {
+
+			openTaskCreate();
+
+			// 任务名称
+			taskName = setTaskName("练习任务");
+			System.out.println("Task Name is '" + taskName + "'.");
+
+			// 任务类型
+			setSelect("ET_Type", "练习");
+			
+			// 出题数量
+			$wex("#ET_TotalNumber").val(totalNumber);
+			
+			// 参与人员
+			setAttendees(department);
+			
+			// 出题分类
+			setClassifies();
+
+			// 考试日期
+			setStartDate(now);
+			
+			// 出题比例
+			if(!setAutoRatios(autoRatios)){
+				return null;
+			}
+
+			// 开始时间和结束时间
+			startTime = setTaskTime();
+
+			// 持续天数
+			setContinuedDays(1);
+			
+			// 考试时长
+			setTimeSpan(10);
+
+			// 备注
+			setRemark("");
+
+			// 提交
+			submit(true, true);
+
+			Assert.assertTrue($wex("//nav[@class='breadcrumb']").text().contains("考试任务"));
+
+			if (waitStart) {
+				startTask(taskName);
+				waitStart(startTime);
+			}
+		} catch (Exception e) {
+			throw e;
+		}
+
+		return taskName;
+	}
+	
 	private void changeAutoRatioEvent() {
 
 		String js;
@@ -731,7 +848,28 @@ public class OLSTest extends WebUnitTest {
 		p = Pattern.compile(pattern);
 
 		// 打开已考完页面，查看成绩
-		openExaminationCenter("已考完");
+		openExaminationCenter("已");
+		we = $x("//tr[.//td[text()='" + taskName + "']]/td[8]");
+		score = we.getText();
+		System.out.println("Examination Score is '" + score + "'.");
+		assertTrue(p.matcher(score).matches());
+
+		// 查看考卷
+		$x("//tr[.//td[text()='" + taskName + "']]/td/a[text()='查看试卷']").click();
+		$x("//div[@id='ExaminationPaperGradeContainer']");
+
+		return true;
+	}
+
+	protected Boolean checkExerciseScore(String taskName, String pattern) throws InterruptedException {
+
+		String score;
+		Pattern p;
+		WebElement we;
+
+		p = Pattern.compile(pattern);
+
+		openExerciseCenter("已");
 		we = $x("//tr[.//td[text()='" + taskName + "']]/td[8]");
 		score = we.getText();
 		System.out.println("Examination Score is '" + score + "'.");
@@ -824,7 +962,7 @@ public class OLSTest extends WebUnitTest {
 		WebElement we;
 
 		// 进入考试
-		openExaminationCenter("未考完");
+		openExaminationCenter("未");
 		Thread.sleep(1000);
 		$x("//tr[.//td[text()='" + taskName + "']]/td/a[text()='进入考试']").click();
 
@@ -837,7 +975,7 @@ public class OLSTest extends WebUnitTest {
 			qType = we.getAttribute("data-question-type");
 			qId = we.getAttribute("data-question-id");
 			Thread.sleep(500);
-			inputAnswer(qType, qId);
+			inputQuestionAnswer(qType, qId);
 
 			// 点击下一题
 			we = $x("//div[@id='" + containerId + "']/div/button[contains(@class,'swiper-button-next-question')]");
@@ -855,7 +993,52 @@ public class OLSTest extends WebUnitTest {
 		return true;
 	}
 
-	protected Boolean inputAnswer(String qType, String qId) {
+	protected Boolean inputAnswer(String taskName, String taskType) throws InterruptedException {
+
+		String containerId, qType, qId;
+		WebElement we;
+
+		// 进入考试
+		if(taskType == "考试"){
+			openExaminationCenter("未");
+			Thread.sleep(1000);
+			$x("//tr[.//td[text()='" + taskName + "']]/td/a[text()='进入考试']").click();
+		}else/* if("练习")*/{
+			openExerciseCenter("练习列表");
+			Thread.sleep(1000);
+			$x("//tr[.//td[text()='" + taskName + "']]/td/a[text()='进入练习']").click();
+			Thread.sleep(1000);
+			$x("//div[@class='layui-layer-btn']/a[text()='是']").click();
+		}
+		
+		while (true) {
+
+			// 录入答案
+			we = $x("//div[contains(@class,'question-container-active')]");
+			containerId = we.getAttribute("id");
+			we = $x("//div[@id='" + containerId + "']/div/div[contains(@class,'swiper-slide-active')]");
+			qType = we.getAttribute("data-question-type");
+			qId = we.getAttribute("data-question-id");
+			Thread.sleep(500);
+			inputQuestionAnswer(qType, qId);
+
+			// 点击下一题
+			we = $x("//div[@id='" + containerId + "']/div/button[contains(@class,'swiper-button-next-question')]");
+			if (we.getAttribute("class").contains("disabled")) {
+				break;
+			} else {
+				we.click();
+			}
+		}
+
+		// 交卷
+		$x("//div[@id='" + containerId + "']/div/button[contains(@class,'paper-hand-in')]").click();
+		wd.switchTo().alert().accept();
+
+		return true;
+	}
+
+	protected Boolean inputQuestionAnswer(String qType, String qId) {
 
 		WebElement we;
 
