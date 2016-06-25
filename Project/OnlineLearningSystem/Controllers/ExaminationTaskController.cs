@@ -89,6 +89,25 @@ namespace OnlineLearningSystem.Controllers
         }
 
         //
+        // POST: /ExaminationTask/ListDataTablesAjaxByUser
+
+        [Description("查询考试任务")]
+        public JsonResult ListDataTablesAjaxByUser(Byte type, Byte enabled)
+        {
+
+            DataTablesRequest dtRequest;
+            DataTablesResponse dtResponse;
+            User u;
+
+            u = (User)Session["User"];
+
+            dtRequest = GetDataTablesRequest();
+            dtResponse = um.ListDataTablesAjax(dtRequest, type, enabled, u.U_Id);
+
+            return Json(dtResponse, JsonRequestBehavior.DenyGet);
+        }
+
+        //
         // GET: /ExaminationTask/Create
 
         [Description("新建考试任务")]
@@ -273,25 +292,6 @@ namespace OnlineLearningSystem.Controllers
         public JsonResult GetDoingUserNumber(Int32 id)
         {
             return Json(um.GetDoingUserNumber(id), JsonRequestBehavior.AllowGet);
-        }
-
-        //
-        // GET: /ExaminationTask/EnterExercise
-
-        [Description("进入练习")]
-        public ActionResult EnterExercise(Int32 id)
-        {
-            User u = (User)Session["User"];
-            ResponseJson resJson = um.EnterExercise(id, u.U_Id);
-
-            if (ResponseStatus.Success == resJson.status)
-            {
-                return RedirectToAction("Paper", "ExaminationPaper", new { epId = resJson.data });
-            }
-
-            resJson.message = resJson.message.Replace("\\r\\n", "||r||n").Replace("\r\n", "|r|n");
-
-            return Redirect("/Contents/html/prompt_redirect.htm?prompt=" + resJson.message + "&close=1");
         }
 
     }

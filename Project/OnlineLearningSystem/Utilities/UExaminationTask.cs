@@ -56,6 +56,25 @@ namespace OnlineLearningSystem.Utilities
             return dtResponse;
         }
 
+        public DataTablesResponse ListDataTablesAjax(DataTablesRequest dtRequest, Byte type, Byte enabled, Int32 uId)
+        {
+
+            String sql;
+            DataTablesResponse dtResponse;
+            List<SqlParameter> sps;
+            UModel<ExaminationTask> umodel;
+
+            sql = "SELECT et.* FROM ExaminationTasks et LEFT JOIN ExaminationTaskAttendees eta ON et.ET_Id = eta.ET_Id ";
+            sps = new List<SqlParameter>();
+            sps.Add(new SqlParameter("@ET_Type", type));
+            sps.Add(new SqlParameter("@ET_Enabled", enabled));
+            sps.Add(new SqlParameter("@U_Id", uId));
+            umodel = new UModel<ExaminationTask>(dtRequest, "ExaminationTasks", "ET_Id");
+            dtResponse = umodel.GetList(sql, sps, "ET_Status");
+
+            return dtResponse;
+        }
+
         public List<SelectListItem> GetTemplateList()
         {
 
@@ -192,6 +211,7 @@ namespace OnlineLearningSystem.Utilities
             ExaminationPaperTemplateQuestion eptq;
             List<ExaminationPaperTemplateQuestion> eptqs;
             Int32[] qs;
+            DateTime startDate, startTime, endTime;
 
             // 任务类型为“练习”或自动类型为“自动”，则不添加手动试卷模板
             if ((Byte)ExaminationTaskType.Exercise == model.ET_Type
@@ -202,15 +222,29 @@ namespace OnlineLearningSystem.Utilities
 
             id = GetEPTId();
 
+            // 设置“预定考试任务”的时间
+            if ((Byte)ExaminationTaskMode.Custom == model.ET_Mode)
+            {
+                startDate = model.ET_StartTime.Date;
+                startTime = model.ET_StartTime.AddMinutes(3);
+                endTime = model.ET_StartTime.AddMinutes(3).AddMinutes(model.ET_TimeSpan);
+            }
+            else
+            {
+                startDate = now.Date;
+                startTime = now;
+                endTime = now;
+            }
+
             ept = new ExaminationPaperTemplate
             {
                 EPT_Id = id,
                 ET_Id = model.ET_Id,
                 ET_Type = model.ET_Type,
                 EPT_PaperTemplateStatus = (Byte)PaperTemplateStatus.Undone,
-                EPT_StartDate = now.Date,
-                EPT_StartTime = now,
-                EPT_EndTime = now,
+                EPT_StartDate = startDate,
+                EPT_StartTime = startTime,
+                EPT_EndTime = endTime,
                 EPT_TimeSpan = model.ET_TimeSpan,
                 EPT_Questions = model.ET_Questions,
                 EPT_AddTime = now,
@@ -603,6 +637,11 @@ namespace OnlineLearningSystem.Utilities
                     }
 
                     model.ET_Enabled = (Byte)etStatus;
+                    model.ET_ErrorMessage = null;
+                    if (ExaminationTaskStatus.Disabled == etStatus)
+                    {
+                        ClearQuestionDone(model.ET_Id);
+                    }
 
                     saveReturn = olsEni.SaveChanges();
                     scope.Complete();
@@ -796,6 +835,19 @@ namespace OnlineLearningSystem.Utilities
             return resJson;
         }
 
+        private void ClearQuestionDone(Int32 etId)
+        {
+
+            List<ExaminationQuestionDone> eqds;
+
+            eqds = olsEni.ExaminationQuestionDones.Where(m => m.ET_Id == etId).ToList();
+
+            foreach (var eqd in eqds)
+            {
+                olsEni.Entry(eqd).State = EntityState.Deleted;
+            }
+        }
+
         public Boolean DuplicateName(Int32 etId, String name)
         {
             try
@@ -885,10 +937,5 @@ namespace OnlineLearningSystem.Utilities
 
         }
 
-        internal ResponseJson EnterExercise(Int32 id, Int32 userId)
-        {
-            ExaminationTask et = Get(id);
-            return new UExaminationPaperTemplate().EnterExercise(et, userId);
-        }
     }
 }

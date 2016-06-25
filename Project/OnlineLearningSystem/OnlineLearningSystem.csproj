@@ -116,6 +116,7 @@
     <Compile Include="Controllers\ExaminationPaperTemplateController.cs" />
     <Compile Include="Controllers\QuestionClassifyController.cs" />
     <Compile Include="Controllers\UserScoreController.cs" />
+    <Compile Include="Models\ExaminationQuestionDone.cs" />
     <Compile Include="Models\UserOnline.cs" />
     <Compile Include="Utilities\Custom\ExaminationTaskTimer.cs" />
     <Compile Include="Utilities\Helpers\OpenXmlExcel.cs" />
@@ -991,6 +992,7 @@
     <None Include="Contents\skin\yellow\Thumbs.db" />
     <Content Include="Views\Shared\_Common.cshtml" />
     <Content Include="Views\ExaminationTask\ListStudent.cshtml" />
+    <Content Include="Views\ExaminationPaperTemplate\PaperGrade.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

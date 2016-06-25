@@ -8,6 +8,7 @@ DELETE FROM dbo.ExaminationPaperQuestions;
 DELETE FROM dbo.ExaminationPapers;
 DELETE FROM dbo.ExaminationPaperTemplateQuestions;
 DELETE FROM dbo.ExaminationPaperTemplates;
+DELETE FROM dbo.ExaminationQuestionDones;
 DELETE FROM dbo.ExaminationTaskAttendees;
 DELETE FROM dbo.ExaminationTasks;
 

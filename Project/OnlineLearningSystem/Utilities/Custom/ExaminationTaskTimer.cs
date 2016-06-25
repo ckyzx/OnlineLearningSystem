@@ -8,7 +8,7 @@ namespace OnlineLearningSystem.Utilities
 {
     public class ExaminationTaskTimer : Utility
     {
-        public void ChangeExerciseTaskEnabled()
+        public void ChangeCustomTaskEnabled()
         {
 
             Boolean changed;
@@ -23,7 +23,9 @@ namespace OnlineLearningSystem.Utilities
                     olsEni
                     .ExaminationTasks
                     .Where(m => 
-                        m.ET_Type == (Byte)ExaminationTaskType.Exercise
+                        (m.ET_Type == (Byte)ExaminationTaskType.Exercise 
+                         || (m.ET_Type == (Byte)ExaminationTaskType.Examination 
+                             && m.ET_AutoType == (Byte)AutoType.Custom))
                         && m.ET_Enabled != (Byte)ExaminationTaskStatus.Disabled
                         && m.ET_Status == (Byte)Status.Available)
                     .ToList();
@@ -56,5 +58,6 @@ namespace OnlineLearningSystem.Utilities
                 StaticHelper.RecordSystemLog(ex);
             }
         }
+
     }
 }

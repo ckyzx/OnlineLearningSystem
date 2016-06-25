@@ -10,7 +10,7 @@ $(function() {
         "processing": true,
         "serverSide": true,
         "ajax": {
-            "url": "/ExaminationTask/ListDataTablesAjaxByType?status=1&type=1&enabled=1",
+            "url": "/ExaminationTask/ListDataTablesAjaxByUser?status=1&type=1&enabled=1",
             "type": "POST"
         },
         "stateSave": false,
@@ -144,7 +144,7 @@ $(function() {
         }, function() {
             layer.closeAll();
             var id = data['ET_Id'];
-            location.href = '/ExaminationTask/EnterExercise?id=' + id;
+            location.href = '/ExaminationPaperTemplate/EnterExercise?etId=' + id;
         });
     });
 

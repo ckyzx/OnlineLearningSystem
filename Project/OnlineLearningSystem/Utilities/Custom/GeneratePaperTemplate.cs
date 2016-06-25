@@ -118,7 +118,7 @@ namespace OnlineLearningSystem.Utilities
             startTime = et.ET_StartTime;
             startTime = new DateTime(nowDate.Year, nowDate.Month, nowDate.Day, startTime.Hour, startTime.Minute, startTime.Second);
 
-            // 当前时间已超过开始时间
+            // 当前时间已超过开始时间，则当次不生成
             if (now > startTime)
             {
                 return false;
@@ -180,6 +180,31 @@ namespace OnlineLearningSystem.Utilities
             return whether;
         }
 
+        public ResponseJson Generate(Int32 etId)
+        {
+
+            ExaminationTask et;
+            List<Question> qs;
+
+            et = olsEni.ExaminationTasks.SingleOrDefault(m => m.ET_Id == etId);
+
+            if (null == et)
+            {
+                return new ResponseJson(ResponseStatus.Error, "任务不存在。");
+            }
+
+            try 
+	        {
+                qs = Generate(et);
+	        }
+	        catch (Exception ex)
+	        {
+                return new ResponseJson(ResponseStatus.Error, ex.Message);
+	        }
+
+            return new ResponseJson(ResponseStatus.Success, "自动出题运行正常。");
+        }
+
         private List<Question> Generate(ExaminationTask et)
         {
 
@@ -218,6 +243,7 @@ namespace OnlineLearningSystem.Utilities
             classifies = JsonConvert.DeserializeObject<String[]>(et.ET_AutoClassifies);
 
             qs = GetQuestions(classifies, diffCoef, true);
+            qs = removeQuestionDone(et, qs);
             optionTotalScore = GetTotalScore(qs);
 
             totalScore = et.ET_TotalScore;
@@ -241,6 +267,7 @@ namespace OnlineLearningSystem.Utilities
             return readyQs;
         }
 
+        // 获取可选试题
         private List<Question> GetQuestions(String[] classifies, Int32 diffCoef, Boolean hasScore)
         {
 
@@ -254,6 +281,7 @@ namespace OnlineLearningSystem.Utilities
             {
 
                 qc = olsEni.QuestionClassifies.SingleOrDefault(m => m.QC_Name == c);
+
                 if (null == qc)
                 {
                     continue;
@@ -311,6 +339,32 @@ namespace OnlineLearningSystem.Utilities
             }
 
             return qs;
+        }
+
+        // 去除已出试题
+        private List<Question> removeQuestionDone(ExaminationTask et, List<Question> qs)
+        {
+
+            List<ExaminationQuestionDone> eqds;
+            List<Question> filteredQs;
+            Int32 count;
+
+            eqds = olsEni.ExaminationQuestionDones.Where(m => m.ET_Id == et.ET_Id).ToList();
+
+            filteredQs = new List<Question>();
+
+            foreach (var q in qs)
+            {
+
+                count = eqds.Where(m => m.Q_Id == q.Q_Id).Count();
+
+                if (count == 0)
+                {
+                    filteredQs.Add(q);
+                }
+            }
+
+            return filteredQs;
         }
 
         private Int32 GetTotalScore(List<Question> qs)
@@ -372,6 +426,7 @@ namespace OnlineLearningSystem.Utilities
             return ratios;
         }
 
+        // 以设定的总分限制选题
         private List<Question> SelectQuestionsWithScore(List<AutoRatio> ratios, Int32 totalScore, List<Question> qs)
         {
 
@@ -483,6 +538,7 @@ namespace OnlineLearningSystem.Utilities
             classifies = JsonConvert.DeserializeObject<String[]>(et.ET_AutoClassifies);
 
             qs = GetQuestions(classifies, diffCoef, true);
+            qs = removeQuestionDone(et, qs);
             optionTotalNumber = GetTotalNumber(qs);
 
             totalNumber = et.ET_TotalNumber;
@@ -511,6 +567,7 @@ namespace OnlineLearningSystem.Utilities
             return qs.Count;
         }
 
+        // 以设定的总数限制选题
         private List<Question> SelectQuestionsWithNumber(List<AutoRatio> ratios, int totalNumber, List<Question> qs)
         {
 
@@ -631,6 +688,9 @@ namespace OnlineLearningSystem.Utilities
             Int32[] eptQsAry;
             ExaminationPaperTemplate ept;
             ExaminationPaperTemplateQuestion eptq;
+            ExaminationQuestionDone eqd;
+
+            List<ExaminationPaperTemplateQuestion> tmpEPTQ = new List<ExaminationPaperTemplateQuestion>();
 
             eptId = GetEPTId();
 
@@ -684,7 +744,12 @@ namespace OnlineLearningSystem.Utilities
                     EPTQ_AddTime = now,
                     EPTQ_Status = 1
                 };
+                tmpEPTQ.Add(eptq);
                 olsEni.Entry(eptq).State = EntityState.Added;
+
+                // 添加已出题记录
+                eqd = new ExaminationQuestionDone { ET_Id = et.ET_Id, EPT_Id = ept.EPT_Id, Q_Id = q.Q_Id };
+                olsEni.Entry(eqd).State = EntityState.Added;
 
                 eptqId += 1;
             }
@@ -705,6 +770,7 @@ namespace OnlineLearningSystem.Utilities
             Int32[] eptQsAry;
             ExaminationPaperTemplate ept;
             ExaminationPaperTemplateQuestion eptq;
+            ExaminationQuestionDone eqd;
 
             eptId = GetEPTId();
 
@@ -753,6 +819,10 @@ namespace OnlineLearningSystem.Utilities
                     EPTQ_Status = 1
                 };
                 olsEni.Entry(eptq).State = EntityState.Added;
+
+                // 添加已出题记录
+                eqd = new ExaminationQuestionDone { ET_Id = et.ET_Id, EPT_Id = ept.EPT_Id, Q_Id = q.Q_Id };
+                olsEni.Entry(eqd).State = EntityState.Added;
 
                 eptqId += 1;
             }

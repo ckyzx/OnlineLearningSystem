@@ -1,7 +1,0 @@
-USE OLS;
-
-GO
-
-UPDATE Users SET U_Password = 'E10ADC3949BA59ABBE56E057F20F883E' WHERE LOWER(U_LoginName) <> 'admin'
-
-GO

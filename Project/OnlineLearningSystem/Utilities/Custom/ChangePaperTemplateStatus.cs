@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using OnlineLearningSystem.Models;
+using System.Data;
 
 namespace OnlineLearningSystem.Utilities
 {
@@ -33,7 +34,8 @@ namespace OnlineLearningSystem.Utilities
                     olsEni
                     .ExaminationPaperTemplates
                     .Where(m =>
-                        (m.EPT_PaperTemplateStatus == (Byte)PaperTemplateStatus.Undone
+                        m.ET_Type == (Byte)ExaminationTaskType.Examination // 不处理练习任务
+                        && (m.EPT_PaperTemplateStatus == (Byte)PaperTemplateStatus.Undone
                         || m.EPT_PaperTemplateStatus == (Byte)PaperTemplateStatus.Doing)
                         && m.EPT_Status == (Byte)Status.Available)
                     .ToList();
@@ -47,22 +49,27 @@ namespace OnlineLearningSystem.Utilities
 
                     et = olsEni.ExaminationTasks.Single(m => m.ET_Id == ept.ET_Id);
 
-                    // 不处理练习任务
+                    /*// 不处理练习任务
                     if (et.ET_Type == (Byte)ExaminationTaskType.Exercise)
-                        continue;
+                        continue;*/
 
                     if ((Byte)ExaminationTaskStatus.Enabled != et.ET_Enabled
-                        && et.ET_Mode != (Byte)ExaminationTaskMode.Auto
+                        && (et.ET_Mode == (Byte)ExaminationTaskMode.Manual
+                            || et.ET_Mode == (Byte)ExaminationTaskMode.Custom)
                         && ept.EPT_PaperTemplateStatus == (Byte)PaperTemplateStatus.Undone)
                     {
                         // 当任务状态为“关闭”，出题类型为“手动”、“预定”，模板状态为“未开始”。
                         // 符合条件时，不处理。
                         continue;
-                    }else if ((Byte)ExaminationTaskStatus.Enabled != et.ET_Enabled)
+
+                    } // TODO: 此处条件似乎没有作用，因为关闭“自动任务”时将自动同时关闭试卷模板。
+                    else if ((Byte)ExaminationTaskStatus.Enabled != et.ET_Enabled
+                        && et.ET_Mode == (Byte)ExaminationTaskMode.Auto)
                     {
                         // 当任务状态为“关闭”，出题类型为“自动”。
                         // 符合条件时，关闭考试（将模板设为“关闭”）。
                         ept.EPT_PaperTemplateStatus = (Byte)PaperTemplateStatus.Done;
+
                         changed = true;
                         success += 1;
                         operate += 1;
@@ -84,8 +91,14 @@ namespace OnlineLearningSystem.Utilities
                         // 符合条件时，关闭考试（将模板设为“关闭”）。
                         ept.EPT_PaperTemplateStatus = (Byte)PaperTemplateStatus.Done;
 
+                        // TODO: 预定考试的试卷模板已关闭，是否应同时关闭任务？
                         // 当出题方式为“手动”、“预定”时，同时将任务设为“关闭”。
-                        if (et.ET_AutoType != (Byte)ExaminationTaskMode.Auto)
+                        /*if (et.ET_AutoType != (Byte)ExaminationTaskMode.Auto)
+                        {
+                            et.ET_Enabled = (Byte)ExaminationTaskStatus.Disabled;
+                        }*/
+                        // 当出题方式为“手动”时，同时将任务设为“关闭”。
+                        if (et.ET_AutoType == (Byte)ExaminationTaskMode.Manual)
                         {
                             et.ET_Enabled = (Byte)ExaminationTaskStatus.Disabled;
                         }

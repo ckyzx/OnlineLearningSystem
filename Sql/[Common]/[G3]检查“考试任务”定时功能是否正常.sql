@@ -4,7 +4,7 @@ DECLARE @etName VARCHAR(50);
 DECLARE @etId INT ,
     @eptId INT;
 
-SET @etName = '练习任务050901';
+SET @etName = '预定考试062501';
 
 --UPDATE  dbo.ExaminationTasks
 --SET     ET_StartTime = '1970-01-01 16:16:00.0000000' ,
@@ -22,6 +22,14 @@ SELECT  ET_Name ,
           WHEN 2 THEN '关闭'
           ELSE '...'
         END 任务状态 ,
+        CASE ET_AutoType
+		  WHEN 0 THEN '手动'
+		  WHEN 1 THEN '每日自动'
+		  WHEN 2 THEN '每周自动'
+		  WHEN 3 THEN '每月自动'
+		  WHEN 4 THEN '预定'
+		  ELSE '[未知]'
+        END 自动类型,
         CONVERT(VARCHAR(100), ET_StartTime, 120) 开始时间 ,
         CONVERT(VARCHAR(100), ET_EndTime, 120) 结束时间 ,
         ET_ContinuedDays ,

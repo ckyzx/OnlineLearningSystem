@@ -80,11 +80,22 @@ function layer_close() {
     path = location.pathname;
 
     redirect = function(href) {
+
         search = location.search;
+
         if (search != "") {
-            search = search.substring(search.indexOf('p_'));
-            search = '?' + search.replace(/p_/g, '');
+
+            /* 恢复上一个页面的请求信息 [Start] */
+            firstParentIndex = search.indexOf('p_');
+
+            if(firstParentIndex != -1){
+
+                search = search.substring(firstParentIndex);
+                search = '?' + search.replace(/p_/g, '');
+            }
+            /* [End] */
         }
+
         location.href = href + search;
     };
 

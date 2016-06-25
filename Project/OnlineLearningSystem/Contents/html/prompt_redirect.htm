@@ -1,4 +1,4 @@
-﻿<html>
+<html>
 
 <head>
     <title></title>
@@ -17,10 +17,12 @@
 
     redirect = QueryString.GetValue('redirect');
     redirect = undefined == redirect ? false : redirect;
+    //alert(redirect);
 
     close = QueryString.GetValue('close');
     close = undefined == close ? false : close;
-
+    //alert(close);
+    
     if (prompt) {
 
         prompt = prompt.replace(/\|\|r\|\|n/g, '\r\n').replace(/\|r\|n/g, '\r\n');

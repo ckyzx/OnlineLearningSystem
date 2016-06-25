@@ -207,13 +207,14 @@ $(function() {
 
     $('.table-sort tbody').on('click', 'a.paper-template', function() {
 
-        var tr, data, id;
+        var tr, data, id, etType;
 
         tr = $(this).parents('tr');
         data = list.dataTables.row(tr).data();
         id = data['ET_Id'];
+        etType = data['ET_Type'];
 
-        location.href = '/ExaminationPaperTemplate/List?etId=' + id;
+        location.href = '/ExaminationPaperTemplate/List?etId=' + id + '&etType=' + etType;
     });
 
     $('.table-sort tbody').on('click', 'a.start-task', function() {
@@ -257,6 +258,8 @@ $(function() {
 
                         // 隐藏常规控制按钮
                         tr.find('a.edit, a.recycle, a.resume, a.delete').addClass('hide');
+
+                        list.dataTables.ajax.reload(null, false);
 
                         layer.msg('操作成功', {
                             offset: '100px'
@@ -366,7 +369,6 @@ $(function() {
 
                 layer.close(layerIndex);
             });
-
     });
 
     // 任务类型选项卡

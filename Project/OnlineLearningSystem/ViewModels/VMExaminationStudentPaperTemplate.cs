@@ -11,7 +11,9 @@ namespace OnlineLearningSystem.ViewModels
         public String ESPT_TaskName { get; set; }
         public Byte ESPT_TaskType { get; set; }
         public Int32 ESPT_UserId { get; set; }
+        public String ESPT_UserName { get; set; }
         public Int32 ESPT_PaperTemplateId { get; set; }
+        public Byte ESPT_Status { get; set; }
         public Byte ESPT_PaperTemplateStatus { get; set; }
         public DateTime ESPT_PaperTemplateStartTime { get; set; }
         public Int32 ESPT_PaperTemplateTimeSpan { get; set; }

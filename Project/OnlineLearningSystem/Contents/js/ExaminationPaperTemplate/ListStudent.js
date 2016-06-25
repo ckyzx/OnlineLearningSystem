@@ -188,6 +188,17 @@ $(function() {
         "data": 'EPT_Remark'
     }];*/
 
+    $('.table-sort thead tr').html(
+        '<th class="text-c"><input type="checkbox" name="" value="" /></th>' +
+        '<th>ID</th>' +
+        '<th>名称</th>' +
+        '<th>用户</th>' +
+        '<th>开始时间</th>' +
+        '<th>时长</th>' +
+        '<th>添加时间</th>' +
+        '<th class="ESPT_PaperTemplateRemark">备注</th>' +
+        '<th class="text-c">操作</th>');
+
     params.columns = [{
         "width": "10px",
         "className": "text-c",
@@ -199,6 +210,9 @@ $(function() {
     }, {
         "name": "ESPT_TaskName",
         "data": "ESPT_TaskName"
+    }, {
+        "name": "ESPT_UserName",
+        "data": "ESPT_UserName"
     }, {
         "name": "ESPT_PaperTemplateStartTime",
         "defaultContent": '<span class="ESPT_PaperTemplateStartTime"></span>'

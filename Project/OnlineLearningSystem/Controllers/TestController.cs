@@ -42,5 +42,12 @@ namespace OnlineLearningSystem.Controllers
             return JsonConvert.SerializeObject(new ChangePaperTemplateStatus().Change());
         }
 
+        //
+        // GET: /Test/CheckGenerate
+
+        public String CheckGenerate(Int32 etId)
+        {
+            return JsonConvert.SerializeObject(new GeneratePaperTemplate().Generate(etId));
+        }
     }
 }

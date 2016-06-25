@@ -20,7 +20,15 @@ namespace OnlineLearningSystem.Utilities
             Int32 recordsTotal, recordsFiltered;
             String whereSql, orderColumn;
             List<ExaminationPaperTemplate> ms;
+            ExaminationTask et;
 
+            // 获取练习模板列表数据
+            et = olsEni.ExaminationTasks.Single(m => m.ET_Id == etId);
+
+            if (et.ET_Type == (Byte)ExaminationTaskType.Exercise)
+            {
+                return ListDataTablesAjaxStudent(etId, dtRequest, (Byte)ExaminationTaskType.Exercise, 2 /* 2:已考完 */);
+            }
 
             dtResponse = new DataTablesResponse();
 
@@ -179,7 +187,7 @@ namespace OnlineLearningSystem.Utilities
                 {
                     m1.EP_Score = ep.EP_Score + "分";
                 }
-                else if((Byte)StatisticType.Number == et.ET_StatisticType)
+                else if ((Byte)StatisticType.Number == et.ET_StatisticType)
                 {
                     m1.EP_Score = ep.EP_Score + "%";
                 }
@@ -188,7 +196,24 @@ namespace OnlineLearningSystem.Utilities
             return new Object[] { count, ms };
         }
 
-        public DataTablesResponse ListDataTablesAjax1(DataTablesRequest dtRequest, Int32 uId, Byte etType, Byte pageType)
+        public DataTablesResponse ListDataTablesAjaxStudent(Int32 etId, DataTablesRequest dtRequest, Byte etType, Byte pageType)
+        {
+
+            DataTablesResponse dtResponse;
+            UModel<VMExaminationStudentPaperTemplate> umodel;
+            List<SqlParameter> sps;
+
+            umodel = new UModel<VMExaminationStudentPaperTemplate>(dtRequest, "ExaminationStudentPaperTemplates", "ESPT_PaperTemplateId");
+            sps = new List<SqlParameter>();
+            sps.Add(new SqlParameter("@EQ_ESPT_TaskId", etId));
+            sps.Add(new SqlParameter("@EQ_ESPT_TaskType", etType));
+            sps.Add(new SqlParameter("@EQ_ESPT_PageType", pageType));
+            dtResponse = umodel.GetList(sps);
+
+            return dtResponse;
+        }
+
+        public DataTablesResponse ListDataTablesAjaxStudent(DataTablesRequest dtRequest, Int32 uId, Byte etType, Byte pageType)
         {
 
             DataTablesResponse dtResponse;
@@ -283,7 +308,7 @@ namespace OnlineLearningSystem.Utilities
 
             // 删除原有试题模板
             eptqs = olsEni.ExaminationPaperTemplateQuestions
-                .Where(m => 
+                .Where(m =>
                     m.EPT_Id == model.EPT_Id
                     && m.EPTQ_Status == (Byte)Status.Available)
                 .ToList();
@@ -531,21 +556,51 @@ namespace OnlineLearningSystem.Utilities
             }
         }
 
-        public ResponseJson EnterExercise(ExaminationTask et, Int32 userId)
+        public ResponseJson EnterExercise(Int32 etId, Int32 userId)
         {
-            if (et.ET_Enabled != (Byte)ExaminationTaskStatus.Enabled)
+
+            ExaminationTask et;
+            ExaminationTaskAttendee eta;
+            GeneratePaperTemplate generator;
+            List<Question> readyQs;
+            Int32 eptId;
+            ExaminationPaperTemplate ept;
+
+            try
             {
-                return new ResponseJson(ResponseStatus.Error, "任务已关闭。");
+
+                et = olsEni.ExaminationTasks.SingleOrDefault(m => m.ET_Id == etId);
+
+                if (null == et)
+                {
+                    return new ResponseJson(ResponseStatus.Error, "任务不存在。");
+                }
+
+                if (et.ET_Enabled != (Byte)ExaminationTaskStatus.Enabled)
+                {
+                    return new ResponseJson(ResponseStatus.Error, "任务已关闭。");
+                }
+
+                eta = olsEni.ExaminationTaskAttendees.SingleOrDefault(m => m.ET_Id == et.ET_Id && m.U_Id == userId);
+
+                if (null == eta)
+                {
+                    return new ResponseJson(ResponseStatus.Error, "您不在此练习的参与人员列表中。");
+                }
+
+                generator = new GeneratePaperTemplate();
+                readyQs = generator.GenerateWithNumber(et);
+                eptId = generator.CreatePaperTemplateOfExercise(et, readyQs);
+                ept = Get(eptId);
+                ept.EPT_PaperTemplateStatus = (Byte)PaperTemplateStatus.Done;
+                SaveChanges();
+
+                return addExaminationPaper(ept, userId);
             }
-
-            GeneratePaperTemplate generator= new GeneratePaperTemplate();
-            List<Question> readyQs = generator.GenerateWithNumber(et);
-            Int32 eptId = generator.CreatePaperTemplateOfExercise(et, readyQs);
-            ExaminationPaperTemplate ept = Get(eptId);
-            ept.EPT_PaperTemplateStatus = (Byte)PaperTemplateStatus.Done;
-            SaveChanges();
-
-            return addExaminationPaper(ept, userId);
+            catch (Exception ex)
+            {
+                return new ResponseJson(ResponseStatus.Error, ex.Message);
+            }
         }
 
         private ResponseJson addExaminationPaper(ExaminationPaperTemplate ept, Int32 userId)
@@ -644,7 +699,7 @@ namespace OnlineLearningSystem.Utilities
                 olsEni.Entry(model).State = EntityState.Modified;
 
                 eps = olsEni.ExaminationPapers
-                    .Where(m => 
+                    .Where(m =>
                         m.EPT_Id == id
                         && m.EP_Status == (Byte)Status.Available)
                     .ToList();
@@ -701,8 +756,8 @@ namespace OnlineLearningSystem.Utilities
 
                 foreach (var uId in userAry)
                 {
-                    u = olsEni.Users.SingleOrDefault(m => 
-                        m.U_Id == uId 
+                    u = olsEni.Users.SingleOrDefault(m =>
+                        m.U_Id == uId
                         && m.U_Status == (Byte)Status.Available);
                     if (null != u)
                     {
@@ -954,12 +1009,12 @@ namespace OnlineLearningSystem.Utilities
                     if (et.ET_StatisticType == (Byte)StatisticType.Score)
                     {
                         // 计算分数
-                        epqs = 
+                        epqs =
                             olsEni.ExaminationPaperQuestions
                             .Where(m => m.EP_Id == ep1.EP_Id).ToList();
-                        eptqs = 
+                        eptqs =
                             olsEni.ExaminationPaperTemplateQuestions
-                            .Where(m => 
+                            .Where(m =>
                                 m.EPT_Id == ep1.EPT_Id
                                 && m.EPTQ_Status == (Byte)Status.Available)
                             .ToList();

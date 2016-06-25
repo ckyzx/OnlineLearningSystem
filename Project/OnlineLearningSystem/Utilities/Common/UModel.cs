@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Data;
 using System.Data.SqlClient;
+using System.Text.RegularExpressions;
 
 namespace OnlineLearningSystem.Utilities
 {
@@ -163,6 +164,28 @@ namespace OnlineLearningSystem.Utilities
             List<T> ms;
 
             modelData = GetModels(sql, sps);
+            ms = (List<T>)modelData[0];
+            recordsTotal = (Int32)modelData[1];
+            recordsFiltered = (Int32)modelData[2];
+
+            dtResponse = new DataTablesResponse();
+            dtResponse.draw = dtRequest.Draw;
+            dtResponse.recordsTotal = recordsTotal;
+            dtResponse.recordsFiltered = recordsFiltered;
+            dtResponse.data = ms;
+
+            return dtResponse;
+        }
+
+        public DataTablesResponse GetList(String sql, List<SqlParameter> sps, String statusFieldName)
+        {
+
+            DataTablesResponse dtResponse;
+            Int32 recordsTotal, recordsFiltered;
+            Object[] modelData;
+            List<T> ms;
+
+            modelData = GetModels(sql, sps, statusFieldName);
             ms = (List<T>)modelData[0];
             recordsTotal = (Int32)modelData[1];
             recordsFiltered = (Int32)modelData[2];
@@ -484,6 +507,34 @@ namespace OnlineLearningSystem.Utilities
             ms = (List<T>)ModelConvert<T>.ConvertToModel(dataTable);
 
             countSql = sql.Replace("SELECT * FROM ", "SELECT COUNT(" + idFieldName + ") FROM ");
+            total = Convert.ToInt32(olsDbo.ExecuteSqlScalar(countSql, sps));
+            filter = Convert.ToInt32(olsDbo.ExecuteSqlScalar(countSql, sps));
+
+            return new Object[] { ms, total, filter };
+        }
+
+        private Object[] GetModels(String sql, List<SqlParameter> spsAddition, String statusFieldName)
+        {
+
+            Int32 total, filter;
+            String orderSql, countSql;
+            DataTable dataTable;
+            Object[] sqlConditions;
+            List<T> ms;
+            List<SqlParameter> sps;
+            Regex regex;
+
+            sqlConditions = GetSqlCondition(sql, spsAddition, statusFieldName);
+            sql = (String)sqlConditions[0];
+            sps = (List<SqlParameter>)sqlConditions[1];
+            orderSql = (String)sqlConditions[2];
+
+            dataTable = olsDbo.GetDataTableWithStart(sql + orderSql, sps, dtRequest.Length, dtRequest.Start);
+            ms = (List<T>)ModelConvert<T>.ConvertToModel(dataTable);
+
+            //countSql = sql.Replace("SELECT * FROM ", "SELECT COUNT(" + idFieldName + ") FROM ");
+            regex = new Regex(@"SELECT ([a-z]+\.)?\* FROM ");
+            countSql = regex.Replace(sql, "SELECT COUNT(*) FROM ");
             total = Convert.ToInt32(olsDbo.ExecuteSqlScalar(countSql, sps));
             filter = Convert.ToInt32(olsDbo.ExecuteSqlScalar(countSql, sps));
 

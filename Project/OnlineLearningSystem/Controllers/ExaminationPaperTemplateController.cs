@@ -32,6 +32,7 @@ namespace OnlineLearningSystem.Controllers
             return View();
         }
 
+
         //
         // GET: /ExaminationPaperTemplate/ListStudent
 
@@ -86,7 +87,7 @@ namespace OnlineLearningSystem.Controllers
             uId = ((User)Session["User"]).U_Id;
 
             dtRequest = GetDataTablesRequest();
-            dtResponse = um.ListDataTablesAjax1(dtRequest, uId, etType, pageType);
+            dtResponse = um.ListDataTablesAjaxStudent(dtRequest, uId, etType, pageType);
 
             return Json(dtResponse, JsonRequestBehavior.DenyGet);
         }
@@ -300,6 +301,35 @@ namespace OnlineLearningSystem.Controllers
         public ActionResult PaperView()
         {
             return View();
+        }
+
+        //
+        // GET: /ExaminationPaperTemplate/PaperGrade
+
+        [Description("评改试卷")]
+        public ActionResult PaperGrade()
+        {
+            return View();
+        }
+
+        //
+        // GET: /ExaminationPaperTemplate/EnterExercise
+
+        [Description("进入练习")]
+        public ActionResult EnterExercise(Int32 etId)
+        {
+
+            User u = (User)Session["User"];
+            ResponseJson resJson = um.EnterExercise(etId, u.U_Id);
+
+            if (ResponseStatus.Success == resJson.status)
+            {
+                return RedirectToAction("Paper", "ExaminationPaper", new { epId = resJson.data });
+            }
+
+            resJson.message = resJson.message.Replace("\\r\\n", "||r||n").Replace("\r\n", "|r|n");
+
+            return Redirect("/Contents/html/prompt_redirect.htm?prompt=" + resJson.message + "&close=1");
         }
 
     }

@@ -1,11 +1,13 @@
 $(function() {
 
-    var table, etId;
+    var table, etId, etType;
+    var parmas;
 
     QueryString.Initial();
     etId = QueryString.GetValue('etId');
+    etType = QueryString.GetValue('etType');
 
-    table = $('.table-sort').DataTable({
+    params = {
         "processing": true,
         "serverSide": true,
         "ajax": {
@@ -15,8 +17,121 @@ $(function() {
         "stateSave": false,
         "lengthChange": false,
         "pageLength": 15,
-        "ordering": false,
-        "columns": [{
+        "ordering": false
+    };
+
+    if (etType == 1) {
+
+        $('.table-sort thead tr').html(
+            '<th class="text-c"><input type="checkbox" name="" value="" /></th>' +
+            '<th>ID</th>' +
+            '<th>名称</th>' +
+            '<th>用户</th>' +
+            '<th>开始时间</th>' +
+            '<th>时长</th>' +
+            '<th>添加时间</th>' +
+            '<th class="ESPT_PaperTemplateRemark">备注</th>' +
+            '<th>成绩</th>' +
+            '<th class="text-c">操作</th>');
+
+        params.columns = [{
+            "width": "10px",
+            "className": "text-c",
+            "defaultContent": '<input type="checkbox" value="" name="">'
+        }, {
+            "width": "30px",
+            "name": "ESPT_PaperTemplateId",
+            "data": "ESPT_PaperTemplateId"
+        }, {
+            "name": "ESPT_TaskName",
+            "data": "ESPT_TaskName"
+        }, {
+            "name": "ESPT_UserName",
+            "data": "ESPT_UserName"
+        }, {
+            "name": "ESPT_PaperTemplateStartTime",
+            "defaultContent": '<span class="ESPT_PaperTemplateStartTime"></span>'
+        }, {
+            "className": "nowrap",
+            "name": "ESPT_PaperTemplateTimeSpan",
+            "defaultContent": '<span class="ESPT_PaperTemplateTimeSpan"></span>'
+        }, {
+            "name": "ESPT_PaperTemplateAddTime",
+            "defaultContent": '<span class="ESPT_PaperTemplateAddTime"></span>'
+        }, {
+            "width": "40%",
+            "name": "ESPT_PaperTemplateRemark",
+            "data": 'ESPT_PaperTemplateRemark'
+        }, {
+            "name": "ESPT_PaperScore",
+            "data": "ESPT_PaperScore"
+        }, {
+            "className": "text-c nowrap",
+            "defaultContent": '<a class="btn btn-primary radius size-MINI terminate mr-5 fz-9 hide" href="javascript:void(0);">终止</a>' +
+                '<a class="btn btn-primary radius size-MINI paper-grade fz-9 hide" href="javascript:void(0);">评改试卷</a>'
+        }];
+
+        params.createdRow = function(row, data, dataIndex) {
+
+            var span, addTime, startTime;
+            var paperScore, pageType;
+
+            row = $(row);
+
+            span = row.find('span.ESPT_PaperTemplateAddTime');
+            addTime = data['ESPT_PaperTemplateAddTime'];
+            addTime = addTime.jsonDateToDate();
+            span.text(addTime.format('yyyy-MM-dd hh:mm:ss'));
+
+            // 设置开始时间
+            span = row.find('span.ESPT_PaperTemplateStartTime');
+            startTime = data['ESPT_PaperTemplateStartTime'];
+            startTime = startTime.jsonDateToDate();
+            if (startTime.getHours() == 0 && startTime.getMinutes() == 0 && startTime.getSeconds() == 0) {
+                span.text(addTime.format('yyyy年MM月dd日 hh时mm分'));
+            } else {
+                span.text(startTime.format('yyyy年MM月dd日 hh时 mm分'));
+            }
+
+            // 设置考试时长
+            span = row.find('span.ESPT_PaperTemplateTimeSpan');
+            timeSpan = data['ESPT_PaperTemplateTimeSpan'];
+            if (0 == timeSpan) {
+                span.text('[无限制]');
+            } else {
+                span.text(timeSpan + '分钟');
+            }
+
+            // 是否显示“查看试卷”按钮
+            paperScore = data['ESPT_PaperScore'];
+            pageType = data['ESPT_PageType']
+
+            if (pageType == 2 && paperScore != '[未参与]' && paperScore != '[未预期]') {
+
+                row.find('a.paper-grade').removeClass('hide');
+            }
+
+            // 是否显示“终止”按钮
+            status = data['ESPT_Status'];
+            ptStatus = data['ESPT_PaperTemplateStatus'];
+
+            if (1 == status && 1 == ptStatus) {
+                row.find('a.terminate').removeClass('hide');
+            }
+        };
+    } else {
+
+        $('.table-sort thead tr').html(
+            '<th class="text-c"><input type="checkbox" name="" value="" /></th>' +
+            '<th>ID</th>' +
+            '<th>名称</th>' +
+            '<th>开始时间</th>' +
+            '<th>时长</th>' +
+            '<th>添加时间</th>' +
+            '<th class="ESPT_PaperTemplateRemark">备注</th>' +
+            '<th class="text-c">操作</th>');
+
+        params.columns = [{
             "width": "10px",
             "className": "text-c",
             "defaultContent": '<input type="checkbox" value="" name="">'
@@ -42,15 +157,11 @@ $(function() {
             "data": 'EPT_Remark'
         }, {
             "className": "text-c nowrap",
-            "defaultContent": 
-                '<a class="btn btn-primary radius size-MINI terminate mr-5 fz-9 hide" href="javascript:void(0);">终止</a>' +
-                '<a class="btn btn-primary radius size-MINI list-grade mr-5 fz-9 hide" href="javascript:void(0);">试卷</a>' +
-                '<!--a class="recycle mr-5 fz-18 hide" href="javascript:void(0);" title="回收"><i class="Hui-iconfont">&#xe631;</i></a>' +
-                '<a class="resume mr-5 fz-18 hide" href="javascript:void(0);" title="恢复"><i class="Hui-iconfont">&#xe615;</i></a>' +
-                '<a class="edit mr-5 fz-18 hide" href="javascript:void(0);" title="编辑"><i class="Hui-iconfont">&#xe60c;</i></a>' +
-                '<a class="delete mr-5 fz-18 hide" href="javascript:void(0);" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a-->'
-        }],
-        "createdRow": function(row, data, dataIndex) {
+            "defaultContent": '<a class="btn btn-primary radius size-MINI terminate mr-5 fz-9 hide" href="javascript:void(0);">终止</a>' +
+                '<a class="btn btn-primary radius size-MINI list-grade mr-5 fz-9 hide" href="javascript:void(0);">试卷</a>'
+        }];
+
+        params.createdRow = function(row, data, dataIndex) {
 
             var span, strDate, date, status, ptStatus;
 
@@ -85,9 +196,9 @@ $(function() {
             switch (status) {
                 case 1:
 
-                    if(1 == ptStatus){
+                    if (1 == ptStatus) {
                         row.find('a.terminate').removeClass('hide');
-                    }else if(2 == ptStatus) {
+                    } else if (2 == ptStatus) {
                         row.find('a.list-grade').removeClass('hide');
                     }
                     break;
@@ -98,7 +209,20 @@ $(function() {
                 default:
                     break;
             }
-        }
+        };
+    }
+
+    table = $('.table-sort').DataTable(params);
+
+    $('.table-sort tbody').on('click', 'a.paper-grade', function() {
+
+        var data, eptId, epId, uId;
+
+        data = table.row($(this).parents('tr')).data();
+        eptId = data['ESPT_PaperTemplateId'];
+        epId = data['ESPT_PaperId'];
+        uId = data['ESPT_UserId'];
+        Kyzx.Utility.redirect('试卷', '/ExaminationPaperTemplate/PaperGrade?eptId=' + eptId + '&epId=' + epId + '&uId=' + uId);
     });
 
     $('.table-sort tbody').on('click', 'a.list-grade', function() {
@@ -115,7 +239,7 @@ $(function() {
 
         var tr, data, id;
 
-        if(!confirm('确定终止考试吗？')){
+        if (!confirm('确定终止考试吗？')) {
             return;
         }
 
@@ -132,7 +256,7 @@ $(function() {
                     tr.find('a.terminate').addClass('hide');
                     tr.find('a.list-grade').removeClass('hide');
 
-                    layer.msg('操作成功', {offset: '100px'});
+                    layer.msg('操作成功', { offset: '100px' });
                 } else if (0 == data.status) {
 
                     alert(data.message);
