@@ -4,7 +4,7 @@ DECLARE @etName VARCHAR(50);
 DECLARE @etId INT ,
     @eptId INT;
 
-SET @etName = '‘§∂®øº ‘062501';
+SET @etName = '≤‚ ‘øº ‘062701';
 
 --UPDATE  dbo.ExaminationTasks
 --SET     ET_StartTime = '1970-01-01 16:16:00.0000000' ,

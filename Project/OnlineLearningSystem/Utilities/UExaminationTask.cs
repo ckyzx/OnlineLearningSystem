@@ -835,7 +835,7 @@ namespace OnlineLearningSystem.Utilities
             return resJson;
         }
 
-        private void ClearQuestionDone(Int32 etId)
+        public void ClearQuestionDone(Int32 etId)
         {
 
             List<ExaminationQuestionDone> eqds;
@@ -846,6 +846,11 @@ namespace OnlineLearningSystem.Utilities
             {
                 olsEni.Entry(eqd).State = EntityState.Deleted;
             }
+        }
+
+        public void SaveChanges()
+        {
+            olsEni.SaveChanges();
         }
 
         public Boolean DuplicateName(Int32 etId, String name)

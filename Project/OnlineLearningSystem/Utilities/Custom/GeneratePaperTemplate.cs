@@ -5,6 +5,7 @@ using System.Web;
 using OnlineLearningSystem.Models;
 using Newtonsoft.Json;
 using System.Data;
+using System.Data.Objects;
 
 namespace OnlineLearningSystem.Utilities
 {
@@ -12,6 +13,15 @@ namespace OnlineLearningSystem.Utilities
     {
 
         private Int32 totalTimeout = 1000; // 选题时，超过重复次数，则选题失败
+
+        private Int32 uId = 0;
+
+        public GeneratePaperTemplate() { }
+
+        public GeneratePaperTemplate(Int32 uId)
+        {
+            this.uId = uId;
+        }
 
         public ResponseJson Generate()
         {
@@ -27,6 +37,7 @@ namespace OnlineLearningSystem.Utilities
                 String tmpMessage;
                 List<ExaminationTask> ets;
                 List<Question> readyQs;
+                UExaminationTask uet;
 
                 success = 0;
 
@@ -72,6 +83,7 @@ namespace OnlineLearningSystem.Utilities
                         }
 
                         et.ET_ErrorMessage = ex.Message;
+                        et.ET_ErrorMessage += "<br />已有试卷模板 " + GetEPTCount(et.ET_Id).ToString() + " 份。";
                         if (et.ET_ErrorMessage.Length > 1000)
                         {
                             et.ET_ErrorMessage = et.ET_ErrorMessage.Substring(0, 1000);
@@ -99,6 +111,11 @@ namespace OnlineLearningSystem.Utilities
                 resJson.detail = StaticHelper.GetExceptionMessageAndRecord(ex);
                 return resJson;
             }
+        }
+
+        private Int32 GetEPTCount(int etId)
+        {
+            return olsEni.ExaminationPaperTemplates.Where(m => m.ET_Id == etId).Count();
         }
 
         /// <summary>
@@ -193,14 +210,14 @@ namespace OnlineLearningSystem.Utilities
                 return new ResponseJson(ResponseStatus.Error, "任务不存在。");
             }
 
-            try 
-	        {
+            try
+            {
                 qs = Generate(et);
-	        }
-	        catch (Exception ex)
-	        {
+            }
+            catch (Exception ex)
+            {
                 return new ResponseJson(ResponseStatus.Error, ex.Message);
-	        }
+            }
 
             return new ResponseJson(ResponseStatus.Success, "自动出题运行正常。");
         }
@@ -356,7 +373,7 @@ namespace OnlineLearningSystem.Utilities
             foreach (var q in qs)
             {
 
-                count = eqds.Where(m => m.Q_Id == q.Q_Id).Count();
+                count = eqds.Where(m => m.U_Id == uId && m.Q_Id == q.Q_Id).Count();
 
                 if (count == 0)
                 {
@@ -821,7 +838,7 @@ namespace OnlineLearningSystem.Utilities
                 olsEni.Entry(eptq).State = EntityState.Added;
 
                 // 添加已出题记录
-                eqd = new ExaminationQuestionDone { ET_Id = et.ET_Id, EPT_Id = ept.EPT_Id, Q_Id = q.Q_Id };
+                eqd = new ExaminationQuestionDone { ET_Id = et.ET_Id, EPT_Id = ept.EPT_Id, U_Id = uId, Q_Id = q.Q_Id };
                 olsEni.Entry(eqd).State = EntityState.Added;
 
                 eptqId += 1;

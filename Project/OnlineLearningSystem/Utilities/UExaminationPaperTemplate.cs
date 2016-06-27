@@ -442,9 +442,9 @@ namespace OnlineLearningSystem.Utilities
         /// 进入考试
         /// </summary>
         /// <param name="id"></param>
-        /// <param name="userId"></param>
+        /// <param name="uId"></param>
         /// <returns></returns>
-        public ResponseJson EnterExamination(Int32 id, Int32 userId)
+        public ResponseJson EnterExamination(Int32 id, Int32 uId)
         {
 
             ResponseJson resJson;
@@ -482,12 +482,12 @@ namespace OnlineLearningSystem.Utilities
                             .ExaminationPapers
                             .SingleOrDefault(m =>
                                 m.EPT_Id == ept.EPT_Id
-                                && m.EP_UserId == userId);
+                                && m.EP_UserId == uId);
 
                         // 试卷不存在
                         if (null == ep && et.ET_Type == (Byte)ExaminationTaskType.Examination)
                         {
-                            addResJson = addExaminationPaper(ept, userId);
+                            addResJson = addExaminationPaper(ept, uId);
                             if (addResJson.status == ResponseStatus.Error)
                             {
                                 resJson.message = "试卷不存在。";
@@ -531,7 +531,7 @@ namespace OnlineLearningSystem.Utilities
                             .ExaminationPapers
                             .SingleOrDefault(m =>
                             m.EPT_Id == ept.EPT_Id
-                            && m.EP_UserId == userId);
+                            && m.EP_UserId == uId);
 
                         if (null != ep)
                         {
@@ -556,7 +556,7 @@ namespace OnlineLearningSystem.Utilities
             }
         }
 
-        public ResponseJson EnterExercise(Int32 etId, Int32 userId)
+        public ResponseJson EnterExercise(Int32 etId, Int32 uId)
         {
 
             ExaminationTask et;
@@ -581,29 +581,30 @@ namespace OnlineLearningSystem.Utilities
                     return new ResponseJson(ResponseStatus.Error, "任务已关闭。");
                 }
 
-                eta = olsEni.ExaminationTaskAttendees.SingleOrDefault(m => m.ET_Id == et.ET_Id && m.U_Id == userId);
+                eta = olsEni.ExaminationTaskAttendees.SingleOrDefault(m => m.ET_Id == et.ET_Id && m.U_Id == uId);
 
                 if (null == eta)
                 {
                     return new ResponseJson(ResponseStatus.Error, "您不在此练习的参与人员列表中。");
                 }
 
-                generator = new GeneratePaperTemplate();
+                generator = new GeneratePaperTemplate(uId);
                 readyQs = generator.GenerateWithNumber(et);
                 eptId = generator.CreatePaperTemplateOfExercise(et, readyQs);
                 ept = Get(eptId);
                 ept.EPT_PaperTemplateStatus = (Byte)PaperTemplateStatus.Done;
                 SaveChanges();
 
-                return addExaminationPaper(ept, userId);
+                return addExaminationPaper(ept, uId);
             }
             catch (Exception ex)
             {
+                StaticHelper.RecordSystemLog(ex);
                 return new ResponseJson(ResponseStatus.Error, ex.Message);
             }
         }
 
-        private ResponseJson addExaminationPaper(ExaminationPaperTemplate ept, Int32 userId)
+        private ResponseJson addExaminationPaper(ExaminationPaperTemplate ept, Int32 uId)
         {
 
             Int32 epId, epqId;
@@ -624,7 +625,7 @@ namespace OnlineLearningSystem.Utilities
                 EP_PaperStatus = (Byte)PaperStatus.Doing,
                 EP_EndTime = now.AddMinutes(ept.EPT_TimeSpan), // 进入考试时开始计算考试时间
                 EP_TimeSpan = ept.EPT_TimeSpan,
-                EP_UserId = userId,
+                EP_UserId = uId,
                 EP_UserName = "",
                 EP_Score = -1,
                 EP_Remark = "",
@@ -892,6 +893,8 @@ namespace OnlineLearningSystem.Utilities
                 ExaminationPaper ep;
                 List<ExaminationPaperQuestion> epqs;
                 List<ExaminationPaperTemplateQuestion> eptqs;
+                ExaminationPaperTemplate ept;
+                ExaminationTask et;
 
                 ep = olsEni.ExaminationPapers.SingleOrDefault(m => m.EP_Id == epId && m.EP_UserId == uId);
 
@@ -918,8 +921,12 @@ namespace OnlineLearningSystem.Utilities
                     .ToList();
                 epqs = olsEni.ExaminationPaperQuestions.Where(m => m.EP_Id == epId).ToList();
 
+                ept = olsEni.ExaminationPaperTemplates.Single(m => m.EPT_Id == id);
+                et = olsEni.ExaminationTasks.Single(m => m.ET_Id == ept.ET_Id);
+
                 resJson.status = ResponseStatus.Success;
                 resJson.data = JsonConvert.SerializeObject(new Object[] { eptqs, epqs, epId });
+                resJson.addition = et;
                 return resJson;
             }
             catch (Exception ex)

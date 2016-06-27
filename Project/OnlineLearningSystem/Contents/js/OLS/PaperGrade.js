@@ -47,7 +47,7 @@ OLS.PaperGrade = {
                         data.data = JSON.parse(data.data);
                         $('#UserItemTmpl').tmpl(data.data).appendTo('#UserList ul');
 
-                        $('<input type="hidden" id="ET_StatisticType" />').val(data.addition.ET_StatisticType);
+                        //$('#ET_StatisticType').val(data.addition.ET_StatisticType);
 
                         $('#UserList li h4').first().click();
                     } else {
@@ -154,9 +154,9 @@ OLS.PaperGrade = {
                     if (hasUserList) {
 
                         userList.find('li[data-user-id=' + uId + '] h4').addClass('done');
-
-                        etStatisticType = $('#ET_StatisticType').val();
                     }
+
+                    etStatisticType = $('#ET_StatisticType').val();
 
                     // 呈现分数
                     eps = JSON.parse(data.data);
@@ -186,7 +186,7 @@ OLS.PaperGrade = {
                         }
                     };
 
-                    layer.msg('评分提交成功<br />考试成绩 ' + score, {
+                    layer.msg('评分提交成功<br />考试成绩 <span class="score">' + score + '</span>', {
                         offset: '100px'
                     });
 
@@ -273,6 +273,8 @@ OLS.PaperGrade = {
                         gradeJsonInput = $('<input type="hidden" id="GradeJson_' + epId + '" />').val('[]');
                         $('#ExaminationPaperGradeContainer').append(gradeJsonInput);
                     }
+
+                    $('#ET_StatisticType').val(data.addition.ET_StatisticType);
 
                     me.___changeButtonStatus();
 

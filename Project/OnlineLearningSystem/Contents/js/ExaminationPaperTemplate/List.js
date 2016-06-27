@@ -102,21 +102,19 @@ $(function() {
                 span.text(timeSpan + '分钟');
             }
 
-            // 是否显示“查看试卷”按钮
             paperScore = data['ESPT_PaperScore'];
             pageType = data['ESPT_PageType']
 
-            if (pageType == 2 && paperScore != '[未参与]' && paperScore != '[未预期]') {
-
-                row.find('a.paper-grade').removeClass('hide');
-            }
-
-            // 是否显示“终止”按钮
             status = data['ESPT_Status'];
             ptStatus = data['ESPT_PaperTemplateStatus'];
 
+            // 是否显示“终止”按钮
             if (1 == status && 1 == ptStatus) {
                 row.find('a.terminate').removeClass('hide');
+
+            // 是否显示“评改试卷”按钮
+            }else if(1 == status && 2 == ptStatus && pageType == 2 && paperScore != '[未参与]' && paperScore != '[未预期]'){
+                row.find('a.paper-grade').removeClass('hide');
             }
         };
     } else {

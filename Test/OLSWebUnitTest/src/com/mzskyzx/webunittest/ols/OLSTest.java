@@ -32,10 +32,10 @@ public class OLSTest extends WebUnitTest {
 	private String url = "http://localhost/User/Login";
 
 	public OLSTest() {
-		//init("chrome");
-		//init("edge");
-		//init("ie");
-		//init("ie", true, 10);
+		// init("chrome");
+		// init("edge");
+		// init("ie");
+		// init("ie", true, 10);
 		init("ie", false, 10);
 		wd.get(url);
 	}
@@ -285,42 +285,44 @@ public class OLSTest extends WebUnitTest {
 			openTaskCreate();
 
 			// 任务名称
-			simpleDateFormat = new SimpleDateFormat("MMddhhmmss");
-			taskName = "手动任务" + simpleDateFormat.format(now);
-			$("#ET_Name").sendKeys(taskName);
+			taskName = setTaskName("手动任务");
 
 			// 参与人员
 			setAttendees("人教股");
 
 			// 成绩计算
-			we = $("#ET_StatisticType");
-			select = new Select(we);
-			select.selectByVisibleText("得分");
+			setSelect("ET_StatisticType", "得分");
 
 			// 出题方式
-			we = $("#ET_Mode");
-			select = new Select(we);
-			select.selectByVisibleText("手动");
+			setSelect("ET_Mode", "手动");
 
 			// 考试时长
-			$wex("#ET_TimeSpan").val("10");
+			setTimeSpan(10);
 
 			// 选择试题
 			Assert.assertTrue(validate("Questions", "请选择试题"));
+			
 			wd.findElement(By.xpath("//input[@type='checkbox'][@value='all']")).click();
 
 			// 备注
-			simpleDateFormat = new SimpleDateFormat("yyyyMMddhhmm");
-			date = simpleDateFormat.format(now);
-			$("textarea#ET_Remark").sendKeys("[前端测试][DATE" + date + "]");
+			setRemark("");
 
 			// 提交
 			submit(true, true);
+			
 			Assert.assertTrue(wd.findElement(By.xpath("//nav[@class='breadcrumb']")).getText().contains("考试任务"));
+
+			// 修改任务名
+			openTaskEdit(taskName);
+			taskName = appendTaskName("测试编辑");
+
+			// 提交
+			submit(true, true);
 
 			if (start) {
 				startTask(taskName);
 			}
+
 		} catch (Exception e) {
 			throw e;
 		}
@@ -378,10 +380,10 @@ public class OLSTest extends WebUnitTest {
 
 			// 提交
 			submit(true, true);
-			
-			//if (start) {
-			//	startTask(taskName);
-			//}
+
+			// if (start) {
+			// startTask(taskName);
+			// }
 
 			if (waitStart) {
 				waitStart(startTime);
@@ -393,7 +395,7 @@ public class OLSTest extends WebUnitTest {
 		}
 	}
 
-	protected String appendTaskName(String name){
+	protected String appendTaskName(String name) {
 		WebElementx wex;
 		wex = $wex("#ET_Name");
 		name = wex.val() + name;
@@ -542,6 +544,13 @@ public class OLSTest extends WebUnitTest {
 
 			Assert.assertTrue($wex("//nav[@class='breadcrumb']").text().contains("考试任务"));
 
+			// 修改任务名
+			openTaskEdit(taskName);
+			taskName = appendTaskName("测试编辑");
+
+			// 提交
+			submit(true, true);
+
 			if (start) {
 				startTask(taskName);
 			}
@@ -591,9 +600,10 @@ public class OLSTest extends WebUnitTest {
 			}
 
 			return true;
+		}else{
+			
+			return true;
 		}
-
-		return false;
 	}
 
 	protected String addExercise(String department, int totalNumber, List<Integer> autoRatios, Boolean waitStart)
@@ -647,6 +657,13 @@ public class OLSTest extends WebUnitTest {
 			submit(true, true);
 
 			Assert.assertTrue($wex("//nav[@class='breadcrumb']").text().contains("考试任务"));
+
+			// 修改任务名
+			openTaskEdit(taskName);
+			taskName = appendTaskName("测试编辑");
+
+			// 提交
+			submit(true, true);
 
 			if (waitStart) {
 				startTask(taskName);
@@ -726,7 +743,8 @@ public class OLSTest extends WebUnitTest {
 		 * $x("//span[@id='" + id + "_check']"); we.click()
 		 */;
 
-		$x("//ul[@id='DepartmentsAndUsers']/li/ul/li[.//span[text()='" + department + "']]/span[contains(@class,'chk')]").click();
+		$x("//ul[@id='DepartmentsAndUsers']/li/ul/li[.//span[text()='" + department
+				+ "']]/span[contains(@class,'chk')]").click();
 
 		return true;
 	}
@@ -902,7 +920,7 @@ public class OLSTest extends WebUnitTest {
 		p = Pattern.compile(pattern);
 
 		openExerciseCenter("已");
-		we = $x("//tr[.//td[text()='" + taskName + "']]/td[8]");
+		we = $x("//tr[.//td[text()='" + taskName + "']]/td[9]");
 		score = we.getText();
 		System.out.println("Examination Score is '" + score + "'.");
 		assertTrue(p.matcher(score).matches());
@@ -965,9 +983,9 @@ public class OLSTest extends WebUnitTest {
 		// 打开试题模板列表
 		$x("//tr[.//td[text()='" + taskName + "']]/td/a[text()='试题']").click();
 		// 打开评改页面
-		$x("//a[contains(@class,'list-grade')]").click();
+		$x("//a[contains(@class,'paper-grade')]").click();
 		// 选取试卷
-		$x("//h4[contains(text(),'" + userName + "')]").click();
+		//$x("//h4[contains(text(),'" + userName + "')]").click();
 		// 评改试题
 		wes = $xs("//a[@title='正确']");
 		for (int i = 0; i < wes.size(); i++) {
@@ -977,7 +995,9 @@ public class OLSTest extends WebUnitTest {
 		$("button#Grade").click();
 		// 验证分数
 		Thread.sleep(1000);
-		score = $x("//h4[contains(text(),'" + userName + "')]/span[@class='score']").getText();
+		//score = $x("//h4[contains(text(),'" + userName + "')]/span[@class='score']").getText();
+		score = $x("//div[@class='layui-layer-content']/span[@class='score']").getText();
+		System.out.println("New Score is '" + score + "'");
 		assertTrue(score.equals(expectedScore));
 		// 结束评分
 		$("button#GradeFinish").click();
