@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Test 3 - 分析如何使用在线编辑器高亮显示“非法格式”的行</title>
+    <!-- umeditor css -->
+    <!--link href="../lib/umeditor/themes/default/css/umeditor.css" type="text/css" rel="stylesheet"-->
+    <!-- <link rel="stylesheet" type="text/css" href="../css/common.css" /> -->
+    <style type="text/css">
+        * { margin: 0; padding: 0; }
+        .control-container, .btn-container{ padding:10px; }
+        .drop-down-list{ height:24px; width:120px; }
+        .btn { width: 80px; height: 24px; }
+    </style>
+    <script type="text/javascript" src="../lib/js.request.js"></script>
+    <script type="text/javascript" src="../lib/jquery-1.10.1.min.js"></script>
+    <!-- umeditor -->
+    <!--script type="text/javascript" charset="utf-8" src="../lib/umeditor/umeditor.config.js"></script>
+    <script type="text/javascript" charset="utf-8" src="../lib/umeditor/umeditor.min.js"></script>
+    <script type="text/javascript" src="../lib/umeditor/lang/zh-cn/zh-cn.js"></script-->
+    <!-- ueeditor -->
+    <script type="text/javascript" charset="utf-8" src="../lib/ueeditor/ueditor.config.js"></script>
+    <script type="text/javascript" charset="utf-8" src="../lib/ueeditor/ueditor.all.min.js"> </script>
+    <script type="text/javascript" charset="utf-8" src="../lib/ueeditor/lang/zh-cn/zh-cn.js"></script>
+    <!-- jquery zclip -->
+    <script type="text/javascript" src="../lib/jquery-zclip/jquery.zclip.js"></script>
+    <script type="text/javascript" src="js/test-3-init.js"></script>
+</head>
+
+<body>
+    <div class="control-container">
+        <select id="type" class="drop-down-list">
+            <option value="0">[未选择]</option>
+            <option value="1">单/多选题</option>
+            <option value="2">判断题</option>
+        </select>
+        <button id="check" class="btn">检查</button>
+        <button id="CopyToClipboard" class="btn">复制</button>
+    </div>
+    <script id="myEditor" type="text/plain"></script>
+    </script>
+</body>
+
+</html>

@@ -1089,7 +1089,7 @@ namespace OnlineLearningSystem.Utilities
         /// 计算成绩
         /// </summary>
         /// <param name="ep"></param>
-        public void GradePaper(ExaminationPaper ep)
+        public String GradePaper(ExaminationPaper ep)
         {
 
             Int32 score, number, eptqCount;
@@ -1097,9 +1097,11 @@ namespace OnlineLearningSystem.Utilities
             ExaminationPaperTemplateQuestion eptq;
             ExaminationTask et;
             List<ExaminationPaperQuestion> epqs;
+            String scoreString;
 
             score = 0;
             number = 0;
+            scoreString = "";
 
             epqs = olsEni.ExaminationPaperQuestions.Where(m => m.EP_Id == ep.EP_Id).ToList();
             foreach (var epq in epqs)
@@ -1145,13 +1147,17 @@ namespace OnlineLearningSystem.Utilities
             {
                 ep.EP_Score = score;
                 olsEni.Entry(ep).State = EntityState.Modified;
+                scoreString = score + "分";
             }
             else if ((Byte)StatisticType.Number == et.ET_StatisticType && eptqCount == 0)
             {
                 ratio = Math.Round((Double)number / (Double)et.ET_TotalNumber, 2, MidpointRounding.AwayFromZero);
                 ep.EP_Score = (Int32)(ratio * 100);
                 olsEni.Entry(ep).State = EntityState.Modified;
+                scoreString = score + "%";
             }
+
+            return scoreString;
         }
 
         public Boolean SaveChanges()

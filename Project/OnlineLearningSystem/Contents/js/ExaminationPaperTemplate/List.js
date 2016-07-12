@@ -74,7 +74,7 @@ $(function() {
         params.createdRow = function(row, data, dataIndex) {
 
             var span, addTime, startTime;
-            var paperScore, pageType;
+            var status, ptStatus, paperScore, pageType;
 
             row = $(row);
 

@@ -374,7 +374,7 @@ namespace OnlineLearningSystem.Utilities
                 }
 
                 uept = new UExaminationPaperTemplate();
-                uept.GradePaper(ep);
+                resJson.data = uept.GradePaper(ep);
                 uept.SaveChanges();
 
                 resJson.status = ResponseStatus.Success;

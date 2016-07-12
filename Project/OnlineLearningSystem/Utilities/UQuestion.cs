@@ -32,7 +32,7 @@ namespace OnlineLearningSystem.Utilities
                 List<DocxParagraph> docxPara;
                 const String qTypes = "单选题；多选题；判断题；公文改错题；计算题；案例分析题；问答题；";
                 DateTime now;
-                Regex typeRegex, contentRegex1, contentRegex2, optionalAnswerRegex, modelAnswerRegex,
+                Regex commentRegex, typeRegex, contentRegex1, contentRegex2, optionalAnswerRegex, modelAnswerRegex,
                     difficultyCoefficientRegex, scoreRegex, digitRegex;
                 String text, qType, qClassify, qContent, qOptionalAnswer, qModelAnswer;
                 Int32 i1, i2, len, qId, qcId, currentQCId, score, duplicate;
@@ -49,6 +49,7 @@ namespace OnlineLearningSystem.Utilities
 
                 now = DateTime.Now;
 
+                commentRegex = new Regex(@"^\/\/");
                 typeRegex = new Regex(@"^题型[:：]{1}");
                 contentRegex1 = new Regex(@"^\s*\d+[\.．、]"); // 示例：1.
                 contentRegex2 = new Regex(@"^\s*\(.+\)|^\s*（.+）"); // 示例：(一) （一）
@@ -79,6 +80,12 @@ namespace OnlineLearningSystem.Utilities
                 {
 
                     text = para.Text;
+
+                    // 忽略“备注行”
+                    if (commentRegex.IsMatch(text))
+                    {
+                        continue;
+                    }
 
                     #region 添加试题数据
 
@@ -295,6 +302,12 @@ namespace OnlineLearningSystem.Utilities
                                 {
                                     qContent = qContent.Replace(qModelAnswer, "  ");
                                     qModelAnswer = qModelAnswer.Trim();
+
+                                    // 处理判断题答案
+                                    if ("判断题" == qType && qModelAnswer.ToLower() == "x")
+                                    {
+                                        qModelAnswer = "×";
+                                    }
                                 }
                                 else // 避免模板中没有设置答案时不添加试题
                                 {

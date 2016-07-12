@@ -35,7 +35,7 @@ public class T02AutoDayExaminationTest01 extends OLSTest {
 			userName = loginStudent();
 
 			// 答卷
-			inputAnswer(taskName);
+			inputAnswer(taskName, "考试");
 			
 			// 查看已考完页面，检查成绩
 			checkExaminationScore(taskName, "\\[未评分\\]");

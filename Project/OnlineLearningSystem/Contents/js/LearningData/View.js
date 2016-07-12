@@ -3,12 +3,13 @@ $(function() {
     var videoJson;
 
     // 调整图片尺寸
-    $('img').css({
-        position: 'absolute',
-        left: $('body').width() + 100 + 'px'
-    })
+    // $('img').css({
+    //     position: 'absolute',
+    //     left: $('body').width() + 100 + 'px'
+    // })
 
-    $('img').on('load', function(){
+    // $('img').on('load', function(){
+    $('img').each(function(){
         var img, content;
         var imgW, imgH, w, h;
 
@@ -30,6 +31,7 @@ $(function() {
             'height': imgH + 'px'
         });
     });
+
 
     videoJson = $('#LD_Video').val();
 

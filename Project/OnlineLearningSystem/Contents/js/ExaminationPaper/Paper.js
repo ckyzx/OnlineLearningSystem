@@ -402,15 +402,28 @@ $(function() {
             });
     }
 
+    // 交卷
     function handIn(successCallback) {
 
         $.post('/ExaminationPaper/HandIn', {
                 id: epId
             }, function(data) {
 
+                var scoreString;
+
                 if (1 == data.status) {
 
+                    // 提示用户试卷的最后成绩
+                    scoreString = data.data;
+
+                    if(scoreString != ""){
+                        alert('交卷成功，您本次测验的成绩为 ' + scoreString + ' 。');
+                    }else{
+                        alert('您已成功交卷，请等待管理部门评分。');
+                    }
+
                     if ('function' == typeof(successCallback)) {
+
                         successCallback();
                     }
                 } else if (0 == data.status) {
@@ -428,6 +441,7 @@ $(function() {
             });
     }
 
+    // 提示用户未答题数量
     function undoPrompt(successCallback) {
 
         $.post('/ExaminationPaper/GetUndoNumber', {

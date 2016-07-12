@@ -386,7 +386,7 @@ public class OLSTest extends WebUnitTest {
 			// }
 
 			if (waitStart) {
-				waitStart(startTime);
+				waitStart(startTime, 4);
 			}
 
 			return taskName;
@@ -750,19 +750,17 @@ public class OLSTest extends WebUnitTest {
 	}
 
 	private Boolean waitStart(int startTime) throws InterruptedException {
+		waitStart(startTime, 1);
+		return true;
+	}
+	private Boolean waitStart(int startTime, int waitMore) throws InterruptedException {
 
 		int wait;
 
 		wait = startTime - (calendar.get(Calendar.HOUR_OF_DAY) * 60 + calendar.get(Calendar.MINUTE));
-		wait += 1; // 加多1分钟，以等待定时任务启动[试卷模板]。
+		wait += waitMore == 0 ? 1 : waitMore; // 加多n分钟，以等待定时任务启动[试卷模板]。
 		System.out.println("Need to wait " + wait + " minutes.");
 		System.out.println("Wait start...");
-		/*
-		 * wait = wait * 60; while (wait > 0) { // Thread.sleep(1000); // wait
-		 * -= 1; // System.out.println(wait / 60 + " minutes " + wait % 60 + "
-		 * // seconds left."); System.out.println(wait / 60 + " minutes left.");
-		 * Thread.sleep(60000); wait -= 60; }
-		 */
 		showPageWaiting(wait);
 
 		return true;
@@ -983,9 +981,16 @@ public class OLSTest extends WebUnitTest {
 		// 打开试题模板列表
 		$x("//tr[.//td[text()='" + taskName + "']]/td/a[text()='试题']").click();
 		// 打开评改页面
-		$x("//a[contains(@class,'paper-grade')]").click();
+		we = $x("//a[contains(@class,'list-grade')]");
+		if(null == we){
+			we = $x("//a[contains(@class,'paper-grade')]");
+		}
+		we.click();
 		// 选取试卷
-		//$x("//h4[contains(text(),'" + userName + "')]").click();
+		we = $x("//h4[contains(text(),'" + userName + "')]");
+		if(null != we){
+			we.click();
+		}
 		// 评改试题
 		wes = $xs("//a[@title='正确']");
 		for (int i = 0; i < wes.size(); i++) {
@@ -995,8 +1000,8 @@ public class OLSTest extends WebUnitTest {
 		$("button#Grade").click();
 		// 验证分数
 		Thread.sleep(1000);
-		//score = $x("//h4[contains(text(),'" + userName + "')]/span[@class='score']").getText();
-		score = $x("//div[@class='layui-layer-content']/span[@class='score']").getText();
+		we = $x("//div[@class='layui-layer-content']/span[@class='score']");
+		score = we.getText();
 		System.out.println("New Score is '" + score + "'");
 		assertTrue(score.equals(expectedScore));
 		// 结束评分
@@ -1085,6 +1090,8 @@ public class OLSTest extends WebUnitTest {
 
 		// 交卷
 		$x("//div[@id='" + containerId + "']/div/button[contains(@class,'paper-hand-in')]").click();
+		wd.switchTo().alert().accept();
+		Thread.sleep(3000);
 		wd.switchTo().alert().accept();
 
 		return true;
