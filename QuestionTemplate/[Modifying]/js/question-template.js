@@ -174,7 +174,7 @@ var QT = {
 
     check: function(textarea, pObj) {
 
-        var txt, p1, p2, r;
+        var txt, p1, p2, r, c, count;
 
         txt = textarea.val();
 
@@ -197,9 +197,20 @@ var QT = {
         p1 = /(<br\/>)/g;
         txt = txt.replace(p1, '<r><n>');
 
+        count = 0;
+
         while (p2.test(txt)) {
+
+            c = txt.match(p2);
+
+            if(null != c){
+                count += c.length;
+            }
+
             txt = txt.replace(p2, r);
         }
+
+        alert('共 ' + count + '项符合验证规则。');
 
         p1 = /(<r><n>|<rn>)/g;
         txt = txt.replace(p1, '<br/>');

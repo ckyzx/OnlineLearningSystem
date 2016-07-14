@@ -1013,7 +1013,7 @@ public class OLSTest extends WebUnitTest {
 		return true;
 	}
 
-	protected Boolean inputAnswer(String taskName) throws InterruptedException {
+	/*protected Boolean inputAnswer(String taskName) throws InterruptedException {
 
 		String containerId, qType, qId;
 		WebElement we;
@@ -1048,7 +1048,7 @@ public class OLSTest extends WebUnitTest {
 		wd.switchTo().alert().accept();
 
 		return true;
-	}
+	}*/
 
 	protected Boolean inputAnswer(String taskName, String taskType) throws InterruptedException {
 

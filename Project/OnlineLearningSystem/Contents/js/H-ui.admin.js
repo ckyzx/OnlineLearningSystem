@@ -85,7 +85,7 @@ function layer_close() {
 
         if (search != "") {
 
-            /* 恢复上一个页面的请求信息 [Start] */
+            /* [Start] 恢复上一个页面的请求信息 */
             firstParentIndex = search.indexOf('p_');
 
             if(firstParentIndex != -1){

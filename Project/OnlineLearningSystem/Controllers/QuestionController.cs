@@ -145,7 +145,7 @@ namespace OnlineLearningSystem.Controllers
 
                 if (um.Edit(m))
                 {
-                    return Redirect("/Contents/html/parent_reload.htm");
+                    return Redirect("/Contents/html/layer_close.htm" + Request.UrlReferrer.Query);
                 }
             }
 

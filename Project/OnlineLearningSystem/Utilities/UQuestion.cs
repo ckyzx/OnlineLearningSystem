@@ -308,6 +308,12 @@ namespace OnlineLearningSystem.Utilities
                                     {
                                         qModelAnswer = "×";
                                     }
+
+                                    // 当判断题答案有误时的处理
+                                    if ("判断题" == qType && "×" != qModelAnswer && "√" != qModelAnswer)
+                                    {
+                                        qModelAnswer = "O";
+                                    }
                                 }
                                 else // 避免模板中没有设置答案时不添加试题
                                 {
@@ -468,7 +474,15 @@ namespace OnlineLearningSystem.Utilities
                         qId += 1;
 
                         // 标识数据错误
-                        if (m1.Q_OptionalAnswer == "{}" || m1.Q_ModelAnswer == "[]")
+                        if (("单选题" == m1.Q_Type
+                            || "多选题" == m1.Q_Type)
+                            && ("{}" == m1.Q_ModelAnswer
+                            || "[]" == m1.Q_ModelAnswer))
+                        {
+                            errorIds.Append(qId + ", ");
+                        }
+
+                        if ("判断题" == m1.Q_Type && "O" == m1.Q_ModelAnswer)
                         {
                             errorIds.Append(qId + ", ");
                         }
@@ -1385,16 +1399,26 @@ namespace OnlineLearningSystem.Utilities
                 List<Question> qs;
                 Boolean errorFlag;
                 List<QuestionClassify> qcs;
+                String modelAnswer;
 
                 errorFlag = false;
 
                 qs = olsEni.Questions.Where(m => m.Q_Status == (Byte)Status.Cache).ToList();
                 foreach (var q in qs)
                 {
+
+                    modelAnswer = q.Q_ModelAnswer.Trim();
+
                     if (("单选题" == q.Q_Type
                         || "多选题" == q.Q_Type)
                         && ("{}" == q.Q_OptionalAnswer
-                        || "[]" == q.Q_ModelAnswer))
+                        || "[]" == modelAnswer))
+                    {
+                        errorFlag = true;
+                        continue;
+                    }
+
+                    if ("判断题" == q.Q_Type && "O" == modelAnswer)
                     {
                         errorFlag = true;
                         continue;

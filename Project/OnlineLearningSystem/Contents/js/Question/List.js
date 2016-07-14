@@ -148,7 +148,7 @@ $(function() {
             }
 
             modelAnswer = data['Q_ModelAnswer'];
-            if ('[]' == modelAnswer && !row.hasClass('question-has-error')) {
+            if (('[]' == modelAnswer || 'O' == modelAnswer ) && !row.hasClass('question-has-error')) {
                 row.addClass('question-has-error');
             }
 
@@ -213,9 +213,16 @@ $(function() {
 
         $('#QuestionImportPanel').removeClass('hide');
 
-        params.ajax.data = {
+        /*params.ajax.data = {
             status: status,
             qcId: qcId
+        };*/
+        params.ajax.data = function(originData){
+
+            return $.extend({}, originData, {
+                status: status,
+                qcId: qcIdInput.attr('value')
+            });
         };
     } else {
 

@@ -51,7 +51,7 @@ public class T02AutoDayExaminationTest02 extends OLSTest {
 			userName = loginStudent();
 
 			// 答卷
-			inputAnswer(taskName);
+			inputAnswer(taskName, "考试");
 			
 			// 查看已考完页面，检查成绩
 			checkExaminationScore(taskName, "\\[未评分\\]");
@@ -95,7 +95,7 @@ public class T02AutoDayExaminationTest02 extends OLSTest {
 			userName = loginStudent();
 
 			// 答卷
-			inputAnswer(taskName);
+			inputAnswer(taskName, "考试");
 			
 			// 查看已考完页面，检查成绩
 			checkExaminationScore(taskName, "[0-9]+\\s*分");
