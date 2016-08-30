@@ -63,7 +63,7 @@ $(function() {
         hasRecycleBin: false,
         hasControlBtn: false,
         treeIdName: 'ldcId',
-        treeIdDefaultValue: 0,
+        /*treeIdDefaultValue: 0,*/
         additionRequestParams: [{name: 'ldcId', input: '#LDCId', value: 0}]
     });
     list.initList();

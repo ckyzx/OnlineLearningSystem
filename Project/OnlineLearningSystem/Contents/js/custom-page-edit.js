@@ -1,4 +1,3 @@
-
 // 给 DataTables 的数据设置复选状态
 function SetDataTablesChecked(tableSelector, valueSelector) {
 
@@ -419,11 +418,76 @@ function setAnswer(qType, answer) {
 
             break;
     }
+    
+    /*// 试题已回答，且 [标准答案] 不为空，则显示 [标准答案模块]
+    if (answerContent != '[]' && answerContent != '') {
+        _showModelAnswerModule();
+    }*/
+
+}
+
+function _showModelAnswerModule() {
+
+    var qContainer, span, textarea;
+    var qId, aData, answer;
+
+    qId = $('#CurrentQuestionId').val();
+
+    qContainer = $('.question-container-active');
+    qContainer = qContainer.find('#Question_' + qId);
+
+    span = qContainer.find('span[data-id=ModelAnswerContainer_' + qId + ']');
+    textarea = qContainer.find('textarea[name=question_textarea_' + qId + '_model_answer]');
+
+    // 获取已提交的答案
+    aData = $('#AnswerData_' + qId).val();
+    aData = JSON.parse(aData);
+    answer = aData.EPQ_Answer;
+
+    // 判断是否显示 [标准答案模块]
+    // - 如果 [标准答案] 内容不为空，则显示
+    if (answer != '[]' 
+        && answer != '' 
+        && (span.text() != '' 
+            || (textarea.length != 0 && textarea.val() != ''))) {
+
+        qContainer.find('div.question-grade').removeClass('hide');
+        _setCheckboxAndRadioStatus(qContainer);
+    }
+}
+
+// 设置选择题、判断题的选项 [正确与否] 的状态
+function _setCheckboxAndRadioStatus(questionContainer) {
+
+    var answerControl, modelAnswer;
+
+    answerControl = questionContainer.find('span.model-answer');
+    modelAnswer = answerControl.text();
+
+    questionContainer.find(':checkbox, :radio').each(function() {
+
+        var control1, parent;
+
+        control1 = $(this);
+        parent = control1.parent();
+
+        if (control1.is(':checked')) {
+
+            if (modelAnswer.indexOf(control1.val()) == -1) {
+                parent.css('color', 'red');
+            } else {
+                parent.css('color', 'green');
+            }
+        } else {
+            parent.css('color', '');
+        }
+    });
 }
 
 function setModelAnswer(eptq, exactness) {
 
     var qType, eptqId, modelAnswer, exactness;
+    var exactnessRadio;
 
     if (null == eptq.EPTQ_ModelAnswer) {
         return;
@@ -433,9 +497,16 @@ function setModelAnswer(eptq, exactness) {
     eptqId = eptq.EPTQ_Id;
     modelAnswer = eptq.EPTQ_ModelAnswer;
 
+    //$('div[data-id=ModelAnswer_' + eptqId + ']').removeClass('hide');
+
     // 设置评分
-    $('input[name="question_radios_' + eptqId + '_grade"][value="' + exactness + '"]').get(0).checked = true;
-    $('span[data-name="question_radios_' + eptqId + '_grade"][data-value="' + exactness + '"] i.Hui-iconfont').addClass('active');
+    exactnessRadio = $('input[name="question_radios_' + eptqId + '_grade"][value="' + exactness + '"]');
+
+    // - 有评分控件，则设置
+    if (exactnessRadio.length != 0) {
+        exactnessRadio.get(0).checked = true;
+        $('span[data-name="question_radios_' + eptqId + '_grade"][data-value="' + exactness + '"] i.Hui-iconfont').addClass('active');
+    }
 
     switch (qType) {
         case '单选题':

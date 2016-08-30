@@ -99,7 +99,7 @@ namespace OnlineLearningSystem.Utilities
                 Du_Id = 0,
                 Du_Name = "",
                 U_Name = "",
-                U_LoginName = "LoginName0",
+                U_LoginName = "LoginName0", //[TOKEN_20160815_1559]
                 U_Password = "",
                 U_RePassword = "",
                 U_Departments = "[]",
@@ -177,7 +177,8 @@ namespace OnlineLearningSystem.Utilities
                     Du_Id = vmModel.Du_Id,
                     U_IdCardNumber = vmModel.U_IdCardNumber,
                     U_Name = vmModel.U_Name,
-                    U_LoginName = "LoginName" + uId,
+                    U_LoginName = "LoginName" + uId, //[TOKEN_20160815_1559]
+                    //U_LoginName = vmModel.Du_Name, //[TOKEN_20160815_1559]
                     U_Password = EncryptPassword(vmModel.U_Password),
                     U_Departments = vmModel.U_Departments,
                     U_Roles = vmModel.U_Roles,

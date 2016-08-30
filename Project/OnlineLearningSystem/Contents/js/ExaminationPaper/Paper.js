@@ -34,6 +34,7 @@ $(function() {
             try {
 
                 renderQuestions(questions, answers);
+                initEventListener();
             } catch (e) {
 
                 alert('ErrorName: ' + e.name + '\r\nMessage: ' + e.message + '\r\nStack: ' + e.stack);
@@ -61,14 +62,14 @@ $(function() {
         $('#TypeItemTmpl').tmpl(questionAry).appendTo('#TypeList ul');
         $('#QuestionListTmpl').tmpl(questionAry).appendTo('#QuestionList');
 
-        $('div.question-answer').each(function(){
+        $('div.question-answer').each(function() {
 
             var div, type;
 
             div = $(this);
             type = div.parentsUntil('.swiper-slide').attr('data-question-type');
 
-            if((type == '单选题' || type == '多选题') && div.text().length > 40){
+            if ((type == '单选题' || type == '多选题') && div.text().length > 40) {
                 div.find('span.optional-answer').before('<br />')
             }
 
@@ -105,12 +106,17 @@ $(function() {
             nextQuestion(this);
         });
 
+        $('.swiper-button-submit-question').on('click', function() {
+
+            submitQuestion(this);
+        });
+
         $('#QuestionList').on('click', 'button.paper-hand-in', function() {
 
             if (confirm('确定结束考试吗？')) {
 
                 saveLocalAnswers();
-                
+
                 submitAnswers(function() {
 
                     undoPrompt(function() {
@@ -182,6 +188,17 @@ $(function() {
 
             nextA.click();
         }
+    }
+
+    function submitQuestion(btn) {
+
+        saveLocalAnswers();
+        submitAnswers(function() {
+            
+            _showModelAnswerModule();
+
+            layer.msg('试题已提交');
+        });
     }
 
     function clickTypeItem(thisElem) {
@@ -260,11 +277,16 @@ $(function() {
         saveAnswers();
 
         setCurrentQuestionId(questionContainer);
+
+        _showModelAnswerModule();
     }
 
     function setCurrentQuestionId(questionContainer) {
 
-        $('#CurrentQuestionId').val(questionContainer.find('.swiper-slide-active').attr('data-question-id'));
+        var qId;
+
+        qId = questionContainer.find('.swiper-slide-active').attr('data-question-id');
+        $('#CurrentQuestionId').val(qId);
     }
 
     function saveAnswers() {
@@ -416,9 +438,9 @@ $(function() {
                     // 提示用户试卷的最后成绩
                     scoreString = data.data;
 
-                    if(scoreString != ""){
+                    if (scoreString != "") {
                         alert('交卷成功，您本次测验的成绩为 ' + scoreString + ' 。');
-                    }else{
+                    } else {
                         alert('您已成功交卷，请等待管理部门评分。');
                     }
 
@@ -473,4 +495,38 @@ $(function() {
                 alert('请求返回错误！');
             });
     }
+
+    function initEventListener() {
+
+        $('a[data-id=ShowModelAnswer]').on('click', function() {
+
+            var a = $(this);
+            var answerControls;
+
+            answerControls = a.parent().find('.model-answer');
+
+            if (answerControls.hasClass('hide')) {
+                answerControls.removeClass('hide');
+                a.text('隐藏');
+            } else {
+                answerControls.addClass('hide');
+                a.text('显示');
+            }
+        });
+
+        $('.optional-answer :radio, .optional-answer :checkbox').on('click', function() {
+
+            var control;
+            var val;
+            var container;
+
+            control = $(this)
+            val = control.val();
+
+            container = control.parentsUntil('.swiper-slide').last();
+
+            //_setCheckboxAndRadioStatus(container);
+        });
+    }
+
 });

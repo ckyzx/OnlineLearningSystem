@@ -208,6 +208,7 @@ namespace OnlineLearningSystem.Utilities
             {
 
                 ExaminationPaper ep;
+                ExaminationTask et;
                 Int32 eptId;
                 List<ExaminationPaperQuestion> epqs;
                 List<ExaminationPaperTemplateQuestion> eptqs;
@@ -238,6 +239,14 @@ namespace OnlineLearningSystem.Utilities
                         && m.EPTQ_Status == (Byte)Status.Available)
                     .ToList();
                 epqs = olsEni.ExaminationPaperQuestions.Where(m => m.EP_Id == epId).ToList();
+
+                // 判断是否为练习任务，是则允许保留标准答案。[201608301015]
+                et = olsEni.ExaminationTasks.Single(m => m.ET_Id == ep.ET_Id);
+
+                if (!hasModelAnswer && et.ET_Type == (Byte)ExaminationTaskType.Exercise)
+                {
+                    hasModelAnswer = true;
+                }
 
                 // 清除标准答案
                 if (!hasModelAnswer)

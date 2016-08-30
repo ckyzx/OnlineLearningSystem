@@ -1,7 +1,7 @@
 $(function() {
 
     var qt;
-    var um;
+    var ue;
     var getType;
     var textarea;
 
@@ -24,8 +24,12 @@ $(function() {
 
             if (undefined == str) {
 
-                str = um.getContent();
+                str = ue.getContent();
 
+                // 格式化粘贴的文本
+                p1 = /(<\/p>)/g;
+                str = str.replace(p1, '$1<br/>');
+        
                 // 去除行标签
                 p1 = /(<(\/)?p>)/g;
                 str = str.replace(p1, '');
@@ -51,7 +55,7 @@ $(function() {
                 p1 = /(<r><n>|<rn>)/g;
                 str = str.replace(p1, '<br/>');
 
-                um.setContent(str);
+                ue.setContent(str);
             }
         }
     };
@@ -59,17 +63,19 @@ $(function() {
     qt = QT.init();
 
     // 初始化编辑器
-    um = UE.getEditor('myEditor', {
+    ue = UE.getEditor('myEditor', {
         toolbars: [
             ['source', 'undo', 'redo']
         ],
         initialFrameHeight: 500
     });
-    um.addListener('ready', function() {
+    ue.addListener('ready', function() {
 
         $('.edui-editor, .edui-editor-iframeholder').css('width', $('body').width() - 24);
 
         $('#reload').click();
+    });
+    ue.addListener('contentChange', function(ue){
 
     });
 
@@ -102,14 +108,14 @@ $(function() {
 
         txt = qt.check(textarea, CheckPatterns['type_' + t])
         txt = '<span style="color:red;">' + txt + '</span>';
-        um.setContent(txt);
+        ue.setContent(txt);
     });
 
     // 复制操作
     $('#CopyToClipboard').zclip({
         path: 'lib/jquery-zclip/ZeroClipboard.swf',
         copy: function() {
-            return um.getPlainTxt();
+            return ue.getPlainTxt();
         }
     });
 
@@ -117,9 +123,11 @@ $(function() {
 
         var req;
 
-        um.setContent('');
+        ue.setContent('');
 
         req = Request.init();
+
+        // 载入文件
         fileName = req.getValue('file');
 
         // 载入试题文档
@@ -131,7 +139,7 @@ $(function() {
             txt = encodeURIComponent(txt).replace(/%0D/g, '<br/>');
             txt = '<br/>' + decodeURIComponent(txt) + '<br/><br/>';
 
-            um.setContent(txt);
+            ue.setContent(txt);
 
             $('#replace').removeAttr('disabled');
         });

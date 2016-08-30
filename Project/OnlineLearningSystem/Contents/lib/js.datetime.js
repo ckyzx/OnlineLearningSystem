@@ -5,9 +5,12 @@ String.prototype.toDate = function() {
     /*strDate = this.replace(/\d+(?=-[^-]+$)/, function (a) {
         return parseInt(a, 10) - 1;
     }).match(/\d+/g);*/
-    ary = this.replace(/-/g, '/').replace(/\d+(?=-[^-]+$)/).match(/\d+/g);
+
+    /*ary = this.replace(/-/g, '/').replace(/\d+(?=-[^-]+$)/).match(/\d+/g);
     ary[1] = parseInt(ary[1]) - 1;
-    date = eval('new Date(' + ary + ')');
+    date = eval('new Date(' + ary + ')');*/
+
+    date = new Date(this.replace(/-/g, '/'));
 
     return date;
 };

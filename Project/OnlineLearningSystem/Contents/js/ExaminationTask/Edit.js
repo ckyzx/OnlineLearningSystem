@@ -15,7 +15,7 @@ $(function() {
     function submitHandler(form) {
 
         var etStartTime, etEndTime;
-        var mode, startDate, startTime, continuedDays, endTime;
+        var mode, startDate, endDate, startTime, continuedDays, endTime;
 
         if (!validateData()) {
             return false;
@@ -44,7 +44,7 @@ $(function() {
             endTime = endTime.toDate();
             continuedDays = $('#ET_ContinuedDays').val();
             continuedDays = continuedDays > 1 ? (continuedDays - 1) : 0;
-            startTime = startTime.add('d', continuedDays);
+            endDate = startDate.add('d', continuedDays);
             etEndTime.val(
                 startDate.getFullYear() + '/' + (startDate.getMonth() + 1) + '/' + startDate.getDate() + ' ' +
                 endTime.getHours() + ':' + endTime.getMinutes() + ':' + endTime.getSeconds());

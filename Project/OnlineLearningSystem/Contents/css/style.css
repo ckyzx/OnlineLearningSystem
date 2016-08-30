@@ -5,7 +5,7 @@ body.prompt{ }
 
 .Hui-header{ background: #3F83DC url('/Contents/images/top_bg.png') repeat-x; }
 .Hui-header .top-img{ position: absolute; z-index:-1; }
-.Hui-header .top-img-l{ /*left:0; top:0; width:864px; height:84px; background: url('/Contents/images/top_img_l.png') no-repeat; */}
+.Hui-header .top-img-l{ /*left:0; top:0; width:864px; height:84px; background: url('/Contents/images/top_img_l.png') no-repeat; */; }
 .Hui-header .top-img-r{ right:0; top:0; width:864px; height:84px; background: url('/Contents/images/top_img_r.png') no-repeat; }
 
 /* 无下拉列表的菜单按钮 */
@@ -40,11 +40,16 @@ body.prompt{ }
 
 #ExaminationPaperContainer #TypeList{ position: absolute; width: 200px; height: 100%; background-color: #EEE; overflow-y: scroll; }
 #ExaminationPaperContainer #QuestionList{ margin-left: 200px; height: 100%; }
-#ExaminationPaperContainer #QuestionList .question{ height: 100%; }
+#ExaminationPaperContainer #QuestionList .question{ min-height: 100%; }
 #ExaminationPaperContainer #QuestionList .question-content{ margin-bottom: 30px; padding: 0 80px; padding-top: 50px; font-size: 18px; text-align: justify; }
-#ExaminationPaperContainer #QuestionList .question-answer{ padding: 0 80px; padding-bottom: 81px; }
+#ExaminationPaperContainer #QuestionList .question-answer, 
+#ExaminationPaperContainer #QuestionList .question-grade{ margin-bottom: 30px; padding: 0 80px; }
+#ExaminationPaperContainer #QuestionList .optional-answer{ font-size: 14px; line-height:28px; }
+#ExaminationPaperContainer #QuestionList .question-indent{ margin: 2px 0; margin-left: 40px; }
+#ExaminationPaperContainer #QuestionList .question-bottom{ padding: 0 80px; padding-bottom: 81px; }
+#ExaminationPaperContainer #QuestionList a.view{ display: block; margin: 2px 0; margin-left:40px; line-height:28px; color: #06c; }
 #ExaminationPaperContainer #QuestionList .question-answer textarea{ height:200px; }
-#ExaminationPaperContainer #QuestionList span.tip, 
+#ExaminationPaperContainer #QuestionList span.tip { float: left; padding: 2px 6px; font-size: 18px; color: #FFF; background: #666; }
 #ExaminationPaperGradeContainer #PaperContainer .question-container span.tip{ padding: 2px 6px; margin-right: 10px; font-size: 18px; color: #FFF; background: #666; }
 
 #ExaminationPaperGradeContainer{ min-height: 100%; background-color: #EEE; }

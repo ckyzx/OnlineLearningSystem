@@ -39,6 +39,7 @@
         <div class="swiper-button-container">
             <button class="btn btn-primary radius swiper-button-question swiper-button-prev-question ml-80 mr-10" type="button">上一题</button>
             <button class="btn btn-primary radius swiper-button-question swiper-button-next-question mr-30" type="button">下一题</button>
+            <button class="btn btn-primary radius swiper-button-question swiper-button-submit-question" type="button">提交</button>
             <button class="btn btn-primary radius f-r paper-hand-in mr-20" type="button">交卷</button>
         </div>
     </div>
@@ -47,28 +48,58 @@
     <div id="Question_${EPTQ_Id}" class="swiper-slide" data-question-id="${EPTQ_Id}" data-question-type="${EPTQ_Type}">
         <div class="question">
             <div class="col-12 cl question-content">
-                <div class="col-12"><span class="tip">题</span>{{html EPTQ_Content}}</div>
+                <div class="col-12">
+                    <span class="tip">题</span>
+                    <div class="question-indent">
+                        {{html EPTQ_Content}}
+                    </div>
+                </div>
             </div>
             <div class="col-12 cl question-answer">
                 <div class="col-12">
                     <span class="tip">答</span>
-                    {{if EPTQ_Type == '单选题'}}
-                        {{each(i, oa) EPTQ_OptionalAnswer}}
-                        <span class="mr-10 optional-answer"><input type="radio" name="question_radios_${EPTQ_Id}" value="${oa.key}" class="mr-5" />${oa.key}.${oa.text}</span>
-                        {{/each}}
-                    {{else EPTQ_Type == '多选题'}}
-                        {{each(i, oa) EPTQ_OptionalAnswer}}
-                        <span class="mr-10 optional-answer"><input type="checkbox" name="question_checkboxs_${EPTQ_Id}" value="${oa.key}" class="mr-5" />${oa.key}.${oa.text}</span>
-                        {{/each}}
-                    {{else EPTQ_Type == '判断题'}}
-                    <span class="mr-10"><input type="radio" name="question_radios_${EPTQ_Id}" value="√" class="mr-5" />√</span>
-                    <span class="mr-10"><input type="radio" name="question_radios_${EPTQ_Id}" value="×" class="mr-5" />×</span>
-                    {{else EPTQ_Type == '公文改错题' || EPTQ_Type == '计算题' || EPTQ_Type == '案例分析题' || EPTQ_Type == '问答题'}}
-                    <br />
-                    <textarea name="question_textarea_${EPTQ_Id}" class="textarea" cols="20" rows="2"></textarea>
-                    {{/if}}
+                    <div class="question-indent">
+                        {{if EPTQ_Type == '单选题'}}
+                            {{each(i, oa) EPTQ_OptionalAnswer}}
+                            <span class="mr-10 optional-answer"><input type="radio" name="question_radios_${EPTQ_Id}" value="${oa.key}" class="mr-5" />${oa.key}.${oa.text}</span><br/>
+                            {{/each}}
+                        {{else EPTQ_Type == '多选题'}}
+                            {{each(i, oa) EPTQ_OptionalAnswer}}
+                            <span class="mr-10 optional-answer"><input type="checkbox" name="question_checkboxs_${EPTQ_Id}" value="${oa.key}" class="mr-5" />${oa.key}.${oa.text}</span><br/>
+                            {{/each}}
+                        {{else EPTQ_Type == '判断题'}}
+                        <span class="mr-10 optional-answer"><input type="radio" name="question_radios_${EPTQ_Id}" value="√" class="mr-5" />√</span>
+                        <span class="mr-10 optional-answer"><input type="radio" name="question_radios_${EPTQ_Id}" value="×" class="mr-5" />×</span>
+                        {{else EPTQ_Type == '公文改错题' || EPTQ_Type == '计算题' || EPTQ_Type == '案例分析题' || EPTQ_Type == '问答题'}}
+                        <textarea name="question_textarea_${EPTQ_Id}" class="textarea" cols="20" rows="2"></textarea>
+                        {{/if}}
+                    </div>
                 </div>
             </div>
+            <div data-id="ModelAnswer_${EPTQ_Id}" class="col-12 cl question-grade hide">
+                <div class="col-12">
+                    <span class="tip">标</span>
+                    <a href="javascript:void(0);" data-id="ShowModelAnswer" class="view">查看</a>
+                    <div class="question-indent">
+                        <span data-id="ModelAnswerContainer_${EPTQ_Id}" class="fz-18 model-answer hide"></span>
+                        {{if EPTQ_Type == '单选题'}}
+                            {{each(i, oa) EPTQ_OptionalAnswer}}
+                            <span class="mr-10 hide"><input type="radio" name="question_radios_${EPTQ_Id}_model_answer" value="${oa.key}" class="mr-5" disabled />${oa.key}.${oa.text}</span>
+                            {{/each}}
+                        {{else EPTQ_Type == '多选题'}}
+                            {{each(i, oa) EPTQ_OptionalAnswer}}
+                            <span class="mr-10 hide"><input type="checkbox" name="question_checkboxs_${EPTQ_Id}_model_answer" value="${oa.key}" class="mr-5" disabled />${oa.key}.${oa.text}</span>
+                            {{/each}}
+                        {{else EPTQ_Type == '判断题'}}
+                        <span class="mr-10 hide"><input type="radio" name="question_radios_${EPTQ_Id}_model_answer" value="√" class="mr-5" disabled />√</span>
+                        <span class="mr-10 hide"><input type="radio" name="question_radios_${EPTQ_Id}_model_answer" value="×" class="mr-5" disabled />×</span>
+                        {{else EPTQ_Type == '公文改错题' || EPTQ_Type == '计算题' || EPTQ_Type == '案例分析题' || EPTQ_Type == '问答题'}}
+                        <textarea name="question_textarea_${EPTQ_Id}_model_answer" class="textarea disabled model-answer hide" cols="20" rows="2"></textarea>
+                        {{/if}}
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 cl question-bottom"></div>
         </div>
     </div>
 </script>

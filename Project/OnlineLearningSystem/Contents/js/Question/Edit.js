@@ -363,10 +363,10 @@ $(function() {
 
                 qOptionalAnswer = qOptionalAnswer == '' ? [] : $.parseJSON(qOptionalAnswer);
                 qModelAnswer = qModelAnswer == '' ? [] : $.parseJSON(qModelAnswer);
-                controlHtml = '<div id="SelectItemContainer">';
+                controlHtml = '<div id="SelectItemContainer" class="mt-5">';
                 for (var p in qOptionalAnswer) {
 
-                    controlHtml += '<span class="mr-10"><input type="radio" name="Answer" value="' + p + '" text="' + qOptionalAnswer[p] + '" class="mr-5" ' + (whetherAnswerCheck(qModelAnswer, p) ? 'checked="checked"' : '') + ' />' + p + '.' + qOptionalAnswer[p] + '</span>';
+                    controlHtml += '<span class="mr-10"><input type="radio" name="Answer" value="' + p + '" text="' + qOptionalAnswer[p] + '" class="mr-5" ' + (whetherAnswerCheck(qModelAnswer, p) ? 'checked="checked"' : '') + ' />' + p + '.' + qOptionalAnswer[p] + '</span><br/>';
                 }
                 controlHtml += '<span class="mr-30"><a id="ModifyAnswerBtn" href="javascript:void();" style="color:#06c;">修改</a></span>';
                 controlHtml += '</div>';
@@ -397,10 +397,10 @@ $(function() {
 
                 qOptionalAnswer = qOptionalAnswer == '' ? [] : $.parseJSON(qOptionalAnswer);
                 qModelAnswer = qModelAnswer == '' ? [] : $.parseJSON(qModelAnswer);
-                controlHtml = '<div id="SelectItemContainer">';
+                controlHtml = '<div id="SelectItemContainer" class="mt-5">';
                 for (var p in qOptionalAnswer) {
 
-                    controlHtml += '<span class="mr-10"><input type="checkbox" name="Answer" value="' + p + '" text="' + qOptionalAnswer[p] + '" class="mr-5" ' + (whetherAnswerCheck(qModelAnswer, p) ? 'checked="checked"' : '') + ' />' + p + '.' + qOptionalAnswer[p] + '</span>';
+                    controlHtml += '<span class="mr-10"><input type="checkbox" name="Answer" value="' + p + '" text="' + qOptionalAnswer[p] + '" class="mr-5" ' + (whetherAnswerCheck(qModelAnswer, p) ? 'checked="checked"' : '') + ' />' + p + '.' + qOptionalAnswer[p] + '</span><br/>';
                 }
                 controlHtml += '<span class="mr-30"><a id="ModifyAnswerBtn" href="javascript:void();" style="color:#06c;">修改</a></span>';
                 controlHtml += '</div>';

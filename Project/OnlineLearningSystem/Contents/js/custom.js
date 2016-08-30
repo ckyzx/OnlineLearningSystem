@@ -858,7 +858,7 @@ Kyzx.List = {
             h = Kyzx.Common.getElemHeight('.list-container');
             h = bodyH > h ? bodyH - 40 : h;
             //$('.tree-container').height(h);
-            $('.list-body').height(h);
+            $('.list-body').css('min-height', h + 'px');
         }
     },
 

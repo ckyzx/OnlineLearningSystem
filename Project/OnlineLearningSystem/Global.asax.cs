@@ -41,6 +41,7 @@ namespace OnlineLearningSystem
             TimerTask.Run(1 * 60 * 1000, TimerTask.GeneratePaperTemplate);
             TimerTask.Run(1 * 60 * 1000, TimerTask.ChangePaperStatus);
             TimerTask.Run(1 * 60 * 1000, TimerTask.ChangePaperTemplateStatus);
+            // - 开始[预定任务]或[练习任务]
             TimerTask.Run(1 * 60 * 1000, TimerTask.ChangeCustomTaskEnabled);
             TimerTask.Run(30 * 60 * 1000, TimerTask.ClearUserOnline);
         }

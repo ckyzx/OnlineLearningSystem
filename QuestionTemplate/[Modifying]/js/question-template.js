@@ -21,7 +21,7 @@ var QT = {
         var pids, epids;
 
         me = this;
-
+        
         pids = me.req.getValue('pids', 0);
         epids = me.req.getValue('epids', 0);
 
@@ -197,7 +197,16 @@ var QT = {
         p1 = /(<br\/>)/g;
         txt = txt.replace(p1, '<r><n>');
 
+        // 去除其它多余标签
+        p1 = /(<(\/)?[A-Za-z]{2,50}>)/g;
+        txt = txt.replace(p1, '');
+
         count = 0;
+
+        // 如果是手工粘贴的试题，可能没有前导换行
+        if(!p2.test(txt)){
+            txt = '<r><n>' + txt + '<r><n><r><n>';
+        }
 
         while (p2.test(txt)) {
 

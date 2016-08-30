@@ -371,6 +371,8 @@ OLS.ExaminationTask = {
 
             etQuestions = $('#' + me.s.idPrefix + 'Questions');
 
+            etContinuedDays = $('#' + me.s.idPrefix + 'ContinuedDays');
+
             switch (autoType) {
                 case 0:
 
@@ -388,6 +390,7 @@ OLS.ExaminationTask = {
                     etaodContainer.hide();
                     me._showAutoTaskControls();
                     etStartDateContainer.remove();
+                    etContinuedDays.parentsUntil('form').last().hide();
                     break;
                 case 2:
 
@@ -397,6 +400,7 @@ OLS.ExaminationTask = {
                     etaodContainer.show();
                     me._showAutoTaskControls();
                     etStartDateContainer.remove();
+                    etContinuedDays.parentsUntil('form').last().hide();
                     break;
                 case 3:
 
@@ -406,6 +410,7 @@ OLS.ExaminationTask = {
                     etaodContainer.show();
                     me._showAutoTaskControls();
                     etStartDateContainer.remove();
+                    etContinuedDays.parentsUntil('form').last().hide();
                     break;
                 case 4:
 
@@ -416,7 +421,6 @@ OLS.ExaminationTask = {
 
                     etMode.find('option[value=2]').get(0).selected = true;
 
-                    etContinuedDays = $('#' + me.s.idPrefix + 'ContinuedDays');
                     etContinuedDays.parentsUntil('form').last().show();
                     if (etContinuedDays.val() == 0) {
                         etContinuedDays.val(1);
@@ -443,6 +447,8 @@ OLS.ExaminationTask = {
             .val(etAutoOffsetDay.attr('data-origin-value'))
             .change();
     },
+
+
 
     initControls: function() {
 

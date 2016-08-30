@@ -567,7 +567,7 @@ namespace OnlineLearningSystem.Utilities
             Int32 count;
 
             spaceRegex = new Regex(@"\s+");
-            dotRegex = new Regex(@"\s*[\.．、]+\s*");
+            dotRegex = new Regex(@"\s*[\.．]+\s*");
             suffixRegex = new Regex(", \"$");
             formatRegex = new Regex("^(\"[a-zA-Z]{1}\":\"[^:\"]*\"){1}$");
 
@@ -1064,6 +1064,7 @@ namespace OnlineLearningSystem.Utilities
 
             // 不能只获取正常状态的记录，因为编辑试题时，其分类可能为“缓存”状态。
             var items = olsEni.QuestionClassifies
+                .Where(m => m.QC_Status != (Byte)Status.Delete) // [201608191618]
                 .Select(model => new { model.QC_Name, model.QC_Id });
 
             list = new List<SelectListItem>();
@@ -1089,7 +1090,10 @@ namespace OnlineLearningSystem.Utilities
 
             // 获取相应状态的分类
             var items = olsEni.QuestionClassifies
-                .Where(m=>m.QC_Status == status)
+                .Where(
+                    m=>m.QC_Status == status 
+                    || m.QC_Status == (Byte)Status.Available
+                    || m.QC_Status == (Byte)Status.Cache)
                 .Select(m => new { m.QC_Name, m.QC_Id });
 
             list = new List<SelectListItem>();

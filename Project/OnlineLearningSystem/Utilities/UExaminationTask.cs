@@ -205,7 +205,7 @@ namespace OnlineLearningSystem.Utilities
         private void AddPaperTemplateAndQuestionTemplate(ExaminationTask model)
         {
 
-            Int32 id, tmpId;
+            Int32 id, tmpId, continueDays;
             Question q;
             ExaminationPaperTemplate ept;
             ExaminationPaperTemplateQuestion eptq;
@@ -225,9 +225,17 @@ namespace OnlineLearningSystem.Utilities
             // 设置“预定考试任务”的时间
             if ((Byte)ExaminationTaskMode.Custom == model.ET_Mode)
             {
+                // - [201608191537]
                 startDate = model.ET_StartTime.Date;
-                startTime = model.ET_StartTime.AddMinutes(3);
-                endTime = model.ET_StartTime.AddMinutes(3).AddMinutes(model.ET_TimeSpan);
+
+                startTime = model.ET_StartTime;
+                startTime = new DateTime(startDate.Year, startDate.Month, startDate.Day, startTime.Hour, startTime.Minute, startTime.Second);
+                startTime = startTime.AddMinutes(3);
+
+                endTime = model.ET_EndTime;
+                endTime = new DateTime(startDate.Year, startDate.Month, startDate.Day, endTime.Hour, endTime.Minute, endTime.Second);
+                continueDays = model.ET_ContinuedDays > 0 ? model.ET_ContinuedDays - 1 : 0;
+                endTime = endTime.AddDays(continueDays).AddMinutes(3);
             }
             else
             {
@@ -726,7 +734,7 @@ namespace OnlineLearningSystem.Utilities
         private ResponseJson SetCustomTypeStatus(ExaminationTask et, ExaminationTaskStatus etStatus)
         {
 
-            Int32 eptId;
+            Int32 eptId, continueDays;
             DateTime startTime, endTime;
             ResponseJson resJson;
             UExaminationPaperTemplate uept;
@@ -763,7 +771,8 @@ namespace OnlineLearningSystem.Utilities
                 epts[0].EPT_StartTime = startTime;
                 epts[0].EPT_StartDate = startTime.Date;
 
-                startTime = startTime.AddDays(et.ET_ContinuedDays > 0 ? et.ET_ContinuedDays - 1 : 0);
+                continueDays = et.ET_ContinuedDays > 0 ? et.ET_ContinuedDays - 1 : 0;
+                startTime = startTime.AddDays(continueDays);
                 endTime = et.ET_EndTime;
                 endTime = new DateTime(startTime.Year, startTime.Month, startTime.Day, endTime.Hour, endTime.Minute, endTime.Second);
                 epts[0].EPT_EndTime = endTime;
