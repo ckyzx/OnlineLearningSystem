@@ -1,0 +1,6 @@
+* { margin: 0; padding: 0; }
+html, body { width: 100%; height: 100%; }
+.container { width: 100%; height: 90%; overflow: hidden; }
+.textarea { padding: 5px; width: 100%; height: 100%; }
+.btn-container { padding: 10px 15px 0 0; text-align: right; }
+.btn { width: 80px; height: 24px; }

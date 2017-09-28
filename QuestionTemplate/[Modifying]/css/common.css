@@ -1,5 +1,0 @@
-* { margin:0; padding:0; }
-.control-container,
-.btn-container { position:fixed; top:0; right:0; z-index:9999; padding: 3px 34px 0 0; height:24px; }
-.drop-down-list { height:24px; width:120px; }
-.btn { width:80px; height:24px; }
